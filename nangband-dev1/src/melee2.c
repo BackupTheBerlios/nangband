@@ -4070,6 +4070,14 @@ static void process_monster(int m_idx)
 					}
 				}
 			}
+
+			/* The nearby monster is carrying a light source */
+			if ((r_ptr->flags2 & (RF2_CARRY_LIGHT | RF2_EMANATE_LIGHT)) &&
+			    (m_ptr->cdis <= MAX_SIGHT + 3))
+			{
+				/* Update monster light */
+				p_ptr->update |= (PU_UPDATE_LIGHT);
+			}
 		}
 
 		/* Stop when done */

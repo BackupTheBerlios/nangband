@@ -11,9 +11,7 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
 - Added the monster light code, mixing the Z and Tome one (which is based
   on the former), with necessary modifications to make it work with the GRID
   macros. Please note that "if (view_monster_light)" is commented out in
-  xtra1.c because it isn't defined yet. I still don't figure out why light
-  updates are slightly out of sync...  Requesting PU_UPDATE_LIGHT
-  whenever PU_MONSTERS is set might help, or maybe not... (pelpel)
+  xtra1.c because it isn't defined yet. (pelpel)
 
 2002-07-23
 ----------

@@ -2,18 +2,18 @@
 
 SUBDIRS = lua
 
-bin_PROGRAMS = angband
+bin_PROGRAMS = nangband
 
 WRES = windres
 
 SUFFIXES = .rc
-angband.res: angband.rc
+nangband.res: nangband.rc
 	$(WRES) $< -O coff -o $@
 
-angband_LDADD = lua/liblua.a @ANGBAND_OBJS@
-angband_DEPENDENCIES = lua/liblua.a @ANGBAND_OBJS@
+nangband_LDADD = lua/liblua.a @ANGBAND_OBJS@
+nangband_DEPENDENCIES = lua/liblua.a @ANGBAND_OBJS@
 
-angband_SOURCES = \
+nangband_SOURCES = \
   z-util.c z-virt.c z-form.c z-rand.c z-term.c \
   variable.c tables.c util.c cave.c \
   object1.c object2.c monster1.c monster2.c \
@@ -56,7 +56,7 @@ l-misc.c: lua/tolua l-misc.pkg
 l-spell.c: lua/tolua l-spell.pkg
 	lua/tolua -n spell -o l-spell.c l-spell.pkg
 
-EXTRA_angband_SOURCES = \
+EXTRA_nangband_SOURCES = \
   main-ros.c main-ami.c main-dos.c main-emx.c \
   main-ibm.c main-lsl.c main-mac.c main-sla.c main-vme.c \
   main-xxx.c \
@@ -71,7 +71,7 @@ EXTRA_angband_SOURCES = \
 
 install-exec-hook:
 if SET_GID
-	chgrp "@GAMEGROUP@" "$(DESTDIR)$(bindir)/angband"
-	chmod g+s "$(DESTDIR)$(bindir)/angband"
+	chgrp "@GAMEGROUP@" "$(DESTDIR)$(bindir)/nangband"
+	chmod g+s "$(DESTDIR)$(bindir)/nangband"
 endif
 

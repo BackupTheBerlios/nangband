@@ -1,6 +1,10 @@
 Nangband ChangeLog
 ==================
 
+2002-02-21
+----------
+- Fixed a few bugs, removed a few compiler warnings.
+
 2002-02-20
 ----------
 - Added Nexus, Chaos and Nether brands.

@@ -98,7 +98,7 @@
 #define BLOCK_VERSION_ERROR      0
 #define BLOCK_VERSION_HEADER     1
 #define BLOCK_VERSION_OPTIONS    1
-#define BLOCK_VERSION_PLAYER     1
+#define BLOCK_VERSION_PLAYER     2
 #define BLOCK_VERSION_RNG        1
 #define BLOCK_VERSION_MESSAGES   1
 #define BLOCK_VERSION_MONLORE    1
@@ -403,14 +403,10 @@ static void savefile_write_block(int fd, byte type, byte version)
 	KILL(savefile_head);
 
 	/* Write the block */
-	if (savefile_block)
-	{
-		printf("We really are saving this bit.\n");
-		fd_write(fd, (cptr) savefile_block, savefile_blockused);
-	}
+	fd_write(fd, (cptr) savefile_block, savefile_blockused);
 
 	/* Free the block's memory */
-	if (savefile_block) KILL(savefile_block);
+	KILL(savefile_block);
 
 	/* We are done */
 	return;
@@ -1031,12 +1027,23 @@ static errr savefile_do_block_player(bool type, int ver)
 	savefile_do_s16b(&p_ptr->see_infra, type);
 	savefile_do_s16b(&p_ptr->tim_infra, type);
 
-	/* Timed resistances */
-	for (i = 0; i < RES_MAX; i++) savefile_do_byte(&p_ptr->resist_timed[i], type);
+	/* These have been moved */
+	if (ver > 1)
+	{
+		savefile_do_byte(&p_ptr->confusing, type);
+		savefile_do_byte(&p_ptr->searching, type);
+	}
 
-	/* Player status flags -- Move to the other stuff above XXX */
-	savefile_do_byte(&p_ptr->confusing, type);
-	savefile_do_byte(&p_ptr->searching, type);
+	/* Timed resistances */
+	for (i = 0; i < RES_MAX; i++)
+		savefile_do_byte(&p_ptr->resist_timed[i], type);
+
+	/* Old player status flags */
+	if (ver == 1)
+	{
+		savefile_do_byte(&p_ptr->confusing, type);
+		savefile_do_byte(&p_ptr->searching, type);
+	}
 
 	/* Special stuff */
 	savefile_do_u16b(&p_ptr->panic_save, type);

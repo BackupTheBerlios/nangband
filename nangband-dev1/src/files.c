@@ -1259,7 +1259,7 @@ static void display_player_xtra_info(void)
 	int col;
 	int hit, dam;
 	int base, plus;
-	int i, tmp;
+	int tmp;
 	int xthn, xthb, xfos, xsrh;
 	int xdis, xdev, xsav, xstl;
 
@@ -1499,15 +1499,14 @@ static void display_player_xtra_info(void)
 	desc = likert(xsrh, 6);
 	c_put_str(likert_color, format("%9s", desc), 17, col+14);
 
-
 	/* Bottom */
-	col = 5;
+	col = 3;
 
 	/* History */
-	for (i = 0; i < 4; i++)
-	{
-		put_str(p_ptr->history[i], i + 19, col);
-	}
+	putstr_multi(col, 19, 77, TERM_L_GREEN, p_ptr->history, FALSE);
+
+	/* We are done. */
+	return;
 }
 
 

@@ -3995,8 +3995,6 @@ void build_gamma_table(int gamma)
 
 #endif /* SUPPORT_GAMMA */
 
-#if 0
-
 /* ------------------------------------------------------- ajps, 20/10/01 ---
  * Displays a string over a number of lines, given a starting point and
  * a width.  Breaks at newline characters or white space at the end of a line.
@@ -4104,8 +4102,6 @@ void putstr_multi(int x_pos, int y_pos, int width, int attr, char *txt, bool cle
 	}
  }
 
-#endif
-               
 /* ------------------------------------------------------------ ajps ---
  * Returns the length of the word starting at cptr.
  *

@@ -30,7 +30,7 @@ struct birther
 
 	s16b stat[A_MAX];
 
-	char history[4][60];
+	char history[250];
 };
 
 
@@ -84,10 +84,7 @@ static void save_prev_data(void)
 	}
 
 	/* Save the history */
-	for (i = 0; i < 4; i++)
-	{
-		strcpy(prev.history[i], p_ptr->history[i]);
-	}
+	strcpy(prev.history, p_ptr->history);
 }
 
 
@@ -117,10 +114,7 @@ static void load_prev_data(void)
 	}
 
 	/* Save the history */
-	for (i = 0; i < 4; i++)
-	{
-		strcpy(temp.history[i], p_ptr->history[i]);
-	}
+	strcpy(temp.history, p_ptr->history);
 
 
 	/*** Load the previous data ***/
@@ -143,10 +137,7 @@ static void load_prev_data(void)
 	}
 
 	/* Load the history */
-	for (i = 0; i < 4; i++)
-	{
-		strcpy(p_ptr->history[i], prev.history[i]);
-	}
+	strcpy(p_ptr->history, prev.history);
 
 
 	/*** Save the current data ***/
@@ -165,10 +156,7 @@ static void load_prev_data(void)
 	}
 
 	/* Save the history */
-	for (i = 0; i < 4; i++)
-	{
-		strcpy(prev.history[i], temp.history[i]);
-	}
+	strcpy(prev.history, temp.history);
 
 	p_ptr->stat_lim[i] = stat_limit(p_ptr->stat_max[i]);
 
@@ -356,27 +344,16 @@ static void get_extra(void)
  */
 static void get_history(void)
 {
-	int i, n, chart, roll, social_class;
+	int i, chart, roll, social_class;
 
-	char *s, *t;
-
-	char buf[240];
-
-
-
-	/* Clear the previous history strings */
-	for (i = 0; i < 4; i++) p_ptr->history[i][0] = '\0';
-
-
-	/* Clear the history text */
-	buf[0] = '\0';
+	/* Clear the previous history */
+	p_ptr->history[0] = '\0';
 
 	/* Initial social class */
 	social_class = randint(4);
 
 	/* Starting place */
 	chart = rp_ptr->hist;
-
 
 	/* Process the history */
 	while (chart)
@@ -391,7 +368,7 @@ static void get_history(void)
 		while ((chart != h_info[i].chart) || (roll > h_info[i].roll)) i++;
 
 		/* Get the textual history */
-		strcat(buf, (h_text + h_info[i].text));
+		strcat(p_ptr->history, (h_text + h_info[i].text));
 
 		/* Add in the social class */
 		social_class += (int)(h_info[i].bonus) - 50;
@@ -400,8 +377,6 @@ static void get_history(void)
 		chart = h_info[i].next;
 	}
 
-
-
 	/* Verify social class */
 	if (social_class > 100) social_class = 100;
 	else if (social_class < 1) social_class = 1;
@@ -409,51 +384,8 @@ static void get_history(void)
 	/* Save the social class */
 	p_ptr->sc = social_class;
 
-
-	/* Skip leading spaces */
-	for (s = buf; *s == ' '; s++) /* loop */;
-
-	/* Get apparent length */
-	n = strlen(s);
-
-	/* Kill trailing spaces */
-	while ((n > 0) && (s[n-1] == ' ')) s[--n] = '\0';
-
-
-	/* Start at first line */
-	i = 0;
-
-	/* Collect the history */
-	while (TRUE)
-	{
-		/* Extract remaining length */
-		n = strlen(s);
-
-		/* All done */
-		if (n < 60)
-		{
-			/* Save one line of history */
-			strcpy(p_ptr->history[i++], s);
-
-			/* All done */
-			break;
-		}
-
-		/* Find a reasonable break-point */
-		for (n = 60; ((n > 0) && (s[n-1] != ' ')); n--) /* loop */;
-
-		/* Save next location */
-		t = s + n;
-
-		/* Wipe trailing spaces */
-		while ((n > 0) && (s[n-1] == ' ')) s[--n] = '\0';
-
-		/* Save one line of history */
-		strcpy(p_ptr->history[i++], s);
-
-		/* Start next line */
-		for (s = t; *s == ' '; s++) /* loop */;
-	}
+	/* We are done. */
+	return;
 }
 
 

@@ -7,6 +7,7 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
   messed up. (takkaria)
 - Twiddled with object recall.  Not quite perfect in relation to the
   new stat code. (takkaria)
+- Made p_ptr->history a single [250], instead of [4][60]. (takkaria)
 
 2002-04-27
 ----------

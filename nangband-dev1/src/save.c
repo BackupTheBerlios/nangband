@@ -98,7 +98,7 @@
 #define BLOCK_VERSION_ERROR      0
 #define BLOCK_VERSION_HEADER     1
 #define BLOCK_VERSION_OPTIONS    1
-#define BLOCK_VERSION_PLAYER     3
+#define BLOCK_VERSION_PLAYER     4
 #define BLOCK_VERSION_RNG        1
 #define BLOCK_VERSION_MESSAGES   1
 #define BLOCK_VERSION_MONLORE    1
@@ -919,10 +919,12 @@ static errr savefile_do_block_player(bool type, int ver)
 	/* What the player died from */
 	savefile_do_string(p_ptr->died_from, type);
 
-#if 0
-	/* Player's history */
-	savefile_do_string(p_ptr->history, type);
-#endif
+	/* Do the history */
+	if (ver > 3)
+	{
+		/* Player's history */
+		savefile_do_string(p_ptr->history, type);
+	}
 
 	/* Sex */
 	savefile_do_byte(&p_ptr->psex, type);

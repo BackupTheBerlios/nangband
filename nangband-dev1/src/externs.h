@@ -706,6 +706,7 @@ extern uint maxroll(uint num, uint sides);
 extern bool is_a_vowel(int ch);
 extern cptr attr_to_text(byte a);
 extern byte color_char_to_attr(char c);
+extern void putstr_multi(int x_pos, int y_pos, int width, int attr, char *txt, bool clear);
 extern void put_text_block(int x_pos, int y_pos, int width, char *txt, byte attr, bool clear, byte align);
 extern void put_continuous_text(int x_pos, int y_pos, char *txt, byte attr, bool clear);
 

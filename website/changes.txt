@@ -10,6 +10,8 @@ Nangband Website changelog
   stuff, I'm sure.  (takkaria)
 - Added the "plain" style.  Looks better in text-based browsers
   than the others. (takkaria)
+- Added image showing facility to the main page.  I'm thinking
+  I might start another rewrite soon! (takkaria)
 
 07-07-02
 --------

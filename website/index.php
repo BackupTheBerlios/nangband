@@ -46,6 +46,7 @@ if ($titles[$page]) $title = $titles[$page];
 $okay = (file_exists('content/'.$page) && !is_dir('content/'.$page));
 if (!$okay) $title = 'page not found';
 if ($source) $title = 'source';
+if ($showimage) $title = 'image';
 
 // Output the header
 page_header($title, $page, $style);
@@ -70,6 +71,15 @@ if ($source)
 	else $source = 'index.php';
 
 	show_source($source);
+}
+else if ($showimage)
+{
+	$okay = (!is_dir('images/'.$showimage.'.desc') && file_exists('images/'.$showimage.'.desc'));
+	if (!$okay)
+	{
+		echo '<p><b>Sorry, that image cannot be found.</b></p>';
+	}
+	else include('images/'.$showimage.'.desc');
 }
 else if ($okay)
 {

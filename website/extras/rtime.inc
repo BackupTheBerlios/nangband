@@ -22,10 +22,13 @@
 // (Andrew Sidwell); I would appriciate it, that if you make any changes to this, you
 // send them to me at nevermiah at hotmail dot com.  Thanks.
 //
-function rtime($time = time(), $max_level = 5)
+function rtime($time = 0, $max_level = 5)
 {
 	// Note we require gmtime()
 	if (!function_exists(gmtime)) return;
+
+	// Hack to default to time()
+	if ($time == 0) $time = time();
 
 	// Grab the times
 	$ts = gmtime($time, 1);

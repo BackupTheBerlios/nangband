@@ -208,7 +208,7 @@ static byte savefile_do_byte(byte *v, bool type)
 		savefile_new = C_RNEW(savefile_blocksize + BLOCK_INCREMENT, byte);
 
 		/* Copy the memory across */
-		COPY(savefile_new, savefile_block, vptr);
+		C_COPY(savefile_new, savefile_block, savefile_blocksize, byte);
 
 		/* Wipe the old block. */
 		KILL(savefile_block);

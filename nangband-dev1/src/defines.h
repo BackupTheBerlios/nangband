@@ -2217,9 +2217,9 @@
 #define RF2_XXX3			0x00000400	/* (?) */
 #define RF2_XXX4			0x00000800	/* (?) */
 #define RF2_POWERFUL		0x00001000	/* Monster has strong breath */
-#define RF2_XXX5			0x00002000	/* (?) */
-#define RF2_XXX7			0x00004000	/* (?) */
-#define RF2_XXX6			0x00008000	/* (?) */
+#define RF2_ABSORB_LIGHT	0x00002000	/* Absorbs light */
+#define RF2_EMANATE_LIGHT	0x00004000	/* Emanates light */
+#define RF2_CARRY_LIGHT		0x00008000	/* Carries light */
 #define RF2_OPEN_DOOR		0x00010000	/* Monster can open doors */
 #define RF2_BASH_DOOR		0x00020000	/* Monster can bash doors */
 #define RF2_PASS_WALL		0x00040000	/* Monster can pass walls */

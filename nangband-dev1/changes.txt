@@ -1,15 +1,20 @@
 Nangband ChangeLog
 ==================
 
+2002-02-24
+----------
+- Improved the object recall code to use the new resist code. (takkaria)
+- Did more work on the new resist system. (takkaria)
+
 2002-02-22
 ----------
-- Improved the object recall code.
+- Improved the object recall code. (takkaria)
 - Added belts of starvation as a new ego type. (grahame)
 
 2002-02-21
 ----------
-- Fixed a few bugs, removed a few compiler warnings.
-- Added object recall code
+- Fixed a few bugs, removed a few compiler warnings. (takkaria)
+- Added object recall code. (takkaria)
 
 2002-02-20
 ----------

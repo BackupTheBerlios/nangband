@@ -4,7 +4,8 @@ Nangband ChangeLog
 2002-03-08
 ----------
 - Added RES_POIS20 to weapons of venom and also made them a little
-  rarer (grahame)
+  rarer. (grahame)
+- Added Runescrye's new artifact file to the cvs. (takkaria)
 
 2002-03-03
 ----------

@@ -129,3 +129,31 @@ another element to the game, which is atmosphere.  Some of it may have to be
 optional, though; maybe have view_monster_light which just does monster lighting
 and absorbing, then have monster_light_complex or whatever to do the different
 loops for each one. 
+
+--pel^2-- Here's the outline of a light priority code
+Prerequisites:
++ CAVE2_MDARK for cave_info2.
++ Another CAVE_TEMP flag, maybe called CAVE2_TEMP.
+
+Outline:
++ Monster-lit grids are marked with CAVE_TEMP and monster-darkened ones
+  CAVE2_TEMP.
++ Remove CAVE2_MLIGHT and CAVE2_MDARK flags from light_g grids, while
+  dropping CAVE_SEEN from grids illuminated only by monster light sources,
+  adding CAVE_SEEN from CAVE_GLOW grids darkened by monster darkness.
++ Scan through m_list, rejecting those with cdis > MAX_SIGHT + 3 and
+  those who don't have lighting flags set. Store their positions,
+  light/darkness radii and light priority in a temporary array.
++ (Important) Sort the temporary array by light priority.
++ Process the sorted just like update_monster_light now handles m_list.
++ Because the current code avoids overwriting already affected grids,
+  this should eliminate the possibility of light/temp array overflow
+  and handle lighting priority correctly, i.e. 
+  if (info2 & (CAVE2_MLIGHT | CAVE2_MDARK)) continue;
+  For EMANATE_LIGHT and CARRY_LIGHT it sets CAVE2_MLIGHT and CAVE_SEEN.
+  For ABSORB_LIGHT, it sets CAVE2_MLIGHT and clears CAVE_SEEN (unless
+  CAVE2_PLIGHT is set? I'm not sure).
++ Double the number of conditions in the redraw code in update_monster_light,
+  to handle the effects of CAVE2_TEMP and CAVE2_MDARK.
++ In update_view, add "&& !(info2 & (CAVE2_MDARK))" whenever it checks
+  CAVE_GLOW.

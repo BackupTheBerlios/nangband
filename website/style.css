@@ -1,12 +1,9 @@
 body
 {
-  background: #000000;
-  color: white;
+  background: #ffffff;
   font-family:  Arial, sans-serif;
   font-size: 14px;
   text-align: justify;
-  scrollbar-arrow-color: #336699;
-  scrollbar-base-color: #000000;
 }
 
 form
@@ -17,10 +14,21 @@ form
 
 input.box
 {
-  background: #999999;
-  padding-bottom: 1px;
-  padding-top: 1px;
-  border-color: #663366;
+	background: #ffffee;
+	padding-bottom: 1px;
+	padding-top: 1px;
+	border : thin solid #CCCC66;
+}
+
+input.button
+{
+	border: 1px solid;
+	cursor: hand;
+	padding-bottom: 1px;
+	padding-top: 1px;
+	background: #ffffee;
+	text-decoration: none;
+	color: #000000;
 }
 
 h1
@@ -29,77 +37,22 @@ h1
   text-align: center;
 }
 
-h2
-{
-  font-size: 14pt;
-  color: #99CCFF;
-}
-
-h3
-{
-  font-size: 13pt;
-  color: #7FFFD4;
-}
-
-h4
-{
-  font-size: 14.5px;
-  font-weight: bold;
-  color: white;
-  margin-bottom: 0px;
-}
-
 a
 {
   text-decoration: none;
-  color: #D090FF;
+  color: #3399FF;
   font-weight: normal;
   border: thin none;
 }
 
 a:hover
 {
-  text-decoration: underline;
-  color: #00FFFF;
+	font-weight : bold;
 }
 
 hr
 {
-  color: blue;
+  color: #005500;
   height: 1pt;
   text-align: center;
-}
-
-input.button
-{
-  border: none;
-  cursor: hand;
-  padding: 4px 0;
-  background: Navy;
-  text-decoration: none;
-  color: #00FFFF;
-}
-
-div.rightbar
-{
-  background: navy;
-  border: 0px solid;
-  float: right;
-  margin-top: 4px;
-  margin-left: 8px;
-  margin-bottom: 8px;
-  margin-right: 20px;
-  padding: 5px;
-  text-align: left;
-  position: relative;
-}
-
-div.small
-{
-  font-size: smaller;
-}
-
-p.small
-{
-  font-size: smaller;
 }

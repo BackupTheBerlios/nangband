@@ -27,7 +27,7 @@ function page_header($title, $type)
 	echo '<html>';
 	echo '<head>';
 	echo '<title>Nangband - ' . $title . '</title>';
-/*	echo '<link rel="stylesheet" rev="content" type="text/css" href="style.css">'; */
+	echo '<link rel="stylesheet" rev="content" type="text/css" href="style.css">';
 	echo '<meta name="description" content="A site about Nangband, an Angband variant.">';
 	echo '</head>';
 	echo '<body bgcolor="#ffffee">';

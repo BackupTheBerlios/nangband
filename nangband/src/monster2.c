@@ -1518,6 +1518,7 @@ static bool place_monster_one(int y, int x, int r_idx, bool slp)
 /*
  * Maximum size of a group of monsters
  */
+#define GROUP_MIN	4
 #define GROUP_MAX	32
 
 
@@ -1560,8 +1561,10 @@ static bool place_monster_group(int y, int x, int r_idx, bool slp)
 	/* Modify the group size */
 	total += extra;
 
-	/* Minimum size */
-	if (total < 1) total = 1;
+	/* Minimum size (with exception) */
+	n = randint(GROUP_MAX);
+	if (n < GROUP_MIN) total = n;
+	else if (total < GROUP_MIN) total = GROUP_MIN;
 
 	/* Maximum size */
 	if (total > GROUP_MAX) total = GROUP_MAX;

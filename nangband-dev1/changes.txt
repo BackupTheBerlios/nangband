@@ -7,6 +7,8 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
   (should be) much smaller in file size. (takkaria)
 - Fixed a compiler warning in util.c. (takkaria)
 - Made cave_info a u16b for pelpel to do some UI stuff. (takkaria)
+- Fix for the Half-Troll & Elf races; they were broken.  Many thanks
+  to Mogami! (takkaria)
 
 2002-06-26
 ----------
@@ -179,7 +181,8 @@ Between 2002-04-21 and 2002-04-27
 - Rewrote small chunks of the store code for better displaying. (takkaria)
 - Added bigscreen support for the stores. (takkaria)
 - Tidied code in store.c. (takkaria)
-- Made the '2' and '8' keys move up and down one item when in the stores. (takkaria)
+- Made the '2' and '8' keys move up and down one item when in the stores.
+ (takkaria)
 
 CVS ENTERS PLAYABLE STATE: 2002-03-12
 =====================================

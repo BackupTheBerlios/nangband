@@ -752,19 +752,15 @@ static void name_randart(randart_type *x_ptr)
 {
 	char *word;
 
-	while (1)
+	do
 	{
 		word = make_word();
+	} while (strlen(word) >= 17);
 
-		if (strlen(word) >= 17)
-			continue;
-
-		if (rand_int(3) == 0)
-			sprintf(x_ptr->name, "'%s'", word);
-		else
-			sprintf(x_ptr->name, "of %s", word);
-
-	}
+	if (rand_int(3) == 0)
+		sprintf(x_ptr->name, "'%s'", word);
+	else
+		sprintf(x_ptr->name, "of %s", word);
 
 	/* We are done. */
 	return;

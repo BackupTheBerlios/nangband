@@ -14,14 +14,15 @@
 <p align="center"><colour name='red'>The Pits of Angband</colour></p>
 
 <p align="center">
-By Andrew Sidwell &lt;<color name="yellow">nevermiah@hotmail.com</color>&gt; and Grahame White.
+By the Nangband DevTeam: Andrew Sidwell, Grahame White and Marshall A. Scott.
 </p>
 
 <p align="center">
-Based on Vanilla Angband CVS - credits in the credits.txt file
+Based on Vanilla Angband CVS - credits in the thanks.txt file
 </p>
 
 <p align="centre">newsgroup: <colour name="yellow">rec.games.roguelike.angband</colour><br />
-webpage: <colour name='yellow'>http://nangband.berlios.de/</colour></p>
+webpage: <colour name='yellow'>http://nangband.berlios.de/</colour><br />
+main email: <colour name="yellow">nevermiah@hotmail.com</colour></p>
 </body>
 </ahml>

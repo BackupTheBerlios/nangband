@@ -479,7 +479,9 @@ void self_knowledge(void)
 	if (p_ptr->free_act) info[i++] = "You have free action.";
 	if (p_ptr->hold_life) info[i++] = "You have a firm hold on your life force.";
 
-	if (p_ptr->resist_blind) info[i++] = "Your eyes are resistant to blindness.";
+	if (p_ptr->immune_blind) info[i++] = "You cannot be blinded.";
+	if (p_ptr->immune_fear) info[i++] = "You are immune to the effects of fear";
+	if (p_ptr->immune_conf) info[i++] = "You cannot be confused by chaos or confusion attacks.";
 
 	if (p_ptr->sustain_str) info[i++] = "Your strength is sustained.";
 	if (p_ptr->sustain_int) info[i++] = "Your intelligence is sustained.";
@@ -511,11 +513,11 @@ void self_knowledge(void)
 	if (o_ptr->k_idx)
 	{
 		/* Special "Attack Bonuses" */
-		if (f2 & (TR2_BRAND_ACID)) info[i++] = "Your weapon melts your foes.";
-		if (f2 & (TR2_BRAND_ELEC)) info[i++] = "Your weapon shocks your foes.";
-		if (f2 & (TR2_BRAND_FIRE)) info[i++] = "Your weapon burns your foes.";
-		if (f2 & (TR2_BRAND_COLD)) info[i++] = "Your weapon freezes your foes.";
-		if (f2 & (TR2_BRAND_POIS)) info[i++] = "Your weapon poisons your foes.";
+		if (f1 & (TR1_BRAND_ACID)) info[i++] = "Your weapon melts your foes.";
+		if (f1 & (TR1_BRAND_ELEC)) info[i++] = "Your weapon shocks your foes.";
+		if (f1 & (TR1_BRAND_FIRE)) info[i++] = "Your weapon burns your foes.";
+		if (f1 & (TR1_BRAND_COLD)) info[i++] = "Your weapon freezes your foes.";
+		if (f1 & (TR1_BRAND_POIS)) info[i++] = "Your weapon poisons your foes.";
 
 		/* Special "slay" flags */
 		if (f1 & (TR1_SLAY_ANIMAL)) info[i++] = "Your weapon strikes at animals with extra force.";
@@ -2404,7 +2406,7 @@ void destroy_area(int y1, int x1, int r, bool full)
 		msg_print("There is a searing blast of light!");
 
 		/* Blind the player */
-		if (!p_ptr->resist_blind)
+		if (!p_ptr->immune_blind)
 		{
 			/* Become blind */
 			(void)set_blind(p_ptr->blind + 10 + randint(10));

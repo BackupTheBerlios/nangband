@@ -510,17 +510,6 @@ static void object_resists_aux(int mode, const object_type *o_ptr, byte *resists
 		{
 			resists[n] += o_ptr->resists[n];
 		}
-
-		/* Randart */
-		if (o_ptr->name3)
-		{
-			randart_type *x_ptr = &x_info[o_ptr->name3];
-
-			for (n = 0; n < RES_MAX; n++)
-			{
-				resists[n] += x_ptr->resists[n];
-			}
-		}
 	}
 
 	return;
@@ -577,16 +566,6 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			(*f3) |= a_ptr->flags3;
 		}
 
-		/* Randarts */
-		if (o_ptr->name3)
-		{
-			randart_type *x_ptr = &x_info[o_ptr->name3];
-
-			(*f1) |= x_ptr->flags1;
-			(*f2) |= x_ptr->flags2;
-			(*f3) |= x_ptr->flags3;
-		}
-
 		(*f1) |= o_ptr->flags1;
 		(*f2) |= o_ptr->flags2;
 		(*f3) |= o_ptr->flags3;
@@ -603,33 +582,12 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			(*f3) |= (a_ptr->flags3 & (TR3_IGNORE_MASK));
 		}
 		
-		/* Obvious ego-item flags */
-		if (o_ptr->name2)
-		{
-			ego_item_type *e_ptr = &e_info[o_ptr->name2];
-
-			/* Obvious flags (pval) */
-			(*f1) |= (e_ptr->flags1 & (TR1_PVAL_MASK));
-			(*f3) |= (e_ptr->flags3 & (TR3_IGNORE_MASK));
-		}
-
-		/* Randarts */
-		if (o_ptr->name3)
-		{
-			randart_type *x_ptr = &x_info[o_ptr->name3];
-
-			/* Obvious flags (pval) */
-			(*f1) |= (x_ptr->flags1 & (TR1_PVAL_MASK));
-			(*f3) |= (x_ptr->flags3 & (TR3_IGNORE_MASK));
-		}
-
 		(*f1) |= (o_ptr->flags1 & (TR1_PVAL_MASK));
 		(*f3) |= (o_ptr->flags3 & (TR3_IGNORE_MASK));
 	}
 
 	return;
 }
-
 
 
 
@@ -2290,14 +2248,14 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 	/* Collect the executes */
 	vn = 0;
-	if (f2 & (TR2_BRAND_ACID)) vp[vn++] = "acid";
-	if (f2 & (TR2_BRAND_ELEC)) vp[vn++] = "electricity";
-	if (f2 & (TR2_BRAND_FIRE)) vp[vn++] = "fire";
-	if (f2 & (TR2_BRAND_COLD)) vp[vn++] = "cold";
-	if (f2 & (TR2_BRAND_POIS)) vp[vn++] = "poison";
-	if (f2 & (TR2_BRAND_NETHER)) vp[vn++] = "nether";
-	if (f2 & (TR2_BRAND_CHAOS)) vp[vn++] = "chaos";
-	if (f2 & (TR2_BRAND_NEXUS)) vp[vn++] = "nexus";
+	if (f2 & (TR1_BRAND_ACID)) vp[vn++] = "acid";
+	if (f2 & (TR1_BRAND_ELEC)) vp[vn++] = "electricity";
+	if (f2 & (TR1_BRAND_FIRE)) vp[vn++] = "fire";
+	if (f2 & (TR1_BRAND_COLD)) vp[vn++] = "cold";
+	if (f2 & (TR1_BRAND_POIS)) vp[vn++] = "poison";
+	if (f2 & (TR1_BRAND_NETHER)) vp[vn++] = "nether";
+	if (f2 & (TR1_BRAND_CHAOS)) vp[vn++] = "chaos";
+	if (f2 & (TR1_BRAND_NEXUS)) vp[vn++] = "nexus";
 
 	/* Describe */
 	if (vn)
@@ -2329,6 +2287,34 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	obj_info_resists(resists, FALSE, temp);
 	text_out(temp);
 
+	/* Collect immunities */
+	vn = 0;
+	if (f3 & (TR3_IMMUNITY_BLIND)) vp[vn++] = "blinding";
+	if (f3 & (TR3_IMMUNITY_FEAR))  vp[vn++] = "fear";
+	if (f3 & (TR3_IMMUNITY_CONF))  vp[vn++] = "confusion";
+
+	/* Describe */
+	if (vn)
+	{
+		int i;
+
+      text_out("It makes you immune to the effects");
+
+      for (i = 0; i < vn; i++)
+      {
+         /* Intro */
+         if (i == 0) text_out(" of ");
+         else if (i < (vn - 1)) text_out(", ");
+         else text_out(" and ");
+
+         /* Dump it */
+         text_out(vp[i]);
+      }
+
+      text_out(".  ");
+      abilities = TRUE;
+	}
+
 	/* Collect strange effects */
 	vn = 0;
 	if (f3 & (TR3_IMPACT)) vp[vn++] = "earthquakes";
@@ -2337,7 +2323,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	if (f3 & (TR3_AGGRAVATE)) vp[vn++] = "an aura of aggravation";
 
 	/* Describe */
-	if (vn > 0)
+	if (vn)
 	{
 		int n;
 
@@ -2359,9 +2345,6 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	}
 
 	/* Describe other (weird) things */
-
-	if (f2 & (TR2_NO_BLIND)) text_out("It grants you immunity to blindness.  ");
-	if (f2 & (TR2_NO_DISENCHANT)) text_out("It cannot be disenchanted.  ");
 	if (f3 & (TR3_SLOW_DIGEST)) text_out("It slows your metabolism.  ");
 	if (f3 & (TR3_FEATHER)) text_out("It induces feather falling.  ");
 	if (f3 & (TR3_REGEN)) text_out("It speeds your regenerative powers.  ");
@@ -2393,29 +2376,25 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 	/* Count the "ignore"s */
 	vn = 0;
-	if (f1 & (TR3_IGNORE_ACID)) vp[vn++] = "acid";
-	if (f1 & (TR3_IGNORE_ELEC)) vp[vn++] = "lightning";
-	if (f1 & (TR3_IGNORE_FIRE)) vp[vn++] = "fire";
-	if (f1 & (TR3_IGNORE_COLD)) vp[vn++] = "cold";
+	if (f3 & (TR3_IGNORE_ACID)) vp[vn++] = "acid";
+	if (f3 & (TR3_IGNORE_ELEC)) vp[vn++] = "lightning";
+	if (f3 & (TR3_IGNORE_FIRE)) vp[vn++] = "fire";
+	if (f3 & (TR3_IGNORE_COLD)) vp[vn++] = "cold";
+	if (f3 & (TR3_IGNORE_DISEN)) vp[vn++] = "disenchantment";
 
 	/* Describe */
+	if (vn == 5)
+		text_out("It cannot be harmed by the elements and cannot be disenchanted.");
 	if (vn)
 	{
 		int n;
 
-		text_out("It cannot be harmed ");
+		text_out("It cannot be harmed");
 
-
-		/* Simplify things */
-		if (vn == 3)
-		{
-			text_out("by the elements.  ");
-		}
-
-		else for (n = 0; n < vn; n++)
+		for (n = 0; n < vn; n++)
 		{
 			/* Connectives */
-			if (n == 0) text_out("by ");
+			if (n == 0) text_out(" by ");
 			else if (n < (vn - 1)) text_out(", ");
 			else text_out(" and ");
 

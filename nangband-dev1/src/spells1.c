@@ -1213,7 +1213,7 @@ bool apply_disenchant(int mode)
 	object_flags(o_ptr, &f1, &f2, &f3);
 
 	/* Can it be disenchanted? */
-	if (f2 & (TR2_NO_DISENCHANT)) return (FALSE);
+	if (f3 & (TR3_IGNORE_DISEN)) return (FALSE);
 
 	/* Nothing to disenchant */
 	if ((o_ptr->to_h <= 0) && (o_ptr->to_d <= 0) && (o_ptr->to_a <= 0))
@@ -3310,11 +3310,8 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ, bool fadin
 		/* Standard damage -- also poisons player */
 		case GF_POIS:
 		{
-			int resist_percent;
-
 			/* Apply the resistance */
-			resist_percent = resist_player_current(RES_POIS);
-			dam = resist_apply(resist_percent, dam);
+			dam = resist_apply(resist_player_current(RES_POIS), dam);
 
 			/* Print a message */
 			if (fuzzy) msg_print("You are hit by poison!");
@@ -3323,7 +3320,7 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ, bool fadin
 			take_hit(dam, killer);
 
 			/* Get poisoned if not resistant */
-			if (!resist_percent)
+			if (!resist_check(RES_POIS))
 			{
 				(void)set_poisoned(p_ptr->poisoned + rand_int(dam) + 10);
 			}
@@ -3368,6 +3365,7 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ, bool fadin
 				int k = (randint((dam > 40) ? 35 : (dam * 3 / 4 + 5)));
 				(void)set_stun(p_ptr->stun + k);
 			}
+
 			break;
 		}
 
@@ -3408,7 +3406,7 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ, bool fadin
 			{
 				(void)set_stun(p_ptr->stun + randint(40));
 			}
-			if (!resist_check(RES_CONF))
+			if (!p_ptr->immune_conf)
 			{
 				(void)set_confused(p_ptr->confused + randint(5) + 5);
 			}
@@ -3423,7 +3421,7 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ, bool fadin
 
 			if (fuzzy) msg_print("You are hit by something!");
 
-			if (!resist_check(RES_CONF))
+			if (!p_ptr->immune_conf)
 			{
 				(void)set_confused(p_ptr->confused + rand_int(20) + 10);
 			}
@@ -3490,11 +3488,11 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ, bool fadin
 		case GF_CONFUSION:
 		{
 			/* Apply the resist */
-			resist_apply(resist_player_current(RES_CONF), dam);
+			resist_apply(resist_player_current(RES_CHAOS), dam);
 
 			if (fuzzy) msg_print("You are hit by something!");
 
-			if (!resist_check(RES_CONF))
+			if (!p_ptr->immune_conf)
 			{
 				(void)set_confused(p_ptr->confused + randint(20) + 10);
 			}
@@ -3522,12 +3520,10 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ, bool fadin
 
 			if (fuzzy) msg_print("You are hit by something strange!");
 
-			if (!resist_check(RES_CONF))
-			{
-				apply_nexus(m_ptr);
-			}
+			if (!resist_check(RES_NEXUS)) apply_nexus(m_ptr);
 
  			take_hit(dam, killer);
+
 			break;
 		}
 
@@ -3563,11 +3559,8 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ, bool fadin
 		/* Dark -- blinding */
 		case GF_DARK:
 		{
-			int resist_percent;
-
 			/* Apply the resistance */
-			resist_percent = resist_player_current(RES_DARK);
-			dam = resist_apply(resist_percent, dam);
+			dam = resist_apply(resist_player_current(RES_DARK), dam);
 
 			/* Print a message */
 			if (fuzzy) msg_print("You feel dark forces rush over you!");
@@ -3577,7 +3570,7 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ, bool fadin
 
 			/* Get poisoned if not resistant */
 			if (blind) msg_print("You feel the veil that covers your vision getting stronger.");
-			if (!p_ptr->resist_blind)
+			if (!p_ptr->immune_blind)
 			{
 				(void)set_blind(p_ptr->blind + randint(5) + 2);
 			}

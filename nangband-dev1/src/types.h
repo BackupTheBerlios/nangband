@@ -69,7 +69,6 @@ typedef struct feature_type feature_type;
 typedef struct object_kind object_kind;
 typedef struct object_type object_type;
 typedef struct artifact_type artifact_type;
-typedef struct randart_type randart_type;
 typedef struct ego_item_type ego_item_type;
 typedef struct monster_blow monster_blow;
 typedef struct monster_race monster_race;
@@ -110,24 +109,23 @@ struct maxima
 	u32b fake_text_size;
 	u32b fake_name_size;
 
-	u16b f_max;		/* Max size for "f_info[]" */
-	u16b k_max;		/* Max size for "k_info[]" */
-	u16b a_max;		/* Max size for "a_info[]" */
-	u16b e_max;		/* Max size for "e_info[]" */
-	u16b r_max;		/* Max size for "r_info[]" */
-	u16b v_max;		/* Max size for "v_info[]" */
-	u16b p_max;		/* Max size for "p_info[]" */
-	u16b h_max;		/* Max size for "h_info[]" */
-	u16b b_max;		/* Max size per element of "b_info[]" */
-	u16b c_max;		/* Max size for "c_info[]" */
-	u16b flavor_max;        /* Max size for "flavor_info[]" */
-	u16b randart_max;       /* Max randarts */
+	u16b f_max;        /* Max size for "f_info[]" */
+	u16b k_max;        /* Max size for "k_info[]" */
+	u16b a_max;        /* Max size for "a_info[]" */
+	u16b e_max;        /* Max size for "e_info[]" */
+	u16b r_max;        /* Max size for "r_info[]" */
+	u16b v_max;        /* Max size for "v_info[]" */
+	u16b p_max;        /* Max size for "p_info[]" */
+	u16b h_max;        /* Max size for "h_info[]" */
+	u16b b_max;        /* Max size per element of "b_info[]" */
+	u16b c_max;        /* Max size for "c_info[]" */
+	u16b flavor_max;   /* Max size for "flavor_info[]" */
 
-	u16b o_max;		/* Max size for "o_list[]" */
-	u16b m_max;		/* Max size for "m_list[]" */
+	u16b o_max;        /* Max size for "o_list[]" */
+	u16b m_max;        /* Max size for "m_list[]" */
 
-	int mon_metaver; /* Meta-version for monster data */
-	int obj_metaver; /* Meta-version for object data */
+	int mon_metaver;   /* Meta-version for monster data */
+	int obj_metaver;   /* Meta-version for object data */
 };
 
 
@@ -263,29 +261,6 @@ struct artifact_type
 	u16b randtime;                    /* Activation time dice */
 
 	s32b cost;                        /* Artifact "cost" */
-};
-
-/*
- * Information about "random artifacts".
- *
- * This holds much less data than artifact_type, because much
- * of the dats is stored in the object itself.
- */
-struct randart_type
-{
-	char name[20];               /* Randart name */
-
-	s32b cost;                   /* "Cost" */
-
-	u32b flags1, flags2, flags3; /* Flags; sets 1-3 */
-
-	sbyte resists[RES_MAX];      /* Item resists */
-
-	byte level;                  /* Randart level */
-
-	byte activation;             /* Activation */
-	u16b time;                   /* Randart charge time */
-	u16b randtime;               /* Randart charge time dice */
 };
 
 
@@ -521,20 +496,27 @@ struct object_type
 
 	s16b timeout;      /* Timeout Counter */
 
-	byte ident;			/* Special flags */
-	byte marked;		/* Object is marked */
+	byte ident;        /* Special flags */
+	byte marked;       /* Object is marked */
 
-	u16b note;        /* Inscription index */
-	u32b name_pre;    /* Index in string table for name "prefix" */
-	u32b name_suf;    /* Index in string table for name "suffix" */
+	u16b note;         /* Inscription index */
+	u32b name_pre;     /* Index in string table for name "prefix" */
+	u32b name_suf;     /* Index in string table for name "suffix" */
 
-	s16b next_o_idx;	/* Next object in stack (if any) */
-	s16b held_m_idx;	/* Monster holding us (if any) */
+	s16b next_o_idx;   /* Next object in stack (if any) */
+	s16b held_m_idx;   /* Monster holding us (if any) */
 
-	u32b flags1, flags2, flags3;  /* Flags */
+	u32b flags1,       /* Object flags */
+	     flags2,
+	     flags3;
 
-	sbyte resists[RES_MAX],       /* Extra resistances */
-	      stats[A_MAX];           /* Stat bonuses */
+	int level;         /* How hard it is to activate */
+	byte activation;   /* Activation */
+	u16b time;         /* Charge time */
+	u16b randtime;     /* Charge time dice */
+
+	sbyte resists[RES_MAX],  /* Extra resistances */
+	      stats[A_MAX];      /* Stat bonuses */
 };
 
 
@@ -1037,7 +1019,9 @@ struct player_type
 	s16b stat_add[A_MAX];	/* Equipment stat bonuses */
 	s16b stat_ind[A_MAX];	/* Indexes into stat tables */
 
-	bool resist_blind;	/* Resist blindness */
+	bool immune_blind;      /* Immunity to blinding */
+	bool immune_fear;       /* Immunity to fear */
+	bool immune_conf;       /* Immunity to confusion */
 
 	bool sustain_str;	/* Keep strength */
 	bool sustain_int;	/* Keep intelligence */

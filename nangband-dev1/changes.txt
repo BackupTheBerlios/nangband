@@ -1,6 +1,94 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+Please scroll down for the latest changes.
+
+Nangband timeplan for "No Control" (alpha one) - leave all changelog
+==============================================   entries *after* this.
+
+Subtitle: I can't believe I've no control.  It's all deranged.  Deranged.
+
+08/08/2002
+	Clean up some of the info files and change file headers.
+		- Completed.
+
+09/08/2002
+	Ego-items should have resists.
+		- Completed.
+	Lots of code cleanup to make the following easier.
+		- Completed.
+
+10/08/2002
+	Change the character information screens (to something which represents the
+		information better)
+		- Not on target.
+		- This is a small job, basically requiring reorganization of the info
+		  screen to include resist data, and possibly more information if it'll
+		  fit.
+	Running code must be useable by now.
+		- Not on target.
+		- Anyone wishing to improve may do so; I'll try to do this ASAP!
+
+11/08/2002
+	New town code so it looks nicer; also new terrain features (trees,
+		firesprings, lava, etc.)
+		- Not on target.
+		- Gah!  Another one not on target.  This is a case of making a
+		  nice-looking town.
+
+12/08/2002
+	Externalise stores to "edit files".
+	Make Cubragol have fire brand and not activate for fire branding.
+
+13/08/2002
+	Remove crossbows and their ammo.
+	Add more types of ammo for bows and slings.
+
+14/08/2002
+	Finish off the above if not already done.
+	Add light/dark flags to the monsters.
+
+15/08/2002  }
+16/08/2002  }
+17/08/2002  }	I'm away now; people playtest these changes,
+18/08/2002  }	and fix anything which is wrong, please!
+19/08/2002  }
+20/08/2002  }
+
+21/08/2002  }	Change the damage dice and weights of weapons.
+22/08/2002  }	Remove some weapons, add others.
+	Playtest these changes.
+	Racial/class powers interface.
+
+23/08/2002
+	EVENT: Nangband "No Control" Alpha One released.
+
+
+CVS UNBROKEN
+============
+
+Right.
+
+CVS is now unbroken.  Earlier savefiles are incompatible.  Release schedule
+is now *three* days off!  I'm getting quite worried about this; I will
+put it here for people to see.
+
+If you want more detail on any item, I will happily add it to this file,
+just add a note to that effect.  If you feel like doing any of these,
+please do.  I really want the alpha out on time!
+
+NO_BLIND/NO_DISENCHANT are now IMMUNITY_BLIND/IGNORE_DISEN, respectively.
+RES_FEAR/RES_CONF[U] are now NO_CONF/NO_FEAR.
+
+Rearranged the flags ever so slightly; this should be the last in a
+while, at least until I change brands and slays to be percentile,
+and/or change the resist system (again!).
+
+Nangband CVS now works again, this is good.
+
+andy/takka.
+
+
 CVS BROKEN
 ==========
 

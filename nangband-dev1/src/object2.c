@@ -430,21 +430,6 @@ void wipe_o_list(void)
 			}
 		}
 
-		/* Clear randarts */
-		if (o_ptr->name3)
-		{
-			if (p_ptr->wizard)
-			{
-				char o_name[80];
-
-				object_desc_store(o_name, o_ptr, FALSE, 0);
-				msg_format("Removing a randart (%s).", o_name);
-			}
-
-			/* Hack - first byte of name indicates used-ness */
-			x_info[o_ptr->name3].name[0] = 0;
-		}
-
 		/* Monster */
 		if (o_ptr->held_m_idx)
 		{
@@ -467,6 +452,10 @@ void wipe_o_list(void)
 			/* Hack -- see above */
 			cave_o_idx[y][x] = 0;
 		}
+
+		/* Remove the names, if any */
+		if (o_ptr->name_suf) strtable_remove(o_ptr->name_suf);
+		if (o_ptr->name_pre) strtable_remove(o_ptr->name_pre);
 
 		/* Wipe the object */
 		(void)WIPE(o_ptr, object_type);
@@ -899,18 +888,6 @@ static s32b object_value_real(const object_type *o_ptr)
 		value = a_ptr->cost;
 	}
 
-	/* Randart */
-	else if (o_ptr->name3)
-	{
-		randart_type *x_ptr = &x_info[o_ptr->name3];
-
-		/* Hack -- "worthless" artifacts */
-		if (!x_ptr->cost) return (0L);
-
-		/* Hack -- Use the artifact cost instead */
-		value = x_ptr->cost;
-	}
-
 	/* Ego-Item */
 	else if (o_ptr->name2)
 	{
@@ -924,7 +901,7 @@ static s32b object_value_real(const object_type *o_ptr)
 	}
 
 	/* Hack -- "worthless"  */
-	if (!o_ptr->cost) return (0L);
+	if ((!o_ptr->cost) && (o_ptr->name3)) return (0L);
 
 	/* Increase our value count */
 	value += o_ptr->cost;
@@ -2950,17 +2927,8 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, 
 		/* Add the "xtra" flags */
 		if (e_ptr->xtra) object_add_xtra(o_ptr, e_ptr->xtra);
 
-		/* Copy the prefix name */
-		o_ptr->name_suf = strtable_add((e_name + e_ptr->name));
-
 		/* Copy the price */
 		o_ptr->cost += e_ptr->cost;
-
-		/* Hack -- acquire "broken" flag */
-		if (!o_ptr->cost) o_ptr->ident |= (IDENT_BROKEN);
-
-		/* Hack -- acquire "cursed" flag */
-		if (o_ptr->flags3 & (TR3_LIGHT_CURSE)) o_ptr->ident |= (IDENT_CURSED);
 
 		/* Apply extra penalties if needed */
 		if (cursed_p(o_ptr) || broken_p(o_ptr))
@@ -3021,37 +2989,10 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, 
 
 		/* Cheat -- describe the item */
 		if (cheat_peek) object_mention(o_ptr);
-
-		/* Done */
-		return;
-	}
- 
-	/* Hack -- analyze artifacts */
-	if (o_ptr->name3)
-	{
-		randart_type *x_ptr = &x_info[o_ptr->name3];
-
-		/* Hack -- extract the "broken" flag */
-		if (!x_ptr->cost) o_ptr->ident |= (IDENT_BROKEN);
-
-		/* Hack -- extract the "cursed" flag */
-		if (x_ptr->flags3 & (TR3_LIGHT_CURSE)) o_ptr->ident |= (IDENT_CURSED);
-
-		/* Mega-Hack -- increase the rating */
-		rating += 10;
-
-		/* Mega-Hack -- increase the rating again */
-		if (x_ptr->cost > 50000L) rating += 10;
-
-		/* Cheat -- peek at the item */
-		if (cheat_peek) object_mention(o_ptr);
-
-		/* Done */
-		return;
 	}
 
 	/* Examine real objects */
-	if (o_ptr->k_idx)
+	else if (o_ptr->k_idx)
 	{
 		object_kind *k_ptr = &k_info[o_ptr->k_idx];
 
@@ -3078,6 +3019,19 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, 
 
 		/* Hack -- acquire "cursed" flag */
 		if (k_ptr->flags3 & (TR3_LIGHT_CURSE)) o_ptr->ident |= (IDENT_CURSED);
+	}
+
+	/* Hack -- acquire "broken" flag */
+	if ((!o_ptr->cost) && (o_ptr->name3)) o_ptr->ident |= (IDENT_BROKEN);
+
+	/* Hack -- acquire "cursed" flag */
+	if (o_ptr->flags3 & (TR3_LIGHT_CURSE)) o_ptr->ident |= (IDENT_CURSED);
+
+	if (o_ptr->name3)
+	{
+		rating += 10;
+		if (o_ptr->cost > 50000L) rating += 10;
+		if (cheat_peek) object_mention(o_ptr);
 	}
 
 	/* We are done. */

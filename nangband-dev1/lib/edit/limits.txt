@@ -53,9 +53,6 @@ M:O:512
 # Maximum number of monsters on the level
 M:M:1024
 
-# Maxiumum randarts
-M:X:256
-
 #
 # Array sizes (in bytes) for some initialization stuff
 #

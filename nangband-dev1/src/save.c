@@ -504,33 +504,8 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	/* Identification info */
 	savefile_do_byte(&o_ptr->ident, type);
 
-	/* "marked" ( ??? ) */
+	/* "Marked" */
 	savefile_do_byte(&o_ptr->marked, type);
-
-	/* Do ranadart info if appropriate */
-	if (o_ptr->name3)
-	{
-		int i;
-		randart_type *x_ptr = &x_info[o_ptr->name3];
-
-		/* Do the name */
-		savefile_do_string(x_ptr->name, type);
-
-		savefile_do_s32b(&x_ptr->cost, type);
-
-		savefile_do_u32b(&x_ptr->flags1, type);
-		savefile_do_u32b(&x_ptr->flags2, type);
-		savefile_do_u32b(&x_ptr->flags3, type);
-
-		for (i = 0; i < RES_MAX; i++)
-			savefile_do_sbyte(&x_ptr->resists[i], type);
-
-		savefile_do_byte(&x_ptr->level, type);
-
-		savefile_do_byte(&x_ptr->activation, type);
-		savefile_do_u16b(&x_ptr->time, type);
-		savefile_do_u16b(&x_ptr->randtime, type);
-	}
 
 	if (o_ptr->name_suf && type == PUT) temp = TRUE;
 	else if (type == PUT) temp = FALSE;
@@ -567,6 +542,10 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	savefile_do_u32b(&o_ptr->flags1, type);
 	savefile_do_u32b(&o_ptr->flags2, type);
 	savefile_do_u32b(&o_ptr->flags3, type);
+
+	savefile_do_byte(&o_ptr->activation, type);
+	savefile_do_u16b(&o_ptr->time, type);
+	savefile_do_u16b(&o_ptr->randtime, type);
 
 	for (i = 0; i < RES_MAX; i++)
 		savefile_do_sbyte(&o_ptr->resists[i], type);
@@ -658,15 +637,6 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 
 		/* Verify that ego-item */
 		if (!e_ptr->name) o_ptr->name2 = 0;
-	}
-
-	/* Paranoia */
-	if (o_ptr->name3)
-	{
-		randart_type *x_ptr = &x_info[o_ptr->name3];
-
-		/* Verify the randart */
-		if (!x_ptr->name[0]) o_ptr->name3 = 0;
 	}
 
 	/* Get the standard fields */

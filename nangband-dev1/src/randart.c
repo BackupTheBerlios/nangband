@@ -5,7 +5,7 @@
  *
  * Authors: Greg Wooledge, Ross Morgan-Linial, Andrew Sidwell.
  *
- * This file is dual-licenced under both the Angband and GPL licences.
+ * For licencing terms, please examine angband.h.
  */
 
 #include "angband.h"
@@ -629,7 +629,7 @@ static cptr names_list =
 
 /* Add a resist to an item */
 #define RANDART_RESIST(x_ptr, resist, min, max) \
-	(x_ptr->resists[resist] = (rand_range(min, max)))
+	(o_ptr->resists[resist] = (rand_range(min, max)))
 
 static unsigned short lprobs[S_WORD+1][S_WORD+1][S_WORD+1];
 static unsigned short ltotal[S_WORD+1][S_WORD+1];
@@ -764,7 +764,7 @@ static void name_randart(object_type *o_ptr)
 		sprintf(buffer, "of %s", word);
 
 	/* "Make" the string */
-	o_ptr->name_pre = strtable_add(buffer);
+	o_ptr->name_suf = strtable_add(buffer);
 
 	/* We are done. */
 	return;
@@ -800,7 +800,6 @@ static s32b pval_table[9] = {0, 1, 2, 4, 6, 8, 10, 13, 10000};
  */
 s32b artifact_power(object_type *o_ptr)
 {
-	const randart_type *x_ptr = &x_info[o_ptr->name3];
 	object_kind *k_ptr;
 
 	s32b p = 0, b;
@@ -826,7 +825,7 @@ s32b artifact_power(object_type *o_ptr)
 			mult = bow_multiplier(o_ptr->sval);
 
 			/* Get bonuses for might */
-			if (x_ptr->flags1 & TR1_MIGHT)
+			if (o_ptr->flags1 & TR1_MIGHT)
 			{
 				if (o_ptr->pval > 3)
 				{
@@ -839,7 +838,7 @@ s32b artifact_power(object_type *o_ptr)
 
 			p *= mult;
 
-			if (x_ptr->flags1 & TR1_SHOTS)
+			if (o_ptr->flags1 & TR1_SHOTS)
 			{
 				if (o_ptr->pval > 3)
 					p += 20000;	/* inhibit */
@@ -865,27 +864,27 @@ s32b artifact_power(object_type *o_ptr)
 
 			b = p;
 
-			if (x_ptr->flags1 & TR1_SLAY_EVIL)   p += b / 4;	/* + 50% dam, rarity factor 2 */
-			if (x_ptr->flags1 & TR1_KILL_DRAGON) p += b / 3;	/* +200% dam, rarity factor 6 */
-			if (x_ptr->flags1 & TR1_KILL_UNDEAD) p += b / 3;	/* +200% dam, rarity factor 6 */
-			if (x_ptr->flags1 & TR1_KILL_DEMON)  p += b / 3;	/* +200% dam, rarity factor 6 */
-			if (x_ptr->flags1 & TR1_SLAY_ANIMAL) p += b / 6;	/* + 50% dam, rarity factor 3 */
-			if (x_ptr->flags1 & TR1_SLAY_UNDEAD) p += b / 4;	/* +100% dam, rarity factor 4 */
-			if (x_ptr->flags1 & TR1_SLAY_DRAGON) p += b / 6;	/* +100% dam, rarity factor 6 */
-			if (x_ptr->flags1 & TR1_SLAY_DEMON)  p += b / 6;	/* +100% dam, rarity factor 6 */
-			if (x_ptr->flags1 & TR1_SLAY_TROLL)  p += b / 6;	/* +100% dam, rarity factor 6 */
-			if (x_ptr->flags1 & TR1_SLAY_ORC)    p += b / 6;	/* +100% dam, rarity factor 6 */
-			if (x_ptr->flags1 & TR1_SLAY_GIANT)  p += b / 9;	/* +100% dam, rarity factor 9 */
+			if (o_ptr->flags1 & TR1_SLAY_EVIL)   p += b / 4;	/* + 50% dam, rarity factor 2 */
+			if (o_ptr->flags1 & TR1_KILL_DRAGON) p += b / 3;	/* +200% dam, rarity factor 6 */
+			if (o_ptr->flags1 & TR1_KILL_UNDEAD) p += b / 3;	/* +200% dam, rarity factor 6 */
+			if (o_ptr->flags1 & TR1_KILL_DEMON)  p += b / 3;	/* +200% dam, rarity factor 6 */
+			if (o_ptr->flags1 & TR1_SLAY_ANIMAL) p += b / 6;	/* + 50% dam, rarity factor 3 */
+			if (o_ptr->flags1 & TR1_SLAY_UNDEAD) p += b / 4;	/* +100% dam, rarity factor 4 */
+			if (o_ptr->flags1 & TR1_SLAY_DRAGON) p += b / 6;	/* +100% dam, rarity factor 6 */
+			if (o_ptr->flags1 & TR1_SLAY_DEMON)  p += b / 6;	/* +100% dam, rarity factor 6 */
+			if (o_ptr->flags1 & TR1_SLAY_TROLL)  p += b / 6;	/* +100% dam, rarity factor 6 */
+			if (o_ptr->flags1 & TR1_SLAY_ORC)    p += b / 6;	/* +100% dam, rarity factor 6 */
+			if (o_ptr->flags1 & TR1_SLAY_GIANT)  p += b / 9;	/* +100% dam, rarity factor 9 */
 
-			if (x_ptr->flags2 & TR2_BRAND_NETHER) p += b / 2;	/* + 50% dam, rarity factor 1 */
-			if (x_ptr->flags2 & TR2_BRAND_NEXUS)  p += b / 2;	/* + 50% dam, rarity factor 1 */
-			if (x_ptr->flags2 & TR2_BRAND_CHAOS)  p += b / 2;	/* + 50% dam, rarity factor 1 */
-			if (x_ptr->flags2 & TR2_BRAND_ACID)   p += b / 3;	/* + 50% dam, rarity factor 1.5 */
-			if (x_ptr->flags2 & TR2_BRAND_ELEC)   p += b / 4;	/* + 50% dam, rarity factor 2 */
-			if (x_ptr->flags2 & TR2_BRAND_FIRE)   p += b / 5;	/* + 50% dam, rarity factor 2.5 */
-			if (x_ptr->flags2 & TR2_BRAND_COLD)   p += b / 4;	/* + 50% dam, rarity factor 2 */
+			if (o_ptr->flags1 & TR1_BRAND_NETHER) p += b / 2;	/* + 50% dam, rarity factor 1 */
+			if (o_ptr->flags1 & TR1_BRAND_NEXUS)  p += b / 2;	/* + 50% dam, rarity factor 1 */
+			if (o_ptr->flags1 & TR1_BRAND_CHAOS)  p += b / 2;	/* + 50% dam, rarity factor 1 */
+			if (o_ptr->flags1 & TR1_BRAND_ACID)   p += b / 3;	/* + 50% dam, rarity factor 1.5 */
+			if (o_ptr->flags1 & TR1_BRAND_ELEC)   p += b / 4;	/* + 50% dam, rarity factor 2 */
+			if (o_ptr->flags1 & TR1_BRAND_FIRE)   p += b / 5;	/* + 50% dam, rarity factor 2.5 */
+			if (o_ptr->flags1 & TR1_BRAND_COLD)   p += b / 4;	/* + 50% dam, rarity factor 2 */
 
-			if (x_ptr->flags1 & TR1_BLOWS)
+			if (o_ptr->flags1 & TR1_BLOWS)
 			{
 				if (o_ptr->pval > 3)
 					p += 20000;	/* inhibit */
@@ -893,7 +892,7 @@ s32b artifact_power(object_type *o_ptr)
 					p = (p * 6) / (4 - o_ptr->pval);
 			}
 
-			if ((x_ptr->flags1 & TR1_TUNNEL) &&
+			if ((o_ptr->flags1 & TR1_TUNNEL) &&
 			    (o_ptr->tval != TV_DIGGING))
 				p += o_ptr->pval * 3;
 
@@ -958,18 +957,18 @@ s32b artifact_power(object_type *o_ptr)
 	/* Use the pval ... */
 	if (o_ptr->pval > 0)
 	{
-		if (x_ptr->flags1 & TR1_STEALTH) p += pval_table[((o_ptr->pval > 8) ? 8 : o_ptr->pval)];
+		if (o_ptr->flags1 & TR1_STEALTH) p += pval_table[((o_ptr->pval > 8) ? 8 : o_ptr->pval)];
 	}
 	else
 	{
-		if ((o_ptr->pval < 0) && (x_ptr->flags1 & TR1_STEALTH)) p += o_ptr->pval;
+		if ((o_ptr->pval < 0) && (o_ptr->flags1 & TR1_STEALTH)) p += o_ptr->pval;
 	}
 
 	/* Apply nfravision bonuses */
-	if (x_ptr->flags1 & TR1_INFRA) p += (o_ptr->pval + sign(o_ptr->pval));
+	if (o_ptr->flags1 & TR1_INFRA) p += (o_ptr->pval + sign(o_ptr->pval));
 
 	/* Apply speed bonuses */
-	if (x_ptr->flags1 & TR1_SPEED)
+	if (o_ptr->flags1 & TR1_SPEED)
 	{
 		p += 2 * o_ptr->pval;
 
@@ -977,73 +976,66 @@ s32b artifact_power(object_type *o_ptr)
 	}
 
 	/* Apply sustain bonuses */
-	if (x_ptr->flags2 & TR2_SUST_STR) p += 3;
-	if (x_ptr->flags2 & TR2_SUST_INT) p += 2;
-	if (x_ptr->flags2 & TR2_SUST_WIS) p += 2;
-	if (x_ptr->flags2 & TR2_SUST_DEX) p += 2;
-	if (x_ptr->flags2 & TR2_SUST_CON) p += 2;
-	if (x_ptr->flags2 & TR2_SUST_CHR) p += 1;
+	if (o_ptr->flags2 & TR2_SUST_STR) p += 3;
+	if (o_ptr->flags2 & TR2_SUST_INT) p += 2;
+	if (o_ptr->flags2 & TR2_SUST_WIS) p += 2;
+	if (o_ptr->flags2 & TR2_SUST_DEX) p += 2;
+	if (o_ptr->flags2 & TR2_SUST_CON) p += 2;
+	if (o_ptr->flags2 & TR2_SUST_CHR) p += 1;
 
 	/* Do the resists */
 	for (i = 0; i < RES_MAX; i++)
 	{
-		int amount = (x_ptr->resists[i] / 15);
+		int amount = (o_ptr->resists[i] / 15);
 
 		/* Reward high powers */
-		if (x_ptr->resists[i] >= 80) amount += 10;
-		if (x_ptr->resists[i] >= 90) amount += 10;
+		if (o_ptr->resists[i] >= 80) amount += 10;
+		if (o_ptr->resists[i] >= 90) amount += 10;
 
 		/* Increase the power */
 		p += amount;
 	}
 
 	/* Decide on power levels for the resists */
-	if (x_ptr->resists[RES_ACID] >= 100) p += 20;
-	else if (x_ptr->resists[RES_ACID] >= 50) p += 10;
-	else if (x_ptr->resists[RES_ACID] >= 10) p += 3;
+	if (o_ptr->resists[RES_ACID] >= 100) p += 20;
+	else if (o_ptr->resists[RES_ACID] >= 50) p += 10;
+	else if (o_ptr->resists[RES_ACID] >= 10) p += 3;
 
-	if (x_ptr->resists[RES_ELEC] >= 100) p += 24;
-	else if (x_ptr->resists[RES_ELEC] >= 50) p += 12;
-	else if (x_ptr->resists[RES_ELEC] >= 10) p += 4;
+	if (o_ptr->resists[RES_ELEC] >= 100) p += 24;
+	else if (o_ptr->resists[RES_ELEC] >= 50) p += 12;
+	else if (o_ptr->resists[RES_ELEC] >= 10) p += 4;
 
-	if (x_ptr->resists[RES_FIRE] >= 100) p += 36;
-	else if (x_ptr->resists[RES_FIRE] >= 50) p += 18;
-	else if (x_ptr->resists[RES_FIRE] >= 10) p += 5;
+	if (o_ptr->resists[RES_FIRE] >= 100) p += 36;
+	else if (o_ptr->resists[RES_FIRE] >= 50) p += 18;
+	else if (o_ptr->resists[RES_FIRE] >= 10) p += 5;
 
-	if (x_ptr->resists[RES_COLD] >= 100) p += 24;
-	else if (x_ptr->resists[RES_COLD] >= 50) p += 12;
-	else if (x_ptr->resists[RES_COLD] >= 10) p += 4;
+	if (o_ptr->resists[RES_COLD] >= 100) p += 24;
+	else if (o_ptr->resists[RES_COLD] >= 50) p += 12;
+	else if (o_ptr->resists[RES_COLD] >= 10) p += 4;
 
-	if (x_ptr->resists[RES_DARK] >= 100) p += 16;
-	else if (x_ptr->resists[RES_DARK] >= 50) p += 8;
+	if (o_ptr->resists[RES_DARK] >= 100) p += 16;
+	else if (o_ptr->resists[RES_DARK] >= 50) p += 8;
 
-/*	if (x_ptr->flags2 & TR2_RES_CONFU) p += 8;
-	if (x_ptr->flags2 & TR2_RES_SOUND) p += 10;
-	if (x_ptr->flags2 & TR2_RES_SHARD) p += 8;
-	if (x_ptr->flags2 & TR2_RES_NETHR) p += 12;
-	if (x_ptr->flags2 & TR2_RES_NEXUS) p += 10;
-	if (x_ptr->flags2 & TR2_RES_CHAOS) p += 12; */
-	if (x_ptr->flags2 & TR2_NO_BLIND) p += 10;
-	if (x_ptr->flags2 & TR2_NO_DISENCHANT) p += 12;
-	if (x_ptr->flags3 & TR3_FREE_ACT) p += 8;
-	if (x_ptr->flags3 & TR3_HOLD_LIFE) p += 10;
-	if (x_ptr->flags2 & TR2_LIGHT1) p += 3;
-	if (x_ptr->flags2 & TR2_LIGHT2) p += 5;
-	if (x_ptr->flags2 & TR2_LIGHT3) p += 9;
-	if (x_ptr->flags2 & TR2_LIGHT4) p += 15;
+	if (o_ptr->flags3 & TR3_IMMUNITY_BLIND) p += 10;
+	if (o_ptr->flags3 & TR3_IGNORE_DISEN) p += 12;
+	if (o_ptr->flags3 & TR3_FREE_ACT) p += 8;
+	if (o_ptr->flags3 & TR3_HOLD_LIFE) p += 10;
+	if (o_ptr->flags2 & TR2_LIGHT1) p += 3;
+	if (o_ptr->flags2 & TR2_LIGHT2) p += 5;
+	if (o_ptr->flags2 & TR2_LIGHT3) p += 9;
+	if (o_ptr->flags2 & TR2_LIGHT4) p += 15;
 
-	if (x_ptr->flags3 & TR3_FEATHER) p += 1;
-	if (x_ptr->flags3 & TR3_SEE_INVIS) p += 4;
-	if (x_ptr->flags3 & TR3_TELEPATHY) p += 12;
-	if (x_ptr->flags3 & TR3_SLOW_DIGEST) p += 2;
-	if (x_ptr->flags3 & TR3_REGEN) p += 6;
-	if (x_ptr->flags3 & TR3_TELEPORT) p -= 12;
-	if (x_ptr->flags3 & TR3_DRAIN_EXP) p -= 16;
-	if (x_ptr->flags3 & TR3_AGGRAVATE) p -= 8;
-	if (x_ptr->flags3 & TR3_BLESSED) p += 2;
-	if (x_ptr->flags3 & TR3_LIGHT_CURSE) p -= 4;
-	if (x_ptr->flags3 & TR3_HEAVY_CURSE) p -= 12;
-/*	if (x_ptr->flags3 & TR3_PERMA_CURSE) p -= 36; */
+	if (o_ptr->flags3 & TR3_FEATHER) p += 1;
+	if (o_ptr->flags3 & TR3_SEE_INVIS) p += 4;
+	if (o_ptr->flags3 & TR3_TELEPATHY) p += 12;
+	if (o_ptr->flags3 & TR3_SLOW_DIGEST) p += 2;
+	if (o_ptr->flags3 & TR3_REGEN) p += 6;
+	if (o_ptr->flags3 & TR3_TELEPORT) p -= 12;
+	if (o_ptr->flags3 & TR3_DRAIN_EXP) p -= 16;
+	if (o_ptr->flags3 & TR3_AGGRAVATE) p -= 8;
+	if (o_ptr->flags3 & TR3_BLESSED) p += 2;
+	if (o_ptr->flags3 & TR3_LIGHT_CURSE) p -= 4;
+	if (o_ptr->flags3 & TR3_HEAVY_CURSE) p -= 12;
 
 	return (p);
 }
@@ -1101,42 +1093,40 @@ static void do_statbonus(object_type *o_ptr, int i)
  */
 static void remove_contradictory(object_type *o_ptr)
 {
-	randart_type *x_ptr = &x_info[o_ptr->name3];
-
 	/* Aggravation removes stealth */
-	if (x_ptr->flags3 & TR3_AGGRAVATE) x_ptr->flags1 &= ~(TR1_STEALTH);
+	if (o_ptr->flags3 & TR3_AGGRAVATE) o_ptr->flags1 &= ~(TR1_STEALTH);
 
 	/* Prevent negative blows/shots/infravision */
 	if (o_ptr->pval < 0)
 	{
-		x_ptr->flags1 &= ~(TR1_BLOWS);
-		x_ptr->flags1 &= ~(TR1_SHOTS);
-		x_ptr->flags1 &= ~(TR1_INFRA);
+		o_ptr->flags1 &= ~(TR1_BLOWS);
+		o_ptr->flags1 &= ~(TR1_SHOTS);
+		o_ptr->flags1 &= ~(TR1_INFRA);
 	}
 
 	/* If a stat is damaged, no sustains */
-	if (o_ptr->stats[A_STR] < 0) x_ptr->flags2 &= ~(TR2_SUST_STR);
-	if (o_ptr->stats[A_INT] < 0) x_ptr->flags2 &= ~(TR2_SUST_INT);
-	if (o_ptr->stats[A_WIS] < 0) x_ptr->flags2 &= ~(TR2_SUST_WIS);
-	if (o_ptr->stats[A_DEX] < 0) x_ptr->flags2 &= ~(TR2_SUST_DEX);
-	if (o_ptr->stats[A_CON] < 0) x_ptr->flags2 &= ~(TR2_SUST_CON);
-	if (o_ptr->stats[A_CHR] < 0) x_ptr->flags2 &= ~(TR2_SUST_CHR);
+	if (o_ptr->stats[A_STR] < 0) o_ptr->flags2 &= ~(TR2_SUST_STR);
+	if (o_ptr->stats[A_INT] < 0) o_ptr->flags2 &= ~(TR2_SUST_INT);
+	if (o_ptr->stats[A_WIS] < 0) o_ptr->flags2 &= ~(TR2_SUST_WIS);
+	if (o_ptr->stats[A_DEX] < 0) o_ptr->flags2 &= ~(TR2_SUST_DEX);
+	if (o_ptr->stats[A_CON] < 0) o_ptr->flags2 &= ~(TR2_SUST_CON);
+	if (o_ptr->stats[A_CHR] < 0) o_ptr->flags2 &= ~(TR2_SUST_CHR);
 
 	/* Execute removes slay */
-	if (x_ptr->flags1 & TR1_KILL_DRAGON) x_ptr->flags1 &= ~(TR1_SLAY_DRAGON);
-	if (x_ptr->flags1 & TR1_KILL_UNDEAD) x_ptr->flags1 &= ~(TR1_SLAY_UNDEAD);
-	if (x_ptr->flags1 & TR1_KILL_DEMON)  x_ptr->flags1 &= ~(TR1_SLAY_DEMON);
+	if (o_ptr->flags1 & TR1_KILL_DRAGON) o_ptr->flags1 &= ~(TR1_SLAY_DRAGON);
+	if (o_ptr->flags1 & TR1_KILL_UNDEAD) o_ptr->flags1 &= ~(TR1_SLAY_UNDEAD);
+	if (o_ptr->flags1 & TR1_KILL_DEMON)  o_ptr->flags1 &= ~(TR1_SLAY_DEMON);
 
 	/* Draining XP and Holding life are mutually exclusive */
-	if (x_ptr->flags3 & TR3_DRAIN_EXP) x_ptr->flags3 &= ~(TR3_HOLD_LIFE);
+	if (o_ptr->flags3 & TR3_DRAIN_EXP) o_ptr->flags3 &= ~(TR3_HOLD_LIFE);
 
 	/* Ammo cannot have any pval-affected flags, nor curses/ignores */
 	if (o_ptr->tval == TV_SHOT || o_ptr->tval == TV_ARROW ||
 		o_ptr->tval == TV_BOLT)
 	{
-		x_ptr->flags1 &= ~(TR1_PVAL_MASK);
-		x_ptr->flags2 = 0;
-		x_ptr->flags3 &= (TR3_IGNORE_MASK | TR3_CURSED_MASK);
+		o_ptr->flags1 &= ~(TR1_PVAL_MASK);
+		o_ptr->flags2 = 0;
+		o_ptr->flags3 &= (TR3_IGNORE_MASK | TR3_CURSED_MASK);
 	}
 
 	/* We are done. */
@@ -1152,8 +1142,6 @@ static void remove_contradictory(object_type *o_ptr)
  */
 static void add_ability(object_type *o_ptr, int power)
 {
-	randart_type *x_ptr = &x_info[o_ptr->name3];
-
 	int r;
 	int p = power;
 
@@ -1197,11 +1185,11 @@ static void add_ability(object_type *o_ptr, int power)
 					case 2:
 						{
 							if (rand_int(2) == 0)
-								x_ptr->flags1 |= TR1_SLAY_ORC;
+								o_ptr->flags1 |= TR1_SLAY_ORC;
 							if (rand_int(2) == 0)
-								x_ptr->flags1 |= TR1_SLAY_TROLL;
+								o_ptr->flags1 |= TR1_SLAY_TROLL;
 							if (rand_int(3) == 0)
-								x_ptr->flags1 |= TR1_SLAY_GIANT;
+								o_ptr->flags1 |= TR1_SLAY_GIANT;
 							break;
 						}
 					case 3:
@@ -1209,21 +1197,21 @@ static void add_ability(object_type *o_ptr, int power)
 					case 5:
 						{
 							if (rand_int(2) == 0)
-								x_ptr->flags1 |= TR1_SLAY_EVIL;
+								o_ptr->flags1 |= TR1_SLAY_EVIL;
 							if (rand_int(2) == 0)
-								x_ptr->flags1 |= TR1_SLAY_UNDEAD;
+								o_ptr->flags1 |= TR1_SLAY_UNDEAD;
 							if (rand_int(3) == 0)
-								x_ptr->flags1 |= TR1_SLAY_DEMON;
+								o_ptr->flags1 |= TR1_SLAY_DEMON;
 							break;
 						}
 					case 6:
 						{
-							x_ptr->flags1 |= TR1_SLAY_ANIMAL;
+							o_ptr->flags1 |= TR1_SLAY_ANIMAL;
 							break;
 						}
 					case 7:
 						{
-							x_ptr->flags1 |= TR1_SLAY_DRAGON;
+							o_ptr->flags1 |= TR1_SLAY_DRAGON;
 							break;
 						}
 					}
@@ -1234,40 +1222,40 @@ static void add_ability(object_type *o_ptr, int power)
 					{
 					case 0:
 						{
-							x_ptr->flags1 |= TR1_KILL_DRAGON;
+							o_ptr->flags1 |= TR1_KILL_DRAGON;
 							break;
 						}
 					case 1:
 						{
-							x_ptr->flags1 |= TR1_KILL_DEMON;
+							o_ptr->flags1 |= TR1_KILL_DEMON;
 							break;
 						}
 					case 2:
 						{
-							x_ptr->flags1 |= TR1_KILL_UNDEAD;
+							o_ptr->flags1 |= TR1_KILL_UNDEAD;
 							break;
 						}
 					case 3:
 						{
-							x_ptr->flags1 |= TR2_BRAND_ACID;
+							o_ptr->flags1 |= TR1_BRAND_ACID;
 							break;
 						}
 					case 4:
 					case 5:
 						{
-							x_ptr->flags1 |= TR2_BRAND_ELEC;
+							o_ptr->flags1 |= TR1_BRAND_ELEC;
 							break;
 						}
 					case 6:
 					case 7:
 						{
-							x_ptr->flags1 |= TR2_BRAND_FIRE;
+							o_ptr->flags1 |= TR1_BRAND_FIRE;
 							break;
 						}
 					case 8:
 					case 9:
 						{
-							x_ptr->flags1 |= TR2_BRAND_COLD;
+							o_ptr->flags1 |= TR1_BRAND_COLD;
 							break;
 						}
 					}
@@ -1289,16 +1277,16 @@ static void add_ability(object_type *o_ptr, int power)
 				else if (r < 33)
 				{
                     do_statbonus(o_ptr, A_DEX);
-					if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_DEX;
+					if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_DEX;
 				}
 				else if (rand_int(2) == 0)
 				{
-					x_ptr->flags1 |= TR1_SHOTS;
+					o_ptr->flags1 |= TR1_SHOTS;
 					do_pval(o_ptr);
 				}
 				else
 				{
-					x_ptr->flags1 |= TR1_MIGHT;
+					o_ptr->flags1 |= TR1_MIGHT;
 					do_pval(o_ptr);
 				}
 				break;
@@ -1324,7 +1312,7 @@ static void add_ability(object_type *o_ptr, int power)
 				}
 				else if (r < 20 && o_ptr->tval != TV_HAFTED)
 				{
-					x_ptr->flags3 |= TR3_BLESSED;
+					o_ptr->flags3 |= TR3_BLESSED;
 				}
 				else if (r < 28)
 				{
@@ -1334,9 +1322,9 @@ static void add_ability(object_type *o_ptr, int power)
 						case 1:
 						case 2:
 						{
-							if (rand_int(2) == 0) x_ptr->flags1 |= TR1_SLAY_ORC;
-							if (rand_int(2) == 0) x_ptr->flags1 |= TR1_SLAY_TROLL;
-							if (rand_int(3) == 0) x_ptr->flags1 |= TR1_SLAY_GIANT;
+							if (rand_int(2) == 0) o_ptr->flags1 |= TR1_SLAY_ORC;
+							if (rand_int(2) == 0) o_ptr->flags1 |= TR1_SLAY_TROLL;
+							if (rand_int(3) == 0) o_ptr->flags1 |= TR1_SLAY_GIANT;
 							break;
 						}
 
@@ -1344,49 +1332,49 @@ static void add_ability(object_type *o_ptr, int power)
 						case 4:
 						case 5:
 						{
-							if (rand_int(2) == 0) x_ptr->flags1 |= TR1_SLAY_EVIL;
-							if (rand_int(2) == 0) x_ptr->flags1 |= TR1_SLAY_UNDEAD;
-							if (rand_int(3) == 0) x_ptr->flags1 |= TR1_SLAY_DEMON;
+							if (rand_int(2) == 0) o_ptr->flags1 |= TR1_SLAY_EVIL;
+							if (rand_int(2) == 0) o_ptr->flags1 |= TR1_SLAY_UNDEAD;
+							if (rand_int(3) == 0) o_ptr->flags1 |= TR1_SLAY_DEMON;
 							if (o_ptr->tval != TV_HAFTED && rand_int(3) != 0)
 							{
-								x_ptr->flags3 |= TR3_BLESSED;
+								o_ptr->flags3 |= TR3_BLESSED;
 							}
 
 							/* Maybe have a stat bonus */
 							if (rand_int(p) >= 40)
 							{
 								do_statbonus(o_ptr, A_WIS);
-								if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_WIS;
+								if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_WIS;
 							}
 
-							if (rand_int(5) == 0) x_ptr->flags3 |= TR3_HOLD_LIFE;
+							if (rand_int(5) == 0) o_ptr->flags3 |= TR3_HOLD_LIFE;
 
 							break;
 						}
 
 						case 6:
 						{
-							x_ptr->flags1 |= TR1_SLAY_ANIMAL;
+							o_ptr->flags1 |= TR1_SLAY_ANIMAL;
 
 							if (rand_int(p) >= 40)
 							{
 								do_statbonus(o_ptr, A_INT);
-								if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_INT;
+								if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_INT;
 							}
 
-							if (rand_int(5) == 0) x_ptr->flags3 |= TR3_REGEN;
+							if (rand_int(5) == 0) o_ptr->flags3 |= TR3_REGEN;
 
 							break;
 						}
 
 						case 7:
 						{
-							x_ptr->flags1 |= TR1_SLAY_DRAGON;
+							o_ptr->flags1 |= TR1_SLAY_DRAGON;
 
 							if (rand_int(p) >= 40)
 							{
 								do_statbonus(o_ptr, A_CON);
-								if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_CON;
+								if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_CON;
 							}
 
 							break;
@@ -1403,18 +1391,18 @@ static void add_ability(object_type *o_ptr, int power)
 					{
 					case 0:
 						{
-							x_ptr->flags1 |= TR1_KILL_DRAGON;
+							o_ptr->flags1 |= TR1_KILL_DRAGON;
 							if (rand_int(p) >= 40)
 							{
                			     do_statbonus(o_ptr, A_CON);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_CON;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_CON;
 
 							}
 							break;
 						}
 					case 1:
 						{
-							x_ptr->flags1 |= TR2_BRAND_ACID;
+							o_ptr->flags1 |= TR1_BRAND_ACID;
 							if (rand_int(p) >= 20)
 
 							break;
@@ -1422,7 +1410,7 @@ static void add_ability(object_type *o_ptr, int power)
 					case 2:
 					case 3:
 						{
-							x_ptr->flags1 |= TR2_BRAND_ELEC;
+							o_ptr->flags1 |= TR1_BRAND_ELEC;
 							if (rand_int(p) >= 20)
 								RANDART_RESIST(x_ptr, RES_ELEC, 25, 35);
 							break;
@@ -1430,7 +1418,7 @@ static void add_ability(object_type *o_ptr, int power)
 					case 4:
 					case 5:
 						{
-							x_ptr->flags1 |= TR2_BRAND_FIRE;
+							o_ptr->flags1 |= TR1_BRAND_FIRE;
 							if (rand_int(p) >= 20)
 								RANDART_RESIST(x_ptr, RES_FIRE, 25, 35);
 							break;
@@ -1438,7 +1426,7 @@ static void add_ability(object_type *o_ptr, int power)
 					case 6:
 					case 7:
 						{
-							x_ptr->flags1 |= TR2_BRAND_COLD;
+							o_ptr->flags1 |= TR1_BRAND_COLD;
 							if (rand_int(p) >= 20)
 								RANDART_RESIST(x_ptr, RES_COLD, 25, 35);
 							break;
@@ -1451,21 +1439,21 @@ static void add_ability(object_type *o_ptr, int power)
 					{
 					case 0:
 						{
-							x_ptr->flags2 |= TR2_BRAND_NEXUS;
+							o_ptr->flags1 |= TR1_BRAND_NEXUS;
 							if (rand_int(p) >= 30)
 								RANDART_RESIST(x_ptr, RES_NEXUS, 25, 35);
 							break;
 						}
 					case 1:
 						{
-							x_ptr->flags2 |= TR2_BRAND_NETHER;
+							o_ptr->flags1 |= TR1_BRAND_NETHER;
 							if (rand_int(p) >= 30)
 								RANDART_RESIST(x_ptr, RES_NETHER, 25, 35);
 							break;
 						}
 					case 2:
 						{
-							x_ptr->flags2 |= TR2_BRAND_CHAOS;
+							o_ptr->flags1 |= TR1_BRAND_CHAOS;
 							if (rand_int(p) >= 30)
 
 							break;
@@ -1475,17 +1463,17 @@ static void add_ability(object_type *o_ptr, int power)
 				else if (r < 44)
 				{
                			     do_statbonus(o_ptr, A_STR);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_STR;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_STR;
 				}
 				else if (r < 47)
 				{
                			     do_statbonus(o_ptr, A_DEX);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_DEX;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_DEX;
 				}
 				else
 				{
                			     do_statbonus(o_ptr, A_CON);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_CON;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_CON;
 				}
 
 				break;
@@ -1493,24 +1481,24 @@ static void add_ability(object_type *o_ptr, int power)
 			case TV_BOOTS:
 			{
 				if (r < 6)
-					x_ptr->flags3 |= TR3_FEATHER;
+					o_ptr->flags3 |= TR3_FEATHER;
 				else if (r < 25)
 					o_ptr->to_a += randint(5) + randint(5);
 				else if (r < 30)
 				{
-					x_ptr->flags1 |= TR1_STEALTH;
+					o_ptr->flags1 |= TR1_STEALTH;
 					do_pval(o_ptr);
 				}
 				else if (r < 35)
 				{
                			     do_statbonus(o_ptr, A_DEX);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_DEX;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_DEX;
 				}
 				else if (r < 45)
-					x_ptr->flags3 |= TR3_FREE_ACT;
+					o_ptr->flags3 |= TR3_FREE_ACT;
 				else
 				{
-					x_ptr->flags1 |= TR1_SPEED;
+					o_ptr->flags1 |= TR1_SPEED;
 					do_pval(o_ptr);
 
 					/* Supercharge! */
@@ -1532,10 +1520,10 @@ static void add_ability(object_type *o_ptr, int power)
 				else if (r < 40)
 				{
                			     do_statbonus(o_ptr, A_DEX);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_DEX;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_DEX;
 				}
 				else
-					x_ptr->flags3 |= TR3_FREE_ACT;
+					o_ptr->flags3 |= TR3_FREE_ACT;
 
  				break;
  			}
@@ -1550,47 +1538,47 @@ static void add_ability(object_type *o_ptr, int power)
 					{
 						if (rand_int(20) == 0)
 						{
-							x_ptr->flags2 |= TR2_LIGHT3;
+							o_ptr->flags2 |= TR2_LIGHT3;
 						}
 						else
 						{
-							x_ptr->flags2 |= TR2_LIGHT2;
+							o_ptr->flags2 |= TR2_LIGHT2;
 						}
 					}
 					else
 					{
-						x_ptr->flags2 |= TR2_LIGHT1;
+						o_ptr->flags2 |= TR2_LIGHT1;
 					}
 				}
 				else if (r < 19)
 				{
-					x_ptr->flags1 |= TR1_INFRA;
+					o_ptr->flags1 |= TR1_INFRA;
 					do_pval(o_ptr);
 				}
 				else if (r < 22)
 				{
-					x_ptr->flags1 |= TR1_SEARCH;
+					o_ptr->flags1 |= TR1_SEARCH;
 					do_pval(o_ptr);
 				}
 				else if (r < 26)
-					x_ptr->flags3 |= TR3_SEE_INVIS;
+					o_ptr->flags3 |= TR3_SEE_INVIS;
 				else if (r < 30)
 				{
                			     do_statbonus(o_ptr, A_CHR);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_CHR;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_CHR;
 				}
 				else if (r < 37)
 				{
                			     do_statbonus(o_ptr, A_INT);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_INT;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_INT;
 				}
 				else if (r < 44)
 				{
                			     do_statbonus(o_ptr, A_WIS);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_WIS;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_WIS;
 				}
 				else
-					x_ptr->flags3 |= TR3_TELEPATHY;
+					o_ptr->flags3 |= TR3_TELEPATHY;
 
  				break;
  			}
@@ -1621,21 +1609,21 @@ static void add_ability(object_type *o_ptr, int power)
 				{
 					switch (rand_int(11))
 					{
-					case 0:  RANDART_RESIST(x_ptr, RES_POIS, 20, 30); break;
-					case 1:  RANDART_RESIST(x_ptr, RES_DOOM, 20, 30); break;
-					case 2:  RANDART_RESIST(x_ptr, RES_DARK, 20, 30); break;
-					case 3:  RANDART_RESIST(x_ptr, RES_CONF, 20, 30); break;
-					case 4:  RANDART_RESIST(x_ptr, RES_SOUND, 20, 30); break;
-					case 5:  RANDART_RESIST(x_ptr, RES_SHARDS, 20, 30); break;
-					case 6:  RANDART_RESIST(x_ptr, RES_NETHER, 20, 30); break;
-					case 7:  RANDART_RESIST(x_ptr, RES_NEXUS, 20, 30); break;
-					case 8:  RANDART_RESIST(x_ptr, RES_CHAOS, 20, 30); break;
-					case 9:  x_ptr->flags2 |= TR2_NO_BLIND; break;
-					case 10: x_ptr->flags2 |= TR2_NO_DISENCHANT; break;
+					case 0: RANDART_RESIST(x_ptr, RES_POIS, 20, 30); break;
+					case 1: RANDART_RESIST(x_ptr, RES_DARK, 20, 30); break;
+					case 2: RANDART_RESIST(x_ptr, RES_SOUND, 20, 30); break;
+					case 3: RANDART_RESIST(x_ptr, RES_SHARDS, 20, 30); break;
+					case 4: RANDART_RESIST(x_ptr, RES_NETHER, 20, 30); break;
+					case 5: RANDART_RESIST(x_ptr, RES_NEXUS, 20, 30); break;
+					case 6: RANDART_RESIST(x_ptr, RES_CHAOS, 20, 30); break;
+					case 7: o_ptr->flags3 |= TR3_IMMUNITY_CONF; break;
+					case 8: o_ptr->flags3 |= TR3_IMMUNITY_BLIND; break;
+					case 9: o_ptr->flags3 |= TR3_IMMUNITY_FEAR; break;
+					case 10: o_ptr->flags3 |= TR3_IGNORE_DISEN; break;
 					}
 				}
 				else
-					x_ptr->flags3 |= TR3_HOLD_LIFE;
+					o_ptr->flags3 |= TR3_HOLD_LIFE;
 
  				break;
  			}
@@ -1645,7 +1633,7 @@ static void add_ability(object_type *o_ptr, int power)
 					o_ptr->to_a += randint(5) + randint(5);
 				else if (r < 30)
 				{
-					x_ptr->flags1 |= TR1_STEALTH;
+					o_ptr->flags1 |= TR1_STEALTH;
 					do_pval(o_ptr);
 				}
 				else if (r < 44)
@@ -1660,9 +1648,9 @@ static void add_ability(object_type *o_ptr, int power)
 						RANDART_RESIST(x_ptr, RES_COLD, 20, 30);
  				}
 				else if (r < 47)
-					x_ptr->flags3 |= TR3_FREE_ACT;
+					o_ptr->flags3 |= TR3_FREE_ACT;
 				else
-					x_ptr->flags3 |= TR3_HOLD_LIFE;
+					o_ptr->flags3 |= TR3_HOLD_LIFE;
 
  				break;
  			}
@@ -1694,21 +1682,21 @@ static void add_ability(object_type *o_ptr, int power)
 				{
 					switch (rand_int(11))
 					{
-					case 0:  RANDART_RESIST(x_ptr, RES_POIS, 20, 30); break;
-					case 1:  RANDART_RESIST(x_ptr, RES_DOOM, 20, 30); break;
-					case 2:  RANDART_RESIST(x_ptr, RES_DARK, 20, 30); break;
-					case 3:  x_ptr->flags2 |= TR2_NO_BLIND; break;
-					case 4:  RANDART_RESIST(x_ptr, RES_CONF, 20, 30); break;
-					case 5:  RANDART_RESIST(x_ptr, RES_SOUND, 20, 30); break;
-					case 6:  RANDART_RESIST(x_ptr, RES_SHARDS, 20, 30); break;
-					case 7:  RANDART_RESIST(x_ptr, RES_NETHER, 20, 30); break;
-					case 8:  RANDART_RESIST(x_ptr, RES_NEXUS, 20, 30); break;
-					case 9:  RANDART_RESIST(x_ptr, RES_CHAOS, 20, 30); break;
-					case 10: x_ptr->flags2 |= TR2_NO_DISENCHANT; break;
+					case 0: RANDART_RESIST(x_ptr, RES_POIS, 20, 30); break;
+					case 1: RANDART_RESIST(x_ptr, RES_DARK, 20, 30); break;
+					case 2: RANDART_RESIST(x_ptr, RES_SOUND, 20, 30); break;
+					case 3: RANDART_RESIST(x_ptr, RES_SHARDS, 20, 30); break;
+					case 4: RANDART_RESIST(x_ptr, RES_NETHER, 20, 30); break;
+					case 5: RANDART_RESIST(x_ptr, RES_NEXUS, 20, 30); break;
+					case 6: RANDART_RESIST(x_ptr, RES_CHAOS, 20, 30); break;
+					case 7: o_ptr->flags3 |= TR3_IMMUNITY_CONF; break;
+					case 8: o_ptr->flags3 |= TR3_IMMUNITY_BLIND; break;
+					case 9: o_ptr->flags3 |= TR3_IMMUNITY_FEAR; break;
+					case 10: o_ptr->flags3 |= TR3_IGNORE_DISEN; break;
 					}
 				}
 				else
-					x_ptr->flags3 |= TR3_HOLD_LIFE;
+					o_ptr->flags3 |= TR3_HOLD_LIFE;
 
  				break;
  			}
@@ -1719,38 +1707,38 @@ static void add_ability(object_type *o_ptr, int power)
 		r = rand_int(power);
 
 		if (r < 2)
-			x_ptr->flags2 |= TR2_LIGHT1;
+			o_ptr->flags2 |= TR2_LIGHT1;
 		else if (r < 4)
-			x_ptr->flags3 |= TR3_FEATHER;
+			o_ptr->flags3 |= TR3_FEATHER;
 		else if (r < 7)
-			x_ptr->flags3 |= TR3_SLOW_DIGEST;
+			o_ptr->flags3 |= TR3_SLOW_DIGEST;
 		else if (r < 10)
-			x_ptr->flags3 |= TR3_SEE_INVIS;
+			o_ptr->flags3 |= TR3_SEE_INVIS;
 		else if (r < 12)
 		{
 			switch (rand_int(6))
  			{
-			case 0: x_ptr->flags2 |= TR2_SUST_STR; break;
-			case 1: x_ptr->flags2 |= TR2_SUST_INT; break;
-			case 2: x_ptr->flags2 |= TR2_SUST_WIS; break;
-			case 3: x_ptr->flags2 |= TR2_SUST_DEX; break;
-			case 4: x_ptr->flags2 |= TR2_SUST_CON; break;
-			case 5: x_ptr->flags2 |= TR2_SUST_CHR; break;
+			case 0: o_ptr->flags2 |= TR2_SUST_STR; break;
+			case 1: o_ptr->flags2 |= TR2_SUST_INT; break;
+			case 2: o_ptr->flags2 |= TR2_SUST_WIS; break;
+			case 3: o_ptr->flags2 |= TR2_SUST_DEX; break;
+			case 4: o_ptr->flags2 |= TR2_SUST_CON; break;
+			case 5: o_ptr->flags2 |= TR2_SUST_CHR; break;
 			}
 		}
 		else if (r < 13)
 		{
-			x_ptr->flags1 |= TR1_INFRA;
+			o_ptr->flags1 |= TR1_INFRA;
 			do_pval(o_ptr);
 		}
 		else if (r < 14)
 		{
-			x_ptr->flags1 |= TR1_SEARCH;
+			o_ptr->flags1 |= TR1_SEARCH;
 			do_pval(o_ptr);
 		}
 		else if (r < 15)
 		{
-			x_ptr->flags1 |= TR1_STEALTH;
+			o_ptr->flags1 |= TR1_STEALTH;
 			do_pval(o_ptr);
 		}
 		else if (r < 19)
@@ -1766,66 +1754,66 @@ static void add_ability(object_type *o_ptr, int power)
 		else if (r < 21)
 		{
                			     do_statbonus(o_ptr, A_CHR);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_CHR;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_CHR;
 		}
 		else if (r < 23)
 		{
 
                			     do_statbonus(o_ptr, A_DEX);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_DEX;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_DEX;
 		}
 		else if (r < 25)
 		{
 
                			     do_statbonus(o_ptr, A_INT);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_INT;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_INT;
 		}
 		else if (r < 27)
 		{
 
                			     do_statbonus(o_ptr, A_WIS);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_WIS;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_WIS;
 		}
 		else if (r < 29)
 		{
 
                			     do_statbonus(o_ptr, A_CON);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_CON;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_CON;
 		}
 		else if (r < 31)
 		{
 
                			     do_statbonus(o_ptr, A_STR);
-					    	 if (rand_int(3) == 0) x_ptr->flags2 |= TR2_SUST_STR;
+					    	 if (rand_int(3) == 0) o_ptr->flags2 |= TR2_SUST_STR;
 		}
 		else if (r < 33)
-			x_ptr->flags3 |= TR3_REGEN;
+			o_ptr->flags3 |= TR3_REGEN;
 		else if (r < 34)
-			x_ptr->flags3 |= TR3_TELEPATHY;
+			o_ptr->flags3 |= TR3_TELEPATHY;
 		else if (r < 38)
 		{
 			switch (rand_int(11))
  			{
-			case 0:  RANDART_RESIST(x_ptr, RES_POIS, 20, 30); break;
-			case 1:  RANDART_RESIST(x_ptr, RES_DOOM, 20, 30); break;
-			case 2:  RANDART_RESIST(x_ptr, RES_DARK, 20, 30); break;
-			case 3:  x_ptr->flags2 |= TR2_NO_BLIND; break;
-			case 4:  RANDART_RESIST(x_ptr, RES_CONF, 20, 30); break;
-			case 5:  RANDART_RESIST(x_ptr, RES_SOUND, 20, 30); break;
-			case 6:  RANDART_RESIST(x_ptr, RES_SHARDS, 20, 30); break;
-			case 7:  RANDART_RESIST(x_ptr, RES_NETHER, 20, 30); break;
-			case 8:  RANDART_RESIST(x_ptr, RES_NEXUS, 20, 30); break;
-			case 9:  RANDART_RESIST(x_ptr, RES_CHAOS, 20, 30); break;
-			case 10: x_ptr->flags2 |= TR2_NO_DISENCHANT; break;
+					case 0: RANDART_RESIST(x_ptr, RES_POIS, 20, 30); break;
+					case 1: RANDART_RESIST(x_ptr, RES_DARK, 20, 30); break;
+					case 2: RANDART_RESIST(x_ptr, RES_SOUND, 20, 30); break;
+					case 3: RANDART_RESIST(x_ptr, RES_SHARDS, 20, 30); break;
+					case 4: RANDART_RESIST(x_ptr, RES_NETHER, 20, 30); break;
+					case 5: RANDART_RESIST(x_ptr, RES_NEXUS, 20, 30); break;
+					case 6: RANDART_RESIST(x_ptr, RES_CHAOS, 20, 30); break;
+					case 7: o_ptr->flags3 |= TR3_IMMUNITY_CONF; break;
+					case 8: o_ptr->flags3 |= TR3_IMMUNITY_BLIND; break;
+					case 9: o_ptr->flags3 |= TR3_IMMUNITY_FEAR; break;
+					case 10: o_ptr->flags3 |= TR3_IGNORE_DISEN; break;
 			}
 		}
 		else if (r < 41)
-			x_ptr->flags3 |= TR3_FREE_ACT;
+			o_ptr->flags3 |= TR3_FREE_ACT;
 		else if (r < 44)
-			x_ptr->flags3 |= TR3_HOLD_LIFE;
+			o_ptr->flags3 |= TR3_HOLD_LIFE;
 		else if (r < 48)
 		{
-			x_ptr->flags1 |= TR1_SPEED;
+			o_ptr->flags1 |= TR1_SPEED;
 			do_pval(o_ptr);
 
 			/* Supercharge! */
@@ -1858,14 +1846,12 @@ static void add_ability(object_type *o_ptr, int power)
  */
 static void do_curse(object_type *o_ptr)
 {
-	randart_type *x_ptr = &x_info[o_ptr->name3];
-
 	if (rand_int(3) == 0)
-		x_ptr->flags3 |= TR3_AGGRAVATE;
+		o_ptr->flags3 |= TR3_AGGRAVATE;
 	if (rand_int(5) == 0)
-		x_ptr->flags3 |= TR3_DRAIN_EXP;
+		o_ptr->flags3 |= TR3_DRAIN_EXP;
 	if (rand_int(7) == 0)
-		x_ptr->flags3 |= TR3_TELEPORT;
+		o_ptr->flags3 |= TR3_TELEPORT;
 
 	if ((o_ptr->pval > 0) && (rand_int(2) == 0))
 		o_ptr->pval = -o_ptr->pval;
@@ -1876,16 +1862,16 @@ static void do_curse(object_type *o_ptr)
 	if ((o_ptr->to_d > 0) && (rand_int(4) == 0))
 		o_ptr->to_d = -o_ptr->to_d;
 
-	if (x_ptr->flags3 & TR3_LIGHT_CURSE)
+	if (o_ptr->flags3 & TR3_LIGHT_CURSE)
 	{
-		if (rand_int(2) == 0) x_ptr->flags3 |= TR3_HEAVY_CURSE;
+		if (rand_int(2) == 0) o_ptr->flags3 |= TR3_HEAVY_CURSE;
 		return;
 	}
 
-	x_ptr->flags3 |= TR3_LIGHT_CURSE;
+	o_ptr->flags3 |= TR3_LIGHT_CURSE;
 
 	if (rand_int(4) == 0)
-		x_ptr->flags3 |= TR3_HEAVY_CURSE;
+		o_ptr->flags3 |= TR3_HEAVY_CURSE;
 }
 
 static byte activation_table[60] = {
@@ -1955,24 +1941,12 @@ bool make_randart_stupid(object_type *o_ptr)
 {
 	int i;
 	int x_idx = 0;
-	randart_type *x_ptr;
 
-	for (i = 1; i < z_info->randart_max; i++)
-	{
-		if (x_info[i].name[0]) continue;
-		x_idx = i;
-		break;
-	}
+	o_ptr->name3 = TRUE;
 
-	if (!x_idx) return (FALSE);
-
-	o_ptr->name3 = x_idx;
-
-	x_ptr = &x_info[x_idx];
-
-	x_ptr->flags1 = 0;
-	x_ptr->flags2 = 0;
-	x_ptr->flags3 = 0;
+	o_ptr->flags1 = 0;
+	o_ptr->flags2 = 0;
+	o_ptr->flags3 = 0;
 
 	name_randart(o_ptr);
 
@@ -1986,7 +1960,7 @@ bool make_randart_stupid(object_type *o_ptr)
 	 * too lazy to find out which ones need it and which ones don't.
 	 */
 	if (o_ptr->pval)
-		x_ptr->flags3 |= TR3_HIDE_TYPE;
+		o_ptr->flags3 |= TR3_HIDE_TYPE;
 
 	return (TRUE);
 
@@ -1994,57 +1968,39 @@ bool make_randart_stupid(object_type *o_ptr)
 
 bool make_randart(object_type *o_ptr, bool curse)
 {
-	randart_type *x_ptr;
 	object_kind *k_ptr = &k_info[o_ptr->k_idx];
-	int x_idx = 0;
+
 	s32b power;
-	int tries;
 	s32b ap;
-	bool aggravate_me = FALSE;
+
+	int tries;
 	int i;
-	u32b f1, f2, f3;
 
-	/* Find a free index */
-	for (i = 1; i < z_info->randart_max; i++) 
-	{
-		if (x_info[i].name[0]) continue;
-		x_idx = i;
-		break;
-	}
-
-	if (!x_idx) return (FALSE);
-
-	/* Get the object's current flags */
-	object_flags(o_ptr, &f1, &f2, &f3);
-
-	/* Get the artifact */
-	x_ptr = &x_info[x_idx];
+	bool aggravate_me = FALSE;
 
 	/* Clear the artifact */
-	x_ptr->cost = k_ptr->cost;
-	x_ptr->flags1 = f1;
-	x_ptr->flags2 = f2;
-	x_ptr->flags3 = f3 & ~(TR3_ACTIVATE);
-	x_ptr->level = (p_ptr->depth + k_ptr->level) / 2;
-	x_ptr->activation = 0;
-	x_ptr->time = 0;
-	x_ptr->randtime = 0;
+	o_ptr->cost = k_ptr->cost;
+	o_ptr->flags3 = (o_ptr->flags3 & ~(TR3_ACTIVATE));
+	o_ptr->activation = 0;
+	o_ptr->time = 0;
+	o_ptr->randtime = 0;
+	o_ptr->level = (p_ptr->depth + k_ptr->level) / 2;
 
 	/* Name it */
 	name_randart(o_ptr);
 
 	/* Assign the artifact index */
-	o_ptr->name3 = x_idx;
+	o_ptr->name3 = TRUE;
 
 	/* Sometimes artifacts are deeper */
-	while (rand_int((x_ptr->level - (p_ptr->depth + k_ptr->level) / 2) * 4) == 0)
-		x_ptr->level++;
+	while (rand_int((o_ptr->level - (p_ptr->depth + k_ptr->level) / 2) * 4) == 0)
+		o_ptr->level++;
 
 	/* Get current power */
 	ap = artifact_power(o_ptr);
 
 	/* Find a power */
-	power = (ap + 30) / 2 + randint(x_ptr->level + 10);
+	power = (ap + 30) / 2 + randint(o_ptr->level + 10);
 
 	/* Reduce powerful items */
 	if (power > ap + 30)
@@ -2053,44 +2009,44 @@ bool make_randart(object_type *o_ptr, bool curse)
 	/* Always add something */
 	if (power < ap + 10) power = ap + 10;
 
-	/* Find a power based on level and rarity */
+	/* Find a power based on o_ptr->level and rarity */
 	if (curse)
 		power = -power;
 
 	/* Sometimes add an activation */
 	if (rand_int(200) < power)
 	{
-		int m = x_ptr->level / 2 + 20;
+		int m = o_ptr->level / 2 + 20;
 
 		/* Inhibit */
 		if (m > 60) m = 60;
 
-		x_ptr->flags3 |= TR3_ACTIVATE;
-		x_ptr->activation = activation_table[rand_int(m)];
+		o_ptr->flags3 |= TR3_ACTIVATE;
+		o_ptr->activation = activation_table[rand_int(m)];
 
 		/* Default values */
-		x_ptr->time = x_ptr->randtime = 2 + x_ptr->level * x_ptr->level / 4;
+		o_ptr->time = o_ptr->randtime = 2 + o_ptr->level * o_ptr->level / 4;
 
 		/* Find a real artifact with the right activation */
 		for (i = 0; i < z_info->a_max; i++)
 		{
 			if (a_info[i].tval == 0) continue;
 			if (!(a_info[i].flags3 & TR3_ACTIVATE)) continue;
-			if (a_info[i].activation != x_ptr->activation) continue;
+			if (a_info[i].activation != o_ptr->activation) continue;
 
 			/* Base on that timeout */
-			x_ptr->time = a_info[i].time * a_info[i].level / x_ptr->level;
-			x_ptr->randtime = a_info[i].randtime * a_info[i].level / x_ptr->level;
+			o_ptr->time = a_info[i].time * a_info[i].level / o_ptr->level;
+			o_ptr->randtime = a_info[i].randtime * a_info[i].level / o_ptr->level;
 
 			/* Not too much worse */
-			if (x_ptr->time > a_info[i].time * 2) x_ptr->time = a_info[i].time * 2;
-			if (x_ptr->randtime > a_info[i].randtime * 2) x_ptr->randtime = a_info[i].randtime * 2;
+			if (o_ptr->time > a_info[i].time * 2) o_ptr->time = a_info[i].time * 2;
+			if (o_ptr->randtime > a_info[i].randtime * 2) o_ptr->randtime = a_info[i].randtime * 2;
 
 			break;
 		}
 
 		/* Ensure sanity */
-		if (x_ptr->time < 2) x_ptr->time = 2;
+		if (o_ptr->time < 2) o_ptr->time = 2;
 	}
 
 	/* Really powerful items should aggravate. */
@@ -2120,11 +2076,9 @@ bool make_randart(object_type *o_ptr, bool curse)
 		for (tries = 0; tries < MAX_TRIES; tries++)
 		{
 			object_type o_old;
-			randart_type x_old;
 
 			/* Copy artifact info temporarily. */
 			o_old = *o_ptr;
-			x_old = *x_ptr;
 			add_ability(o_ptr, 20 + randint(power * 2 / 3));
 			ap = artifact_power(o_ptr);
 
@@ -2132,7 +2086,6 @@ bool make_randart(object_type *o_ptr, bool curse)
 			{
 				/* Too powerful */
 				*o_ptr = o_old;
-				*x_ptr = x_old;
 
 				continue;
 			}
@@ -2151,24 +2104,23 @@ bool make_randart(object_type *o_ptr, bool curse)
 
 		if (aggravate_me)
 		{
-			x_ptr->flags3 |= TR3_AGGRAVATE;
+			o_ptr->flags3 |= TR3_AGGRAVATE;
 			remove_contradictory(o_ptr);
 			ap = artifact_power(o_ptr);
 		}
 	}
 
 	/* Work out the cost */
-	x_ptr->cost = ap * (s32b)(400 + 100 * randint(6));
+	o_ptr->cost = ap * (s32b)(400 + 100 * randint(6));
 
 	/* Restore the cost */
-	if (x_ptr->cost < 0) x_ptr->cost = 0;
+	if (o_ptr->cost < 0) o_ptr->cost = 0;
 
 	/*
 	 * Add TR3_HIDE_TYPE to all artifacts with nonzero pval because we're
 	 * too lazy to find out which ones need it and which ones don't.
 	 */
-	if (o_ptr->pval)
-		x_ptr->flags3 |= TR3_HIDE_TYPE;
+	if (o_ptr->pval) o_ptr->flags3 |= TR3_HIDE_TYPE;
 
 	/* We are done. */
 	return (TRUE);

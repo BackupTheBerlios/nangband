@@ -960,17 +960,15 @@ function get_activation(object)
 		local artifact = a_info[object.name1 + 1]
 
 		-- Get field values
-		activation = activation
+		activation = artifact.activation
 		time = artifact.time
 		randtime = artifcact.randtime
-	elseif object.name3 > 0 then
-		-- Get the randart
-		local artifact = x_info[object.name3 + 1]
+	elseif object.activation > 0 then
 
 		-- Get field values
-		activation = activation
-		time = artifact.time
-		randtime = artifcact.randtime
+		activation = object.activation
+		time = object.time
+		randtime = object.randtime
 	end
 
 	return activation, time, randtime

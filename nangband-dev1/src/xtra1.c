@@ -1754,8 +1754,8 @@ static void calc_bonuses(void)
 
 	/* Flags, resists and stat bonuses temp */
 	u32b f1, f2, f3;
-	sbyte res_mods[RES_MAX];
-	sbyte stat_mods[A_MAX];
+	sbyte resists[RES_MAX];
+	sbyte stats[A_MAX];
 
 	/*** Memorize ***/
 
@@ -1799,10 +1799,7 @@ static void calc_bonuses(void)
 	extra_might = 0;
 
 	/* Clear the stat modifiers */
-	for (i = 0; i < A_MAX; i++)
-	{
-		p_ptr->stat_add[i] = 0;
-	}
+	for (i = 0; i < A_MAX; i++) p_ptr->stat_add[i] = 0;
 
 	/* Clear the resistance stuff */
 	for (i = 0; i < RES_MAX; i++)
@@ -1842,7 +1839,9 @@ static void calc_bonuses(void)
 	p_ptr->sustain_con = FALSE;
 	p_ptr->sustain_dex = FALSE;
 	p_ptr->sustain_chr = FALSE;
-	p_ptr->resist_blind = FALSE;
+	p_ptr->immune_blind = FALSE;
+	p_ptr->immune_fear = FALSE;
+	p_ptr->immune_conf = FALSE;
 	p_ptr->pass_walls = FALSE;
 
 	/*** Extract race/class info ***/
@@ -1900,7 +1899,7 @@ static void calc_bonuses(void)
 
 	/* deal with silly flags --takkaria */
 	if ((cp_ptr->flags & (CF_BRAVERY_30)) && (p_ptr->lev > 29))
-		p_ptr->resist_cur[RES_FEAR] += 30;
+		p_ptr->immune_fear = TRUE;
 
 	/* Good flags */
 	if (f3 & (TR3_SLOW_DIGEST)) p_ptr->slow_digest = TRUE;
@@ -1915,9 +1914,9 @@ static void calc_bonuses(void)
 	if (f3 & (TR3_BLESSED)) p_ptr->bless_blade = TRUE;
 
 	/* Weirder flags */
-	if (f2 & (TR2_BRAND_NETHER)) p_ptr->nethr_brand = TRUE;
-	if (f2 & (TR2_BRAND_NEXUS)) p_ptr->nexus_brand = TRUE;
-	if (f2 & (TR2_BRAND_CHAOS)) p_ptr->chaos_brand = TRUE;
+	if (f1 & (TR1_BRAND_NETHER)) p_ptr->nethr_brand = TRUE;
+	if (f1 & (TR1_BRAND_NEXUS)) p_ptr->nexus_brand = TRUE;
+	if (f1 & (TR1_BRAND_CHAOS)) p_ptr->chaos_brand = TRUE;
 
 	/* Bad flags */
 	if (f3 & (TR3_HUNGER)) p_ptr->hunger = TRUE;
@@ -1927,8 +1926,10 @@ static void calc_bonuses(void)
 	if (f3 & (TR3_TELEPORT)) p_ptr->teleport = TRUE;
 	if (f3 & (TR3_DRAIN_EXP)) p_ptr->exp_drain = TRUE;
 
-	/* Resistance flags */
-	if (f2 & (TR2_NO_BLIND)) p_ptr->resist_blind = TRUE;
+	/* Immunity flags */
+	if (f2 & (TR3_IMMUNITY_BLIND)) p_ptr->immune_blind = TRUE;
+	if (f2 & (TR3_IMMUNITY_FEAR)) p_ptr->immune_fear = TRUE;
+	if (f2 & (TR3_IMMUNITY_CONF)) p_ptr->immune_conf = TRUE;
 
 	/* Sustain flags */
 	if (f2 & (TR2_SUST_STR)) p_ptr->sustain_str = TRUE;
@@ -1957,10 +1958,10 @@ static void calc_bonuses(void)
 		object_flags(o_ptr, &f1, &f2, &f3);
 
 		/* Extract the resists */
-		object_resists(o_ptr, res_mods);
+		object_resists(o_ptr, resists);
 		
 		/* Extract the item bonuses */
-		object_stat_bonuses(o_ptr, stat_mods);
+		object_stat_bonuses(o_ptr, stats);
 
 		/* Affect stealth */
 		if (f1 & (TR1_STEALTH)) p_ptr->skill_stl += o_ptr->pval;
@@ -2009,8 +2010,10 @@ static void calc_bonuses(void)
 		if (f3 & (TR3_TELEPORT)) p_ptr->teleport = TRUE;
 		if (f3 & (TR3_DRAIN_EXP)) p_ptr->exp_drain = TRUE;
 
-		/* Resistance flags */
-		if (f2 & (TR2_NO_BLIND)) p_ptr->resist_blind = TRUE;
+		/* Immunity flags */
+		if (f2 & (TR3_IMMUNITY_BLIND)) p_ptr->immune_blind = TRUE;
+		if (f2 & (TR3_IMMUNITY_FEAR)) p_ptr->immune_fear = TRUE;
+		if (f2 & (TR3_IMMUNITY_CONF)) p_ptr->immune_conf = TRUE;
 
 		/* Sustain flags */
 		if (f2 & (TR2_SUST_STR)) p_ptr->sustain_str = TRUE;
@@ -2023,24 +2026,15 @@ static void calc_bonuses(void)
 		/* Resistances */
 		for (n = 0; n < RES_MAX; n++)
 		{
-			byte cur_mod = res_mods[n];
-			
 			/* Add the bonus */
-			p_ptr->resist_cur[n] += (cur_mod ? cur_mod : 0);
+			p_ptr->resist_cur[n] += resists[n];
 
 			/* Display the bonus */
-			if (object_known_p(o_ptr))
-				p_ptr->resist_dis[n] += (cur_mod ? cur_mod : cur_mod);
+			if (object_known_p(o_ptr)) p_ptr->resist_dis[n] += resists[n];
 		}
 
 		/* Affect stats */
-		for (n = 0; n < A_MAX; n++)
-		{
-			s16b cur_mod = stat_mods[n];
-
-			/* Add the bonus */
-			p_ptr->stat_add[n] += (cur_mod ? cur_mod : 0);
-		}
+		for (n = 0; n < A_MAX; n++) p_ptr->stat_add[n] += stats[n];
 
 		/* Modify the base armor class */
 		p_ptr->ac += o_ptr->ac;
@@ -2194,27 +2188,13 @@ static void calc_bonuses(void)
 		p_ptr->see_infra += 5;
 	}
 
-/*
- NOTE FROM TAKKARIA:
-
- HACK! HACK! HACK! HACK!
- BIG HACK!
-
- HACK!
- NASTY HACK!
-
- HACK!
- HACK!
-
- * Thanks for listening. Bye.
- */
 
 	/*** Special flags ***/
 
 	/* Hack -- Hero/Shero -> Res fear */
 	if (p_ptr->hero || p_ptr->shero)
 	{
-		p_ptr->resist_cur[RES_FEAR] += 50;
+		p_ptr->immune_fear = TRUE;
 	}
 
 

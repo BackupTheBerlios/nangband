@@ -802,7 +802,7 @@ void do_cmd_activate(void)
 
 	/* Use artifact level instead */
 	if (o_ptr->name1) lev = a_info[o_ptr->name1].level;
-	if (o_ptr->name3) lev = x_info[o_ptr->name3].level;
+	else if (o_ptr->level) lev = o_ptr->level;
 
 	/* Base chance of success */
 	chance = p_ptr->skill_dev;

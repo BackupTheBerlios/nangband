@@ -754,6 +754,18 @@ struct object_type
 	s16b next_o_idx;	/* Next object in stack (if any) */
 
 	s16b held_m_idx;	/* Monster holding us (if any) */
+
+	s32b cost;                   /* "Cost" */
+
+	u32b flags1;
+	u32b flags2;
+	u32b flags3; /* Flags; sets 1-3 */
+
+	byte level;                  /* Randart level */
+
+	byte activation;             /* Activation */
+	u16b time;                   /* Randart charge time */
+	u16b randtime;               /* Randart charge time dice */
 };
 
 
@@ -846,28 +858,6 @@ struct artifact_type
 	u16b randtime;		/* Activation time dice */
 };
 
-/*
- * Information about "random artifacts".
- *
- * This holds much less data than artifact_type, because much
- * of the dats is stored in the object itself.
- */
-struct randart_type
-{
-	s32b cost;                   /* "Cost" */
-
-	u32b flags1;
-	u32b flags2;
-	u32b flags3; /* Flags; sets 1-3 */
-
-	byte level;                  /* Randart level */
-
-	byte activation;             /* Activation */
-	u16b time;                   /* Randart charge time */
-	u16b randtime;               /* Randart charge time dice */
-};
-
-
 struct ego_item_type
 {
 	u32b name;			/* Name (offset) */
@@ -909,7 +899,6 @@ extern char *k_text;
 extern artifact_type a_info[z_info->a_max];
 extern char *a_name;
 extern char *a_text;
-extern randart_type x_info[z_info->randart_max];
 extern ego_item_type e_info[z_info->e_max];
 extern char *e_name;
 extern char *e_text;

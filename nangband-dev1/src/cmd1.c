@@ -320,11 +320,10 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 			}
 
                        /* Brand (Nether) */
-                       if (f2 & (TR2_BRAND_NETHER))
+                       if (f1 & (TR1_BRAND_NETHER))
                        {
                                /* Notice immunity */
-                               if ((r_ptr->flags4 & (RF4_BR_NETH)) ||
- (r_ptr->flags3 && (RF3_UNDEAD)))
+                               if ((r_ptr->flags4 & (RF4_BR_NETH)) || (r_ptr->flags3 && (RF3_UNDEAD)))
                                {
                                        /* Oh, never mind */
                                }
@@ -337,7 +336,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
                        }
 
                        /* Brand (Nexus) */
-                       if (f2 & (TR2_BRAND_NEXUS))
+                       if (f1 & (TR1_BRAND_NEXUS))
                        {
                                /* Notice immunity */
                                if (r_ptr->flags4 & (RF4_BR_NEXU))
@@ -353,7 +352,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
                        }
 
                        /* Brand (Chaos) */
-                       if (f2 & (TR2_BRAND_CHAOS))
+                       if (f1 & (TR1_BRAND_CHAOS))
                        {
                                /* Notice immunity */
                                if (r_ptr->flags4 & (RF4_BR_CHAO))
@@ -370,7 +369,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 
 
 			/* Brand (Acid) */
-			if (f2 & (TR2_BRAND_ACID))
+			if (f1 & (TR1_BRAND_ACID))
 			{
 				/* Notice immunity */
 				if (r_ptr->flags3 & (RF3_IM_ACID))
@@ -389,7 +388,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 			}
 
 			/* Brand (Elec) */
-			if (f2 & (TR2_BRAND_ELEC))
+			if (f1 & (TR1_BRAND_ELEC))
 			{
 				/* Notice immunity */
 				if (r_ptr->flags3 & (RF3_IM_ELEC))
@@ -408,7 +407,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 			}
 
 			/* Brand (Fire) */
-			if (f2 & (TR2_BRAND_FIRE))
+			if (f1 & (TR1_BRAND_FIRE))
 			{
 				/* Notice immunity */
 				if (r_ptr->flags3 & (RF3_IM_FIRE))
@@ -427,7 +426,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 			}
 
 			/* Brand (Cold) */
-			if (f2 & (TR2_BRAND_COLD))
+			if (f1 & (TR1_BRAND_COLD))
 			{
 				/* Notice immunity */
 				if (r_ptr->flags3 & (RF3_IM_COLD))
@@ -446,7 +445,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 			}
 
 			/* Brand (Poison) */
-			if (f2 & (TR2_BRAND_POIS))
+			if (f1 & (TR1_BRAND_POIS))
 			{
 				/* Notice immunity */
 				if (r_ptr->flags3 & (RF3_IM_POIS))
@@ -1091,7 +1090,7 @@ void hit_trap(int y, int x)
 		case FEAT_TRAP_HEAD + 0x0C:
 		{
 			msg_print("You are surrounded by a black gas!");
-			if (!p_ptr->resist_blind)
+			if (!p_ptr->immune_blind)
 			{
 				(void)set_blind(p_ptr->blind + rand_int(50) + 25);
 			}
@@ -1101,7 +1100,7 @@ void hit_trap(int y, int x)
 		case FEAT_TRAP_HEAD + 0x0D:
 		{
 			msg_print("You are surrounded by a gas of scintillating colors!");
-			if (!resist_check(RES_CONF))
+			if (!p_ptr->immune_conf)
 			{
 				(void)set_confused(p_ptr->confused + rand_int(20) + 10);
 			}

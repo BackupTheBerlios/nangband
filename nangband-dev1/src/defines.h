@@ -239,26 +239,19 @@
 /*
  * Player resist constants
  */
-#define RES_ACID		0
-#define RES_ELEC		1
-#define RES_FIRE		2
-#define RES_COLD		3
-#define RES_POIS		4
-#define RES_FEAR		5
-#define RES_DOOM		6
-#define RES_DARK		7
-#define RES_CONF		8
-#define RES_SOUND		9
-#define RES_SHARDS		10
-#define RES_NEXUS		11
-#define RES_NETHER		12
-#define RES_CHAOS		13
+#define RES_ACID     0
+#define RES_ELEC     1
+#define RES_FIRE     2
+#define RES_COLD     3
+#define RES_POIS     4
+#define RES_DARK     5
+#define RES_SOUND    6
+#define RES_SHARDS   7
+#define RES_NEXUS    8
+#define RES_NETHER   9
+#define RES_CHAOS   10
 
-/*
- * Maximum resists
- */
-#define RES_MAX			14
-#define STRUCT_RES_MAX	16
+#define RES_MAX     11
 
 /*
  * Store constants
@@ -1962,89 +1955,125 @@
 
 
 /*
- * As of 2.7.8, the "object flags" are valid for all objects, and as
- * of 2.7.9, these flags are not actually stored with the object, but
- * rather in the object_kind, ego_item, and artifact structures.
+ * Angband 2.7.8 made the object flags valid for all objects, while
+ * 2.7.9 moved them from object_type to the kind/ego-item/artifact
+ * structures.  Nangband has now added object_bonus, which can contain
+ * various bonuses to the item itself.
  *
- * Note that "flags1" contains all flags dependant on "pval" (including
- * stat bonuses, but NOT stat sustainers), plus all "extra attack damage"
- * flags (SLAY_XXX and BRAND_XXX).
- *
- * Note that "flags2" contains all "resistances" (including "sustain" flags,
- * immunity flags, and resistance flags).  Note that "free action" and "hold
- * life" are no longer considered to be "immunities".
- *
- * Note that "flags3" contains everything else (including eight good flags,
- * seven unused flags, four bad flags, four damage ignoring flags, six weird
- * flags, and three cursed flags).
+ * All pval-dependent flags must be in TR1.
  */
 
-#define TR1_XXX1            0x00000001L /* xxx STR */
-#define TR1_XXX2            0x00000002L /* xxx INT */
-#define TR1_XXX3            0x00000004L /* xxx WIS */
-#define TR1_XXX4            0x00000008L /* xxx DEX */
-#define TR1_XXX5            0x00000010L /* xxx CON */
-#define TR1_XXX6            0x00000020L /* xxx CHR */
-#define TR1_XXX7            0x00000040L /* (reserved)  */
-#define TR1_XXX8            0x00000080L /* (reserved) */
-#define TR1_STEALTH         0x00000100L /* Stealth += "pval" */
-#define TR1_SEARCH          0x00000200L /* Search += "pval" */
-#define TR1_INFRA           0x00000400L /* Infra += "pval" */
-#define TR1_TUNNEL          0x00000800L /* Tunnel += "pval" */
-#define TR1_SPEED           0x00001000L /* Speed += "pval" */
-#define TR1_BLOWS           0x00002000L /* Blows += "pval" */
-#define TR1_SHOTS           0x00004000L /* Shots += "pval" */
-#define TR1_MIGHT           0x00008000L /* Might += "pval" */
-#define TR1_SLAY_ANIMAL     0x00010000L /* Weapon slays animals */
-#define TR1_SLAY_EVIL       0x00020000L /* Weapon slays evil */
-#define TR1_SLAY_UNDEAD     0x00040000L /* Weapon slays undead */
-#define TR1_SLAY_DEMON      0x00080000L /* Weapon slays demon */
-#define TR1_SLAY_ORC        0x00100000L /* Weapon slays orc */
-#define TR1_SLAY_TROLL      0x00200000L /* Weapon slays troll */
-#define TR1_SLAY_GIANT      0x00400000L /* Weapon slays giant */
-#define TR1_SLAY_DRAGON     0x00800000L /* Weapon slays dragon */
-#define TR1_KILL_DRAGON     0x01000000L /* Great bane of dragons */
-#define TR1_KILL_DEMON      0x02000000L /* Great bane of demons */
-#define TR1_KILL_UNDEAD     0x04000000L /* Great bane of undead */
-#define TR1_XXX9            0x08000000L /* (reserved) */
-#define TR1_XX10            0x10000000L /* (reserved) */
-#define TR1_XX11            0x20000000L /* (reserved) */
-#define TR1_XX12            0x40000000L /* (reserved) */
-#define TR1_XX13            0x80000000L /* (reserved) */
+#define TR1_STEALTH         (1<<0)		/* Stealth += "pval" */
+#define TR1_SEARCH          (1<<1)		/* Search += "pval" */
+#define TR1_INFRA           (1<<2)		/* Infra += "pval" */
+#define TR1_TUNNEL          (1<<3)		/* Tunnel += "pval" */
+#define TR1_SPEED           (1<<4)		/* Speed += "pval" */
+#define TR1_BLOWS           (1<<5)		/* Blows += "pval" */
+#define TR1_SHOTS           (1<<6)		/* Shots += "pval" */
+#define TR1_MIGHT           (1<<7)		/* Might += "pval" */
+#define TR1_SLAY_ANIMAL     (1<<8)		/* Weapon slays animals */
+#define TR1_SLAY_EVIL       (1<<9)		/* Weapon slays evil */
+#define TR1_SLAY_UNDEAD     (1<<10)		/* Weapon slays undead */
+#define TR1_SLAY_DEMON      (1<<11)		/* Weapon slays demon */
+#define TR1_SLAY_ORC        (1<<12)		/* Weapon slays orc */
+#define TR1_SLAY_TROLL      (1<<13)		/* Weapon slays troll */
+#define TR1_SLAY_GIANT      (1<<14)		/* Weapon slays giant */
+#define TR1_SLAY_DRAGON     (1<<15)		/* Weapon slays dragon */
+#define TR1_KILL_DRAGON     (1<<16)		/* Great bane of dragons */
+#define TR1_KILL_DEMON      (1<<17)		/* Great bane of demons */
+#define TR1_KILL_UNDEAD     (1<<18)		/* Great bane of undead */
+#define TR1_XXX1            (1<<19)
+#define TR1_XXX2            (1<<20)
+#define TR1_XXX3            (1<<21)
+#define TR1_XXX4            (1<<22)
+#define TR1_XXX5            (1<<23)
+#define TR1_BRAND_FIRE      (1<<24)		/* Fire Brand */
+#define TR1_BRAND_COLD      (1<<25)		/* Cold Brand */
+#define TR1_BRAND_ELEC      (1<<26)		/* Lightning Brand */
+#define TR1_BRAND_ACID      (1<<27)		/* Acid Brand */
+#define TR1_BRAND_POIS      (1<<28)		/* Poison Brand */
+#define TR1_BRAND_NEXUS     (1<<29)		/* Nexus Brand */
+#define TR1_BRAND_CHAOS     (1<<30)		/* Chaos Brand */
+#define TR1_BRAND_NETHER    (1<<31)		/* Nether Brand */
 
-#define TR2_SUST_STR        0x00000001L /* Sustain STR */
-#define TR2_SUST_INT        0x00000002L /* Sustain INT */
-#define TR2_SUST_WIS        0x00000004L /* Sustain WIS */
-#define TR2_SUST_DEX        0x00000008L /* Sustain DEX */
-#define TR2_SUST_CON        0x00000010L /* Sustain CON */
-#define TR2_SUST_CHR        0x00000020L /* Sustain CHR */
-#define TR2_LIGHT1          0x00000040L /* Provides light rad1 */
-#define TR2_LIGHT2          0x00000080L /* Provides light rad2 */
-#define TR2_LIGHT3          0x00000100L /* Provides light rad3 */
-#define TR2_LIGHT4          0x00000200L /* Provides light rad4 */
-#define TR2_NEEDS_FUEL      0x00000400L /* Light source needs fuel */
-#define TR2_XXX1            0x00000800L /* (reserved) */
-#define TR2_NO_DISENCHANT   0x00001000L /* Item cannot be disenchanted */
-#define TR2_NO_BLIND        0x00002000L /* Item grants immunity to blindness */
-#define TR2_XXX2            0x00004000L /* (reserved) */
-#define TR2_XXX3            0x00008000L /* (reserved) */
-#define TR2_XXX4            0x00010000L /* (reserved) */
-#define TR2_XXX5            0x00020000L /* (reserved) */
-#define TR2_XXX6            0x00040000L /* (reserved) */
-#define TR2_XXX7            0x00080000L /* (reserved) */
-#define TR2_XXX8            0x00100000L /* (reserved) */
-#define TR2_XXX9            0x00200000L /* (reserved) */
-#define TR2_XXX10           0x00400000L /* (reserved) */
-#define TR2_XXX11           0x00800000L /* (reserved) */
-#define TR2_BRAND_FIRE      0x01000000L /* Fire Brand */
-#define TR2_BRAND_COLD      0x02000000L /* Cold Brand */
-#define TR2_BRAND_ELEC      0x04000000L /* Lightning Brand */
-#define TR2_BRAND_ACID      0x08000000L /* Acid Brand */
-#define TR2_BRAND_POIS      0x10000000L /* Poison Brand */
-#define TR2_BRAND_NEXUS     0x20000000L /* Nexus Brand */
-#define TR2_BRAND_CHAOS     0x40000000L /* Chaos Brand */
-#define TR2_BRAND_NETHER    0x80000000L /* Nether Brand */
+#define NAME_TR1_00         "STEALTH"
+#define NAME_TR1_01         "SEARCH"
+#define NAME_TR1_02         "INFRA"
+#define NAME_TR1_03         "TUNNEL"
+#define NAME_TR1_04         "SPEED"
+#define NAME_TR1_05         "BLOWS"
+#define NAME_TR1_06         "SHOTS"
+#define NAME_TR1_07         "MIGHT"
+#define NAME_TR1_08         "SLAY_ANIMAL"
+#define NAME_TR1_09         "SLAY_EVIL"
+#define NAME_TR1_10         "SLAY_UNDEAD"
+#define NAME_TR1_11         "SLAY_DEMON"
+#define NAME_TR1_12         "SLAY_ORC"
+#define NAME_TR1_13         "SLAY_TROLL"
+#define NAME_TR1_14         "SLAY_GIANT"
+#define NAME_TR1_15         "SLAY_DRAGON"
+#define NAME_TR1_16         "KILL_DRAGON"
+#define NAME_TR1_17         "KILL_DEMON"
+#define NAME_TR1_18         "KILL_UNDEAD"
+#define NAME_TR1_19         ""
+#define NAME_TR1_20         ""
+#define NAME_TR1_21         ""
+#define NAME_TR1_22         ""
+#define NAME_TR1_23         ""
+#define NAME_TR1_24         "BRAND_FIRE"
+#define NAME_TR1_25         "BRAND_COLD"
+#define NAME_TR1_26         "BRAND_ELEC"
+#define NAME_TR1_27         "BRAND_ACID"
+#define NAME_TR1_28         "BRAND_POIS"
+#define NAME_TR1_29         "BRAND_NEXUS"
+#define NAME_TR1_30         "BRAND_CHAOS"
+#define NAME_TR1_31         "BRAND_NETHER"
 
+
+#define TR2_SUST_STR        (1<<0)		/* Sustain STR */
+#define TR2_SUST_INT        (1<<1)		/* Sustain INT */
+#define TR2_SUST_WIS        (1<<2)		/* Sustain WIS */
+#define TR2_SUST_DEX        (1<<3)		/* Sustain DEX */
+#define TR2_SUST_CON        (1<<4)		/* Sustain CON */
+#define TR2_SUST_CHR        (1<<5)		/* Sustain CHR */
+#define TR2_LIGHT1          (1<<6)		/* Provides light rad1 */
+#define TR2_LIGHT2          (1<<7)		/* Provides light rad2 */
+#define TR2_LIGHT3          (1<<8)		/* Provides light rad3 */
+#define TR2_LIGHT4          (1<<9)		/* Provides light rad4 */
+#define TR2_NEEDS_FUEL      (1<<10)		/* Light source needs fuel */
+
+#define NAME_TR2_00         "SUST_STR"
+#define NAME_TR2_01         "SUST_INT"
+#define NAME_TR2_02         "SUST_WIS"
+#define NAME_TR2_03         "SUST_DEX"
+#define NAME_TR2_04         "SUST_CON"
+#define NAME_TR2_05         "SUST_CHR"
+#define NAME_TR2_06         "LIGHT1"
+#define NAME_TR2_07         "LIGHT2"
+#define NAME_TR2_08         "LIGHT3"
+#define NAME_TR2_09         "LIGHT4"
+#define NAME_TR2_10         "NEEDS_FUEL"
+#define NAME_TR2_11         ""
+#define NAME_TR2_12         ""
+#define NAME_TR2_13         ""
+#define NAME_TR2_14         ""
+#define NAME_TR2_15         ""
+#define NAME_TR2_16         ""
+#define NAME_TR2_17         ""
+#define NAME_TR2_18         ""
+#define NAME_TR2_19         ""
+#define NAME_TR2_20         ""
+#define NAME_TR2_21         ""
+#define NAME_TR2_22         ""
+#define NAME_TR2_23         ""
+#define NAME_TR2_24         ""
+#define NAME_TR2_25         ""
+#define NAME_TR2_26         ""
+#define NAME_TR2_27         ""
+#define NAME_TR2_28         ""
+#define NAME_TR2_29         ""
+#define NAME_TR2_30         ""
+#define NAME_TR2_31         ""
 
 
 #define TR3_SLOW_DIGEST     (1<<0)		/* Slow digest */
@@ -2062,11 +2091,11 @@
 #define TR3_IGNORE_ELEC     (1<<12)		/* Item ignores Elec Damage */
 #define TR3_IGNORE_FIRE     (1<<13)		/* Item ignores Fire Damage */
 #define TR3_IGNORE_COLD     (1<<14)		/* Item ignores Cold Damage */
-#define TR3_XXX1            (1<<15)
+#define TR3_IGNORE_DISEN    (1<<15)		/* Item ignores Disenchantment */
 #define TR3_XXX2            (1<<16)
-#define TR3_XXX3            (1<<17)
-#define TR3_XXX4            (1<<18)
-#define TR3_XXX5            (1<<19)
+#define TR3_IMMUNITY_BLIND  (1<<17)
+#define TR3_IMMUNITY_FEAR   (1<<18)
+#define TR3_IMMUNITY_CONF   (1<<19)
 #define TR3_XXX6            (1<<20)
 #define TR3_XXX7            (1<<21)
 #define TR3_BLESSED         (1<<22)		/* Item has been blessed */
@@ -2095,16 +2124,16 @@
 #define NAME_TR3_12         "IGNORE_ELEC"
 #define NAME_TR3_13         "IGNORE_FIRE"
 #define NAME_TR3_14         "IGNORE_COLD"
-#define NAME_TR3_15         "XXX1"
-#define NAME_TR3_16         "XXX2"
-#define NAME_TR3_17         "XXX3"
-#define NAME_TR3_18         "XXX4"
-#define NAME_TR3_19         "XXX5"
-#define NAME_TR3_20         "XXX6"
-#define NAME_TR3_21         "XXX7"
+#define NAME_TR3_15         "IGNORE_DISEN"
+#define NAME_TR3_16         ""
+#define NAME_TR3_17         "IMMUNITY_BLIND"
+#define NAME_TR3_18         "IMMUNITY_FEAR"
+#define NAME_TR3_19         "IMMUNITY_CONF"
+#define NAME_TR3_20         ""
+#define NAME_TR3_21         ""
 #define NAME_TR3_22         "BLESSED"
 #define NAME_TR3_23         "ACTIVATE"
-#define NAME_TR3_24         "INSTRA_ART"
+#define NAME_TR3_24         "INSTA_ART"
 #define NAME_TR3_25         "EASY_KNOW"
 #define NAME_TR3_26         "HIDE_TYPE"
 #define NAME_TR3_27         "SHOW_MODS"

@@ -624,7 +624,10 @@ static void wiz_reroll_item(object_type *o_ptr)
 		/* Apply normal magic, but first clear object */
 		else if (ch == 'n' || ch == 'N')
 		{
-			if (i_ptr->name3) x_info[i_ptr->name3].name[0] = 0;
+			/* Remove the names, if any */
+			if (o_ptr->name_suf) strtable_remove(o_ptr->name_suf);
+			if (o_ptr->name_pre) strtable_remove(o_ptr->name_pre);
+
 			object_prep(i_ptr, o_ptr->k_idx);
 			apply_magic(i_ptr, p_ptr->depth, FALSE, FALSE, FALSE, FALSE);
 		}
@@ -632,7 +635,10 @@ static void wiz_reroll_item(object_type *o_ptr)
 		/* Apply good magic, but first clear object */
 		else if (ch == 'g' || ch == 'g')
 		{
-			if (i_ptr->name3) x_info[i_ptr->name3].name[0] = 0;
+			/* Remove the names, if any */
+			if (o_ptr->name_suf) strtable_remove(o_ptr->name_suf);
+			if (o_ptr->name_pre) strtable_remove(o_ptr->name_pre);
+
 			object_prep(i_ptr, o_ptr->k_idx);
 			apply_magic(i_ptr, p_ptr->depth, FALSE, TRUE, FALSE, FALSE);
 		}
@@ -640,7 +646,10 @@ static void wiz_reroll_item(object_type *o_ptr)
 		/* Apply great magic, but first clear object */
 		else if (ch == 'e' || ch == 'e')
 		{
-			if (i_ptr->name3) x_info[i_ptr->name3].name[0] = 0;
+			/* Remove the names, if any */
+			if (o_ptr->name_suf) strtable_remove(o_ptr->name_suf);
+			if (o_ptr->name_pre) strtable_remove(o_ptr->name_pre);
+
 			object_prep(i_ptr, o_ptr->k_idx);
 			apply_magic(i_ptr, p_ptr->depth, FALSE, TRUE, TRUE, FALSE);
 		}
@@ -648,7 +657,10 @@ static void wiz_reroll_item(object_type *o_ptr)
 		/* Apply randarism, but first clear object */
 		else if (ch == 'r' || ch == 'r')
 		{
-			if (i_ptr->name3) x_info[i_ptr->name3].name[0] = 0;
+			/* Remove the names, if any */
+			if (o_ptr->name_suf) strtable_remove(o_ptr->name_suf);
+			if (o_ptr->name_pre) strtable_remove(o_ptr->name_pre);
+
 			object_prep(i_ptr, o_ptr->k_idx);
 			apply_magic(i_ptr, p_ptr->depth, FALSE, TRUE, TRUE, TRUE);
 		}

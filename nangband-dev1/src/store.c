@@ -1057,10 +1057,6 @@ static void store_item_optimize(int item)
 	/* Must have no items */
 	if (o_ptr->number) return;
 
-	/* Reclaim randarts */
-	if (o_ptr->name3)
-		x_info[o_ptr->name3].name[0] = 0;
-
 	/* One less object */
 	st_ptr->stock_num--;
 

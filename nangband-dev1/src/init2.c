@@ -1274,10 +1274,6 @@ static errr init_other(void)
 	C_MAKE(light_g, VIEW_MAX, u16b);
 
 
-	/*** Prepare randarts ***/
-	C_MAKE(x_info, z_info->randart_max, randart_type);
-
-
 	/*** Prepare dungeon arrays ***/
 
 	/* Padded into array */
@@ -1324,11 +1320,6 @@ static errr init_other(void)
 
 	/* Quests */
 	C_MAKE(q_list, MAX_Q_IDX, quest);
-
-	/*** Prepare randart array ***/
-
-	/* Randarts */
-	C_MAKE(x_info, z_info->randart_max, randart_type);
 
 
 	/*** Prepare the inventory ***/

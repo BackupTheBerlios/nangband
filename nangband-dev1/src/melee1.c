@@ -819,7 +819,7 @@ bool make_attack_normal(int m_idx)
 					take_hit(damage, ddesc);
 
 					/* Increase "blind" */
-					if (!p_ptr->resist_blind)
+					if (!p_ptr->immune_blind)
 					{
 						if (set_blind(p_ptr->blind + 10 + randint(rlev)))
 						{
@@ -839,7 +839,7 @@ bool make_attack_normal(int m_idx)
 					take_hit(damage, ddesc);
 
 					/* Increase "confused" */
-					if (!resist_check(RES_CONF))
+					if (!p_ptr->immune_conf)
 					{
 						if (set_confused(p_ptr->confused + 3 + randint(rlev)))
 						{
@@ -859,7 +859,7 @@ bool make_attack_normal(int m_idx)
 					take_hit(damage, ddesc);
 
 					/* Increase "afraid" */
-					if (rand_int(100) < resist_player_current(RES_FEAR))
+					if (!p_ptr->immune_fear)
 					{
 						msg_print("You stand your ground!");
 						obvious = TRUE;
@@ -1135,7 +1135,7 @@ bool make_attack_normal(int m_idx)
 					take_hit(damage, ddesc);
 
 					/* Increase "image" */
-					if (!resist_check(RES_CONF))
+					if (!p_ptr->immune_conf)
 					{
 						if (set_image(p_ptr->image + 3 + randint(rlev / 2)))
 						{

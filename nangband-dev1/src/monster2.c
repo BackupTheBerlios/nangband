@@ -2360,7 +2360,7 @@ void update_smart_learn(int m_idx, int what)
 
 		case DRS_RES_FEAR:
 		{
-			if (p_ptr->resist_cur[RES_FEAR] || p_ptr->resist_timed[RES_FEAR])
+			if (p_ptr->immune_fear)
 				m_ptr->smart |= (SM_RES_FEAR);
 
 			break;
@@ -2376,13 +2376,15 @@ void update_smart_learn(int m_idx, int what)
 
 		case DRS_RES_BLIND:
 		{
-			if (p_ptr->resist_blind) m_ptr->smart |= (SM_RES_BLIND);
+			if (p_ptr->immune_blind)
+				m_ptr->smart |= (SM_RES_BLIND);
+
 			break;
 		}
 
 		case DRS_RES_CONFU:
 		{
-			if (p_ptr->resist_cur[RES_CONF] || p_ptr->resist_timed[RES_CONF])
+			if (p_ptr->immune_conf)
 				m_ptr->smart |= (SM_RES_CONFU);
 
 			break;

@@ -481,11 +481,6 @@ char *a_name;
 char *a_text;
 
 /*
- * The randart array
- */
-randart_type *x_info;
-
-/*
  * The ego-item arrays
  */
 ego_item_type *e_info;

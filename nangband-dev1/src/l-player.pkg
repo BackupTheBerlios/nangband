@@ -86,10 +86,6 @@ typedef int errr;
 #define RES_COLD		3
 #define RES_POIS		4
 
-/*
- * Maximum resists
- */
-#define RES_MAX			5
 
 
 /***** Types *****/
@@ -259,7 +255,9 @@ struct player_type
 	s16b stat_add[A_MAX];	/* Equipment stat bonuses */
 	s16b stat_ind[A_MAX];	/* Indexes into stat tables */
 
-	bool resist_blind;	/* Resist blindness */
+	bool immune_blind;	/* Resist blindness */
+	bool immune_fear;
+	bool immune_conf;
 
 	bool sustain_str;	/* Keep strength */
 	bool sustain_int;	/* Keep intelligence */

@@ -59,10 +59,7 @@ static cptr resist_flag_names[RES_MAX] =
 	"FIRE",
 	"COLD",
 	"POIS",
-	"FEAR",
-	"DOOM",
 	"DARK",
-	"CONF",
 	"SOUND",
 	"SHARDS",
 	"NEXUS",
@@ -433,38 +430,13 @@ static cptr r_info_flags6[] =
  */
 static cptr k_info_flags1[] =
 {
-	"NULL",
-	"NULL",
-	"NULL",
-	"NULL",
-	"NULL",
-	"NULL",
-	"XXX1",
-	"XXX2",
-	"STEALTH",
-	"SEARCH",
-	"INFRA",
-	"TUNNEL",
-	"SPEED",
-	"BLOWS",
-	"SHOTS",
-	"MIGHT",
-	"SLAY_ANIMAL",
-	"SLAY_EVIL",
-	"SLAY_UNDEAD",
-	"SLAY_DEMON",
-	"SLAY_ORC",
-	"SLAY_TROLL",
-	"SLAY_GIANT",
-	"SLAY_DRAGON",
-	"KILL_DRAGON",
-	"KILL_DEMON",
-	"KILL_UNDEAD",
-	"library",
-	"tome",
-	"treewr",
-	"qqq",
-	"R$%£"
+	NAME_TR1_00, NAME_TR1_01, NAME_TR1_02, NAME_TR1_03, NAME_TR1_04,
+	NAME_TR1_05, NAME_TR1_06, NAME_TR1_07, NAME_TR1_08, NAME_TR1_09,
+	NAME_TR1_10, NAME_TR1_11, NAME_TR1_12, NAME_TR1_13, NAME_TR1_14,
+	NAME_TR1_15, NAME_TR1_16, NAME_TR1_17, NAME_TR1_18, NAME_TR1_19,
+	NAME_TR1_20, NAME_TR1_21, NAME_TR1_22, NAME_TR1_23, NAME_TR1_24,
+	NAME_TR1_25, NAME_TR1_26, NAME_TR1_27, NAME_TR1_28, NAME_TR1_29,
+	NAME_TR1_30, NAME_TR1_31,
 };
 
 /*
@@ -472,38 +444,13 @@ static cptr k_info_flags1[] =
  */
 static cptr k_info_flags2[] =
 {
-	"SUST_STR",
-	"SUST_INT",
-	"SUST_WIS",
-	"SUST_DEX",
-	"SUST_CON",
-	"SUST_CHR",
-	"LIGHT1",
-	"LIGHT2",
-	"LIGHT3",
-	"LIGHT4",
-	"NEEDS_FUEL",
-	"XXX1",
-	"NO_DISENCHANT",
-	"NO_BLIND",
-	"XXX2",
-	"XXX3",
-	"XXX4",
-	"XXX5",
-	"XXX6",
-	"XXX7",
-	"XXX8",
-	"XXX9",
-	"XXX10",
-	"XXX11",
-	"BRAND_FIRE",
-	"BRAND_COLD",
-	"BRAND_ELEC",
-	"BRAND_ACID",
-	"BRAND_POIS",
-	"BRAND_NEXUS",
-	"BRAND_CHAOS",
-	"BRAND_NETHER"
+	NAME_TR2_00, NAME_TR2_01, NAME_TR2_02, NAME_TR2_03, NAME_TR2_04,
+	NAME_TR2_05, NAME_TR2_06, NAME_TR2_07, NAME_TR2_08, NAME_TR2_09,
+	NAME_TR2_10, NAME_TR2_11, NAME_TR2_12, NAME_TR2_13, NAME_TR2_14,
+	NAME_TR2_15, NAME_TR2_16, NAME_TR2_17, NAME_TR2_18, NAME_TR2_19,
+	NAME_TR2_20, NAME_TR2_21, NAME_TR2_22, NAME_TR2_23, NAME_TR2_24,
+	NAME_TR2_25, NAME_TR2_26, NAME_TR2_27, NAME_TR2_28, NAME_TR2_29,
+	NAME_TR2_30, NAME_TR2_31,
 };
 
 /*
@@ -511,38 +458,13 @@ static cptr k_info_flags2[] =
  */
 static cptr k_info_flags3[] =
 {
-	"SLOW_DIGEST",
-	"FEATHER",
-	"XXX8",
-	"REGEN",
-	"TELEPATHY",
-	"SEE_INVIS",
-	"FREE_ACT",
-	"HOLD_LIFE",
-	"888",
-	"qwert",
-	"poiuy",
-	"XXX4",
-	"IMPACT",
-	"TELEPORT",
-	"AGGRAVATE",
-	"DRAIN_EXP",
-	"IGNORE_ACID",
-	"IGNORE_ELEC",
-	"IGNORE_FIRE",
-	"IGNORE_COLD",
-	"XXX5",
-	"XXX6",
-	"BLESSED",
-	"ACTIVATE",
-	"INSTA_ART",
-	"EASY_KNOW",
-	"HIDE_TYPE",
-	"SHOW_MODS",
-	"HUNGER",
-	"LIGHT_CURSE",
-	"HEAVY_CURSE",
-	"PERMA_CURSE"
+	NAME_TR3_00, NAME_TR3_01, NAME_TR3_02, NAME_TR3_03, NAME_TR3_04,
+	NAME_TR3_05, NAME_TR3_06, NAME_TR3_07, NAME_TR3_08, NAME_TR3_09,
+	NAME_TR3_10, NAME_TR3_11, NAME_TR3_12, NAME_TR3_13, NAME_TR3_14,
+	NAME_TR3_15, NAME_TR3_16, NAME_TR3_17, NAME_TR3_18, NAME_TR3_19,
+	NAME_TR3_20, NAME_TR3_21, NAME_TR3_22, NAME_TR3_23, NAME_TR3_24,
+	NAME_TR3_25, NAME_TR3_26, NAME_TR3_27, NAME_TR3_28, NAME_TR3_29,
+	NAME_TR3_30, NAME_TR3_31,
 };
 
 
@@ -873,18 +795,6 @@ errr parse_z_info(char *buf, header *head)
 
 		/* Save the value */
 		z_info->a_max = max;
-	}
-
-	/* Process 'X' for "Maximum x_info[] index" */
-	else if (buf[2] == 'X')
-	{
-		int max;
-
-		/* Scan for the value */
-		if (1 != sscanf(buf+4, "%d", &max)) return (PARSE_ERROR_GENERIC);
-
-		/* Save the value */
-		z_info->randart_max = max;
 	}
 
 	/* Process 'E' for "Maximum e_info[] index" */
@@ -1396,31 +1306,10 @@ static errr grab_one_resist(sbyte *resists, cptr what)
 		return (0);
 	}
 
-	if (prefix(what, "RES_FEAR"))
-	{
-		s = what + 8;
-		resists[RES_FEAR] = atoi(s);
-		return (0);
-	}
-
-	if (prefix(what, "RES_LIGHT") || prefix(what, "RES_DOOM"))
-	{
-		s = what + 8;
-		resists[RES_DOOM] = atoi(s);
-		return (0);
-	}
-
 	if (prefix(what, "RES_DARK"))
 	{
 		s = what + 8;
 		resists[RES_DARK] = atoi(s);
-		return (0);
-	}
-
-	if (prefix(what, "RES_CONF"))
-	{
-		s = what + 8;
-		resists[RES_CONF] = atoi(s);
 		return (0);
 	}
 

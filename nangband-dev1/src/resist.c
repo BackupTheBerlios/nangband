@@ -19,7 +19,7 @@
  */
 bool resist_check_valid(byte *res_idx)
 {
-	if ((*res_idx < 0) || (*res_idx >= RES_MAX))
+	if ((res_idx < 0) || (res_idx >= RES_MAX))
 	{
 		/* The index is too big. */
 		*res_idx = 0;

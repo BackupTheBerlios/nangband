@@ -2875,6 +2875,14 @@ static void store_process_command(void)
 		/* Increase the display counter */
 		case '2':
 		{
+			if (st_ptr->stock_num <= (size_y - 11))
+			{
+				if (top_item != 0) top_item = 0;
+
+				/* Don't continue */
+				break;
+			}
+
 			top_item++;
 
 			if (top_item > st_ptr->stock_num - 1)
@@ -2890,6 +2898,14 @@ static void store_process_command(void)
 		/* Decrease the display counter */
 		case '8':
 		{
+			if (st_ptr->stock_num <= (size_y - 11))
+			{
+				if (top_item != 0) top_item = 0;
+
+				/* Don't continue */
+				break;
+			}
+
 			top_item--;
 
 			if (top_item == -1)
@@ -2908,9 +2924,6 @@ static void store_process_command(void)
 			if (st_ptr->stock_num <= (size_y - 11))
 			{
 				if (top_item != 0) top_item = 0;
-
-				/* Nothing to see */
-				msg_print("Entire inventory is shown.");
 
 				/* Don't continue */
 				break;
@@ -2982,17 +2995,6 @@ static void store_process_command(void)
 			break;
 		}
 
-#if 0
-
-		/* Drop an item */
-		case 'd':
-		{
-			do_cmd_drop();
-			break;
-		}
-
-#endif
-
 		/* Destroy an item */
 		case 'k':
 		{
@@ -3024,53 +3026,12 @@ static void store_process_command(void)
 			break;
 		}
 
-		/* Hack -- toggle windows */
-		case KTRL('E'):
-		{
-			toggle_inven_equip();
-			break;
-		}
-
-
-
-		/*** Use various objects ***/
-
-		/* Browse a book */
-		case 'b':
-		{
-			do_cmd_browse();
-			break;
-		}
-
-		/* Inscribe an object */
-		case '{':
-		{
-			do_cmd_inscribe();
-			break;
-		}
-
-		/* Uninscribe an object */
-		case '}':
-		{
-			do_cmd_uninscribe();
-			break;
-		}
-
-
-
 		/*** Help and Such ***/
 
 		/* Help */
 		case '?':
 		{
 			do_cmd_help();
-			break;
-		}
-
-		/* Identify symbol */
-		case '/':
-		{
-			do_cmd_query_symbol();
 			break;
 		}
 
@@ -3081,81 +3042,12 @@ static void store_process_command(void)
 			break;
 		}
 
-
-		/*** System Commands ***/
-
-		/* Hack -- User interface */
-		case '!':
-		{
-			(void)Term_user(0);
-			break;
-		}
-
-		/* Single line from a pref file */
-		case '"':
-		{
-			do_cmd_pref();
-			break;
-		}
-
-		/* Interact with macros */
-		case '@':
-		{
-			do_cmd_macros();
-			break;
-		}
-
-		/* Interact with visuals */
-		case '%':
-		{
-			do_cmd_visuals();
-			break;
-		}
-
-		/* Interact with colors */
-		case '&':
-		{
-			do_cmd_colors();
-			break;
-		}
-
-		/* Interact with options */
-		case '=':
-		{
-			do_cmd_options();
-			do_cmd_redraw();
-			display_store();
-			break;
-		}
-
-
 		/*** Misc Commands ***/
 
 		/* Take notes */
 		case ':':
 		{
 			do_cmd_note();
-			break;
-		}
-
-		/* Version info */
-		case 'V':
-		{
-			do_cmd_version();
-			break;
-		}
-
-		/* Repeat level feeling */
-		case KTRL('F'):
-		{
-			do_cmd_feeling();
-			break;
-		}
-
-		/* Show previous message */
-		case KTRL('O'):
-		{
-			do_cmd_message_one();
 			break;
 		}
 
@@ -3189,7 +3081,7 @@ static void store_process_command(void)
 		}
 
 
-		/* Hack -- Unknown command */
+		/* Unknown command */
 		default:
 		{
 			msg_print("That command does not work in stores.");
@@ -3290,9 +3182,6 @@ void do_cmd_store(void)
 		/* Hack */
 		size_y--;
 
-		/* Hack -- Clear line 1 */
-		prt("", 1, 0);
-
 		/* Hack -- Check the charisma */
 		tmp_chr = p_ptr->stat_use[A_CHR];
 
@@ -3303,7 +3192,7 @@ void do_cmd_store(void)
 		prt(" ESC) Exit from Building.", size_y - 1, 0);
 
 		/* Browse if necessary */
-		if (st_ptr->stock_num > 12)
+		if (st_ptr->stock_num <= (size_y - 11))
 		{
 			prt(" SPACE) Next page of stock.", size_y, 0);
 		}

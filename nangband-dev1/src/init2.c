@@ -1266,6 +1266,9 @@ static errr init_other(void)
 	temp_y = ((byte*)(temp_g)) + 0;
 	temp_x = ((byte*)(temp_g)) + TEMP_MAX;
 
+	/* Array of grids */
+	C_MAKE(light_g, VIEW_MAX, u16b);
+
 
 	/*** Prepare randarts ***/
 	C_MAKE(x_info, z_info->randart_max, randart_type);

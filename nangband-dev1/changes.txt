@@ -1,6 +1,14 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-07-27
+----------
+- Started to throw the monster light code in, currently incomplete and
+  hence disabled, mixing the Z and Tome one (which is based on the former),
+  with necessary modifications to make it work with the GRID macros.
+  I'm very hesitant to code multiple light radii, though... It's too
+  complicated as a cosmetic feature to suit my tastes. (pelpel)
+
 2002-07-23
 ----------
 - Tweaked some stuff at start.  Astral characters don't start with torches

@@ -1472,7 +1472,8 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ, bool fadin
 					    (cave_feat[y][x] <= FEAT_DOOR_TAIL))
 					{
 						/* Update the visuals */
-						p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+						p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS |
+						                  PU_UPDATE_LIGHT);
 					}
 				}
 
@@ -1599,7 +1600,7 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ, bool fadin
 			}
 
 			/* Update the visuals */
-			p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+			p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS | PU_UPDATE_LIGHT);
 
 			/* Fully update the flow */
 			p_ptr->update |= (PU_FORGET_FLOW | PU_UPDATE_FLOW);
@@ -1620,7 +1621,7 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ, bool fadin
 			if (cave_info[y][x] & (CAVE_MARK)) obvious = TRUE;
 
 			/* Update the visuals */
-			p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+			p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS | PU_UPDATE_LIGHT);
 
 			break;
 		}
@@ -1651,7 +1652,8 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ, bool fadin
 				obvious = TRUE;
 
 				/* Fully update the visuals */
-				p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS);
+				p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS
+				                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 			}
 
 			break;
@@ -1678,7 +1680,8 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ, bool fadin
 				obvious = TRUE;
 
 				/* Fully update the visuals */
-				p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS);
+				p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS
+				                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 			}
 
 			/* All done */

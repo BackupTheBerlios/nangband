@@ -3359,7 +3359,7 @@ void do_cmd_store(void)
 	Term_clear();
 
 	/* Update the visuals */
-	p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+	p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS | PU_UPDATE_LIGHT);
 
 	/* Redraw entire screen */
 	p_ptr->redraw |= (PR_BASIC | PR_EXTRA);

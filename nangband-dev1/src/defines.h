@@ -1746,7 +1746,8 @@
 /* xxx (many) */
 #define PU_FORGET_VIEW	0x00010000L	/* Forget field of view */
 #define PU_UPDATE_VIEW	0x00020000L	/* Update field of view */
-/* xxx (many) */
+#define PU_FORGET_LIGHT	0x00040000L	/* Forget monster light */
+#define PU_UPDATE_LIGHT	0x00080000L	/* Update monster light */
 #define PU_FORGET_FLOW	0x00100000L	/* Forget flow data */
 #define PU_UPDATE_FLOW	0x00200000L	/* Update flow data */
 /* xxx (many) */
@@ -1817,17 +1818,23 @@
  * Special cave grid flags
  *
  * CAVE_* are for cave_info, CAVE2_* are for cave_info2.
+ * 
+ * We have to have separate flag for player torch, because it's updated
+ * by update_view, while monster light is processed by update_monster_light
+ * called after update_monsters...
  */
-#define CAVE_MARK            0x0001     /* memorized feature */
-#define CAVE_GLOW            0x0002     /* self-illuminating */
-#define CAVE_ICKY            0x0004     /* part of a vault */
-#define CAVE_ROOM            0x0008     /* part of a room */
-#define CAVE_SEEN            0x0010     /* seen flag */
-#define CAVE_VIEW            0x0020     /* view flag */
-#define CAVE_TEMP            0x0040     /* temp flag */
-#define CAVE_WALL            0x0080     /* wall flag */
+#define CAVE_MARK            0x01     /* memorized feature */
+#define CAVE_GLOW            0x02     /* self-illuminating */
+#define CAVE_ICKY            0x04     /* part of a vault */
+#define CAVE_ROOM            0x08     /* part of a room */
+#define CAVE_SEEN            0x10     /* seen flag */
+#define CAVE_VIEW            0x20     /* view flag */
+#define CAVE_TEMP            0x40     /* temp flag */
+#define CAVE_WALL            0x80     /* wall flag */
 
-#define CAVE2_TDETECT        0x0001     /* trap detection flag */
+#define CAVE2_TDETECT        0x01     /* trap detection flag */
+#define CAVE2_PLIGHT         0x02     /* Player light */
+#define CAVE2_MLIGHT         0x04     /* Monster light */
 
 
 

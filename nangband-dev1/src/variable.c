@@ -257,6 +257,12 @@ u16b *temp_g;
 byte *temp_y;
 byte *temp_x;
 
+/*
+ * Array[VIEW_MAX] used by "update_monster_light()"
+ */
+sint light_n = 0;
+u16b *light_g;
+
 
 /*
  * Array[DUNGEON_HGT][256] of cave grid info flags (padded)

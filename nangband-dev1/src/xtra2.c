@@ -57,7 +57,8 @@ bool set_blind(int v)
 	if (disturb_state) disturb(0, 0);
 
 	/* Fully update the visuals */
-	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS);
+	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |
+	                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 
 	/* Redraw map */
 	p_ptr->redraw |= (PR_MAP);
@@ -1687,7 +1688,7 @@ static void build_quest_stairs(int y, int x)
 	cave_set_feat(y, x, FEAT_MORE);
 
 	/* Update the visuals */
-	p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+	p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS | PU_UPDATE_LIGHT);
 
 	/* Fully update the flow */
 	p_ptr->update |= (PU_FORGET_FLOW | PU_UPDATE_FLOW);

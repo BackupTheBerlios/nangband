@@ -690,7 +690,7 @@ static bool do_cmd_open_aux(int y, int x)
 			cave_set_feat(y, x, FEAT_OPEN);
 
 			/* Update the visuals */
-			p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+			p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS | PU_UPDATE_LIGHT);
 
 			/* Experience */
 			gain_exp(1);
@@ -717,7 +717,7 @@ static bool do_cmd_open_aux(int y, int x)
 		cave_set_feat(y, x, FEAT_OPEN);
 
 		/* Update the visuals */
-		p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+		p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS | PU_UPDATE_LIGHT);
 
 		/* Sound */
 		sound(MSG_OPENDOOR);
@@ -896,7 +896,7 @@ static bool do_cmd_close_aux(int y, int x)
 		cave_set_feat(y, x, FEAT_DOOR_HEAD + 0x00);
 
 		/* Update the visuals */
-		p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+		p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS | PU_UPDATE_LIGHT);
 
 		/* Sound */
 		sound(MSG_SHUTDOOR);
@@ -1045,7 +1045,7 @@ static bool twall(int y, int x)
 	cave_set_feat(y, x, FEAT_FLOOR);
 
 	/* Update the visuals */
-	p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+	p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS | PU_UPDATE_LIGHT);
 
 	/* Fully update the flow */
 	p_ptr->update |= (PU_FORGET_FLOW | PU_UPDATE_FLOW);
@@ -1622,7 +1622,7 @@ static bool do_cmd_bash_aux(int y, int x)
 		message(MSG_OPENDOOR, 0, "The door crashes open!");
 
 		/* Update the visuals */
-		p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+		p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS | PU_UPDATE_LIGHT);
 	}
 
 	/* Saving throw against stun */

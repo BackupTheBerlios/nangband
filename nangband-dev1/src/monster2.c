@@ -39,6 +39,13 @@ void delete_monster_idx(int i)
 	/* Hack -- count the number of "reproducers" */
 	if (r_ptr->flags2 & (RF2_MULTIPLY)) num_repro--;
 
+	/* Hack -- Notice change in lighting effects */
+	if (r_ptr->flags2 & (RF2_ABSORB_LIGHT|RF2_EMANATE_LIGHT|RF2_CARRY_LIGHT))
+	{
+		/* Update monster light later */
+		p_ptr->update |= (PU_UPDATE_LIGHT);
+	}
+
 
 	/* Hack -- remove target monster */
 	if (p_ptr->target_who == i) target_set_monster(0);
@@ -1231,7 +1238,7 @@ void monster_swap(int y1, int x1, int y2, int x2)
 		p_ptr->update |= (PU_PANEL);
 
 		/* Update the visuals (and monster distances) */
-		p_ptr->update |= (PU_UPDATE_VIEW | PU_DISTANCE);
+		p_ptr->update |= (PU_UPDATE_VIEW | PU_DISTANCE | PU_UPDATE_LIGHT);
 
 		/* Update the flow */
 		p_ptr->update |= (PU_UPDATE_FLOW);
@@ -1267,7 +1274,7 @@ void monster_swap(int y1, int x1, int y2, int x2)
 		p_ptr->update |= (PU_PANEL);
 
 		/* Update the visuals (and monster distances) */
-		p_ptr->update |= (PU_UPDATE_VIEW | PU_DISTANCE);
+		p_ptr->update |= (PU_UPDATE_VIEW | PU_DISTANCE | PU_UPDATE_LIGHT);
 
 		/* Update the flow */
 		p_ptr->update |= (PU_UPDATE_FLOW);

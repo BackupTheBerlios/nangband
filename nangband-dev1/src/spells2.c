@@ -2433,7 +2433,8 @@ void destroy_area(int y1, int x1, int r, bool full)
 
 
 	/* Fully update the visuals */
-	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS);
+	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |
+	                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 
 	/* Fully update the flow */
 	p_ptr->update |= (PU_FORGET_FLOW | PU_UPDATE_FLOW);
@@ -2775,7 +2776,8 @@ void earthquake(int cy, int cx, int r)
 
 
 	/* Fully update the visuals */
-	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS);
+	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |
+	                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 
 	/* Fully update the flow */
 	p_ptr->update |= (PU_FORGET_FLOW | PU_UPDATE_FLOW);
@@ -2825,7 +2827,8 @@ static void cave_temp_room_light(void)
 	}
 
 	/* Fully update the visuals */
-	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS);
+	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |
+	                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 
 	/* Update stuff */
 	update_stuff();
@@ -2914,7 +2917,8 @@ static void cave_temp_room_unlight(void)
 	}
 
 	/* Fully update the visuals */
-	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS);
+	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |
+	                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 
 	/* Update stuff */
 	update_stuff();

@@ -1683,7 +1683,7 @@ static void calc_torch(void)
 	if (old_light != p_ptr->cur_light)
 	{
 		/* Update the visuals */
-		p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+		p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS | PU_UPDATE_LIGHT);
 	}
 
 	/* We are done */
@@ -2748,6 +2748,17 @@ void update_stuff(void)
 		update_monsters(FALSE);
 	}
 
+	if (p_ptr->update & (PU_FORGET_LIGHT))
+	{
+		p_ptr->update &= ~(PU_FORGET_LIGHT);
+		forget_monster_light();
+	}
+
+	if (p_ptr->update & (PU_UPDATE_LIGHT))
+	{
+		p_ptr->update &= ~(PU_UPDATE_LIGHT);
+		if (view_monster_light) update_monster_light();
+	}
 
 	if (p_ptr->update & (PU_PANEL))
 	{

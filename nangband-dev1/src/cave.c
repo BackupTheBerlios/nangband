@@ -2546,6 +2546,11 @@ void forget_view(void)
  * special grids.  Because the actual number of required grids is bizarre,
  * we simply allocate twice as many as we would normally need.  XXX XXX XXX
  */
+
+/*
+ * The splitting of cave_info[][] array slows down the code a bit here.
+ * Compare this with the tome version... -- pelpel
+ */
 void update_view(void)
 {
 	int py = p_ptr->py;
@@ -2564,8 +2569,10 @@ void update_view(void)
 	u16b *fast_temp_g = temp_g;
 
 	byte *fast_cave_info = &cave_info[0][0];
+	byte *fast_cave_info2 = &cave_info2[0][0];
 
 	byte info;
+	byte info2;
 
 
 	/*** Step 0 -- Begin ***/
@@ -2592,8 +2599,8 @@ void update_view(void)
 		/* Clear "CAVE_VIEW" and "CAVE_SEEN" flags */
 		info &= ~(CAVE_VIEW | CAVE_SEEN);
 
-		/* Clear "CAVE_LIGHT" flag */
-		/* info &= ~(CAVE_LIGHT); */
+		/* Clear "CAVE2_PLIGHT" flag */
+		fast_cave_info2[g] &= ~(CAVE2_PLIGHT);
 
 		/* Save cave info */
 		fast_cave_info[g] = info;
@@ -2626,8 +2633,8 @@ void update_view(void)
 		/* Mark as "CAVE_SEEN" */
 		info |= (CAVE_SEEN);
 
-		/* Mark as "CAVE_LIGHT" */
-		/* info |= (CAVE_LIGHT); */
+		/* Mark as "CAVE2_PLIGHT" */
+		fast_cave_info2[g] |= (CAVE2_PLIGHT);
 	}
 
 	/* Perma-lit grid */
@@ -2689,6 +2696,7 @@ void update_view(void)
 
 				/* Get grid info */
 				info = fast_cave_info[g];
+				info2 = fast_cave_info2[g];
 
 				/* Handle wall */
 				if (info & (CAVE_WALL))
@@ -2711,8 +2719,15 @@ void update_view(void)
 							/* Mark as "CAVE_SEEN" */
 							info |= (CAVE_SEEN);
 
-							/* Mark as "CAVE_LIGHT" */
-							/* info |= (CAVE_LIGHT); */
+							/* Mark as "CAVE2_PLIGHT" */
+							info2 |= (CAVE2_PLIGHT);
+						}
+
+						/* Monster-lit grids */
+						else if (info2 & (CAVE2_MLIGHT))
+						{
+							/* Mark as "CAVE_SEEN" */
+							info |= (CAVE_SEEN);
 						}
 
 						/* Perma-lit grids */
@@ -2754,6 +2769,7 @@ void update_view(void)
 
 						/* Save cave info */
 						fast_cave_info[g] = info;
+						fast_cave_info2[g] = info2;
 
 						/* Save in array */
 						fast_view_g[fast_view_n++] = g;
@@ -2787,12 +2803,13 @@ void update_view(void)
 							/* Mark as "CAVE_SEEN" */
 							info |= (CAVE_SEEN);
 
-							/* Mark as "CAVE_LIGHT" */
-							/* info |= (CAVE_LIGHT); */
+							/* Mark as "CAVE2_PLIGHT" */
+							info2 |= (CAVE2_PLIGHT);
 						}
 
-						/* Perma-lit grids */
-						else if (info & (CAVE_GLOW))
+						/* Perma-lit or monster-lit grids */
+						else if ((info & (CAVE_GLOW)) ||
+						         (info2 & (CAVE2_MLIGHT)))
 						{
 							/* Mark as "CAVE_SEEN" */
 							info |= (CAVE_SEEN);
@@ -2800,6 +2817,7 @@ void update_view(void)
 
 						/* Save cave info */
 						fast_cave_info[g] = info;
+						fast_cave_info2[g] = info2;
 
 						/* Save in array */
 						fast_view_g[fast_view_n++] = g;
@@ -2884,6 +2902,208 @@ void update_view(void)
 
 	/* Save 'view_n' */
 	view_n = fast_view_n;
+}
+
+
+/*
+ * Forget monster light
+ */
+void forget_monster_light(void)
+{
+#if 0 /* Work in progress */
+
+	int i, g;
+	int y, x;
+
+	int fast_light_n = light_n;
+	u16b *fast_light_g = light_g;
+
+	byte *fast_cave_info2 = &cave_info2[0][0];
+
+
+	/* Process all the monster-lit grids */
+	for (i = 0; i < fast_light_n; i++)
+	{
+		/* Access grid */
+		g = fast_light_g[i];
+
+		/* Clear monster light flag */
+		fast_cave_info2[g] &= ~(CAVE2_MLIGHT);
+	}
+
+	/* Forget light array */
+	light_n = 0;
+
+#endif /* 0 -- work in progress */
+}
+
+
+/*
+ * Update monster light
+ * Throw the Z code in, with necessary mods, here.
+ */
+void update_monster_light(void)
+{
+#if 0 /* work in progress */
+
+	int i, g;
+	int y, x;
+
+	byte info;
+	byte info2;
+
+	s16b m_idx;
+
+	int fast_light_n = light_n;
+	u16b *fast_light_g = light_g;
+
+	int fast_temp_n;
+	u16b *fast_temp_g = temp_g;
+
+	byte *fast_cave_info = &cave_info[0][0];
+	byte *fast_cave_info2 = &cave_info2[0][0];
+
+
+	/* Handle special case -- blindness */
+	if (p_ptr->blind)
+	{
+		/* Clear all the monster-lit grids */
+		for (i = 0; i < fast_light_n; i++)
+		{
+			/* Access grid */
+			g = fast_light_g[i];
+
+			/* Clear monster light flag */
+			fast_cave_info2[g] &= ~(CAVE2_MLIGHT);
+
+			/* XXX XXX Square is invisible */
+			fast_cave_info[g] &= ~(CAVE_SEEN);
+		}
+
+		/* Clear the light list */
+		light_n = 0;
+
+		/* Done */
+		return;
+	}
+
+	/* Normal case, step 1 -- remember and clear all the monster-lit grids */
+	for (i = 0; i < fast_light_n; i++)
+	{
+		/* Access grid */
+		g = fast_light_g[i];
+		
+		/* Access cave info */
+		info = fast_cave_info[g];
+		info2 = fast_cave_info2[g];
+
+		/* Remember it by setting the CAVE_TEMP flag */
+		info |= (CAVE_TEMP);
+
+		/* Forget monster light */
+		info2 &= ~(CAVE2_MLIGHT);
+
+		/* Unseen unless it's glowing or illuminated by player light source */
+		if (!(info & (CAVE_GLOW)) && !(info2 & (CAVE2_PLIGHT)))
+		{
+			info &= ~(CAVE_SEEN);
+		}
+
+		/* Save cave info flags */
+		fast_cave_info[g] = info;
+		fast_cave_info2[g] = info2;
+	}
+
+	/* Step 2, build list of newly lit grids */
+
+	/* To be done later -- I'm not sure if I can do this... */
+
+	/* Step 3, process old grids */
+	for (i = 0; i < fast_light_n; i++)
+	{
+		/* Access grids */
+		g = fast_light_g[i];
+
+		/* Location */
+		y = GRID_Y(g);
+		x = GRID_X(g);
+
+		/* Monster index */
+		m_idx = cave_m_idx[y][x];
+
+		/* Was lit, is no longer lit */
+		if (!fast_cave_info2[g] & (CAVE2_MLIGHT))
+		{
+			/* Clear the temp flag */
+			fast_cave_info[g] &= ~(CAVE_TEMP);
+
+			/* See if there was a visible monster */
+			if (player_has_los_bold(y, x) && m_idx)
+			{
+				/* Hide the monster */
+				update_mon(m_idx, FALSE);
+			}
+			else
+			{
+				/* Redraw */
+				light_spot(y, x);
+			}
+		}
+	}
+
+	/* Step 4, copy the temp array into the light array */
+	for (i = 0; i < fast_temp_n; i++)
+	{
+		/* Access grids */
+		g = temp_g[i];
+
+		/* Retrieve cave info */
+		info = fast_cave_info[g];
+
+		/* No changes in illumination */
+		if (info & (CAVE_TEMP))
+		{
+			/* Clear the temp flag */
+			fast_cave_info[g] &= ~(CAVE_TEMP);
+		}
+
+		/* Was not lit, is now lit */
+		else
+		{
+			/* Location */
+			y = GRID_Y(g);
+			x = GRID_X(g);
+
+			/* Monster index */
+			m_idx = cave_m_idx[y][x];
+
+			/* Remember the location, if appropriate */
+			note_spot(y, x);
+
+			/* See if there is a monster */
+			if (m_idx)
+			{
+				/* Show it */
+				update_mon(m_idx, FALSE);
+			}
+			else
+			{
+				/* Redraw */
+				light_spot(y, x);
+			}
+		}
+
+		/* Save the location */
+		light_g[i] = g;
+	}
+
+	/* Save light_n */
+	light_n = fast_temp_n;
+
+	/* Forget temp array */
+	temp_n = 0;
+
+#endif /* 0 -- work in progress */
 }
 
 
@@ -3225,7 +3445,8 @@ void wiz_light(void)
 	}
 
 	/* Fully update the visuals */
-	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS);
+	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |
+	                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 
 	/* Redraw map */
 	p_ptr->redraw |= (PR_MAP);
@@ -3269,7 +3490,8 @@ void wiz_dark(void)
 	}
 
 	/* Fully update the visuals */
-	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS);
+	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS
+	                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 
 	/* Redraw map */
 	p_ptr->redraw |= (PR_MAP);
@@ -3360,7 +3582,8 @@ void town_illuminate(bool daytime)
 
 
 	/* Fully update the visuals */
-	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS);
+	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS
+	                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 
 	/* Redraw map */
 	p_ptr->redraw |= (PR_MAP);

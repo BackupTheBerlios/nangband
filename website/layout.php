@@ -51,7 +51,7 @@ function page_header($title, $type)
 
 function page_footer($creators)
 {
-	echo '</font></td></tr>\n';
+	echo '</font></td></tr>';
  
 	echo '<tr><td bgcolor="#eeeeee" align="center">';
 	echo '<font face="Veranda" color="#555555">';

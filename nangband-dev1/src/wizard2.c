@@ -331,18 +331,18 @@ static void wiz_display_item(const object_type *o_ptr)
 	           o_ptr->ident, o_ptr->timeout), 8, j);
 
 	prt("+------------FLAGS1------------+", 10, j);
-	prt("AFFECT..........SLAY............", 11, j);
+	prt("................SLAY............", 11, j);
 	prt("                ae      xxx     ", 12, j);
-	prt("siwdcc  ssidsasmnvudotgdddu     ", 13, j);
-	prt("tnieoh  trnipthgiinmrrnrren     ", 14, j);
-	prt("rtsxna..lcfgdkttmldncltggmd.....", 15, j);
+	prt("        ssidsasmnvudotgdddu     ", 13, j);
+	prt("        trnipthgiinmrrnrren     ", 14, j);
+	prt("........lcfgdkttmldncltggmd.....", 15, j);
 	prt_binary(f1, 16, j);
 
 	prt("+------------FLAGS2------------+", 17, j);
 	prt("SUST..LIGHT..XTRA..........BRAND", 18, j);
 	prt("                                ", 19, j);
-	prt("SiWdCcllllf nn          fceapncn", 20, j);
-	prt("TnIeOhtttte db          rllcieht", 21, j);
+	prt("SiWdCc    f nn          fceapncn", 20, j);
+	prt("TnIeOh    e db          rllcieht", 21, j);
 	prt("RtSxNa1234l.sd..........edcdsxoh", 22, j);
 	prt_binary(f2, 23, j);
 

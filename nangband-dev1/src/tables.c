@@ -2069,6 +2069,7 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
+	FALSE,		/* xxx */
 	FALSE,		/* OPT_birth_point_based */
 	TRUE,		/* OPT_birth_auto_roller */
 	TRUE,		/* OPT_birth_maximize */
@@ -2078,7 +2079,6 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* OPT_birth_no_artifacts */
 	FALSE,		/* xxx */
 	FALSE,		/* OPT_birth_no_stacking */
-	FALSE,		/* xxx */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */

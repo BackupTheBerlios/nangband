@@ -2539,7 +2539,7 @@ void item_show_knowledge(const object_type *o_ptr)
  */
 void identify_backend(const object_type *o_ptr)
 {
-//	item_info_brief(o_ptr, OBJECT_AUX_KNOWN);
+	item_info_desc(o_ptr, OBJECT_AUX_KNOWN);
 
 	return;
 }

@@ -1,13 +1,15 @@
-# Project: Angband 3.0.0
+# Project: Nangband
+#
+# To use this makefile, the current working directory must be where
+# this makefile is (if this makefile is at "raFS::Temp.$.ang.src.makefile",
+# the CWD must be "raFS::Temp.$.ang.src").
 #
 # This makefile is for Acorn C rel. 5 (edit the CCFLAGS for rel.4).
 
 # Libraries:
-
 LIBS = C:o.Stubs DeskLib:o.DeskLib
 
 # Tools:
-
 CC = cc
 LD = link
 SQ = squeeze
@@ -15,60 +17,56 @@ RM = remove
 tolua = lua.tolua
 
 # Flags:
-
-CCFLAGS = -throwback -Wand -depend !Depend
+CCFLAGS = -throwback -Wall -depend !Depend
 LDFLAGS = -aif
-SQFLAGS =
+SQFLAGS = 
 
-LUAOBJS = \
-  lua.lapi.o lua.ldebug.o lua.lmem.o lua.lstrlib.o lua.lvm.o \
+# Lua object files
+LUAOBJS = lua.lapi.o lua.ldebug.o lua.lmem.o lua.lstrlib.o lua.lvm.o \
   lua.tolua_lb.o lua.lauxlib.o lua.ldo.o lua.lobject.o lua.ltable.o \
   lua.lzio.o lua.tolua_rg.o lua.lbaselib.o lua.lfunc.o lua.lparser.o \
   lua.ltests.o lua.tolua_bd.o lua.tolua_tm.o lua.lcode.o lua.lgc.o \
   lua.lstate.o lua.ltm.o lua.tolua_eh.o lua.tolua_tt.o lua.ldblib.o \
   lua.llex.o lua.lstring.o lua.lundump.o lua.tolua_gp.o
 
-TOLUAOBJS = \
-  lua.tolua.o lua.tolualua.o lua.liolib.o \
+# toLua object files
+TOLUAOBJS = lua.tolua.o lua.tolualua.o lua.liolib.o \
   $(LUAOBJS)
-                      
+
 # Lua package files:
 LUAPKGS = l-monst.c l-object.c l-player.c l-random.c l-ui.c l-misc.c l-spell.c
 
 # The standard object files:
-
-OBJS = \
-	z-util.o z-virt.o z-form.o z-rand.o z-term.o \
-	variable.o tables.o util.o cave.o \
-	object1.o object2.o monster1.o monster2.o \
-	xtra1.o xtra2.o spells1.o spells2.o \
-	melee1.o melee2.o save.o files.o \
-	cmd1.o cmd2.o cmd3.o cmd4.o cmd5.o cmd6.o \
-	resist.o interface.o \
-	help.o xmlbulp.o \
-	store.o birth.o \
-	wizard1.o wizard2.o \
-	generate.o dungeon.o init1.o init2.o randart.o \
-	main-ros.o main.o \
-	script.o l-monst.o l-object.o l-player.o l-random.o l-ui.o l-misc.o l-spell.o l-dynamic.o \
-	$(LUAOBJS)
+OBJS = z-util.o z-virt.o z-form.o z-rand.o z-term.o \
+  variable.o util.o cave.o \
+  object1.o object2.o monster1.o monster2.o \
+  xtra1.o xtra2.o spells1.o spells2.o \
+  melee1.o melee2.o files.o \
+  cmd1.o cmd2.o cmd3.o cmd4.o cmd5.o cmd6.o \
+  store.o birth.o save.o interface.o resist.o \
+  xmlbulp.o help.o \
+  wizard1.o wizard2.o \
+  generate.o dungeon.o init1.o init2.o randart.o \
+  main-ros.o main.o \
+  script.o l-dynamic.o tables.o \
+  l-monst.o l-object.o l-player.o l-random.o l-ui.o l-misc.o l-spell.o \
+  $(LUAOBJS)
 
 # Borg object files:
-
-BOBJS = \
-	borg1.o borg2.o borg3.o borg4.o borg5.o borg6.o borg7.o \
+BOBJS = borg1.o borg2.o borg3.o borg4.o borg5.o borg6.o borg7.o \
 	borg8.o borg9.o $(OBJS)
 
+# A standard compile
 compile: ^.!RunImage lua/tolua
 
 # The normal !RunImage:
-^.!RunImage:	$(OBJS) $(LIBS) $(LUAPKGS)
+^.!RunImage:	$(LUAPKGS) $(OBJS) $(LIBS)
 		$(LD) $(LDFLAGS) -o !RunImage $(OBJS) $(LIBS)
 		$(SQ) $(SQFLAGS) !RunImage ^.!RunImage
 		$(RM) !RunImage
 
 # The Borg RunImage
-^.!RunImageB:	$(BOBJS) $(LIBS)
+^.!RunImageB:	$(LUAPKGS) $(BOBJS) $(LIBS)
 		$(LD) $(LDFLAGS) -o !RunImage $(BOBJS) $(LIBS)
 		$(SQ) $(SQFLAGS) !RunImageB ^.!RunImageB
 		$(RM) !RunImageB
@@ -77,417 +75,41 @@ compile: ^.!RunImage lua/tolua
 lua/tolua: $(TOLUAOBJS)
 	$(LD) -o lua.tolua $(TOLUAOBJS) $(LDFLAGS) $(LIBS)
 
-
 # Lua packages
-l-monst.c: pkg.l-monst
-	$(tolua) -n monster -o @.c.l-monst pkg.l-monst
+l-monst.c: $(tolua) pkg.l-monst
+	$(tolua) -n monster -o c.l-monst pkg.l-monst
 
-l-object.c: pkg.l-object
+l-object.c: $(tolua) pkg.l-object
 	$(tolua) -n object -o c.l-object pkg.l-object
 
-l-player.c: pkg.l-player
+l-player.c: $(tolua) pkg.l-player
 	$(tolua) -n player -o c.l-player pkg.l-player
 
-l-random.c: pkg.l-random
+l-random.c: $(tolua) pkg.l-random
 	$(tolua) -n random -o c.l-random pkg.l-random
 
-l-ui.c: pkg.l-ui
+l-ui.c: $(tolua) pkg.l-ui
 	$(tolua) -n ui -o c.l-ui pkg.l-ui
 
-l-misc.c: pkg.l-misc
+l-misc.c: $(tolua) pkg.l-misc
 	$(tolua) -n misc -o c.l-misc pkg.l-misc
 
-l-spell.c: pkg.l-spell
-	$(tolua) -n spell -o c.l-spell pkg.l-spell
+l-spell.c: $(tolua) pkg.l-spell
+	$(tolua) -n spell -o c.l-spell pkg.l-spell   
 
-
+# Suffix rules
 .SUFFIXES: .o .c
 
+# Hack to remove compiler crashes
 object2.o:
 	$(CC) -Ospace $(CCFLAGS) -c -o object2.o object2.c
 
 monster2.o:
 	$(CC) -Ospace $(CCFLAGS) -c -o monster2.o monster2.c
 
-# Defining MULT_RET for all compiles is a bit hacky, really.
-# Only needed for compiling Lua itself.
+# Defining MULT_RET for everything is a bit silly
+# It should onlt be defined for the Lua files.
 .c.o:
 	$(CC) -DMULT_RET=255 -Otime $(CCFLAGS) -c -o $@ $<
 
 # Dynamic dependencies:
-o.z-util:	c.z-util
-o.z-util:	h.z-util
-o.z-util:	h.h-basic
-o.z-util:	h.h-config
-o.z-util:	h.h-system
-o.z-util:	h.h-type
-o.z-util:	h.h-define
-o.z-virt:	c.z-virt
-o.z-virt:	h.z-virt
-o.z-virt:	h.h-basic
-o.z-virt:	h.h-config
-o.z-virt:	h.h-system
-o.z-virt:	h.h-type
-o.z-virt:	h.h-define
-o.z-virt:	h.z-util
-o.z-virt:	h.h-basic
-o.z-form:	c.z-form
-o.z-form:	h.z-form
-o.z-form:	h.h-basic
-o.z-form:	h.h-config
-o.z-form:	h.h-system
-o.z-form:	h.h-type
-o.z-form:	h.h-define
-o.z-form:	h.z-util
-o.z-form:	h.h-basic
-o.z-form:	h.z-virt
-o.z-form:	h.h-basic
-o.z-rand:	c.z-rand
-o.z-rand:	h.z-rand
-o.z-rand:	h.h-basic
-o.z-rand:	h.h-config
-o.z-rand:	h.h-system
-o.z-rand:	h.h-type
-o.z-rand:	h.h-define
-o.z-term:	c.z-term
-o.z-term:	h.z-term
-o.z-term:	h.h-basic
-o.z-term:	h.h-config
-o.z-term:	h.h-system
-o.z-term:	h.h-type
-o.z-term:	h.h-define
-o.z-term:	h.z-virt
-o.z-term:	h.h-basic
-o.variable:	c.variable
-o.variable:	h.angband
-o.variable:	h.h-basic
-o.variable:	h.h-config
-o.variable:	h.h-system
-o.variable:	h.h-type
-o.variable:	h.h-define
-o.variable:	h.z-util
-o.variable:	h.h-basic
-o.variable:	h.z-virt
-o.variable:	h.h-basic
-o.variable:	h.z-form
-o.variable:	h.h-basic
-o.variable:	h.z-rand
-o.variable:	h.h-basic
-o.variable:	h.z-term
-o.variable:	h.h-basic
-o.variable:	h.config
-o.variable:	h.defines
-o.variable:	h.types
-o.variable:	h.externs
-o.tables:	c.tables
-o.tables:	h.angband
-o.tables:	h.h-basic
-o.tables:	h.h-config
-o.tables:	h.h-system
-o.tables:	h.h-type
-o.tables:	h.h-define
-o.tables:	h.z-util
-o.tables:	h.h-basic
-o.tables:	h.z-virt
-o.tables:	h.h-basic
-o.tables:	h.z-form
-o.tables:	h.h-basic
-o.tables:	h.z-rand
-o.tables:	h.h-basic
-o.tables:	h.z-term
-o.tables:	h.h-basic
-o.tables:	h.config
-o.tables:	h.defines
-o.tables:	h.types
-o.tables:	h.externs
-o.util:	c.util
-o.util:	h.angband
-o.util:	h.h-basic
-o.util:	h.h-config
-o.util:	h.h-system
-o.util:	h.h-type
-o.util:	h.h-define
-o.util:	h.z-util
-o.util:	h.h-basic
-o.util:	h.z-virt
-o.util:	h.h-basic
-o.util:	h.z-form
-o.util:	h.h-basic
-o.util:	h.z-rand
-o.util:	h.h-basic
-o.util:	h.z-term
-o.util:	h.h-basic
-o.util:	h.config
-o.util:	h.defines
-o.util:	h.types
-o.util:	h.externs
-o.cave:	c.cave
-o.cave:	h.angband
-o.cave:	h.h-basic
-o.cave:	h.h-config
-o.cave:	h.h-system
-o.cave:	h.h-type
-o.cave:	h.h-define
-o.cave:	h.z-util
-o.cave:	h.h-basic
-o.cave:	h.z-virt
-o.cave:	h.h-basic
-o.cave:	h.z-form
-o.cave:	h.h-basic
-o.cave:	h.z-rand
-o.cave:	h.h-basic
-o.cave:	h.z-term
-o.cave:	h.h-basic
-o.cave:	h.config
-o.cave:	h.defines
-o.cave:	h.types
-o.cave:	h.externs
-o.object1:	c.object1
-o.object1:	h.angband
-o.object1:	h.h-basic
-o.object1:	h.h-config
-o.object1:	h.h-system
-o.object1:	h.h-type
-o.object1:	h.h-define
-o.object1:	h.z-util
-o.object1:	h.h-basic
-o.object1:	h.z-virt
-o.object1:	h.h-basic
-o.object1:	h.z-form
-o.object1:	h.h-basic
-o.object1:	h.z-rand
-o.object1:	h.h-basic
-o.object1:	h.z-term
-o.object1:	h.h-basic
-o.object1:	h.config
-o.object1:	h.defines
-o.object1:	h.types
-o.object1:	h.externs
-o.object2:	c.object2
-o.object2:	h.angband
-o.object2:	h.h-basic
-o.object2:	h.h-config
-o.object2:	h.h-system
-o.object2:	h.h-type
-o.object2:	h.h-define
-o.object2:	h.z-util
-o.object2:	h.h-basic
-o.object2:	h.z-virt
-o.object2:	h.h-basic
-o.object2:	h.z-form
-o.object2:	h.h-basic
-o.object2:	h.z-rand
-o.object2:	h.h-basic
-o.object2:	h.z-term
-o.object2:	h.h-basic
-o.object2:	h.config
-o.object2:	h.defines
-o.object2:	h.types
-o.object2:	h.externs
-o.monster1:	c.monster1
-o.monster1:	h.angband
-o.monster1:	h.h-basic
-o.monster1:	h.h-config
-o.monster1:	h.h-system
-o.monster1:	h.h-type
-o.monster1:	h.h-define
-o.monster1:	h.z-util
-o.monster1:	h.h-basic
-o.monster1:	h.z-virt
-o.monster1:	h.h-basic
-o.monster1:	h.z-form
-o.monster1:	h.h-basic
-o.monster1:	h.z-rand
-o.monster1:	h.h-basic
-o.monster1:	h.z-term
-o.monster1:	h.h-basic
-o.monster1:	h.config
-o.monster1:	h.defines
-o.monster1:	h.types
-o.monster1:	h.externs
-o.monster2:	c.monster2
-o.monster2:	h.angband
-o.monster2:	h.h-basic
-o.monster2:	h.h-config
-o.monster2:	h.h-system
-o.monster2:	h.h-type
-o.monster2:	h.h-define
-o.monster2:	h.z-util
-o.monster2:	h.h-basic
-o.monster2:	h.z-virt
-o.monster2:	h.h-basic
-o.monster2:	h.z-form
-o.monster2:	h.h-basic
-o.monster2:	h.z-rand
-o.monster2:	h.h-basic
-o.monster2:	h.z-term
-o.monster2:	h.h-basic
-o.monster2:	h.config
-o.monster2:	h.defines
-o.monster2:	h.types
-o.monster2:	h.externs
-o.xtra1:	c.xtra1
-o.xtra1:	h.angband
-o.xtra1:	h.h-basic
-o.xtra1:	h.h-config
-o.xtra1:	h.h-system
-o.xtra1:	h.h-type
-o.xtra1:	h.h-define
-o.xtra1:	h.z-util
-o.xtra1:	h.h-basic
-o.xtra1:	h.z-virt
-o.xtra1:	h.h-basic
-o.xtra1:	h.z-form
-o.xtra1:	h.h-basic
-o.xtra1:	h.z-rand
-o.xtra1:	h.h-basic
-o.xtra1:	h.z-term
-o.xtra1:	h.h-basic
-o.xtra1:	h.config
-o.xtra1:	h.defines
-o.xtra1:	h.types
-o.xtra1:	h.externs
-o.xtra1:	h.script
-o.xtra1:	h.angband
-o.xtra2:	c.xtra2
-o.xtra2:	h.angband
-o.xtra2:	h.h-basic
-o.xtra2:	h.h-config
-o.xtra2:	h.h-system
-o.xtra2:	h.h-type
-o.xtra2:	h.h-define
-o.xtra2:	h.z-util
-o.xtra2:	h.h-basic
-o.xtra2:	h.z-virt
-o.xtra2:	h.h-basic
-o.xtra2:	h.z-form
-o.xtra2:	h.h-basic
-o.xtra2:	h.z-rand
-o.xtra2:	h.h-basic
-o.xtra2:	h.z-term
-o.xtra2:	h.h-basic
-o.xtra2:	h.config
-o.xtra2:	h.defines
-o.xtra2:	h.types
-o.xtra2:	h.externs
-o.spells1:	c.spells1
-o.spells1:	h.angband
-o.spells1:	h.h-basic
-o.spells1:	h.h-config
-o.spells1:	h.h-system
-o.spells1:	h.h-type
-o.spells1:	h.h-define
-o.spells1:	h.z-util
-o.spells1:	h.h-basic
-o.spells1:	h.z-virt
-o.spells1:	h.h-basic
-o.spells1:	h.z-form
-o.spells1:	h.h-basic
-o.spells1:	h.z-rand
-o.spells1:	h.h-basic
-o.spells1:	h.z-term
-o.spells1:	h.h-basic
-o.spells1:	h.config
-o.spells1:	h.defines
-o.spells1:	h.types
-o.spells1:	h.externs
-o.spells2:	c.spells2
-o.spells2:	h.angband
-o.spells2:	h.h-basic
-o.spells2:	h.h-config
-o.spells2:	h.h-system
-o.spells2:	h.h-type
-o.spells2:	h.h-define
-o.spells2:	h.z-util
-o.spells2:	h.h-basic
-o.spells2:	h.z-virt
-o.spells2:	h.h-basic
-o.spells2:	h.z-form
-o.spells2:	h.h-basic
-o.spells2:	h.z-rand
-o.spells2:	h.h-basic
-o.spells2:	h.z-term
-o.spells2:	h.h-basic
-o.spells2:	h.config
-o.spells2:	h.defines
-o.spells2:	h.types
-o.spells2:	h.externs
-o.save:	c.save
-o.save:	h.angband
-o.save:	h.h-basic
-o.save:	h.h-config
-o.save:	h.h-system
-o.save:	h.h-type
-o.save:	h.h-define
-o.save:	h.z-util
-o.save:	h.h-basic
-o.save:	h.z-virt
-o.save:	h.h-basic
-o.save:	h.z-form
-o.save:	h.h-basic
-o.save:	h.z-rand
-o.save:	h.h-basic
-o.save:	h.z-term
-o.save:	h.h-basic
-o.save:	h.config
-o.save:	h.defines
-o.save:	h.types
-o.save:	h.externs
-o.main-ros:	c.main-ros
-o.main-ros:	h.angband
-o.main-ros:	h.h-basic
-o.main-ros:	h.h-config
-o.main-ros:	h.h-system
-o.main-ros:	h.h-type
-o.main-ros:	h.h-define
-o.main-ros:	h.z-util
-o.main-ros:	h.h-basic
-o.main-ros:	h.z-virt
-o.main-ros:	h.h-basic
-o.main-ros:	h.z-form
-o.main-ros:	h.h-basic
-o.main-ros:	h.z-rand
-o.main-ros:	h.h-basic
-o.main-ros:	h.z-term
-o.main-ros:	h.h-basic
-o.main-ros:	h.config
-o.main-ros:	h.defines
-o.main-ros:	h.types
-o.main-ros:	h.externs
-o.main-ros:	Desklib:h.Event
-o.main-ros:	Desklib:h.Core
-o.main-ros:	Desklib:h.Wimp
-o.main-ros:	Desklib:h.EventMsg
-o.main-ros:	Desklib:h.Template
-o.main-ros:	Desklib:h.Sprite
-o.main-ros:	Desklib:h.Coord
-o.main-ros:	Desklib:h.LinkList
-o.main-ros:	Desklib:h.Window
-o.main-ros:	Desklib:h.WimpSWIs
-o.main-ros:	Desklib:h.Pointer
-o.main-ros:	Desklib:h.Core
-o.main-ros:	Desklib:h.Icon
-o.main-ros:	Desklib:h.DragASpr
-o.main-ros:	Desklib:h.Window
-o.main-ros:	Desklib:h.Handler
-o.main-ros:	Desklib:h.Screen
-o.main-ros:	Desklib:h.Menu
-o.main-ros:	Desklib:h.Msgs
-o.main-ros:	Desklib:h.Icon
-o.main-ros:	Desklib:h.Resource
-o.main-ros:	Desklib:h.SWI
-o.main-ros:	Desklib:h.Time
-o.main-ros:	Desklib:h.Sound
-o.main-ros:	Desklib:h.KeyCodes
-o.main-ros:	Desklib:h.Kbd
-o.main-ros:	Desklib:h.GFX
-o.main-ros:	Desklib:h.ColourTran
-o.main-ros:	Desklib:h.Error
-o.main-ros:	Desklib:h.Coord
-o.main-ros:	Desklib:h.Slider
-o.main-ros:	Desklib:h.WimpSWIs
-o.main-ros:	Desklib:h.Sprite
-o.main-ros:	Desklib:h.Hourglass
-o.main-ros:	Desklib:h.Save
-o.main-ros:	Desklib:h.Sprite
-o.main-ros:	Desklib:h.KernelSWIs

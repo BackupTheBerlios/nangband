@@ -399,31 +399,6 @@ struct flag_desc
 
 
 /*
- * These are used for "+3 to STR, DEX", etc. These are separate from
- * the other pval affected traits to simplify the case where an object
- * affects all stats.  In this case, "All stats" is used instead of
- * listing each stat individually.
- */
-
-static const flag_desc stat_flags_desc[] =
-{
-    /*
-	{ TR1_STR,        "STR" },
-	{ TR1_INT,        "INT" },
-	{ TR1_WIS,        "WIS" },
-	{ TR1_DEX,        "DEX" },
-	{ TR1_CON,        "CON" },
-	{ TR1_CHR,        "CHR" }
-    */
-    { TR1_XXX1, "Non-existant"},
-        { TR1_XXX1, "Non-existant"},
-            { TR1_XXX1, "Non-existant"},
-                { TR1_XXX1, "Non-existant"},
-                    { TR1_XXX1, "Non-existant"},
-                        { TR1_XXX1, "Non-existant"}
-};
-
-/*
  * Besides stats, these are the other player traits
  * which may be affected by an object's pval
  */
@@ -532,8 +507,7 @@ typedef struct
 	 *
 	 * This list includes extra attacks, for simplicity.
 	 */
-	cptr pval_affects[N_ELEMENTS(stat_flags_desc) - 1 +
-	                  N_ELEMENTS(pval_flags1_desc) + 1];
+	cptr pval_affects[N_ELEMENTS(pval_flags1_desc) + 1];
 
 } pval_info_type;
 
@@ -615,7 +589,6 @@ static void spoiler_underline(cptr str)
  *
  * The possibly updated description pointer is returned.
  */
-
 static cptr *spoiler_flag_aux(const u32b art_flags, const flag_desc *flag_x_ptr,
                               cptr *desc_x_ptr, const int n_elmnts)
 {
@@ -644,7 +617,7 @@ static void analyze_general(const object_type *o_ptr, char *desc_x_ptr)
 }
 
 /*
- * List "player traits" altered by an artifact's pval. These include stats,
+ * List "player traits" altered by an artifact's pval. These include
  * speed, infravision, tunneling, stealth, searching, and extra attacks.
  */
 static void analyze_pval(const object_type *o_ptr, pval_info_type *pval_x_ptr)
@@ -668,22 +641,6 @@ static void analyze_pval(const object_type *o_ptr, pval_info_type *pval_x_ptr)
 
 	/* Create the "+N" string */
 	sprintf(pval_x_ptr->pval_desc, "%s%d", POSITIZE(o_ptr->pval), o_ptr->pval);
-
-    #if 0
-	/* First, check to see if the pval affects all stats */
-	if ((f1 & all_stats) == all_stats)
-	{
-		*affects_list++ = "All stats";
-	}
-
-	/* Are any stats affected? */
-	else if (f1 & all_stats)
-	{
-		affects_list = spoiler_flag_aux(f1, stat_flags_desc,
-		                                affects_list,
-		                                N_ELEMENTS(stat_flags_desc));
-	}
-    #endif
 
 	/* And now the "rest" */
 	affects_list = spoiler_flag_aux(f1, pval_flags1_desc,
@@ -1146,6 +1103,9 @@ static void spoil_artifact(cptr fname)
 			/* Miscellaneous facts */
 			text_out(INDENT1);
 			text_out(artifact.misc_desc);
+
+			/* Whee */
+//			identify_backend(i_ptr);
 
 			/* Terminate the entry */
 			text_out("\n\n");

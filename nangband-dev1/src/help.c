@@ -5091,7 +5091,10 @@ bool move_down(helpfile_blk *help_file, int *from_line, int height, int by, int 
 bool move_up(int *from_line, int height, int by)
 {
 	bool at_top = FALSE;
-                 
+ 
+	/* Unused parameters */
+	(void) height;
+                
 	/* Establish if we were at the top before */
 	if (*from_line == 0)
 	{

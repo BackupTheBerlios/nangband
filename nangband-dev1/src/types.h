@@ -178,7 +178,7 @@ struct object_kind
 	byte level;			/* Level */
 	byte extra;			/* Something */
 
-	s16b resists[RES_MAX];	/* Item resists */
+	byte resists[RES_MAX];	/* Item resists */
 
 	byte d_attr;		/* Default object attribute */
 	char d_char;		/* Default object character */
@@ -227,7 +227,7 @@ struct artifact_type
 	u32b flags2;		/* Artifact Flags, set 2 */
 	u32b flags3;		/* Artifact Flags, set 3 */
 
-	s16b resists[RES_MAX];	/* Item resists */
+	byte resists[RES_MAX];	/* Item resists */
 
 	byte level;			/* Artifact level */
 	byte rarity;		/* Artifact rarity */
@@ -269,7 +269,7 @@ struct ego_item_type
 	u32b flags2;		/* Ego-Item Flags, set 2 */
 	u32b flags3;		/* Ego-Item Flags, set 3 */
 
-	s16b resists[RES_MAX];	/* Item resists */
+	byte resists[RES_MAX];	/* Item resists */
 };
 
 
@@ -877,9 +877,9 @@ struct player_type
 	s16b tim_invis;		/* Timed -- See Invisible */
 	s16b tim_infra;		/* Timed -- Infra Vision */
 
-	s16b resist_timed[RES_MAX];	/* Timed resistances */
-	s16b resist_cur[RES_MAX];	/* Current % resistances */
-	s16b resist_dis[RES_MAX];	/* Displayed resistances */
+	byte resist_timed[RES_MAX];	/* Timed resistances */
+	byte resist_cur[RES_MAX];	/* Current % resistances */
+	byte resist_dis[RES_MAX];	/* Displayed resistances */
 
 	s16b word_recall;	/* Word of recall counter */
 

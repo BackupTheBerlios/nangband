@@ -55,7 +55,7 @@
  */
 #define SAVEFILE_MAJOR	2
 #define SAVEFILE_MINOR	9
-#define SAVEFILE_PATCH	7
+#define SAVEFILE_PATCH	8
 #define SAVEFILE_EXTRA	0
 
 /*

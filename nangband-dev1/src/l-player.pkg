@@ -142,9 +142,9 @@ struct player_type
 	s16b tim_invis;		/* Timed -- See Invisible */
 	s16b tim_infra;		/* Timed -- Infra Vision */
 
-	s16b resist_timed[RES_MAX];	/* Timed resistances */
-	s16b resist_cur[RES_MAX];	/* Current % resistances */
-	s16b resist_dis[RES_MAX];	/* Displayed resistances */
+	byte resist_timed[RES_MAX];	/* Timed resistances */
+	byte resist_cur[RES_MAX];	/* Current % resistances */
+	byte resist_dis[RES_MAX];	/* Displayed resistances */
 
 	s16b word_recall;	/* Word of recall counter */
 

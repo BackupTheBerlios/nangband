@@ -18,7 +18,7 @@
 /*
  * Check that a given resist index is valid.
  */
-bool resist_check_valid(s16b *res_idx)
+bool resist_check_valid(byte *res_idx)
 {
 	if (0 <= res_idx < RES_MAX)
 	{
@@ -34,7 +34,7 @@ bool resist_check_valid(s16b *res_idx)
 /*
  * Return the current resistance value for a given resist.
  */
-s16b resist_player_current(s16b res_idx)
+int resist_player_current(byte res_idx)
 {
 	u16b x, y;
 
@@ -46,4 +46,26 @@ s16b resist_player_current(s16b res_idx)
 	/* [note to self - do the clever timed resist decrement stuff] */
 
 	return(x + y);
+}
+
+/*
+ * Apply a resistance.
+ *
+ * Mostly Eytan's code from EyAngband.
+ */
+int resist_apply(byte res_amnt, int dam)
+{
+	/* No effect */
+	if ((1 > dam) || !res_amnt) return (dam);
+
+	/* Immunity */
+	if (res_amnt >= 100) return (0);
+
+	/* Apply the resistance */
+	dam = (dam * (100 - res_amnt)) / 100;
+
+	/* Resistances can't lower damage to 0 */
+	if (dam < 1) dam = 1;
+
+	return (dam);
 }

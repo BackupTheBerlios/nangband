@@ -1093,7 +1093,7 @@ static void wr_extra(void)
 	/* Timed resistances */
 	for (i = 0; i < RES_MAX; i++)
 	{
-		wr_s16b(p_ptr->resist_timed[i]);
+		wr_byte(p_ptr->resist_timed[i]);
 	}
 
 	wr_byte(p_ptr->confusing);

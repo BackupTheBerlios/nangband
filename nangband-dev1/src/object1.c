@@ -1624,7 +1624,7 @@ void object_desc_store(char *buf, const object_type *o_ptr, int pref, int mode)
 /*
  * Print a given object's resists/immunities.
  */
-void obj_info_resists(s16b *resists)
+void obj_info_resists(byte *resists)
 {
 	/* Texts */
 	int vn;
@@ -1692,13 +1692,12 @@ void obj_info_resists(s16b *resists)
 			text_out("% resistance to ");
 			text_out_c(colours[n], text[n]);
 
-			/* Intro */
-			if (n < (vn - 1)) text_out(", ");
+			/* Connectives */
+			if (n == 0) text_out(" your ");
+			else if (n < (vn - 1)) text_out(", ");
+			else if (n == vn) text_out(".  ");
 			else text_out(" and ");
 		}
-
-		/* End the sentence */
-		text_out(".  ");
 	}
 
 	return;

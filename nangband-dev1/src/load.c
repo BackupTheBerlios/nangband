@@ -920,13 +920,14 @@ static errr rd_extra(void)
 	rd_s16b(&p_ptr->tim_infra);
 
 	/* Old savefile compatibility */
-	if (older_than(2, 9, 7))
+	/* [note to self - what's the point of savefile compat between devel versions?]*/
+	if (older_than(2, 9, 8))
 	{
-		rd_s16b(&p_ptr->resist_timed[RES_FIRE]);
-		rd_s16b(&p_ptr->resist_timed[RES_COLD]);
-		rd_s16b(&p_ptr->resist_timed[RES_ACID]);
-		rd_s16b(&p_ptr->resist_timed[RES_ELEC]);
-		rd_s16b(&p_ptr->resist_timed[RES_POIS]);
+		rd_s16b(&(byte)p_ptr->resist_timed[RES_FIRE]);
+		rd_s16b(&(byte)p_ptr->resist_timed[RES_COLD]);
+		rd_s16b(&(byte)p_ptr->resist_timed[RES_ACID]);
+		rd_s16b(&(byte)p_ptr->resist_timed[RES_ELEC]);
+		rd_s16b(&(byte)p_ptr->resist_timed[RES_POIS]);
 	}
 	else
 	{
@@ -934,7 +935,7 @@ static errr rd_extra(void)
 
 		for (n = 0; n < RES_MAX; n++)
 		{
-			rd_s16b(&p_ptr->resist_timed[n]);
+			rd_byte(&p_ptr->resist_timed[n]);
 		}
 	}
 

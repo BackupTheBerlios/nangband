@@ -1141,7 +1141,7 @@ static errr grab_one_flag(u32b *flags, cptr names[], cptr what)
 /*
  * Grab one resist for a object_kind. XXX XXX
  */
-static errr grab_one_resist(s16b *resists, cptr what)
+static errr grab_one_resist(byte *resists, cptr what)
 {
 	cptr s;
 

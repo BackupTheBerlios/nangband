@@ -6256,11 +6256,11 @@ B:CLAW:HURT:3d3
 F:FORCE_SLEEP | FORCE_MAXHP
 F:ONLY_ITEM | DROP_90 | DROP_2D2 | DROP_4D2
 F:SMART | INVISIBLE | PASS_WALL
-F:EVIL | DEMON | IM_FIRE | IM_POIS
+F:EVIL | DEMON | IM_FIRE | IM_POIS | ASTRAL
 F:NO_CONF | NO_SLEEP | NO_FEAR
 S:1_IN_10
 S:BLIND | CONF | SCARE | CAUSE_3 | FORGET
-S:S_DEMON | ASTRAL
+S:S_DEMON
 D:It is a demon of small stature, but its armoured frame moves with
 D: lightning speed and its powers make it a tornado of death and destruction.
 
@@ -6331,11 +6331,11 @@ B:HIT:HURT:3d4
 B:HIT:HURT:3d4
 F:FORCE_SLEEP | FORCE_MAXHP | FRIENDS
 F:ONLY_ITEM | DROP_1D2
-F:OPEN_DOOR | BASH_DOOR | POWERFUL
+F:OPEN_DOOR | BASH_DOOR | POWERFUL | ASTRAL
 F:EVIL | DEMON | IM_FIRE | NO_CONF | NO_SLEEP
 S:1_IN_9
 S:BO_FIRE
-S:S_DEMON | ASTRAL
+S:S_DEMON
 D:It is a demon of lizard form with cruel-looking jaws.
 
 N:453:Akhorahil the Blind
@@ -7401,12 +7401,12 @@ F:UNIQUE | MALE
 F:FORCE_SLEEP | FORCE_MAXHP
 F:ONLY_ITEM | DROP_3D2 | DROP_4D2 | DROP_GOOD
 F:SMART | TAKE_ITEM | OPEN_DOOR | BASH_DOOR | POWERFUL | MOVE_BODY
-F:IM_ACID | IM_FIRE | IM_COLD | IM_ELEC | IM_POIS
+F:IM_ACID | IM_FIRE | IM_COLD | IM_ELEC | IM_POIS | ASTRAL
 S:1_IN_2
 S:TELE_TO | BLIND
 S:BO_FIRE | BO_MANA | BO_PLAS | BA_FIRE
 S:BR_FIRE | BR_PLAS
-S:S_ANGEL | ASTRAL 
+S:S_ANGEL
 D:A creature of godly appearance, you dare not challenge Uriel's supremacy.
 D: Those who stood against him before are but a memory, cremated by his
 D: mastery of elemental fire.
@@ -8328,12 +8328,12 @@ B:TOUCH:LOSE_DEX:8d12
 B:TOUCH:LOSE_DEX:8d12
 F:FORCE_SLEEP | FORCE_MAXHP | SMART
 F:ONLY_ITEM | DROP_4D2 | DROP_2D2 | DROP_GOOD
-F:COLD_BLOOD | OPEN_DOOR | BASH_DOOR | PASS_WALL
+F:COLD_BLOOD | OPEN_DOOR | BASH_DOOR | PASS_WALL | ASTRAL
 F:EVIL | UNDEAD | IM_COLD | IM_POIS | NO_CONF | NO_SLEEP
 S:1_IN_3
 S:BLINK | TELE_TO | SCARE | HOLD | CAUSE_4
 S:DRAIN_MANA | BRAIN_SMASH | FORGET
-S:TPORT | HEAL | S_HI_UNDEAD | S_DEMON | BA_NETH | ASTRAL
+S:TPORT | HEAL | S_HI_UNDEAD | S_DEMON | BA_NETH
 D:A lich who has reached its ultimate evolutionary stage:  a completely
 D: immaterial state.
 
@@ -8447,9 +8447,9 @@ B:STING:POISON:5d5
 F:FORCE_SLEEP | FORCE_MAXHP | FRIENDS
 F:ONLY_ITEM | DROP_1D2
 F:OPEN_DOOR | BASH_DOOR | POWERFUL
-F:EVIL | DEMON | IM_POIS | NO_CONF | NO_SLEEP
+F:EVIL | DEMON | IM_POIS | NO_CONF | NO_SLEEP | ASTRAL
 S:1_IN_10
-S:SCARE | S_DEMON | ASTRAL
+S:SCARE | S_DEMON
 D:A foul, humanoid creature with a long tail, clawed hands and feet,
 D: and a disgusting, wiry, snaky beard.  They are the elite shock troops
 D: of the hells, capable of a terrifying berserk fury.
@@ -8464,9 +8464,9 @@ B:CRUSH:ACID:9d9
 F:FORCE_SLEEP | FORCE_MAXHP
 F:ONLY_ITEM | DROP_3D2 | DROP_GOOD
 F:OPEN_DOOR | BASH_DOOR | POWERFUL
-F:EVIL | DEMON | IM_POIS | IM_ACID | NO_CONF | NO_SLEEP
+F:EVIL | DEMON | IM_POIS | IM_ACID | NO_CONF | NO_SLEEP | ASTRAL
 S:1_IN_6
-S:BR_POIS | BR_ACID | S_DEMON | BLIND | CONF | ARROW_4 | ASTRAL
+S:BR_POIS | BR_ACID | S_DEMON | BLIND | CONF | ARROW_4
 D:It's big.  It's fat.  It's red.  It's ugly.  It's got a severe attack of
 D: highly poisonous flatulence.  And its insides are corrosive.  All of which
 D: go together to make the single most repulsive sight - and smell - you have
@@ -8483,10 +8483,10 @@ B:STING:LOSE_STR:5d5
 F:FORCE_SLEEP | FORCE_MAXHP
 F:ONLY_ITEM | DROP_3D2 | DROP_GOOD
 F:OPEN_DOOR | BASH_DOOR | POWERFUL | MOVE_BODY
-F:EVIL | DEMON | NO_CONF | NO_SLEEP | INVISIBLE
+F:EVIL | DEMON | NO_CONF | NO_SLEEP | INVISIBLE | ASTRAL
 F:IM_ACID | IM_ELEC | IM_POIS | IM_COLD | IM_FIRE
 S:1_IN_6
-S:BA_ELEC | BA_COLD | BO_ICEE | SCARE | S_DEMON | ASTRAL
+S:BA_ELEC | BA_COLD | BO_ICEE | SCARE | S_DEMON
 D:It is a demon made almost entirely out of bones.  It is humanoid, but with
 D: a large tail similar to that of a giant scorpion, and emits a foul smell
 D: of decay and rot.  They are despised even in the hells.
@@ -8500,12 +8500,12 @@ B:CLAW:COLD:6d8
 B:BITE:COLD:9d9
 B:HIT:PARALYZE:5d5
 F:FORCE_SLEEP | FORCE_MAXHP
-F:ONLY_ITEM | DROP_GOOD | DROP_4D2
+F:ONLY_ITEM | DROP_GOLD | DROP_4D2 | ASTRAL
 F:OPEN_DOOR | BASH_DOOR | POWERFUL | REGENERATE
 F:EVIL | DEMON | IM_COLD | NO_CONF | NO_SLEEP
 S:1_IN_6
 S:BR_COLD | BR_SHAR | BA_COLD | BO_ICEE | S_HI_DEMON
-S:SLOW | SCARE | HOLD | ASTRAL
+S:SLOW | SCARE | HOLD
 D:This demon from the ice planes is a truly terrifying sight.  It has an
 D: extremely large, insect-like body towering a full twelve feet tall, with
 D: great claws on its hands and pincers on its mouth, and its head bulges
@@ -8523,10 +8523,10 @@ B:HIT:HURT:11d11
 F:FORCE_SLEEP | FORCE_MAXHP | REGENERATE
 F:ONLY_ITEM | DROP_GOOD | DROP_4D2 | DROP_2D2
 F:OPEN_DOOR | BASH_DOOR | KILL_BODY | POWERFUL
-F:EVIL | DEMON | NO_CONF | NO_SLEEP
+F:EVIL | DEMON | NO_CONF | NO_SLEEP | ASTRAL
 F:IM_FIRE | IM_COLD | IM_POIS | IM_ACID | IM_ELEC
 S:1_IN_5
-S:HASTE | SLOW | SCARE | S_HI_DEMON | ASTRAL
+S:HASTE | SLOW | SCARE | S_HI_DEMON
 D:A giant humanoid demon wielding a massive, heavy and sharp scythe.  Feared
 D: by foes and friends alike when it flies into one of its berserk rages, the
 D: Horned Reaper will cut down anything in its path between it and you - even
@@ -8542,11 +8542,11 @@ B:BITE:POISON:5d10
 B:BITE:LOSE_CON:5d10
 F:FORCE_SLEEP | FORCE_MAXHP | REGENERATE
 F:ONLY_ITEM | DROP_GOOD | DROP_4D2 | DROP_2D2
-F:OPEN_DOOR | BASH_DOOR | MOVE_BODY | POWERFUL
+F:OPEN_DOOR | BASH_DOOR | MOVE_BODY | POWERFUL | ASTRAL
 F:EVIL | DEMON | IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP
 S:1_IN_5
 S:S_HI_DEMON | S_HI_DRAGON | BR_FIRE | BR_POIS | BR_CHAO
-S:SCARE | BA_FIRE | CAUSE_4 | ASTRAL
+S:SCARE | BA_FIRE | CAUSE_4
 D:Appearing as a giant, clawed and winged humanoid with a scaly red body
 D: and massive fangs dripping a foul green liquid, the Pit Fiend is a
 D: dreadful enemy from the lowest depths of the hells.  They are often the
@@ -8563,12 +8563,12 @@ B:TOUCH:UN_POWER
 F:FORCE_SLEEP | FORCE_MAXHP
 F:ONLY_ITEM | DROP_3D2 | DROP_4D2 | DROP_GOOD
 F:OPEN_DOOR | BASH_DOOR | POWERFUL | MOVE_BODY
-F:EVIL | DEMON | IM_FIRE | IM_ELEC | IM_POIS
+F:EVIL | DEMON | IM_FIRE | IM_ELEC | IM_POIS | ASTRAL
 F:NO_CONF | NO_SLEEP
 S:1_IN_3
 S:CONF | SCARE
 S:BR_FIRE | BR_PLAS | BO_PLAS | BA_FIRE
-S:S_UNDEAD | S_DEMON | S_HI_DEMON | ASTRAL
+S:S_UNDEAD | S_DEMON | S_HI_DEMON
 D:Originally of the semi-divine Maiar, this evil spirit swore allegiance
 D: to Morgoth at the beginning of time and is now one of his most terrible
 D: demonic servants.  With its flaming whip and sword it seeks to destroy you.

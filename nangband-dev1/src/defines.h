@@ -2941,6 +2941,9 @@
 	(((unsigned)(Y) < (unsigned)(DUNGEON_HGT)) && \
 	 ((unsigned)(X) < (unsigned)(DUNGEON_WID)))
 
+#define in_bounds_xy(X, Y) \
+	(in_bounds(Y, X))
+
 /*
  * Determines if a map location is fully inside the outer walls
  * This is more than twice as expensive as "in_bounds()", but

@@ -505,7 +505,8 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 		case OBJECT_XTRA_TYPE_RESIST:
 		{
 			/* OBJECT_XTRA_WHAT_RESIST == 2 */
-			(*f2) |= (OBJECT_XTRA_BASE_RESIST << o_ptr->xtra2);
+/*			(*f2) |= (OBJECT_XTRA_BASE_RESIST <<
+o_ptr->xtra2); */
 			break;
 		}
 
@@ -2023,12 +2024,6 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	if (id)
 	{
 		obj_info_resists(k_ptr->resists);
-	}
-
-	if (f2 & (TR2_RES_POIS))
-	{
-		text_out("It provides resistance to poison.\n");
-		known = TRUE;
 	}
 
 	if (f2 & (TR2_RES_FEAR))

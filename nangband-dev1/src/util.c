@@ -3363,6 +3363,7 @@ bool get_com(cptr prompt, char *command)
  */
 void pause_line(int row)
 {
+	row = 0;
 /*	prt("", row, 0); */
 	prompt_note("[Press any key to continue]");
 	inkey();

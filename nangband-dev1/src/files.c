@@ -1580,7 +1580,8 @@ static const byte display_player_flag_set[4] =
  */
 static const u32b display_player_flag_head[4] =
 {
-	TR2_RES_ACID,
+/*	TR2_RES_ACID, */
+	TR2_RES_BLIND,
 	TR2_RES_BLIND,
 	TR3_SLOW_DIGEST,
 	TR1_STEALTH
@@ -1702,14 +1703,14 @@ static void display_player_flag_info(void)
 				if (!o_ptr->k_idx) attr = TERM_L_DARK;
 
 				/* Hack -- Check immunities */
-				if ((x == 0) && (y < 4) &&
+/*				if ((x == 0) && (y < 4) &&
 				    (f[set] & ((TR2_IM_ACID) << y)))
 				{
 					c_put_str(TERM_WHITE, "*", row, col+n);
-				}
+				} */
 
 				/* Check flags */
-				else if (f[set] & flag)
+				if (f[set] & flag)
 				{
 					c_put_str(TERM_WHITE, "+", row, col+n);
 				}
@@ -1728,14 +1729,14 @@ static void display_player_flag_info(void)
 			c_put_str(TERM_SLATE, ".", row, col+n);
 
 			/* Hack -- Check immunities */
-			if ((x == 0) && (y < 4) &&
+/*			if ((x == 0) && (y < 4) &&
 			    (f[set] & ((TR2_IM_ACID) << y)))
 			{
 				c_put_str(TERM_WHITE, "*", row, col+n);
-			}
+			} */
 
 			/* Check flags */
-			else if (f[set] & flag) c_put_str(TERM_WHITE, "+", row, col+n);
+			if (f[set] & flag) c_put_str(TERM_WHITE, "+", row, col+n);
 
 			/* Advance */
 			row++;

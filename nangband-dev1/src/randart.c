@@ -865,7 +865,6 @@ static s32b artifact_power(int a_idx)
 	s32b p = 0;
 	s16b k_idx;
 	object_kind *k_ptr;
-	int immunities = 0;
 
 	/* Try to use the cache */
 	k_idx = kinds[a_idx];
@@ -1034,36 +1033,26 @@ static s32b artifact_power(int a_idx)
 	if (a_ptr->flags2 & TR2_SUST_DEX) p += 4;
 	if (a_ptr->flags2 & TR2_SUST_CON) p += 4;
 	if (a_ptr->flags2 & TR2_SUST_CHR) p += 1;
-	if (a_ptr->flags2 & TR2_IM_ACID)
-	{
-		p += 20;
-		immunities++;
-	}
-	if (a_ptr->flags2 & TR2_IM_ELEC)
-	{
-		p += 24;
-		immunities++;
-	}
-	if (a_ptr->flags2 & TR2_IM_FIRE)
-	{
-		p += 36;
-		immunities++;
-	}
-	if (a_ptr->flags2 & TR2_IM_COLD)
-	{
-		p += 24;
-		immunities++;
-	}
-	if (immunities > 1) p += 16;
-	if (immunities > 2) p += 16;
-	if (immunities > 3) p += 20000;		/* inhibit */
+
+	/* Decide on power levels for the resists */
+	if (a_ptr->resists[RES_ACID] >= 100) p += 20;
+	else if (a_ptr->resists[RES_ACID] >= 50) p += 10;
+	else if (a_ptr->resists[RES_ACID] >= 10) p += 3;
+
+	if (a_ptr->resists[RES_ELEC] >= 100) p += 24;
+	else if (a_ptr->resists[RES_ELEC] >= 50) p += 12;
+	else if (a_ptr->resists[RES_ELEC] >= 10) p += 4;
+
+	if (a_ptr->resists[RES_FIRE] >= 100) p += 36;
+	else if (a_ptr->resists[RES_FIRE] >= 50) p += 18;
+	else if (a_ptr->resists[RES_FIRE] >= 10) p += 5;
+
+	if (a_ptr->resists[RES_COLD] >= 100) p += 24;
+	else if (a_ptr->resists[RES_COLD] >= 50) p += 12;
+	else if (a_ptr->resists[RES_COLD] >= 10) p += 4;
+
 	if (a_ptr->flags3 & TR3_FREE_ACT) p += 8;
 	if (a_ptr->flags3 & TR3_HOLD_LIFE) p += 10;
-	if (a_ptr->flags2 & TR2_RES_ACID) p += 6;
-	if (a_ptr->flags2 & TR2_RES_ELEC) p += 6;
-	if (a_ptr->flags2 & TR2_RES_FIRE) p += 6;
-	if (a_ptr->flags2 & TR2_RES_COLD) p += 6;
-	if (a_ptr->flags2 & TR2_RES_POIS) p += 12;
 	if (a_ptr->flags2 & TR2_RES_LITE) p += 8;
 	if (a_ptr->flags2 & TR2_RES_DARK) p += 10;
 	if (a_ptr->flags2 & TR2_RES_BLIND) p += 10;
@@ -1359,7 +1348,7 @@ static void choose_item(int a_idx)
 			if (a_ptr->to_a < 10)
 				a_ptr->to_a += (s16b)(2 + rand_int(4) + rand_int(4));
 
-				/*
+			/*
 			 * Make sure armor gets some resists!  Hard body armor
 			 * is generally high-level stuff, with good ac and
 			 * to_a.  That sucks up all the points....
@@ -1368,10 +1357,14 @@ static void choose_item(int a_idx)
 			{
 			case TV_SOFT_ARMOR:
 			case TV_HARD_ARMOR:
-				if (rand_int(2) == 0) a_ptr->flags2 |= TR2_RES_ACID;
-				if (rand_int(2) == 0) a_ptr->flags2 |= TR2_RES_ELEC;
-				if (rand_int(2) == 0) a_ptr->flags2 |= TR2_RES_COLD;
-				if (rand_int(2) == 0) a_ptr->flags2 |= TR2_RES_FIRE;
+				if (rand_int(2) == 0)
+					a_ptr->resists[RES_ACID] += 20;
+				if (rand_int(2) == 0)
+					a_ptr->resists[RES_ELEC] += 20;
+				if (rand_int(2) == 0)
+					a_ptr->resists[RES_COLD] += 20;
+				if (rand_int(2) == 0)
+					a_ptr->resists[RES_FIRE] += 20;
 				break;
 			}
 			break;
@@ -1397,10 +1390,6 @@ static void do_pval(artifact_type *a_ptr)
 static void remove_contradictory(artifact_type *a_ptr)
 {
 	if (a_ptr->flags3 & TR3_AGGRAVATE) a_ptr->flags1 &= ~(TR1_STEALTH);
-	if (a_ptr->flags2 & TR2_IM_ACID) a_ptr->flags2 &= ~(TR2_RES_ACID);
-	if (a_ptr->flags2 & TR2_IM_ELEC) a_ptr->flags2 &= ~(TR2_RES_ELEC);
-	if (a_ptr->flags2 & TR2_IM_FIRE) a_ptr->flags2 &= ~(TR2_RES_FIRE);
-	if (a_ptr->flags2 & TR2_IM_COLD) a_ptr->flags2 &= ~(TR2_RES_COLD);
 
 	if (a_ptr->pval < 0)
 	{
@@ -1471,22 +1460,22 @@ static void add_ability(artifact_type *a_ptr)
 				else if (r < 7)
 				{
 					a_ptr->flags1 |= TR1_BRAND_ACID;
-					if (rand_int(4) > 0) a_ptr->flags2 |= TR2_RES_ACID;
+					if (rand_int(4) > 0) a_ptr->resists[RES_ACID] += 20;
 				}
 				else if (r < 10)
 				{
 					a_ptr->flags1 |= TR1_BRAND_ELEC;
-					if (rand_int(4) > 0) a_ptr->flags2 |= TR2_RES_ELEC;
+					if (rand_int(4) > 0) a_ptr->resists[RES_ELEC] += 20;
 				}
 				else if (r < 15)
 				{
 					a_ptr->flags1 |= TR1_BRAND_FIRE;
-					if (rand_int(4) > 0) a_ptr->flags2 |= TR2_RES_FIRE;
+					if (rand_int(4) > 0) a_ptr->resists[RES_FIRE] += 20;
 				}
 				else if (r < 20)
 				{
 					a_ptr->flags1 |= TR1_BRAND_COLD;
-					if (rand_int(4) > 0) a_ptr->flags2 |= TR2_RES_COLD;
+					if (rand_int(4) > 0) a_ptr->resists[RES_COLD] += 20;
 				}
 				else if (r < 28)
 				{
@@ -1637,10 +1626,10 @@ static void add_ability(artifact_type *a_ptr)
 			}
 			case TV_SHIELD:
 			{
-				if (r < 20) a_ptr->flags2 |= TR2_RES_ACID;
-				else if (r < 40) a_ptr->flags2 |= TR2_RES_ELEC;
-				else if (r < 60) a_ptr->flags2 |= TR2_RES_FIRE;
-				else if (r < 80) a_ptr->flags2 |= TR2_RES_COLD;
+				if (r < 20) a_ptr->resists[RES_ACID] += 20;
+				else if (r < 40) a_ptr->resists[RES_ELEC] += 20;
+				else if (r < 60) a_ptr->resists[RES_FIRE] += 20;
+				else if (r < 80) a_ptr->resists[RES_COLD] += 20;
 				else a_ptr->to_a += (s16b)(3 + rand_int(3));
 				break;
 			}
@@ -1670,10 +1659,10 @@ static void add_ability(artifact_type *a_ptr)
 					if (rand_int(2) == 0)
 						a_ptr->flags2 |= TR2_SUST_CON;
 				}
-				else if (r < 34) a_ptr->flags2 |= TR2_RES_ACID;
-				else if (r < 46) a_ptr->flags2 |= TR2_RES_ELEC;
-				else if (r < 58) a_ptr->flags2 |= TR2_RES_FIRE;
-				else if (r < 70) a_ptr->flags2 |= TR2_RES_COLD;
+				else if (r < 34) a_ptr->resists[RES_ACID] += 20;
+				else if (r < 46) a_ptr->resists[RES_ELEC] += 20;
+				else if (r < 58) a_ptr->resists[RES_FIRE] += 20;
+				else if (r < 70) a_ptr->resists[RES_COLD] += 20;
 				else if (r < 80)
 					a_ptr->weight = (a_ptr->weight * 9) / 10;
 				else a_ptr->to_a += (s16b)(3 + rand_int(3));
@@ -1790,32 +1779,36 @@ static void add_ability(artifact_type *a_ptr)
 
 			case 16:
 			{
-				if (rand_int(3) == 0) a_ptr->flags2 |= TR2_IM_ACID;
+				if (rand_int(4) == 0)
+					a_ptr->resists[RES_ACID] = 70;
 				break;
 			}
 			case 17:
 			{
-				if (rand_int(3) == 0) a_ptr->flags2 |= TR2_IM_ELEC;
+				if (rand_int(4) == 0)
+					a_ptr->resists[RES_ELEC] = 70;
 				break;
 			}
 			case 18:
 			{
-				if (rand_int(4) == 0) a_ptr->flags2 |= TR2_IM_FIRE;
+				if (rand_int(5) == 0)
+					a_ptr->resists[RES_FIRE] = 70;
 				break;
 			}
 			case 19:
 			{
-				if (rand_int(3) == 0) a_ptr->flags2 |= TR2_IM_COLD;
+				if (rand_int(4) == 0)
+					a_ptr->resists[RES_COLD] = 70;
 				break;
 			}
 			case 20: a_ptr->flags3 |= TR3_FREE_ACT; break;
 			case 21: a_ptr->flags3 |= TR3_HOLD_LIFE; break;
-			case 22: a_ptr->flags2 |= TR2_RES_ACID; break;
-			case 23: a_ptr->flags2 |= TR2_RES_ELEC; break;
-			case 24: a_ptr->flags2 |= TR2_RES_FIRE; break;
-			case 25: a_ptr->flags2 |= TR2_RES_COLD; break;
+			case 22: a_ptr->resists[RES_ACID] += 20; break;
+			case 23: a_ptr->resists[RES_ELEC] += 20; break;
+			case 24: a_ptr->resists[RES_FIRE] += 20; break;
+			case 25: a_ptr->resists[RES_COLD] += 20; break;
 
-			case 26: a_ptr->flags2 |= TR2_RES_POIS; break;
+			case 26: a_ptr->resists[RES_POIS] += 20; break;
 			case 27: a_ptr->flags2 |= TR2_RES_LITE; break;
 			case 28: a_ptr->flags2 |= TR2_RES_DARK; break;
 			case 29: a_ptr->flags2 |= TR2_RES_BLIND; break;

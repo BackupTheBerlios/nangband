@@ -1,6 +1,9 @@
 Nangband ChangeLog
 ==================
 
+2002-03-05
+----------
+
 2002-03-03
 ----------
 - Made the title screen bigscreen-compliant. (takkaria)

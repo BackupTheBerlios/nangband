@@ -499,11 +499,6 @@ static const flag_desc brand_flags_desc[] =
 
 static const flag_desc resist_flags_desc[] =
 {
-	{ TR2_RES_ACID,   "Acid" },
-	{ TR2_RES_ELEC,   "Lightning" },
-	{ TR2_RES_FIRE,   "Fire" },
-	{ TR2_RES_COLD,   "Cold" },
-	{ TR2_RES_POIS,   "Poison" },
 	{ TR2_RES_FEAR,   "Fear" },
 	{ TR2_RES_LITE,   "Light" },
 	{ TR2_RES_DARK,   "Dark" },
@@ -515,18 +510,6 @@ static const flag_desc resist_flags_desc[] =
 	{ TR2_RES_NETHR,  "Nether" },
 	{ TR2_RES_CHAOS,  "Chaos" },
 	{ TR2_RES_DISEN,  "Disenchantment" },
-};
-
-/*
- * Elemental immunities (along with poison)
- */
-
-static const flag_desc immune_flags_desc[] =
-{
-	{ TR2_IM_ACID,    "Acid" },
-	{ TR2_IM_ELEC,    "Lightning" },
-	{ TR2_IM_FIRE,    "Fire" },
-	{ TR2_IM_COLD,    "Cold" },
 };
 
 /*
@@ -617,9 +600,6 @@ typedef struct
 
 	/* A list if an object's elemental brands */
 	cptr brands[N_ELEMENTS(brand_flags_desc) + 1];
-
-	/* A list of immunities granted by an object */
-	cptr immunities[N_ELEMENTS(immune_flags_desc) + 1];
 
 	/* A list of resistances granted by an object */
 	cptr resistances[N_ELEMENTS(resist_flags_desc) + 1];
@@ -810,25 +790,6 @@ static void analyze_resist(const object_type *o_ptr, cptr *resist_list)
 	*resist_list = NULL;
 }
 
-
-/*
- * Note the immunities granted by an object
- */
-static void analyze_immune(const object_type *o_ptr, cptr *immune_list)
-{
-	u32b f1, f2, f3;
-
-	object_flags(o_ptr, &f1, &f2, &f3);
-
-	immune_list = spoiler_flag_aux(f2, immune_flags_desc,
-	                               immune_list, N_ELEMENTS(immune_flags_desc));
-
-	/* Terminate the description list */
-	*immune_list = NULL;
-
-}
-
-
 /*
  * Note which stats an object sustains
  */
@@ -937,8 +898,6 @@ static void object_analyze(const object_type *o_ptr, obj_desc_list *desc_x_ptr)
 	analyze_brand(o_ptr, desc_x_ptr->brands);
 
 	analyze_slay(o_ptr, desc_x_ptr->slays);
-
-	analyze_immune(o_ptr, desc_x_ptr->immunities);
 
 	analyze_resist(o_ptr, desc_x_ptr->resistances);
 
@@ -1116,8 +1075,6 @@ static void spoiler_print_art(const obj_desc_list *art_ptr)
 	spoiler_outlist("Slay", art_ptr->slays, ITEM_SEP);
 
 	spoiler_outlist("", art_ptr->brands, LIST_SEP);
-
-	spoiler_outlist("Immunity to", art_ptr->immunities, ITEM_SEP);
 
 	spoiler_outlist("Resist", art_ptr->resistances, ITEM_SEP);
 

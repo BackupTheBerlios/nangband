@@ -1939,21 +1939,21 @@
 #define TR2_SUST_DEX        0x00000008L /* Sustain DEX */
 #define TR2_SUST_CON        0x00000010L /* Sustain CON */
 #define TR2_SUST_CHR        0x00000020L /* Sustain CHR */
-#define TR2_LITE1           0x00000040L /* (reserved) */
-#define TR2_LITE2           0x00000080L /* (reserved) */
-#define TR2_LITE3           0x00000100L /* (reserved) */
-#define TR2_LITE4           0x00000200L /* (reserved) */
-#define TR2_NEEDS_FUEL      0x00000400L /* (reserved) */
+#define TR2_LITE1           0x00000040L /* Provides light rad1 */
+#define TR2_LITE2           0x00000080L /* Provides light rad2 */
+#define TR2_LITE3           0x00000100L /* Provides light rad3 */
+#define TR2_LITE4           0x00000200L /* Provides light rad4 */
+#define TR2_NEEDS_FUEL      0x00000400L /* Light source needs fuel */
 #define TR2_XXX6            0x00000800L /* (reserved) */
-#define TR2_IM_ACID         0x00001000L /* Immunity to acid */
-#define TR2_IM_ELEC         0x00002000L /* Immunity to elec */
-#define TR2_IM_FIRE         0x00004000L /* Immunity to fire */
-#define TR2_IM_COLD         0x00008000L /* Immunity to cold */
-#define TR2_RES_ACID        0x00010000L /* Resist acid */
-#define TR2_RES_ELEC        0x00020000L /* Resist elec */
-#define TR2_RES_FIRE        0x00040000L /* Resist fire */
-#define TR2_RES_COLD        0x00080000L /* Resist cold */
-#define TR2_RES_POIS        0x00100000L /* Resist poison */
+#define TR2_XXX7            0x00001000L /* (reserved) */
+#define TR2_XXX8            0x00002000L /* (reserved) */
+#define TR2_XXX9            0x00004000L /* (reserved) */
+#define TR2_XXX10           0x00008000L /* (reserved) */
+#define TR2_XXX11           0x00010000L /* (reserved) */
+#define TR2_XXX12           0x00020000L /* (reserved) */
+#define TR2_XXX13           0x00040000L /* (reserved) */
+#define TR2_XXX14           0x00080000L /* (reserved) */
+#define TR2_XXX15           0x00100000L /* (reserved) */
 #define TR2_RES_FEAR        0x00200000L /* Resist fear */
 #define TR2_RES_LITE        0x00400000L /* Resist lite */
 #define TR2_RES_DARK        0x00800000L /* Resist dark */

@@ -136,7 +136,7 @@ static void borg_notice_aux1(void)
     /* Good flags */
     if (f3 & (TR3_SLOW_DIGEST)) borg_skill[BI_SDIG] = TRUE;
     if (f3 & (TR3_FEATHER)) borg_skill[BI_FEATH] = TRUE;
-    if (f3 & (TR3_LITE)) borg_skill[BI_LITE] = TRUE;
+/*    if (f3 & (TR3_LITE)) borg_skill[BI_LITE] = TRUE; */
     if (f3 & (TR3_REGEN)) borg_skill[BI_REG] = TRUE;
     if (f3 & (TR3_TELEPATHY)) borg_skill[BI_ESP] = TRUE;
     if (f3 & (TR3_SEE_INVIS)) borg_skill[BI_SINV] = TRUE;

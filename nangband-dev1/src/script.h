@@ -31,6 +31,15 @@ extern bool script_do_string(cptr script);
 extern bool script_do_file(cptr filename);
 
 /*
+ * Callbacks for the borg
+ */
+#ifdef ALLOW_BORG
+
+int script_borg_get_spellbook_index(int);
+
+#endif /* ALLOW_BORG */
+
+/*
  * Callback for using an object
  */
 extern bool use_object(object_type *o_ptr, bool *ident);

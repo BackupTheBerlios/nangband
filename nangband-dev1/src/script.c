@@ -160,7 +160,7 @@ static const struct luaL_reg intMathLib[] =
 /*
  * Callback for the borg
  */
-bool borg_get_spellindex(int spell_tval)
+int script_borg_get_spellbook_index(int spell_tval)
 {
 	int result, status;
 

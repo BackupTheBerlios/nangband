@@ -6,6 +6,7 @@
 
 #include "angband.h"
 #include "z-virt.h"
+#include "script.h"
 
 #include "borg1.h"
 #include "borg3.h"
@@ -4319,7 +4320,7 @@ void borg_parse_spell(int book)
  */
 static void prepare_book_info(int book)
 {
-    int i, what;
+    int what, n;
 
     int spell[64], num = 0;
 
@@ -4350,6 +4351,7 @@ static void prepare_book_info(int book)
     /* Can we use spells/prayers? */
     if (!cp_ptr->spell_book) return;
 
+    n = script_borg_get_spellbook_index(cp_ptr->spell_book);
 
     /* Extract spells */
 /*    for (i = 0; i < 64; i++)
@@ -4376,19 +4378,19 @@ static void prepare_book_info(int book)
         if (s_ptr->slevel == 99) continue;
 
         /* Save the spell name */
-/*        as->name = spell_names[cp_ptr->spell_type][spell[what]];*/
+        as->name = get_spell_name(cp_ptr->spell_book, num);
 
         /* Save the spell index */
-        /*as->cheat = spell[what];*/
+        as->cheat = spell[what];
 
         /* Hack -- assume excessive level */
         as->status = BORG_MAGIC_HIGH;
 
         /* Access the correct "method" */
-        as->method = borg_magic_method[cp_ptr->spell_book][book][what];
+        as->method = borg_magic_method[n][book][what];
 
         /* Access the correct "rating" */
-        as->rating = borg_magic_rating[cp_ptr->spell_type][book][what];
+        as->rating = borg_magic_rating[n][book][what];
 
         /* Extract the level and power */
         as->level = s_ptr->slevel;
@@ -4397,6 +4399,8 @@ static void prepare_book_info(int book)
         /* extract fail rate. */
         as->sfail = s_ptr->sfail;
     }
+
+	return;
 }
 
 

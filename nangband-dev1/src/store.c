@@ -1455,10 +1455,10 @@ static void store_prt_gold(void)
 {
 	char out_val[64];
 
-	prt("Gold Remaining: ", size_y - 3, 53);
+	prt("Gold Remaining: ", size_y - 4, 53);
 
 	sprintf(out_val, "%9ld", (long)p_ptr->au);
-	prt(out_val, size_y - 3, 68);
+	prt(out_val, size_y - 4, 68);
 }
 
 

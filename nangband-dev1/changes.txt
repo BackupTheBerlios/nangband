@@ -1,6 +1,16 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-05-12
+----------
+- Imported lua bit operator implementation from Vanilla 3.0.0 CVS,
+  which compiles on lcc, doesn't offend some cpp's with empty arguments
+  and is more readable. (pelpel)
+- Moved up the "Remaining gold:" display by one line, so that it doesn't
+  interact strangely with the shop action prompt. (pelpel)
+- Imported a couple of my lua engine fixes cleaned up by rr9 --
+  this is only relevant for users of CodeWarrior (pelpel)
+
 2002-05-02
 ----------
 - Fixed bug with monster blows, as suggested by pelpel. (parody)

@@ -76,43 +76,74 @@ static const struct luaL_reg anglib[] =
 #define luaL_check_bit(L, n)  ((long)luaL_check_number(L, n))
 #define luaL_check_ubit(L, n) ((unsigned long)luaL_check_bit(L, n))
 
-#define TDYADIC(name, op, t1, t2) \
-	static int int_ ## name(lua_State* L) \
-	{ \
-		lua_pushnumber(L, \
-		luaL_check_ ## t1 ## bit(L, 1) op luaL_check_ ## t2 ## bit(L, 2)); \
-		return 1; \
-	}
 
-#define DYADIC(name, op) \
-	TDYADIC(name, op, , )
+static int int_not(lua_State* L)
+{
+	lua_pushnumber(L, ~luaL_check_bit(L, 1));
+	return 1;
+}
 
-#define MONADIC(name, op) \
-	static int int_ ## name(lua_State* L) \
-	{ \
-		lua_pushnumber(L, op luaL_check_bit(L, 1)); \
-		return 1; \
-	}
 
-#define VARIADIC(name, op) \
-	static int int_ ## name(lua_State *L) \
-	{ \
-		int n = lua_gettop(L), i; \
-		long w = luaL_check_bit(L, 1); \
-		for (i = 2; i <= n; i++) \
-			w op ## = luaL_check_bit(L, i); \
-		lua_pushnumber(L, w); \
-		return 1; \
-	}
+static int int_mod(lua_State* L)
+{
+	lua_pushnumber(L, luaL_check_bit(L, 1) % luaL_check_bit(L, 2));
+	return 1;
+}
 
-MONADIC(not,     ~)
-DYADIC(mod,      %)
-VARIADIC(and,    &)
-VARIADIC(or,     |)
-VARIADIC(xor,    ^)
-TDYADIC(lshift,  <<, , u)
-TDYADIC(rshift,  >>, u, u)
-TDYADIC(arshift, >>, , u)
+
+static int int_or(lua_State *L)
+{
+	int n = lua_gettop(L), i;
+	long w = luaL_check_bit(L, 1);
+	for (i = 2; i <= n; i++)
+		w |= luaL_check_bit(L, i);
+	lua_pushnumber(L, w);
+	return 1;
+}
+
+
+static int int_xor(lua_State *L)
+{
+	int n = lua_gettop(L), i;
+	long w = luaL_check_bit(L, 1);
+	for (i = 2; i <= n; i++)
+		w ^= luaL_check_bit(L, i);
+	lua_pushnumber(L, w);
+	return 1;
+}
+
+
+static int int_and(lua_State *L)
+{
+	int n = lua_gettop(L), i;
+	long w = luaL_check_bit(L, 1);
+	for (i = 2; i <= n; i++)
+		w &= luaL_check_bit(L, i);
+	lua_pushnumber(L, w);
+	return 1;
+}
+
+
+static int int_lshift(lua_State* L)
+{
+	lua_pushnumber(L, luaL_check_bit(L, 1) << luaL_check_ubit(L, 2));
+	return 1;
+}
+
+
+static int int_rshift(lua_State* L)
+{
+	lua_pushnumber(L, luaL_check_ubit(L, 1) >> luaL_check_ubit(L, 2));
+	return 1;
+}
+
+
+static int int_arshift(lua_State* L)
+{
+	lua_pushnumber(L, luaL_check_bit(L, 1) >> luaL_check_ubit(L, 2));
+	return 1;
+}
+
 
 static const struct luaL_reg bitlib[] =
 {

@@ -411,12 +411,12 @@ static cptr k_info_flags2[] =
 	"LITE3",
 	"LITE4",
 	"NEEDS_FUEL",
+	"XXX1",
+	"XXX2",
+	"XXX3",
+	"XXX4",
+	"XXX5",
 	"XXX6",
-	"IM_ACID",
-	"IM_ELEC",
-	"IM_FIRE",
-	"IM_COLD",
-	"RES_ACID",
 	"RES_ELEC",
 	"RES_FIRE",
 	"RES_COLD",
@@ -1141,18 +1141,44 @@ static errr grab_one_flag(u32b *flags, cptr names[], cptr what)
 /*
  * Grab one resist for a object_kind. XXX XXX
  */
-static errr grab_one_resist(object_kind *k_ptr, cptr what)
+static errr grab_one_resist(s16b *resists, cptr what)
 {
 	cptr s;
 
 	if (prefix(what, "RES_ACID"))
 	{
 		s = what + 8;
-		k_ptr->resists[RES_ACID] = atoi(s);
+		resists[RES_ACID] = atoi(s);
 		return (0);
 	}
 
-	/* [note to self - finish adding these] */
+	if (prefix(what, "RES_ELEC"))
+	{
+		s = what + 8;
+		resists[RES_ELEC] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_FIRE"))
+	{
+		s = what + 8;
+		resists[RES_FIRE] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_COLD"))
+	{
+		s = what + 8;
+		resists[RES_COLD] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_POIS"))
+	{
+		s = what + 8;
+		resists[RES_POIS] = atoi(s);
+		return (0);
+	}
 
 	/* Whoops */
 	return (-1);
@@ -1175,7 +1201,7 @@ static errr grab_one_kind_flag(object_kind *k_ptr, cptr what)
 		return (0);
 
 	/* Grab the resists stuff */
-	if (grab_one_resist(k_ptr, what) == 0)
+	if (grab_one_resist(k_ptr->resists, what) == 0)
 		return (0);
 
 	/* Oops */
@@ -1422,6 +1448,10 @@ static errr grab_one_artifact_flag(artifact_type *a_ptr, cptr what)
 	if (grab_one_flag(&a_ptr->flags3, k_info_flags3, what) == 0)
 		return (0);
 
+	/* Grab the resists stuff */
+	if (grab_one_resist(a_ptr->resists, what) == 0)
+		return (0);
+        
 	/* Oops */
 	msg_format("Unknown artifact flag '%s'.", what);
 
@@ -1648,6 +1678,10 @@ static bool grab_one_ego_item_flag(ego_item_type *e_ptr, cptr what)
 	if (grab_one_flag(&e_ptr->flags3, k_info_flags3, what) == 0)
 		return (0);
 
+	/* Grab the resists stuff */
+	if (grab_one_resist(e_ptr->resists, what) == 0)
+		return (0);
+        
 	/* Oops */
 	msg_format("Unknown ego-item flag '%s'.", what);
 

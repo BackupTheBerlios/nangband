@@ -90,19 +90,19 @@ INCS = \
 #
 
 
-default: angband
+default: nangband
 
-install: angband movebin cleanobjs
+install: nangband movebin cleanobjs
 
 movebin:
-	mv -f angband.exe ../angband.exe
+	mv -f nangband.exe ../nangband.exe
 
 cleanobjs:
 	rm -f $(EXOBJS)
 	rm -f $(TOLUAOBJS)
 
 cleanbin:
-	rm -f angband.exe
+	rm -f nangband.exe
 	rm -f lua/tolua.exe
 
 clean:	cleanobjs cleanbin
@@ -135,8 +135,8 @@ l-spell.c: lua/tolua l-spell.pkg
 # Dependency rules
 #
 
-angband: $(EXOBJS)
-	$(CC) -o angband $(EXOBJS) $(INCDIRS) $(LIBDIRS) $(LIBS)
+nangband: $(EXOBJS)
+	$(CC) -o nangband $(EXOBJS) $(INCDIRS) $(LIBDIRS) $(LIBS)
 
 
 #

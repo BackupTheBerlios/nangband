@@ -251,8 +251,8 @@ cygwin:
 
 
 # Move the binary one level up.
-install: nangband
-	 cp nangband ../
+install:
+	cp nangband ../
 
 # Clean up object files
 clean:

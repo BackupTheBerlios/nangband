@@ -395,28 +395,66 @@ void reset_visuals(bool unused)
  */
 static void object_resists_aux(int mode, const object_type *o_ptr, byte *resists)
 {
-	object_kind *k_ptr;
-	int n;
-	
-	/* Clear */
-	for (n = 0; n < RES_MAX; n++)
-	{
-		resists[n] = 0;
-	}
-	
-	if (mode != OBJECT_AUX_FULL)
-	{
-		/* Must be identified */
-		if (!object_known_p(o_ptr)) return;
-	}
+	object_kind *k_ptr = NULL;
+  bool fully_known = FALSE;
+  int n;
 
+	/* Make k_ptr useful */
 	k_ptr = &k_info[o_ptr->k_idx];
 
+	/* Clear */
+	for (n = 0; n < RES_MAX; n++) resists[n] = 0;
+	
+#ifdef SPOIL_ARTIFACTS
+	/* Full knowledge for some artifacts */
+	if (artifact_p(o_ptr)) fully_known = TRUE;
+#endif /* SPOIL_ARTIFACTS */
+
+#ifdef SPOIL_EGO_ITEMS
+	/* Full knowledge for some ego-items */
+	if (ego_item_p(o_ptr)) fully_known = TRUE;
+#endif /* SPOIL_ARTIFACTS */
+
+  if (mode == OBJECT_AUX_FULL) fully_known = TRUE;
+  if (o_ptr->ident & (IDENT_MENTAL)) fully_known = TRUE;
+
+	/* Must be identified */	
+	if (!fully_known)
+	{
+		if (!object_known_p(o_ptr)) return;
+	}
+	
 	/* Get the resists from the base object */
 	for (n = 0; n < RES_MAX; n++)
 	{
 		/* Copy it across */
 		resists[n] += k_ptr->resists[n];
+	}
+	
+	/* Show all resists if fully known */
+	if (fully_known)
+	{
+		/* Artifact */
+		if (o_ptr->name1)
+		{
+			artifact_type *a_ptr = &a_info[o_ptr->name1];
+
+			for (n = 0; n < RES_MAX; n++)
+			{
+				resists[n] += a_ptr->resists[n];
+			}
+		}
+
+		/* Ego-item */
+		if (o_ptr->name2)
+		{
+			ego_item_type *e_ptr = &e_info[o_ptr->name2];
+
+			for (n = 0; n < RES_MAX; n++)
+			{
+				resists[n] += e_ptr->resists[n];
+			}
+		}
 	}
 		
 	return;
@@ -468,9 +506,9 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 		{
 			artifact_type *a_ptr = &a_info[o_ptr->name1];
 
-			(*f1) = a_ptr->flags1;
-			(*f2) = a_ptr->flags2;
-			(*f3) = a_ptr->flags3;
+			(*f1) |= a_ptr->flags1;
+			(*f2) |= a_ptr->flags2;
+			(*f3) |= a_ptr->flags3;
 		}
 
 		/* Ego-item */
@@ -548,8 +586,6 @@ void object_flags(const object_type *o_ptr, u32b *f1, u32b *f2, u32b *f3)
 	object_flags_aux(OBJECT_AUX_FULL, o_ptr, f1, f2, f3);
 }
 
-
-
 /*
  * Obtain the "flags" for an item which are known to the player
  */
@@ -558,6 +594,21 @@ void object_flags_known(const object_type *o_ptr, u32b *f1, u32b *f2, u32b *f3)
 	object_flags_aux(OBJECT_AUX_KNOWN, o_ptr, f1, f2, f3);
 }
 
+/*
+ * Obtain the "resists" for an item
+ */
+void object_resists(const object_type *o_ptr, byte *resists)
+{
+	object_resists_aux(OBJECT_AUX_FULL, o_ptr, resists);
+}
+
+/*
+ * Obtain the "resists" for an item which are known to the player
+ */
+void object_resists_known(const object_type *o_ptr, byte *resists)
+{
+	object_resists_aux(OBJECT_AUX_KNOWN, o_ptr, resists);
+}
 
 /*
  * Efficient version of '(T) += strfmt((T), "%c", (C))'
@@ -1722,16 +1773,6 @@ void obj_info_resists(byte *resists)
 }
 
 /*
- * Describe an item's random attributes for "character dumps"
- */
-void identify_backend(const object_type *o_ptr)
-{
-	identify_fully_aux2(o_ptr, OBJECT_AUX_KNOWN);
-	
-	return;
-}
-
-/*
  * Output a description of the item flags.
  */
 static bool identify_fully_aux2(const object_type *o_ptr, int mode)
@@ -1750,9 +1791,13 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	int vc[32];
 
 	u32b f1, f2, f3;
+	byte resists[RES_MAX];
 
 	/* Extract the correct type of flag */
 	object_flags_aux(mode, o_ptr, &f1, &f2, &f3);
+	
+	/* Extract the correct type of resists */
+	object_resists_aux(mode, o_ptr, resists);
 
 	/* Prepare the object base kind */
 	k_ptr = &k_info[o_ptr->k_idx];
@@ -2051,7 +2096,7 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	/* Describe the resists/immunities */
 	if (id)
 	{
-		obj_info_resists(k_ptr->resists);
+		obj_info_resists(resists);
 	}
 
 	if (f2 & (TR2_RES_FEAR))
@@ -2296,6 +2341,17 @@ bool identify_fully_aux(const object_type *o_ptr)
 	return (known);
 }
 
+
+
+/*
+ * Describe an item's random attributes for "character dumps"
+ */
+void identify_backend(const object_type *o_ptr)
+{
+	identify_fully_aux2(o_ptr, OBJECT_AUX_KNOWN);
+	
+	return;
+}
 
 
 /*

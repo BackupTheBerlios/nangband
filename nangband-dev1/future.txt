@@ -24,6 +24,6 @@ command. cheat_live can be made a birth option. cheat_live shoud be a birth
 option.  Debug mode characters should also be able to turn birth options on
 and off.
 
-All gameplay options possible should be removed; this makes the game more
+All gameplay options possible should be removed; this will make the game more
 balanced.
 

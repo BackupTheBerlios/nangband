@@ -15,7 +15,7 @@
 # increase for each new item.
 
 # Required version stamp.
-V:2.9.7
+V:1.0.0
 
 # Book One - Magic for Beginners
 

@@ -61,9 +61,9 @@
 /*
  * Hack -- current lib/edit version numbers
  */
-#define LIBEDIT_MAJOR	2
-#define LIBEDIT_MINOR	9
-#define LIBEDIT_PATCH	7
+#define LIBEDIT_MAJOR	1
+#define LIBEDIT_MINOR	0
+#define LIBEDIT_PATCH	0
 
 /*
  * Oldest version number that can still be imported

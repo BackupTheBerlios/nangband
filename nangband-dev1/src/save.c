@@ -268,12 +268,13 @@ static void savefile_write_block(vptr block, int fd)
 
 	/* Reset the header type */
 	savefile_head_type = BLOCK_TYPE_ERROR;
+	savefile_head_type = 0;
 
 	/* Write the block */
-	if (block) fd_write(fd, (cptr) block, BLOCK_HEAD_SIZE);
+	if (savefile_block) fd_write(fd, (cptr) savefile_block, BLOCK_HEAD_SIZE);
 
 	/* Free the block's memory */
-	if (block) KILL(block);
+	if (savefile_block) KILL(savefile_block);
 
 	/* We are done */
 	return;
@@ -992,7 +993,7 @@ static void savefile_do_block_artifacts(void)
 	/* Write the individual entries */
 	for (i = 0; i < z_info->a_max; i++)
 	{
-  		artifact_type *a_ptr = &a_info[i];
+  	artifact_type *a_ptr = &a_info[i];
 		savefile_add_byte(a_ptr->cur_num);
 	}
 

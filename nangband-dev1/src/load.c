@@ -2026,7 +2026,7 @@ bool load_player(void)
 		C_MAKE(header, 6, byte);
 
 		/* Point to the block */
-		header_pos = (byte *) header_pos;
+		header_pos = (byte *) header;
 
 		/* Read in the data */
 		if (fd_read(fd, (char *) header, 6)) err = -1;

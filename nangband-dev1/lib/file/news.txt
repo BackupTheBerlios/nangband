@@ -1,23 +1,24 @@
 
 
-           ********************************************************
-           **   Angband 2.9.6 alpha   **   The Pits of Angband   **
-           ********************************************************
+             _   _                       _                        _ 
+            | \ | |  __ _  _ __    __ _ | |__    __ _  _ __    __| |
+            |  \| | / _` || '_ \  / _` || '_ \  / _` || '_ \  / _` |
+            | |\  || (_| || | | || (_| || |_) || (_| || | | || (_| |
+            |_| \_| \__,_||_| |_| \__, ||_.__/  \__,_||_| |_| \__,_|
+                                  |___/     ___     ___     ____ 
+                                           |_  )   / _ \   |__  |
+                 The Pits of Angband        / /  _ \_, / _   / /
+                                           /___|(_) /_/ (_) /_/
 
-           Based on Moria:   Copyright (c) 1985 Robert Alan Koeneke
-               and Umoria:   Copyright (c) 1989 James E. Wilson
+           By Andrew Sidwell <nevermiah@hotmail.com> and Grahame White.
 
-                       Angband 2.0 - 2.4 - 2.6.2 by:
-                   Alex Cutler, Andy Astrand, Sean Marsh,
-                 Geoff Hill, Charles Teague, Charles Swiger
+         Based on Angband 2.9.6alpha4 - credits in the credits.txt file
+                                                   
+                   newsgroup: rec.games.rougelike.angband
+                    webpage: http://nangband.berlios.de/
 
-                   Angband 2.7.0 - 2.8.5 by Ben Harrison
+                         Press '?' in-game for help.
 
-                 Angband 2.9.0 - 2.9.x by Robert Ruehlmann
 
-        Send comments, bug reports, and patches, to "rr9@angband.org"
-       Visit the Angband Home Page at "http://thangorodrim.angband.org/"
-      Browse the Angband newsgroup at "news:rec.games.roguelike.angband"
-    Read the online help files, especially "general.txt" and "version.txt"
-   Angband is available for Unix, X11, DOS, Windows, Macintosh, Amiga, etc.
 
+-------------------------------------------------------------------------------

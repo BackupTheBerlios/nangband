@@ -210,7 +210,7 @@ function quaff_potion(object)
 			set_fast(player.fast + 5)
 		end
 	elseif object.sval == SV_POTION_RESIST_HEAT then
-		if set_oppose_fire(player.oppose_fire + randint(10) + 10) then
+		if set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + randint(10) + 10) then
 			ident = TRUE
 		end
 	elseif object.sval == SV_POTION_RESIST_COLD then

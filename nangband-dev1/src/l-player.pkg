@@ -64,6 +64,19 @@ typedef int errr;
 #define CF_PSEUDO_ID_HEAVY	0x00000080L /* Allow heavy pseudo-id */
 #define CF_PSEUDO_ID_IMPROV	0x00000100L /* Pseudo-id improves quicker with player-level */
 
+/*
+ * Player resist constants
+ */
+#define RES_ACID		0
+#define RES_ELEC		1
+#define RES_FIRE		2
+#define RES_COLD		3
+#define RES_POIS		4
+
+/*
+ * Maximum resists
+ */
+#define RES_MAX			5
 
 
 /***** Types *****/
@@ -76,6 +89,7 @@ struct player_type
 	byte psex;			/* Sex index */
 	byte prace;			/* Race index */
 	byte pclass;		/* Class index */
+	byte oops;			/* Unused */
 
 	byte hitdie;		/* Hit dice (sides) */
 	byte expfact;		/* Experience factor */
@@ -127,6 +141,10 @@ struct player_type
 	s16b blessed;		/* Timed -- Blessed */
 	s16b tim_invis;		/* Timed -- See Invisible */
 	s16b tim_infra;		/* Timed -- Infra Vision */
+
+	s16b resist_timed[RES_MAX];	/* Timed resistances */
+	s16b resist_cur[RES_MAX];	/* Current % resistances */
+	s16b resist_dis[RES_MAX];	/* Displayed resistances */
 
 	s16b word_recall;	/* Word of recall counter */
 
@@ -261,6 +279,7 @@ struct player_type
 	bool free_act;		/* Free action */
 	bool hold_life;		/* Hold life */
 
+	bool hunger;		/* Extra hungry */
 	bool impact;		/* Earthquake blows */
 	bool aggravate;		/* Aggravate monsters */
 	bool teleport;		/* Random teleporting */
@@ -304,7 +323,6 @@ struct player_type
 
 	s16b pspeed;		/* Current speed */
 };
-
 
 struct player_sex
 {

@@ -860,6 +860,7 @@ bool set_timed_res(int res_idx, int amount)
 			char text[32];
 
 			sprintf(text, "You feel resistant to %s!", res_names[res_idx]);
+			msg_print(text);
 
 			notice = TRUE;
 		}
@@ -873,6 +874,7 @@ bool set_timed_res(int res_idx, int amount)
 			char text[38];
 
 			sprintf(text, "You feel less resistant to %s!", res_names[res_idx]);
+			msg_print(text);
 
 			notice = TRUE;
 		}

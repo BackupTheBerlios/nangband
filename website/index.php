@@ -17,7 +17,7 @@ via CVS.  It features a full rewrite of the savefile code, a new resists
 system similar to EyAngband, seperate stat bonuses, object recall and 
 three new races from Antiband.</p>
 
-<p><em>Berlios.de</em hosts the project, including CVS, bug reporting 
+<p><em>Berlios.de</em> hosts the project, including CVS, bug reporting 
 facilities, website hosting, file releases and mailing lists.  Many thanks 
 to them for hosting it.</p>
 

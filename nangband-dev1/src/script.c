@@ -538,6 +538,8 @@ extern int tolua_misc_open(lua_State* tolua_S);
 extern void tolua_misc_close(lua_State* tolua_S);
 extern int tolua_spell_open(lua_State* tolua_S);
 extern void tolua_spell_close(lua_State* tolua_S);
+extern int tolua_dynamic_open(lua_State* tolua_S);
+extern void tolua_dynamic_close(lua_State* tolua_S);
 
 
 /*
@@ -569,6 +571,7 @@ errr script_init(void)
 	tolua_ui_open(L);
 	tolua_misc_open(L);
 	tolua_spell_open(L);
+	tolua_dynamic_open(L);
 
 	/* Initialization code */
 	path_build(buf, 1024, ANGBAND_DIR_SCRIPT, "init.lua");

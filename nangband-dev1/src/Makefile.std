@@ -46,7 +46,7 @@ ANGOBJS = \
 	generate.o dungeon.o init1.o init2.o randart.o \
 	main-cap.o main-gcu.o main-x11.o main-xaw.o main.o \
 	main-gtk.o main-lsl.o main-sla.o main-vcs.o main-xpj.o maid-x11.o \
-	script.o use-obj.o l-monst.o l-object.o l-player.o l-random.o l-ui.o l-misc.o l-spell.o \
+	script.o use-obj.o l-monst.o l-object.o l-player.o l-random.o l-ui.o l-misc.o l-spell.o l-dynamic.o \
 	$(LUAOBJS)
 
 ##

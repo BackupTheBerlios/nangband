@@ -101,7 +101,7 @@ WARNINGS = -Wall
 ##         line if you do not want debugging information in the
 ##         executable.
 #
-DEBUGGING = -g
+EXTRAS += -g
 
 ## OPTION: The system which Nangband is being run on has mkstemp().
 ##         This is default; if you get errors including "mkstemp()",
@@ -276,9 +276,9 @@ s-lang: LIBS += -lslang
 # Dependency rules
 #
 
-ifdef HAVE_MKSTEMP
-nangband: CFLAGS += $(HAVE_MKSTEMP)
-nangband: LINKFLAGS += $(HAVE_MKSTEMP)
+ifdef EXTRAS
+nangband: CFLAGS += $(EXTRAS)
+nangband: LINKFLAGS += $(EXTRAS)
 endif
 
 ifdef WARNINGS
@@ -287,14 +287,9 @@ nangband: LINKFLAGS += $(WARNINGS)
 endif
 
 ifdef ALLOW_BORG
-nangband: CFLAGS += $(ALLOW_BORG)
-nangband: LINKFLAGS += $(ALLOW_BORG)
+nangband: CFLAGS += -DALLOW_BORG
+nangband: LINKFLAGS += -DALLOW_BORG
 nangband: ANGOBJS += $(BORGOBJS)
-endif
-
-ifdef DEBUGGING
-nangband: CFLAGS += $(DEBUGGING)
-nangband: LINKFLAGS += $(DEBUGGING)
 endif
 
 nangband: lua/tolua $(ANGOBJS)

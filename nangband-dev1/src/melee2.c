@@ -1357,7 +1357,7 @@ bool make_attack_spell(int m_idx)
 			else
 			{
 				msg_print("Your mind is blasted by psionic energy.");
-				if (!p_ptr->resist_confu)
+				if (!resist_check(RES_CONF))
 				{
 					(void)set_confused(p_ptr->confused + rand_int(4) + 4);
 				}
@@ -1391,7 +1391,7 @@ bool make_attack_spell(int m_idx)
 				{
 					(void)set_blind(p_ptr->blind + 8 + rand_int(8));
 				}
-				if (!p_ptr->resist_confu)
+				if (!resist_check(RES_CONF))
 				{
 					(void)set_confused(p_ptr->confused + rand_int(4) + 4);
 				}
@@ -1650,11 +1650,8 @@ bool make_attack_spell(int m_idx)
 			disturb(1, 0);
 			if (blind) msg_format("%^s mumbles, and you hear puzzling noises.", m_name);
 			else msg_format("%^s creates a mesmerising illusion.", m_name);
-			if (p_ptr->resist_confu)
-			{
-				msg_print("You disbelieve the feeble spell.");
-			}
-			else if (rand_int(100) < p_ptr->skill_sav)
+
+			if (resist_check(RES_CONF))
 			{
 				msg_print("You disbelieve the feeble spell.");
 			}

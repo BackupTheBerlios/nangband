@@ -1129,7 +1129,7 @@ void hit_trap(int y, int x)
 		case FEAT_TRAP_HEAD + 0x0D:
 		{
 			msg_print("You are surrounded by a gas of scintillating colors!");
-			if (!p_ptr->resist_confu)
+			if (!resist_check(RES_CONF))
 			{
 				(void)set_confused(p_ptr->confused + rand_int(20) + 10);
 			}

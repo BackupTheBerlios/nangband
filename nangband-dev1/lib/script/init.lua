@@ -3,10 +3,27 @@ _ALERT = function(text)
 	msg_print(text)
 end
 
-dofile(build_script_path("object.lua"))
-dofile(build_script_path("spell.lua"))
+-- Simple helper function
+function loadfile(name)
+	dofile(build_script_path(name))
+end
 
--- Note to porters: only uncomment this line if you have defined
--- ALLOW_BORG *and* BORG_SCRIPTING.
+-- Load the managing files
 
--- dofile(build_script_patch("borg.lua"))
+-- Load the "powers" manager
+loadfile("p_manage.lua")
+
+-- Load the "spells" manager
+loadfile("s_manage.lua")
+
+
+-- Load the magic spells
+loadfile("s_magic.lua")
+loadfile("s_pray.lua")
+
+-- Load the object uses
+loadfile("object.lua")
+
+-- Load the (silly) example powers
+loadfile("p_exampl.lua")
+

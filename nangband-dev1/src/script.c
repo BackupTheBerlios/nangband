@@ -162,37 +162,6 @@ static const struct luaL_reg bitlib[] =
 	{"arshift", int_arshift},
 };
 
-#ifdef ALLOW_BORG
-/*
- * Callback for the borg
- */
-int script_borg_get_spellbook_index(int spell_tval)
-{
-	int result, status;
-
-	lua_getglobal(L, "borg_get_spellindex_hook");
-	tolua_pushusertype(L, (void*)spell_tval, tolua_tag(L, "int"));
-
-	/* Call the function with 1 argument and 1 result */
-	status = lua_call(L, 1, 1);
-
-	if (status == 0)
-	{
-		result = tolua_getnumber(L, -1, -1);
-
-		/* Remove the results */
-		lua_pop(L, 1);
-	}
-	else
-	{
-		result = -1;
-	}
-
-	return (result);
-}
-
-#endif
-
 /*
  * Callback for using an object
  */
@@ -398,6 +367,7 @@ static void line_hook(lua_State *L, lua_Debug *ar)
 			/* Activate */
 			Term_activate(angband_term[j]);
 
+			path_build(buf, 1025, ANGBAND_DIR_SCRIPT, "debug");
 			path_build(buf, 1024, ANGBAND_DIR_SCRIPT, "trace.lua");
 
 			/* Execute the file */
@@ -470,7 +440,7 @@ void do_cmd_script(void)
 			prt("Lua script: ", 0, 0);
 
 			/* Default filename */
-			sprintf(tmp, "test.lua");
+			sprintf(tmp, "debug/test.lua");
 
 			/* Ask for a file */
 			if (!askfor_aux(tmp, 80)) break;

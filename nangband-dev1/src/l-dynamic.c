@@ -1,3 +1,5 @@
+/* NOTICE: THIS FILE IS NOT AUTOMATICALLY GENERATED! DO NOT DELETE! */
+
 /*
  * File: l-dynamic.c
  *
@@ -15,11 +17,6 @@
 extern int tolua_dynamic_open(lua_State* tolua_S);
 extern void tolua_dynamic_close(lua_State* tolua_S);
 
-/*
- * At the moment, this function only has commented out code.
- * It serves as a brief example of how to export information
- * dynamically using tolua.
- */
 int tolua_dynamic_open(lua_State* tolua_S)
 {
 	int i;
@@ -27,12 +24,12 @@ int tolua_dynamic_open(lua_State* tolua_S)
 	/* Open the lua directories */
 	tolua_open(tolua_S);
 
-	/* Export the spell names */
+	/* Export the class names */
 	for (i = 0; i < z_info->c_max; i++)
 	{
 		/* Buffer */
 		char buffer[20];
-		char class_name[14];
+		char class_name[20];
 		unsigned int r;
 
 		/* Grab the class */
@@ -49,6 +46,33 @@ int tolua_dynamic_open(lua_State* tolua_S)
 
 		/* Prepare the buffer */
 		sprintf(buffer, "CLASS_%s", class_name);
+
+		/* Make it a constant - state, null, name, value */
+		tolua_constant(tolua_S, NULL, buffer, i);
+	}
+
+	/* Export the spell names */
+	for (i = 0; i < z_info->c_max; i++)
+	{
+		/* Buffer */
+		char buffer[20];
+		char race_name[20];
+		unsigned int r;
+
+		/* Grab the class */
+		rp_ptr = &p_info[i];
+
+		/* Set the class name */
+		strcpy(race_name, (p_name + rp_ptr->name));
+
+		/* Make it uppercase */
+		for (r = 0; r < strlen(race_name); r++)
+		{
+			race_name[r] = toupper(race_name[r]);
+		}
+
+		/* Prepare the buffer */
+		sprintf(buffer, "RACE_%s", race_name);
 
 		/* Make it a constant - state, null, name, value */
 		tolua_constant(tolua_S, NULL, buffer, i);

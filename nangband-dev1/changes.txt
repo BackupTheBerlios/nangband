@@ -1,6 +1,12 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-07-31
+----------
+- Reorganized the lua files.  Also, updated the Vanilla's spell code -
+  it looks much nicer.  Added the basics of class/race powers.
+  Moved debugging stuff into lib/script/debug/.  (takkaria)
+
 2002-07-29
 ----------
 - Added support for ABSORB_LIGHT, using linked lists to avoid the calls for

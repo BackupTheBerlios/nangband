@@ -776,8 +776,7 @@ errr init_gtk(int argc, char **argv)
 	init_angband();
 
 	/* Prompt the user */
-	prt("[Choose 'New' or 'Open' from the 'File' menu]", 23, 17);
-	Term_fresh();
+	prompt_note("[Choose 'New' or 'Open' from the 'File' menu]");
 
 	/* Processing loop */
 	gtk_main();

@@ -4658,11 +4658,7 @@ int main(void)
 
 
 	/* Prompt the user */
-	prt("[Choose 'New' or 'Open' from the 'File' menu]", 23, 15);
-
-	/* Flush the prompt */
-	Term_fresh();
-
+	prompt_note("[Choose 'New' or 'Open' from the 'File' menu]");
 
 	/* Hack -- Process Events Forever */
 	while (TRUE) CheckEvents(TRUE);

@@ -639,8 +639,11 @@ int main(int argc, char *argv[])
 	/* Hack -- If requested, display scores and quit */
 	if (show_score > 0) display_scores(0, show_score);
 
-	/* Wait for response */
-	pause_line(23);
+	/* Tell the user what to do now */
+	prompt_note("[Press any key to continue]");
+
+	/* Wait for the user */
+	inkey();
 
 	/* Play the game */
 	play_game(new_game);

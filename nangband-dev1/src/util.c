@@ -135,14 +135,21 @@ void prompt_note(char *prompt)
 {
 	int x, y;
 
+	/* Get the terminal size */
 	Term_get_size(&x, &y);
 
+	/* Decide the start position */
 	x = (x / 2) - (strlen(prompt) / 2);
+	y--;
 
-	Term_erase(0, y - 1, 255);
+	/* Print */
+	Term_erase(0, y, 255);
+	Term_putstr(x, y, -1, TERM_WHITE, prompt);
 
-	prt(prompt, y - 1, x);
+	/* Flush input */
+	Term_flush();
 
+	/* Return control */
 	return;
 }
 
@@ -3349,9 +3356,10 @@ bool get_com(cptr prompt, char *command)
 
 
 /*
- * Pause for user response
+ * Pause for user response.
  *
- * This function is stupid.  XXX XXX XXX
+ * This function is stupid, and can be replaced by inlining this
+ * function into the required positions.
  */
 void pause_line(int row)
 {

@@ -3666,20 +3666,20 @@ D:A stout leather belt.
 N:519:& Gold-Plated Belt~
 G:(:y
 I:29:20:0
-W:15:20:250
+W:15:15:30:250
 P:5:1d3:0:0:0
 D:A thick belt with gold links along the length of it.
 
 N:520:& Leather Girdle~
 G:(:D
 I:29:25:0
-W:17:30:300
+W:17:20:30:300
 P:6:1d3:0:0:0
 D:A thick and sturdy leather girdle.
 
 N:521:& Steel-Reinforced Girdle~
 G:(:W
 I:29:26:0
-W:25:10:500
+W:25:10:50:500
 P:8:1d4:0:0:0
 D:A thick leather girdle with steel plates riveted to it.

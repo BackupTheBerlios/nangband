@@ -7,6 +7,8 @@
  * by:				takkaria
  */
 
+echo '<html><head><title>Access Denied.<title></head><body>Access Denied.</body></html>';
+
 function page_header($title, $type)
 {
 	echo '<html>';
@@ -26,7 +28,7 @@ function page_header($title, $type)
 	echo '</div>';
 
 	echo '<hr width="450" size="1" align="center">';
-	echo '<br';
+	echo '<br>';
 
 	return;
 }

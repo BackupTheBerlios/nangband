@@ -849,13 +849,22 @@ static int minus_ac(void)
 void acid_dam(int dam, cptr kb_str)
 {
 	int inv = (dam < 30) ? 1 : (dam < 60) ? 2 : 3;
+	int resist_percent;
 
 	/* Total Immunity */
-	if (p_ptr->immune_acid || (dam <= 0)) return;
+	if ((p_ptr->resist_cur[RES_ACID] > 90) || (dam <= 0)) return;
+
+	/*
+	 * Grab a current % resist value
+	 *
+	 * [note to self - create a function that decreases the % gain for
+     * temporary resistances based on time left] --takkaria
+	 */
+	resist_percent = p_ptr->resist_cur[RES_ACID] +
+		(p_ptr->resist_timed[RES_ACID] ? 20 : 0);
 
 	/* Resist the damage */
-	if (p_ptr->resist_acid) dam = (dam + 2) / 3;
-	if (p_ptr->oppose_acid) dam = (dam + 2) / 3;
+	dam /= resist_percent;
 
 	/* If any armor gets hit, defend the player */
 	if (minus_ac()) dam = (dam + 1) / 2;

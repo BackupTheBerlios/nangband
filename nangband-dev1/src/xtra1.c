@@ -1823,11 +1823,6 @@ static void calc_bonuses(void)
 	p_ptr->sustain_con = FALSE;
 	p_ptr->sustain_dex = FALSE;
 	p_ptr->sustain_chr = FALSE;
-	p_ptr->resist_acid = FALSE;
-	p_ptr->resist_elec = FALSE;
-	p_ptr->resist_fire = FALSE;
-	p_ptr->resist_cold = FALSE;
-	p_ptr->resist_pois = FALSE;
 	p_ptr->resist_fear = FALSE;
 	p_ptr->resist_lite = FALSE;
 	p_ptr->resist_dark = FALSE;
@@ -1839,10 +1834,6 @@ static void calc_bonuses(void)
 	p_ptr->resist_shard = FALSE;
 	p_ptr->resist_nexus = FALSE;
 	p_ptr->resist_nethr = FALSE;
-	p_ptr->immune_acid = FALSE;
-	p_ptr->immune_elec = FALSE;
-	p_ptr->immune_fire = FALSE;
-	p_ptr->immune_cold = FALSE;
 
 
 	/*** Extract race/class info ***/
@@ -1904,24 +1895,13 @@ static void calc_bonuses(void)
 
 	/* Bad flags */
 	if (f3 & (TR3_HUNGER)) p_ptr->hunger = TRUE;
-        if (f3 & (TR3_HUNGER) & (TR3_SLOW_DIGEST)) p_ptr->slow_digest = FALSE;
+	if (f3 & (TR3_HUNGER) && (TR3_SLOW_DIGEST)) p_ptr->slow_digest = FALSE;
 	if (f3 & (TR3_IMPACT)) p_ptr->impact = TRUE;
 	if (f3 & (TR3_AGGRAVATE)) p_ptr->aggravate = TRUE;
 	if (f3 & (TR3_TELEPORT)) p_ptr->teleport = TRUE;
 	if (f3 & (TR3_DRAIN_EXP)) p_ptr->exp_drain = TRUE;
 
-	/* Immunity flags */
-	if (f2 & (TR2_IM_FIRE)) p_ptr->immune_fire = TRUE;
-	if (f2 & (TR2_IM_ACID)) p_ptr->immune_acid = TRUE;
-	if (f2 & (TR2_IM_COLD)) p_ptr->immune_cold = TRUE;
-	if (f2 & (TR2_IM_ELEC)) p_ptr->immune_elec = TRUE;
-
 	/* Resistance flags */
-	if (f2 & (TR2_RES_ACID)) p_ptr->resist_acid = TRUE;
-	if (f2 & (TR2_RES_ELEC)) p_ptr->resist_elec = TRUE;
-	if (f2 & (TR2_RES_FIRE)) p_ptr->resist_fire = TRUE;
-	if (f2 & (TR2_RES_COLD)) p_ptr->resist_cold = TRUE;
-	if (f2 & (TR2_RES_POIS)) p_ptr->resist_pois = TRUE;
 	if (f2 & (TR2_RES_FEAR)) p_ptr->resist_fear = TRUE;
 	if (f2 & (TR2_RES_LITE)) p_ptr->resist_lite = TRUE;
 	if (f2 & (TR2_RES_DARK)) p_ptr->resist_dark = TRUE;
@@ -1948,7 +1928,11 @@ static void calc_bonuses(void)
 	/* Scan the equipment */
 	for (i = INVEN_WIELD; i < INVEN_TOTAL; i++)
 	{
+		int n;
+		object_kind *k_ptr;
+
 		o_ptr = &inventory[i];
+		k_ptr = &k_info[o_ptr->k_idx];
 
 		/* Skip non-objects */
 		if (!o_ptr->k_idx) continue;
@@ -2003,26 +1987,15 @@ static void calc_bonuses(void)
 		/* Weird flags */
 		if (f3 & (TR3_BLESSED)) p_ptr->bless_blade = TRUE;
 
-	        /* Bad flags */
+		/* Bad flags */
 		if (f3 & (TR3_HUNGER)) p_ptr->hunger = TRUE;
-                if (f3 & (TR3_HUNGER) & (TR3_SLOW_DIGEST)) p_ptr->slow_digest = FALSE;
+ 		if (f3 & (TR3_HUNGER) & (TR3_SLOW_DIGEST)) p_ptr->slow_digest = FALSE;
 		if (f3 & (TR3_IMPACT)) p_ptr->impact = TRUE;
 		if (f3 & (TR3_AGGRAVATE)) p_ptr->aggravate = TRUE;
 		if (f3 & (TR3_TELEPORT)) p_ptr->teleport = TRUE;
 		if (f3 & (TR3_DRAIN_EXP)) p_ptr->exp_drain = TRUE;
 
-		/* Immunity flags */
-		if (f2 & (TR2_IM_FIRE)) p_ptr->immune_fire = TRUE;
-		if (f2 & (TR2_IM_ACID)) p_ptr->immune_acid = TRUE;
-		if (f2 & (TR2_IM_COLD)) p_ptr->immune_cold = TRUE;
-		if (f2 & (TR2_IM_ELEC)) p_ptr->immune_elec = TRUE;
-
 		/* Resistance flags */
-		if (f2 & (TR2_RES_ACID)) p_ptr->resist_acid = TRUE;
-		if (f2 & (TR2_RES_ELEC)) p_ptr->resist_elec = TRUE;
-		if (f2 & (TR2_RES_FIRE)) p_ptr->resist_fire = TRUE;
-		if (f2 & (TR2_RES_COLD)) p_ptr->resist_cold = TRUE;
-		if (f2 & (TR2_RES_POIS)) p_ptr->resist_pois = TRUE;
 		if (f2 & (TR2_RES_FEAR)) p_ptr->resist_fear = TRUE;
 		if (f2 & (TR2_RES_LITE)) p_ptr->resist_lite = TRUE;
 		if (f2 & (TR2_RES_DARK)) p_ptr->resist_dark = TRUE;
@@ -2042,6 +2015,16 @@ static void calc_bonuses(void)
 		if (f2 & (TR2_SUST_DEX)) p_ptr->sustain_dex = TRUE;
 		if (f2 & (TR2_SUST_CON)) p_ptr->sustain_con = TRUE;
 		if (f2 & (TR2_SUST_CHR)) p_ptr->sustain_chr = TRUE;
+
+		/* Resistances */
+		for (n = 0; n < RES_MAX; n++)
+		{
+			/* Adjust the stats */
+			p_ptr->resist_cur[n] += k_ptr->resists[n];
+
+			if (object_known_p(o_ptr))
+				p_ptr->resist_dis[n] += k_ptr->resists[n];
+		}
 
 		/* Modify the base armor class */
 		p_ptr->ac += o_ptr->ac;

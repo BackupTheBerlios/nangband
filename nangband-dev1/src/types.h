@@ -154,7 +154,6 @@ struct object_kind
 
 	byte tval;			/* Object type */
 	byte sval;			/* Object sub type */
-
 	s16b pval;			/* Object extra info */
 
 	s16b to_h;			/* Bonus to hit */
@@ -179,20 +178,17 @@ struct object_kind
 	byte level;			/* Level */
 	byte extra;			/* Something */
 
+	s16b resists[RES_MAX];	/* Item resists */
 
 	byte d_attr;		/* Default object attribute */
 	char d_char;		/* Default object character */
 
-
 	byte x_attr;		/* Desired object attribute */
 	char x_char;		/* Desired object character */
 
-
 	u16b flavor;		/* Special object flavor (or zero) */
 
-
 	bool aware;			/* The player is "aware" of the item's effects */
-
 	bool tried;			/* The player has "tried" one of the items */
 };
 
@@ -230,6 +226,8 @@ struct artifact_type
 	u32b flags1;		/* Artifact Flags, set 1 */
 	u32b flags2;		/* Artifact Flags, set 2 */
 	u32b flags3;		/* Artifact Flags, set 3 */
+
+	s16b resists[RES_MAX];	/* Item resists */
 
 	byte level;			/* Artifact level */
 	byte rarity;		/* Artifact rarity */
@@ -270,6 +268,8 @@ struct ego_item_type
 	u32b flags1;		/* Ego-Item Flags, set 1 */
 	u32b flags2;		/* Ego-Item Flags, set 2 */
 	u32b flags3;		/* Ego-Item Flags, set 3 */
+
+	s16b resists[RES_MAX];	/* Item resists */
 };
 
 
@@ -877,6 +877,10 @@ struct player_type
 	s16b tim_invis;		/* Timed -- See Invisible */
 	s16b tim_infra;		/* Timed -- Infra Vision */
 
+	s16b resist_timed[RES_MAX];	/* Timed resistances */
+	s16b resist_cur[RES_MAX];	/* Current % resistances */
+	s16b resist_dis[RES_MAX];	/* Displayed resistances */
+
 	s16b oppose_acid;	/* Timed -- oppose acid */
 	s16b oppose_elec;	/* Timed -- oppose lightning */
 	s16b oppose_fire;	/* Timed -- oppose heat */
@@ -989,17 +993,6 @@ struct player_type
 	s16b stat_add[A_MAX];	/* Equipment stat bonuses */
 	s16b stat_ind[A_MAX];	/* Indexes into stat tables */
 
-	bool immune_acid;	/* Immunity to acid */
-	bool immune_elec;	/* Immunity to lightning */
-	bool immune_fire;	/* Immunity to fire */
-	bool immune_cold;	/* Immunity to cold */
-
-	bool resist_acid;	/* Resist acid */
-	bool resist_elec;	/* Resist lightning */
-	bool resist_fire;	/* Resist fire */
-	bool resist_cold;	/* Resist cold */
-	bool resist_pois;	/* Resist poison */
-
 	bool resist_fear;	/* Resist fear */
 	bool resist_lite;	/* Resist light */
 	bool resist_dark;	/* Resist darkness */
@@ -1030,7 +1023,7 @@ struct player_type
 
 	bool nethr_brand, nexus_brand, chaos_brand;
 
-        bool hunger;            /* Extra hungery */
+	bool hunger;		/* Extra hungry */
 	bool impact;		/* Earthquake blows */
 	bool aggravate;		/* Aggravate monsters */
 	bool teleport;		/* Random teleporting */

@@ -1,6 +1,7 @@
-/* File: defines.h */
-
 /*
+ * File: defines.h
+ * Purpose: Various constants and macros for Angband
+ *
  * Copyright (c) 1997 Ben Harrison, James E. Wilson, Robert A. Koeneke
  *
  * This software may be copied and distributed for educational, research,
@@ -28,12 +29,6 @@
  * be defined in this file, but which may be related to definitions here.
  * This is of course bad programming practice, but nobody is perfect...
  *
- * For example, there are MANY things that depend on the screen being
- * 80x24, with the top line used for messages, the bottom line being
- * used for status, and exactly 22 lines used to show the dungeon.
- * Just because your screen can hold 46 lines does not mean that the
- * game will work if you try to use 44 lines to show the dungeon.
- *
  * You have been warned.
  */
 
@@ -41,13 +36,13 @@
 /*
  * Name of the version/variant
  */
-#define VERSION_NAME "Angband"
+#define VERSION_NAME "Nangband"
 
 
 /*
  * Current version string
  */
-#define VERSION_STRING	"2.9.6 alpha"
+#define VERSION_STRING	"2.9.7 alpha"
 
 
 /*
@@ -101,17 +96,8 @@
 #define ROW_MAP			1
 #define COL_MAP			13
 
-
-/*
- * Number of grids in each screen (vertically)
- * Must be a multiple of PANEL_HGT (at least 2x)
- */
+/* Number of grids in each screen (vertically & horizontally) */
 #define SCREEN_HGT	(Term->hgt - ROW_MAP - 1)
-
-/*
- * Number of grids in each screen (horizontally)
- * Must be a multiple of PANEL_WID (at least 2x)
- */
 #define SCREEN_WID	(Term->wid - COL_MAP - 1)
 
 
@@ -239,6 +225,19 @@
  */
 #define MAX_SHORT       32767
 
+/*
+ * Player resist constants
+ */
+#define RES_ACID		0
+#define RES_ELEC		1
+#define RES_FIRE		2
+#define RES_COLD		3
+#define RES_POIS		4
+
+/*
+ * Maximum resists
+ */
+#define RES_MAX			5
 
 /*
  * Store constants
@@ -249,7 +248,7 @@
 #define STORE_TURNOVER	9		/* Normal shop turnover, per day */
 #define STORE_MIN_KEEP	6		/* Min slots to "always" keep full */
 #define STORE_MAX_KEEP	18		/* Max slots to "always" keep full */
-#define STORE_SHUFFLE	25		/* 1/Chance (per day) of an owner changing */
+#define STORE_SHUFFLE	30		/* 1/Chance (per day) of an owner changing */
 #define STORE_TURNS		1000	/* Number of turns between turnovers */
 
 
@@ -265,18 +264,18 @@
 #define USE_DEVICE      3		/* x> Harder devices x< Easier devices */
 
 /*
- * There is a 1/20 (5%) chance of inflating the requested object_level
+ * There is a 1/15 (6.66%) chance of inflating the requested object_level
  * during the creation of an object (see "get_obj_num()" in "object.c").
  * Lower values yield better objects more often.
  */
-#define GREAT_OBJ	20
+#define GREAT_OBJ	15
 
 /*
- * There is a 1/20 (5%) chance that ego-items with an inflated base-level are
+ * There is a 1/40 (2.5%) chance that ego-items with an inflated base-level are
  * generated when an object is turned into an ego-item (see make_ego_item()
  * in object2.c). As above, lower values yield better ego-items more often.
  */
-#define GREAT_EGO	20
+#define GREAT_EGO	40
 
 /*
  * There is a 1/50 (2%) chance of inflating the requested monster_level

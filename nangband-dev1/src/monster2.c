@@ -2285,40 +2285,60 @@ void update_smart_learn(int m_idx, int what)
 
 		case DRS_RES_ACID:
 		{
-			if (p_ptr->resist_acid) m_ptr->smart |= (SM_RES_ACID);
-			if (p_ptr->oppose_acid) m_ptr->smart |= (SM_OPP_ACID);
-			if (p_ptr->immune_acid) m_ptr->smart |= (SM_IMM_ACID);
+			if (p_ptr->resist_cur[RES_ACID])
+				m_ptr->smart |= (SM_RES_ACID);
+
+			if (p_ptr->resist_timed[RES_ACID])
+				m_ptr->smart |= (SM_OPP_ACID);
+
+/*			if (p_ptr->immune_acid) m_ptr->smart |= (SM_IMM_ACID); */
+
 			break;
 		}
 
 		case DRS_RES_ELEC:
 		{
-			if (p_ptr->resist_elec) m_ptr->smart |= (SM_RES_ELEC);
-			if (p_ptr->oppose_elec) m_ptr->smart |= (SM_OPP_ELEC);
-			if (p_ptr->immune_elec) m_ptr->smart |= (SM_IMM_ELEC);
+			if (p_ptr->resist_cur[RES_ELEC])
+				m_ptr->smart |= (SM_RES_ELEC);
+
+			if (p_ptr->resist_timed[RES_ELEC])
+				m_ptr->smart |= (SM_OPP_ELEC);
+
+/*			if (p_ptr->immune_elec) m_ptr->smart |= (SM_IMM_ELEC); */
 			break;
 		}
 
 		case DRS_RES_FIRE:
 		{
-			if (p_ptr->resist_fire) m_ptr->smart |= (SM_RES_FIRE);
-			if (p_ptr->oppose_fire) m_ptr->smart |= (SM_OPP_FIRE);
-			if (p_ptr->immune_fire) m_ptr->smart |= (SM_IMM_FIRE);
+			if (p_ptr->resist_cur[RES_FIRE])
+				m_ptr->smart |= (SM_RES_FIRE);
+
+			if (p_ptr->resist_timed[RES_FIRE])
+				m_ptr->smart |= (SM_OPP_FIRE);
+
+/*			if (p_ptr->immune_fire) m_ptr->smart |= (SM_IMM_FIRE); */
 			break;
 		}
 
 		case DRS_RES_COLD:
 		{
-			if (p_ptr->resist_cold) m_ptr->smart |= (SM_RES_COLD);
-			if (p_ptr->oppose_cold) m_ptr->smart |= (SM_OPP_COLD);
-			if (p_ptr->immune_cold) m_ptr->smart |= (SM_IMM_COLD);
+			if (p_ptr->resist_cur[RES_COLD])
+				m_ptr->smart |= (SM_RES_COLD);
+
+			if (p_ptr->resist_timed[RES_COLD])
+				m_ptr->smart |= (SM_OPP_COLD);
+
+/*			if (p_ptr->immune_cold) m_ptr->smart |= (SM_IMM_COLD); */
 			break;
 		}
 
 		case DRS_RES_POIS:
 		{
-			if (p_ptr->resist_pois) m_ptr->smart |= (SM_RES_POIS);
-			if (p_ptr->oppose_pois) m_ptr->smart |= (SM_OPP_POIS);
+			if (p_ptr->resist_cur[RES_POIS])
+				m_ptr->smart |= (SM_RES_POIS);
+
+			if (p_ptr->resist_timed[RES_POIS])
+				m_ptr->smart |= (SM_OPP_POIS);
 			break;
 		}
 

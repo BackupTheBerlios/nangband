@@ -1,4 +1,4 @@
-Nangband Credits and Developers
+Nangband Credits and Developers - Those who fixed what wasn't broken.
 ===============================
 
 The DevTeam:

@@ -517,9 +517,10 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 		char buf[50];
 		if (type == PUT) note = strtable_content(o_ptr->name_suf);
 		else note = buf;
-		savefile_do_string((char *) &note, type);
+
+		savefile_do_string((char *) note, type);
 		buf[49] = '\0';
-		if (type == GET) o_ptr->name_suf = strtable_add(buf);
+		if (type == GET) o_ptr->name_suf = strtable_add(note);
 	}
 
 	if (o_ptr->name_pre && type == PUT) temp = TRUE;
@@ -532,9 +533,10 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 		char buf[50];
 		if (type == PUT) note = strtable_content(o_ptr->name_pre);
 		else note = buf;
-		savefile_do_string((char *) &note, type);
+
+		savefile_do_string((char *) note, type);
 		buf[49] = '\0';
-		if (type == GET) o_ptr->name_suf = strtable_add(buf);
+		if (type == GET) o_ptr->name_suf = strtable_add(note);
 	}
 
 	savefile_do_s32b(&o_ptr->cost, type);

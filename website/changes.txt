@@ -18,3 +18,5 @@ Nangband Website changelog
   completely broken. (takkaria)
 - Made cookies expire a few years after setting. (takkaria)
 - Move the stylesheets into styles/. (takkaria)
+- Cleaned up some code in layout.php.  (takkaria)
+- Forgot to add the main page to CVS! (takkaria)

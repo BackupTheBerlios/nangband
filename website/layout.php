@@ -12,26 +12,34 @@ if ($access != 'arnold')
 	echo '<html><head><title>Access Denied.</title></head><body><h1>Access Denied.</h1></body></html>';
 }
 
-function do_sidebar_links()
+// Sidebar link ends and beginnings
+$sidebar_links_start = '<tr><td bgcolor="#bbbbbb" align="center">';
+$sidebar_links_end   = '</td></tr>';
+
+// Output all the links using flexible formatting.
+function do_links($start, $end, $has_pipes)
 {
-?>
-	<tr><td bgcolor="#bbbbbb" align="center"><a href="?page=main">main page</a></td></tr>
-	<tr><td bgcolor="#bbbbbb" align="center"><a href="?page=changes">changes</a></td></tr>
-	<tr><td bgcolor="#bbbbbb" align="center"><a href="?page=download">download</a></td></tr>
-	<tr><td bgcolor="#bbbbbb" align="center"><a href="?page=project">project page</a></td></tr>
-<?php
+        if ($start) echo $start;
+        echo '<a href="?page=main">main page</a>';
+        if ($has_pipes) echo ' | ';
+        if ($end) echo $end;
 
-	return;
-}
+        if ($start) echo $changes;
+        echo '<a href="?page=changes">changes</a>';
+        if ($has_pipes) echo ' | ';
+        if ($end) echo $end;
 
-function do_clean_links()
-{
-	echo '<a href="?page=main">main page</a> | ';
-	echo '<a href="?page=changes">changes</a> | ';
-	echo '<a href="?page=download">download</a> | ';
-	echo '<a href="?page=project">project page</a>';
+        if ($start) echo $start;
+        echo '<a href="?page=download">download</a>';
+        if ($has_pipes) echo ' | ';o
 
-	return;
+        if ($end) echo $end;
+
+        if ($start) echo $start;
+        echo '<a href="?page=project">project page</a>';
+        if ($end) echo $end;
+
+        return;
 }
 
 function do_styles($type)
@@ -40,7 +48,7 @@ function do_styles($type)
 
 	if ($style != 'sidebar')
 	{
-		echo '<a href="?page='.$type.'&newstyle=sidebar">Sidebar-thing</a>';
+		echo '<a href="?page='.$type.'&amp;newstyle=sidebar">Sidebar-thing</a>';
 	}
 	else
 	{
@@ -51,7 +59,7 @@ function do_styles($type)
 
 	if ($style != 'clean')
 	{
-		echo '<a href="?page='.$type.'&newstyle=clean">Clean</a>';
+		echo '<a href="?page='.$type.'&amp;newstyle=clean">Clean</a>';
 	}
 	else
 	{
@@ -65,6 +73,7 @@ function page_header($title, $type)
 {
 	global $style;
 
+	echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
 	echo '<html>';
 	echo '<head>';
 	echo '<title>nangband - ' . $title . '</title>';
@@ -76,18 +85,18 @@ function page_header($title, $type)
 	{
 ?>
 <body bgcolor="#ffffff">
-<table width="95%" align="center" callspacing="1" cellpadding="0" border="0">
+<table width="95%" align="center" cellspacing="1" cellpadding="0" border="0">
 	<tr><td>
 		<table width="100%" align="center" callspacing="0" cellpadding="4" border="0">
 		<tr><td bgcolor="#eeeeee" align="center">
-			<font face="Veranda" color="#555555" size="+2">
+			<font face="Verdana" color="#555555" size="+2">
 			<b>nangband - <?php echo $title; ?></b></font>
 
 			<br>
 			<font face="Verdana" size="-1" color="#555555">Change style: <?php do_styles($type); ?></font>
 			<br>
 
-			<font face="Veranna" color="#555555"><?php do_clean_links(); ?></font>
+			<font face="Veranna" color="#555555"><?php do_links(0, 0, 1); ?></font>
 
 		</td></tr>
 		<tr><td bgcolor="#dddddd"><font face="Veranna" color="#333333">
@@ -100,7 +109,7 @@ function page_header($title, $type)
 <table width="95%" border="0">
 	<tr><td valign="top" width="15%">
 			<table align="center" cellpadding="20" cellspacing="10" border="0" width="95%">
-				<?php do_sidebar_links(); ?>
+				<?php do_links($sidebar_links_start, $sidebar_links_end, 0); ?>
 			</table>
 		</td>
 		<td valign="top">
@@ -127,8 +136,8 @@ function page_footer()
 		echo '</font></td></tr>';
  
 		echo '<tr><td bgcolor="#eeeeee" align="center">';
-		echo '<font face="Veranda" color="#555555">';
-		do_clean_links();
+		echo '<font face="Verdana" color="#555555">';
+		do_links(0, 0, 1);
 		echo '<br>';
 		echo '<font size="-1"><div align="center">Material &copy; Nangband Developers. Contact ';
 		echo '<a href="mailto:nevermiah@hotmail.com">nevermiah@hotmail.com</a>';

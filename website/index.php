@@ -12,11 +12,22 @@ include('general/layout.php');
 $creators = 'Andrew Sidwell';
 page_header('Main Page', 'index');
 ?>
-<p>Nangband is a farirly new Angband variant, based on the plain version of Angband's (Vanilla) CVS. Nangband is normally updated to incorporate any useful changes made in the Vanilla tree within a few days.</p>
+<p>Nangband is an Angband variant still in alpha stage, and only available 
+via CVS.  It features a full rewrite of the savefile code, a new resists 
+system similar to EyAngband, seperate stat bonuses, object recall and 
+three new races from Antiband.</p>
 
-<p>There is no release as of yet, because it is very much in development. However, you may download via CVS, or you can wait for a near-stable prerelease which should happen in the next week or two. The estimated release date of Nangband 0.1.0 is the first week of April.</p>
+<p><em>Berlios.de</em hosts the project, including CVS, bug reporting 
+facilities, website hosting, file releases and mailing lists.  Many thanks 
+to them for hosting it.</p>
 
-<p><em>Berlios.de</em> is hosting the project, including the CVS, the website, file releases and the mailing lists. If you are interested in this project, please join 'nangband-discussion'. A direct link to the mailing page is: <a href="http://developer.berlios.de/mail/?group_id=266">http://developer.berlios.de/mail/?group_id=266</a>.</p>
+<p>There are two mailing lists for Nangband; click on one to be taken to 
+it's subscription/unsubscription page.
+<ul>
+<li><a href="https://lists.berlios.de/mailman/listinfo/nangband-discussion">nangband-discussion</a>: General discussion about Nangband.</li>
+<li><a href="https://lists.berlios.de/mailman/listinfo/nangband-developer">nangband-developer</a>: Nangband developer's list.</li>
+</ul>
+</p>
 
 <p>The CVS can be checked out using the following command:<br>
 <pre>cvs -z3 -:d:pserver:anonymous@cvs.nangband.berlios.de:/cvsroot/nangband co nangband</pre>

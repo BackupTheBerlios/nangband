@@ -6,41 +6,25 @@
 //                                   //
 ///////////////////////////////////////
 
-// Ensure we don't have rubbish
-if ((($page != 'main') &&
-     ($page != 'changes') &&
-     ($page != 'download') &&
-     ($page != 'project')) ||
-     (!$page))
-{
-	$page = 'main';
-}
+// Include the general layout functions
+$included = true;
+include('layout.php');
+
+// Ensure we always have a page. and style
+if (!$page) $page = 'main';
+if (!$cstyle) $style = 'clean';
+         else $style = $cstyle;
 
 // Check on the setting styles
 if (($newstyle == 'sidebar') ||
     ($newstyle == 'clean'))
 {
 	// Set a cookie for a few years
-	setcookie("style", $newstyle, time()+172800000);
+	setcookie("cstyle", $newstyle, time()+172800000);
 
 	// Set the current style
 	$style = $newstyle;
 }
-
-// Check on "current" styles
-if ((($style != 'sidebar') &&
-     ($style != 'clean')) ||
-     (!$style))
-{
-	$style = 'clean';
-}
-
-
-// Silly.
-$access = 'arnold';
-
-// Include the general layout functions
-include('layout.php');
 
 // Come up with a page "title"
 switch ($page)

@@ -6,12 +6,6 @@
 //                               //
 ///////////////////////////////////
 
-// Make sure prying eyes get a nice response ;)
-if ($access != 'arnold')
-{
-	echo '<html><head><title>Access Denied.</title></head><body><h1>Access Denied.</h1></body></html>';
-}
-
 // Sidebar link ends and beginnings
 $sidebar_links_start = '<tr><td bgcolor="#bbbbbb" align="center">';
 $sidebar_links_end   = '</td></tr>';
@@ -172,6 +166,19 @@ Contact <a href="mailto:nevermiah@hotmail.com">nevermiah@hotmail.com</a></font>
 	echo '</body></html>';
 
 	return;
+}
+
+// Make sure prying eyes get a nice response :)
+if ($included == false)
+{
+	// Output a nice header
+	page_header('Source for layout.php', 'clean');
+
+	// Show the source
+	show_source('layout.php');
+
+	// Output a nice footer
+	page_footer();
 }
 
 ?>

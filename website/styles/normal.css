@@ -1,15 +1,23 @@
+/*
+ * Stylesheet for the Nangband website
+ * clean.css - "clean" layout.
+ *
+ * Design (c) Andrew Sidwell, 2002. 
+ */
+
 body
 {
-  background: #ffffff;
-  font-family:  Arial, sans-serif;
-  font-size: 14px;
-  text-align: justify;
+	background: #ffffff;
+	color: #000000;
+	font-family:  Arial, sans-serif;
+	font-size: 14px;
+	text-align: justify;
 }
 
 form
 {
-  margin-bottom: 0px;
-  margin-top: 0px;
+	margin-bottom: 0px;
+	margin-top: 0px;
 }
 
 input.box
@@ -23,7 +31,6 @@ input.box
 input.button
 {
 	border: 1px solid;
-	cursor: hand;
 	padding-bottom: 1px;
 	padding-top: 1px;
 	background: #ffffee;
@@ -33,7 +40,7 @@ input.button
 
 em
 {
-	background-color : #DDDDDD;
+	background-color: #DDDDDD;
 }
 
 h1
@@ -46,7 +53,7 @@ a
 {
 	color: #3399FF;
 	font-weight: normal;
-	text-decoration : none;
+	text-decoration: none;
 }
 
 a:hover

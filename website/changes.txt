@@ -1,6 +1,13 @@
 Nangband Website changelog
 ==========================
 
+05-07-02
+--------
+- Added a timing counter to the Nangband changes page for fun.  It
+  needs gmtime.inc which is now in the content/ directory.
+- Removed the "content lister" - I've chosen a different approach
+  now.
+
 01-07-02
 --------
 - Cleaned up some code in layout.php - the links code is now much

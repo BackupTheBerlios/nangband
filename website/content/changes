@@ -1,48 +1,26 @@
-<p>Nangband has made some quite major changes in the time it has been in development. A brief outline 
-of some of them are listed here:</p>
-<pre>
-- Changed referances to 'lite', to 'light'. (parody)
-- Added a basic monster kill count. (parody)
-- Moved the stat bonuses from the pval to their own variable. (takkaria)
-- New makefile.std --> cygwin is incroporated into it now.
-- Instead of being capped at 1600, many monster breaths are now capped
-  at their dungeon level * 10. Suggested by JLE and Nathan Mahon.
-  (takkaria)
-- Object recall code. (takkaria)
-- Changed some function names. (takkaria)
-- Added the view_player_colour option from Zangband CVS; this changes the 
-  colour of your '@' depending on how much HP you have left. (takkaria)
-- Removed the unused 'alert_failure' option. (takkaria)
-- Added tins of caviar as a new deep food source (grahame).
-- Improved the layout of the birthscreen. Implemented the first
-  (excessive) use of 'Window Popups'.
-- Remember to add Livingstones, Phase Reavers and the joke monster
-  'The Iron Lady'. (takkaria)
-- Added in Antiband's new roller code, along with changes to init1.c
-  so defaults can be non-hardcoded. (takkaria)
-- Added Antiband's new vaults. (takkaria)
-- Rewrote small chunks of the store code for better displaying. (takkaria)
-- Added bigscreen support for the stores. (takkaria)
-- Made the '2' and '8' keys move up and down one item when in the stores. (takkaria)
-- EyAngband style resists. (takkaria)
-- Made areas of detection circlular. Taken the rough way of doing it from ToME.
-  (takkaria)
-- Completely ruined the character info screen. (takkaria)
-- Removed the 'smart_cheat' option. (takkaria)
-- Removed the light element from the game. (takkaria)
-- Made the title screen bigscreen-compliant. (takkaria)
-- Added the new XML help system. (ajps)
-- The title screen is now an AHML file. (ajps)
-- Fixed the mac and windows ports somewhat. (takkaria)
-- Added belts of starvation as a new ego type. (grahame)
-- Added Nexus, Chaos and Nether brands (from Antiband).
-- Tweaked the artifacts.
-- Added the Ring of Elemental Mastery (from Antiband).
-- Added Orbs. These are permanent, non-artifact light sources.
-  Very few exist at the moment. (takkaria)
-- Added the HUNGER flag which vastly increases the amount of food
-  required by the player (grahame)
-- Added a belt slot and some belts to wear in those. There are also
-  ego-item belts. (grahame)
-</pre>
+<?php
+// We need gmtime()
+include('gmtime.inc');
 
+// Given a UNIX timestamp, we make a readable date of the form:
+//   "5 years, 4 days, 2 hours, 44 minutes, and 25 seconds"
+//   "3 days, 17 hours, 0 minutes and 7 seconds"
+// Note the last example showing "0 minutes".  This method was
+// chosen as making it say "3 days, 17 hours, and 7 seconds"
+// was vastly less efficient.
+function readable_date($time)
+{
+	$times = gmtime($time, 1);
+
+	$times[tm_year] -= 70;
+
+	if ($times[tm_year]) $result .= $times[tm_year]. ' years, ';
+	if ($times[tm_yday]) $result .= $times[tm_yday]. ' days, ';
+	if ($times[tm_hour]) $result .= $times[tm_hour]. ' hours, ';
+	if ($times[tm_min])  $result .= $times[tm_min]. ' minutes, ';
+	$result .= 'and ' .$times[tm_sec]. ' seconds';
+
+	return $result;
+}
+?><p>In the short time Nangband has been in development (<?= readable_date(time() - 1013454487);?>), it has
+made some interesting changes.</p>

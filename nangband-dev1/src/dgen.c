@@ -23,12 +23,12 @@ map_grid_t **map_alloc(int width, int height)
 	int n;
 	
 	/* Allocate the dungeon */
-	C_MAKE(dungeon, 80, map_grid_t *);
+	C_MAKE(dungeon, width, map_grid_t *);
 	
 	for (n = 0; n < width; n++)
 	{
 		/* Allocate the memory */
-		C_MAKE(dungeon[n], 80, map_grid_t);
+		C_MAKE(dungeon[n], height, map_grid_t);
 	}
 		
 	/* Return a pointer the the space */
@@ -52,18 +52,19 @@ static void generate_dungeon(map_grid_t **dungeon, int width, int height, int le
 	/* Debugging info */
 	printf("args are: width = %i, height = %i, level = %i, exeption = %i\n", width, height, level, exeption);
 
-	/* Init the dungeon to empty spaces */
+	/* Fill the dungeon with wall */
 	for (x = 0; x < width; x++)
 	{
 		for (y = 0; y < height; y++)
 		{
-			printf("x = %i, y = %i", x, y);
 			dungeon[x][y].feature = TERRAIN_TYPE_WALL;
 		}
 	}
 	
 	/* Pick a random point in the dungeon */
 	this_grid = &dungeon[rand_int(width)][rand_int(height)];
+
+	/* Do something */
 	
 	/* Return control */
 	return;
@@ -71,14 +72,35 @@ static void generate_dungeon(map_grid_t **dungeon, int width, int height, int le
 
 #ifdef DEBUG
 
+#define MAP_SIZE_X	80
+#define MAP_SIZE_Y	60
+
 int main(int argc, char **argv)
 {
 	map_grid_t **dungeon;
+	int x, y;
 	
-	dungeon = map_alloc(80, 80);
+	dungeon = map_alloc(MAP_SIZE_X, MAP_SIZE_Y);
 	
-	generate_dungeon(dungeon, 80, 80, 2, 0);
-	
+	generate_dungeon(dungeon, MAP_SIZE_X, MAP_SIZE_Y, 2, 0);
+
+	for (y = 0; y < MAP_SIZE_Y; y++)
+	{
+		for (x = 0; x < MAP_SIZE_X; x++)
+		{
+			switch(dungeon[x][y].feature)
+			{
+				case TERRAIN_TYPE_WALL:
+				{
+					printf("#");
+					break;
+				}
+			}
+		}
+
+		printf("\n");
+	}
+
 	map_free(dungeon);
 	
 	return(0);

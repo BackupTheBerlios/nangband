@@ -1994,6 +1994,12 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		known = TRUE;
 	}
 
+        if (f3 & (TR3_HUNGER))
+	{
+	    	text_out("It increases you metabolism.\n");
+	    	known = TRUE;
+	}
+
 	if (f3 & (TR3_FEATHER))
 	{
 		text_out("It induces feather falling.\n");

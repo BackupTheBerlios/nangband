@@ -1848,6 +1848,8 @@ static void calc_bonuses(void)
 	if (f3 & (TR3_BLESSED)) p_ptr->bless_blade = TRUE;
 
 	/* Bad flags */
+	if (f3 & (TR3_HUNGER)) p_ptr->hunger = TRUE;
+        if (f3 & (TR3_HUNGER) & (TR3_SLOW_DIGEST)) p_ptr->slow_digest = FALSE;
 	if (f3 & (TR3_IMPACT)) p_ptr->impact = TRUE;
 	if (f3 & (TR3_AGGRAVATE)) p_ptr->aggravate = TRUE;
 	if (f3 & (TR3_TELEPORT)) p_ptr->teleport = TRUE;
@@ -1946,7 +1948,9 @@ static void calc_bonuses(void)
 		/* Weird flags */
 		if (f3 & (TR3_BLESSED)) p_ptr->bless_blade = TRUE;
 
-		/* Bad flags */
+	        /* Bad flags */
+		if (f3 & (TR3_HUNGER)) p_ptr->hunger = TRUE;
+                if (f3 & (TR3_HUNGER) & (TR3_SLOW_DIGEST)) p_ptr->slow_digest = FALSE;
 		if (f3 & (TR3_IMPACT)) p_ptr->impact = TRUE;
 		if (f3 & (TR3_AGGRAVATE)) p_ptr->aggravate = TRUE;
 		if (f3 & (TR3_TELEPORT)) p_ptr->teleport = TRUE;

@@ -88,33 +88,36 @@ static int value_check_aux2(const object_type *o_ptr)
 static void sense_inventory(void)
 {
 	int i;
-
+	int feel;
 	int plev = p_ptr->lev;
 
-	bool heavy = ((cp_ptr->flags & CF_PSEUDO_ID_HEAVY) ? TRUE : FALSE);
-
-	int feel;
-
 	object_type *o_ptr;
-
 	char o_name[80];
+
+	bool heavy = !adult_pseudo_light;
 
 
 	/*** Check for "sensing" ***/
 
-	/* No sensing when confused */
+	/*
+	 * No sensing when confused, Berserk, or blind.
+	 * Also no sensing when distracted by other things (like stunning).
+	 */
 	if (p_ptr->confused) return;
+	if (p_ptr->blind) return;
+	if (p_ptr->shero) return;
+	if (p_ptr->stun) return;
+	if (p_ptr->paralyzed) return;
+	if (p_ptr->afraid) return;
+	if (p_ptr->cut) return;
+	if (p_ptr->image) return;
+	if (p_ptr->poisoned) return;
 
-	if (cp_ptr->flags & CF_PSEUDO_ID_IMPROV)
-	{
-		if (0 != rand_int(cp_ptr->sense_base / (plev * plev + cp_ptr->sense_div)))
+	/*
+	 * Do a check to see if pseudo-id should happen now.
+	 */
+	if (0 != rand_int(cp_ptr->sense_base / (plev * plev + cp_ptr->sense_div)))
 			return;
-	}
-	else
-	{
-		if (0 != rand_int(cp_ptr->sense_base / (plev + cp_ptr->sense_div)))
-			return;
-	}
 
 
 	/*** Sense everything ***/
@@ -154,6 +157,7 @@ static void sense_inventory(void)
 				break;
 			}
 		}
+
 
 		/* Skip non-sense machines */
 		if (!okay) continue;

@@ -1,6 +1,17 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-07-22
+----------
+- New option: "pseudo_light". Pseudo-ID type is no longer based on class.
+  Instead, if this option is off, your character will have 'heavy'
+  pseudo-ID and will therefore sense {average}, {special}, etc.... If
+  on, you will only sense lightly, but will have a score advantage.
+  (takkaria; idea taken from Gumband)
+- Changed the total_score() code so it now gives much more "specific"
+  scores; inventory+equipment cost is counted, and options give score modifiers.
+  (takkaria)
+
 2002-07-18
 ----------
 - Divorced the new CAVE_TDETECT flag from cave_info[][]; it is now in 

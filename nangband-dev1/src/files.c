@@ -2979,14 +2979,60 @@ void do_cmd_save_game(void)
 	strcpy(p_ptr->died_from, "(alive and well)");
 }
 
+/*
+ * Get total value of all equipment.
+ */
+static long equip_value(void)
+{
+	object_type *o_ptr;
+	long total = 0L;
+	int i;
 
+	for (i = 0; i < INVEN_TOTAL; i++)
+	{
+		o_ptr = &inventory[i];
+
+		/* Don't count storebought items */
+		/* if (o_ptr->ident & IDENT_STOREB) continue; */
+		if (!(o_ptr->ident & IDENT_KNOWN)) continue;
+
+		total += object_value(o_ptr);
+	}
+
+	return (total);
+}
 
 /*
  * Hack -- Calculates the total number of points earned
  */
 long total_points(void)
 {
-	return (p_ptr->max_exp + (100 * p_ptr->max_depth));
+	long i, mult = 85;
+
+	/* Penalize preserve mode */
+	if (birth_preserve) mult -= 10;
+
+	/* Light pseudo-id is easier than normal */
+	if (birth_pseudo_light) mult += 5;
+
+	/* Evil mode & astral mode players get cookies */
+	if (birth_evil_mode) mult += 15;
+	if (birth_astral) mult =+ 10;
+
+	/* At least 5% of the original score */
+	if (mult < 5) mult = 5;
+
+	/* Calculate initial score */
+	i = p_ptr->max_exp + (100 * p_ptr->max_depth);
+
+	/* Multiply and divide by exp. factor */
+	i = (i * mult) / p_info[p_ptr->prace].r_exp;
+
+	/* Add the value of the equipment on */
+	i += equip_value() / 10;
+
+	/* Return it */
+	return (i);
 }
 
 

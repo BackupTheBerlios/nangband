@@ -1542,17 +1542,17 @@ cptr option_text[OPT_MAX] =
 	NULL,						/* xxx */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
-	"birth_point_based",		/* OPT_birth_point_based */
-	"birth_auto_roller",		/* OPT_birth_auto_roller */
-	"birth_maximize",			/* OPT_birth_maximize */
-	"birth_preserve",			/* OPT_birth_preserve */
-	"birth_ironman",			/* OPT_birth_ironman */
-	"birth_no_stores",			/* OPT_birth_no_stores */
-	"birth_no_artifacts",		/* OPT_birth_no_artifacts */
-	"birth_evil_mode",						/* OPT_birth_evil_mode */
-	"birth_no_stacking",		/* OPT_birth_no_stacking */
-	"birth_astral",						/* OPT_birth_astral */
-	NULL,						/* xxx */
+	"birth_point_based",   /* OPT_birth_point_based */
+	"birth_auto_roller",   /* OPT_birth_auto_roller */
+	"birth_maximize",      /* OPT_birth_maximize */
+	"birth_preserve",      /* OPT_birth_preserve */
+	"birth_ironman",       /* OPT_birth_ironman */
+	"birth_no_stores",     /* OPT_birth_no_stores */
+	"birth_no_artifacts",  /* OPT_birth_no_artifacts */
+	"birth_evil_mode",     /* OPT_birth_evil_mode */
+	"birth_no_stacking",   /* OPT_birth_no_stacking */
+	"birth_astral",        /* OPT_birth_astral */
+	"birth_light_pseudo",  /* OPT_birth_light_pseudo */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
@@ -1606,18 +1606,17 @@ cptr option_text[OPT_MAX] =
 	NULL,						/* xxx */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
-	"adult_point_based",		/* OPT_adult_point_based */
-	"adult_auto_roller",		/* OPT_adult_auto_roller */
-	"adult_maximize",			/* OPT_adult_maximize */
-	"adult_preserve",			/* OPT_adult_preserve */
-	"adult_ironman",			/* OPT_adult_ironman */
-	"adult_no_stores",			/* OPT_adult_no_stores */
-	"adult_no_artifacts",		/* OPT_adult_no_artifacts */
-	"adult_rand_artifacts",		/* OPT_adult_rand_artifacts */
-	"adult_evil_mode",						/* OPT_adult_evil_mode */
-	"adult_no_stacking",		/* OPT_adult_no_stacking */
-	"adult_astral",						/* OPT_adult_astral */
-	NULL,						/* xxx */
+	"adult_point_based",   /* OPT_adult_point_based */
+	"adult_auto_roller",   /* OPT_adult_auto_roller */
+	"adult_maximize",      /* OPT_adult_maximize */
+	"adult_preserve",      /* OPT_adult_preserve */
+	"adult_ironman",       /* OPT_adult_ironman */
+	"adult_no_stores",     /* OPT_adult_no_stores */
+	"adult_no_artifacts",  /* OPT_adult_no_artifacts */
+	"adult_evil_mode",     /* OPT_adult_evil_mode */
+	"adult_no_stacking",   /* OPT_adult_no_stacking */
+	"adult_astral",        /* OPT_adult_astral */
+	"adult_light_pseudo",  /* OPT_adult_light_pseudo */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
@@ -1815,8 +1814,8 @@ cptr option_desc[OPT_MAX] =
 	"Birth: Restrict creation of artifacts",        /* OPT_birth_no_artifacts */
 	"Birth: Evil mode",                             /* OPT_birth_evil_mode */
 	"Birth: Don't stack objects on the floor",      /* OPT_birth_no_stacking */
-	"Birth: Start as an astral being",				/* OPT_birth_astral */
-	NULL,										/* xxx */
+	"Birth: Start as an astral being",              /* OPT_birth_astral */
+	"Birth: Have light pseudo identification",      /* OPT_birth_light_pseudo */
 	NULL,										/* xxx */
 	NULL,										/* xxx */
 	NULL,										/* xxx */
@@ -1870,17 +1869,17 @@ cptr option_desc[OPT_MAX] =
 	NULL,										/* xxx */
 	NULL,										/* xxx */
 	NULL,										/* xxx */
-	"Adult: Allow purchase of stats using points",	/* OPT_adult_point_based */
-	"Adult: Allow specification of minimal stats",	/* OPT_adult_auto_roller */
-	"Adult: Maximize effect of race/class bonuses",	/* OPT_adult_maximize */
-	"Adult: Preserve artifacts when leaving level",	/* OPT_adult_preserve */
-	"Adult: Restrict the use of stairs/recall",	/* OPT_adult_ironman */
-	"Adult: Restrict the use of stores/home",	/* OPT_adult_no_stores */
-	"Adult: Restrict creation of artifacts",	/* OPT_adult_no_artifacts */
-	"Adult: Evil mode",								/* OPT_adult_evil_mode */
-	"Adult: Don't stack objects on the floor",	/* OPT_adult_no_stacking */
-	"Adult: Start as an astral being",			/* OPT_adult_astral */
-	NULL,										/* xxx */
+	"Adult: Allow purchase of stats using points",  /* OPT_adult_point_based */
+	"Adult: Allow specification of minimal stats",  /* OPT_adult_auto_roller */
+	"Adult: Maximize effect of race/class bonuses", /* OPT_adult_maximize */
+	"Adult: Preserve artifacts when leaving level", /* OPT_adult_preserve */
+	"Adult: Restrict the use of stairs/recall",     /* OPT_adult_ironman */
+	"Adult: Restrict the use of stores/home",       /* OPT_adult_no_stores */
+	"Adult: Restrict creation of artifacts",        /* OPT_adult_no_artifacts */
+	"Adult: Evil mode",                             /* OPT_adult_evil_mode */
+	"Adult: Don't stack objects on the floor",      /* OPT_adult_no_stacking */
+	"Adult: Start as an astral being",              /* OPT_adult_astral */
+	"Adult: Have light pseudo identification",      /* OPT_adult_light_pseudo */
 	NULL,										/* xxx */
 	NULL,										/* xxx */
 	NULL,										/* xxx */
@@ -1978,37 +1977,37 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* OPT_auto_scum */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
-	TRUE,			/* OPT_expand_look */
-	TRUE,			/* OPT_expand_list */
-	TRUE,			/* OPT_view_perma_grids */
+	TRUE,		/* OPT_expand_look */
+	TRUE,		/* OPT_expand_list */
+	TRUE,		/* OPT_view_perma_grids */
 	FALSE,		/* OPT_view_torch_grids */
-	TRUE,			/* OPT_dungeon_align */
-	TRUE,			/* OPT_dungeon_stair */
+	TRUE,		/* OPT_dungeon_align */
+	TRUE,		/* OPT_dungeon_stair */
 	FALSE,		/* OPT_flow_by_sound */
 	FALSE,		/* OPT_flow_by_smell */
-	FALSE,		/* xxx track_follow */
-	FALSE,		/* xxx track_target */
+	FALSE,		/* xxx */
+	FALSE,		/* xxx */
 	FALSE,		/* OPT_smart_learn */
 	FALSE,		/* OPT_smart_cheat */
 	FALSE,		/* OPT_view_reduce_light */
 	FALSE,		/* OPT_hidden_player */
 	FALSE,		/* OPT_avoid_abort */
 	FALSE,		/* OPT_avoid_other */
-	TRUE,			/* OPT_flush_failure */
+	TRUE,		/* OPT_flush_failure */
 	FALSE,		/* OPT_flush_disturb */
 	FALSE,		/* xxx */
-	TRUE,			/* OPT_fresh_before */
+	TRUE,		/* OPT_fresh_before */
 	FALSE,		/* OPT_fresh_after */
 	FALSE,		/* xxx */
-	TRUE,			/* OPT_compress_savefile */
+	TRUE,		/* OPT_compress_savefile */
 	FALSE,		/* OPT_highlight_player */
 	FALSE,		/* OPT_view_yellow_light */
 	FALSE,		/* OPT_view_bright_light */
 	FALSE,		/* OPT_view_granite_light */
 	FALSE,		/* OPT_view_special_light */
-	TRUE,			/* OPT_easy_open */
-	TRUE,			/* OPT_easy_alter */
-	TRUE,			/* OPT_easy_floor */
+	TRUE,		/* OPT_easy_open */
+	TRUE,		/* OPT_easy_alter */
+	TRUE,		/* OPT_easy_floor */
 	FALSE,		/* OPT_show_piles */
 	FALSE,		/* OPT_center_player */
 	FALSE,		/* OPT_run_avoid_center */
@@ -2016,8 +2015,8 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* OPT_auto_more */
 	FALSE,		/* OPT_smart_monsters */
 	FALSE,		/* OPT_smart_packs */
-	TRUE,			/* OPT_view_player_colour */
-	TRUE,			/* OPT_view_equippy_chars */
+	TRUE,		/* OPT_view_player_colour */
+	TRUE,		/* OPT_view_equippy_chars */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
@@ -2071,16 +2070,16 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
 	FALSE,		/* OPT_birth_point_based */
-	TRUE,			/* OPT_birth_auto_roller */
-	TRUE,			/* OPT_birth_maximize */
-	TRUE,			/* OPT_birth_preserve */
+	TRUE,		/* OPT_birth_auto_roller */
+	TRUE,		/* OPT_birth_maximize */
+	TRUE,		/* OPT_birth_preserve */
 	FALSE,		/* OPT_birth_ironman */
 	FALSE,		/* OPT_birth_no_stores */
 	FALSE,		/* OPT_birth_no_artifacts */
 	FALSE,		/* OPT_birth_evil_mode */
 	FALSE,		/* OPT_birth_no_stacking */
 	FALSE,		/* OPT_birth_astral */
-	FALSE,		/* xxx */
+	FALSE,		/* OPT_light_pseudo */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
@@ -2134,9 +2133,9 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
 	FALSE,		/* OPT_adult_point_based */
-	TRUE,			/* OPT_adult_auto_roller */
-	TRUE,			/* OPT_adult_maximize */
-	TRUE,			/* OPT_adult_preserve */
+	FALSE,		/* OPT_adult_auto_roller */
+	FALSE,		/* OPT_adult_maximize */
+	FALSE,		/* OPT_adult_preserve */
 	FALSE,		/* OPT_adult_ironman */
 	FALSE,		/* OPT_adult_no_stores */
 	FALSE,		/* OPT_adult_no_artifacts */
@@ -2343,10 +2342,10 @@ const byte option_page[OPT_PAGE_MAX][OPT_PAGE_PER] =
 		OPT_birth_ironman,
 		OPT_birth_evil_mode,
 		OPT_birth_astral,
+		OPT_birth_pseudo_light,
 		OPT_birth_no_stores,
 		OPT_birth_no_artifacts,
 		OPT_birth_no_stacking,
-		255,
 		255,
 		255,
 		255,

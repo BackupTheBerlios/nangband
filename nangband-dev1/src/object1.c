@@ -1726,26 +1726,56 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		text_out(".  ");
 	}
 
-	if (f1 & (TR1_STEALTH))
+	/* Count the stats affected */
+	vn = 0;
+	if (f1 & (TR1_STEALTH)) vp[vn++] = "stealth";
+	if (f1 & (TR1_SEARCH)) vp[vn++] = "searching";
+	if (f1 & (TR1_INFRA)) vp[vn++] = "infravision";
+	if (f1 & (TR1_TUNNEL)) vp[vn++] = "ability to tunnel";
+
+	/* Describe */
+	if (vn)
 	{
-		text_out("It affects your stealth.");
-		known = TRUE;
+		int n;
+
+		/* Intro */
+		text_out("It ");
+
+		/* What does it do? */
+		if (o_ptr->pval > 0)
+		{
+			text_out("increases");
+		}
+		else if (o_ptr->pval < 0)
+		{
+			text_out("decreases");
+		}
+		else if (o_ptr->pval == 0)
+		{
+			text_out("does not affect");
+		}
+
+		/* Print stats */
+		for (n = 0; n < vn; n++)
+		{
+			/* Connectives */
+			if (n == 0) text_out(" your ");
+			else if (n < (vn - 1)) text_out(", ");
+			else text_out(" and ");
+
+			/* Dump the stat */
+			text_out(vp[n]);
+		}
+
+		/* What's the bonus? */
+		text_out(" by ");
+		text_out(format("%i", ABS(o_ptr->pval)));
+
+		/* Finish */
+		text_out(".  ");
 	}
-	if (f1 & (TR1_SEARCH))
-	{
-		text_out("It affects your searching.");
-		known = TRUE;
-	}
-	if (f1 & (TR1_INFRA))
-	{
-		text_out("It affects your infravision.");
-		known = TRUE;
-	}
-	if (f1 & (TR1_TUNNEL))
-	{
-		text_out("It affects your ability to tunnel.\n");
-		known = TRUE;
-	}
+
+
 	if (f1 & (TR1_SPEED))
 	{
 		text_out("It affects your speed.\n");

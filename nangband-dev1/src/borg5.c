@@ -1,6 +1,10 @@
-/* File: borg5.c */
-/* Purpose: Medium level stuff for the Borg -BEN- */
-
+/*
+ * File: borg5.c
+ * Purpose: Medium level handling functions for Borg.
+ * Authors: Ben Harrison, AP. White, Andrew Sidwell (takkaria)
+ *
+ * This file is under the Angband licence.
+ */
 #include "angband.h"
 
 #ifdef ALLOW_BORG
@@ -10,7 +14,6 @@
 #include "borg3.h"
 #include "borg4.h"
 #include "borg5.h"
-
 
 
 /*
@@ -90,7 +93,7 @@ static cptr *borg_unique_text;      /* Names of uniques */
 
 static int borg_normal_size;        /* Number of normals */
 static s16b *borg_normal_what;      /* Indexes of normals */
-static cptr *borg_normal_text;      /* Names of normals */
+9~static cptr *borg_normal_text;      /* Names of normals */
 
 
 

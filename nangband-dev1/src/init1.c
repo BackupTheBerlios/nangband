@@ -2676,8 +2676,8 @@ errr parse_c_info(char *buf, header *head)
 		}
 	}
 
-	/* Process 'A' for "Stats" (one line only) */
-	else if (buf[0] == 'A')
+	/* Process 'R' for "Roller Stats" (one line only) */
+	else if (buf[0] == 'R')
 	{
 		int adj;
 

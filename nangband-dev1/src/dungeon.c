@@ -1002,7 +1002,7 @@ static void process_world(void)
 				}
 			}
 			else
-				msg_print("The migical aura leaves the air.");
+				msg_print("The magical aura leaves the air.");
 
 		}
 	}

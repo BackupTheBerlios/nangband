@@ -1,6 +1,11 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-06-30
+----------
+- Fixed a big that allowed astral players to use word of recall to
+  reach the surface. (parody)
+
 2002-06-29
 ----------
 - Fiddled around with the cygwin and "standard" makefiles - they are

@@ -427,7 +427,7 @@ function get_spell_name_hook(tval, index)
 	end
 
 	-- No spell at that index
-	if not name then return "(blank)" end
+	if not name then return "(no spell)" end
 
 	return name
 end
@@ -480,6 +480,8 @@ function get_spell_info_hook(tval, index)
 		elseif index == SPELL_RESIST_COLD then
 			info = " dur 20+d20"
 		elseif index == SPELL_RESIST_ELEC then
+			info = " dur 20+d20"
+		elseif index == SPELL_RESIST_ACID then
 			info = " dur 20+d20"
 		elseif index == SPELL_RESIST_POISON then
 			info = " dur 20+d20"
@@ -742,20 +744,23 @@ function cast_spell(index)
 	elseif index == SPELL_MASS_GENOCIDE then
 		mass_genocide()
 	elseif index == SPELL_RESIST_FIRE then
-		set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + randint(20) + 20)
+		alter_timed_res(RES_FIRE, randint(20) + 20)
 	elseif index == SPELL_RESIST_COLD then
-		set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + randint(20) + 20)
+		alter_timed_res(RES_COLD, randint(20) + 20)
 	elseif index == SPELL_RESIST_ELEC then
-		set_timed_res(RES_ELEC, player.resist_timed[RES_ACID] + randint(20) + 20)
+		alter_timed_res(RES_ELEC, randint(20) + 20)
+-- 	elseif index == SPELL_RESIST_ACID then
+-- 		alter_timed_res(RES_ACID, randint(20) + 20)
 	elseif index == SPELL_RESIST_POISON then
-		set_timed_res(RES_POIS, player.resist_timed[RES_POIS] + randint(20) + 20)
+		alter_timed_res(RES_POIS, randint(20) + 20)
 	elseif index == SPELL_RESISTANCE then
 		local time = randint(20) + 20
 
-		set_timed_res(RES_POIS, player.resist_timed[RES_POIS] + time)
-		set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + time)
-		set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + time)
-		set_timed_res(RES_ACID, player.resist_timed[RES_ELEC] + time)
+		alter_timed_res(RES_ACID, time)
+		alter_timed_res(RES_POIS, time)
+		alter_timed_res(RES_F`IRE, time)
+		alter_timed_res(RES_COLD, time)
+		alter_timed_res(RES_ELEC, time)
 	elseif index == SPELL_HEROISM then
 		hp_player(10)
 		set_hero(player.hero + randint(25) + 25)
@@ -823,8 +828,8 @@ function pray(index)
 	elseif index == PRAYER_REMOVE_CURSE then
 		remove_curse()
 	elseif index == PRAYER_RESIST_HEAT_COLD then
-		set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + randint(10) + 10)
-		set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + randint(10) + 10)
+		alter_timed_res(RES_FIRE, randint(10) + 10)
+		alter_timed_res(RES_COLD, randint(10) + 10)
 	elseif index == PRAYER_NEUTRALIZE_POISON then
 		set_poisoned(0)
 	elseif index == PRAYER_ORB_OF_DRAINING then

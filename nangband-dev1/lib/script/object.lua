@@ -210,11 +210,11 @@ function quaff_potion(object)
 			set_fast(player.fast + 5)
 		end
 	elseif object.sval == SV_POTION_RESIST_HEAT then
-		if set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + randint(10) + 10) then
+		if alter_timed_res(RES_FIRE, randint(10) + 10) then
 			ident = TRUE
 		end
 	elseif object.sval == SV_POTION_RESIST_COLD then
-		if set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + randint(10) + 10) then
+		if alter_timed_res(RES_COLD, randint(10) + 10) then
 			ident = TRUE
 		end
 	elseif object.sval == SV_POTION_HEROISM then
@@ -1025,11 +1025,11 @@ function activate_object(object)
 			set_afraid(0)
 			set_shero(player.shero + randint(50) + 50)
 			set_blessed(player.blessed + randint(50) + 50)
-			set_timed_res(RES_ACID, player.resist_timed[RES_ACID] + randint(50) + 50)
-			set_timed_res(RES_ELEC, player.resist_timed[RES_ELEC] + randint(50) + 50)
-			set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + randint(50) + 50)
-			set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + randint(50) + 50)
-			set_timed_res(RES_POIS, player.resist_timed[RES_POIS] + randint(50) + 50)
+			alter_timed_res(RES_ACID, randint(50) + 50)
+			alter_timed_res(RES_ELEC, randint(50) + 50)
+			alter_timed_res(RES_FIRE, randint(50) + 50)
+			alter_timed_res(RES_COLD, randint(50) + 50)
+			alter_timed_res(RES_POIS, randint(50) + 50)
 		elseif artifact.activation == ACT_HEAL2 then
 			msg_print(format("Your %s glows a bright white...", o_name))
 			msg_print("You feel much better...")
@@ -1055,11 +1055,11 @@ function activate_object(object)
 			set_cut(0)
 		elseif artifact.activation == ACT_RESIST then
 			msg_print(format("Your %s glows many colours...", o_name))
-			set_timed_res(RES_ACID, player.resist_timed[RES_ACID] + randint(20) + 20)
-			set_timed_res(RES_ELEC, player.resist_timed[RES_ELEC] + randint(20) + 20)
-			set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + randint(20) + 20)
-			set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + randint(20) + 20)
-			set_timed_res(RES_POIS, player.resist_timed[RES_POIS] + randint(20) + 20)
+			alter_timed_res(RES_ACID, randint(20) + 20)
+			alter_timed_res(RES_ELEC, randint(20) + 20)
+			alter_timed_res(RES_FIRE, randint(20) + 20)
+			alter_timed_res(RES_COLD, randint(20) + 20)
+			alter_timed_res(RES_POIS, randint(20) + 20)
 		elseif artifact.activation == ACT_SLEEP then
 			msg_print(format("Your %s glows deep blue...", o_name))
 			sleep_monsters_touch()
@@ -1194,7 +1194,7 @@ function activate_object(object)
 			msg_print(format("Your %s glows in anger...", o_name))
 			set_shero(player.shero + randint(50) + 50)
 		elseif artifact.activation == ACT_ELEMENTS then
-			msg_print(format("Your %s glows brillian white...", o_name))
+			msg_print(format("Your %s glows brilliant white...", o_name))
 			success, dir = get_aim_dir()
 			if not sucess then return FALSE, FALSE end
 			fire_ball(GF_MISSILE, dir, 400, 3);
@@ -1306,22 +1306,22 @@ function activate_object(object)
 		if object.sval == SV_RING_ACID then
 			msg_print("You feel resistant to acid.")
 			fire_ball(GF_ACID, dir, 70, 2)
-			set_timed_res(RES_ACID, player.resist_timed[RES_ACID] + randint(20) + 20)
+			alter_timed_res(RES_ACID, randint(20) + 20)
 			object.timeout = rand_int(50) + 50
 		elseif object.sval == SV_RING_FLAMES then
 			msg_print("You feel resistant to fire.")
 			fire_ball(GF_FIRE, dir, 80, 2)
-			set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + randint(20) + 20)
+			alter_timed_res(RES_FIRE, randint(20) + 20)
 			object.timeout = rand_int(50) + 50
 		elseif object.sval == SV_RING_ICE then
 			msg_print("You feel resistant to cold.")
 			fire_ball(GF_COLD, dir, 75, 2)
-			set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + randint(20) + 20)
+			alter_timed_res(RES_COLD, randint(20) + 20)
 			object.timeout = rand_int(50) + 50
 		elseif object.sval == SV_RING_LIGHTNING then
 			msg_print("You feel resistant to electricity.")
 			fire_ball(GF_ELEC, dir, 85, 2)
-			set_timed_res(RES_ELEC, player.resist_timed[RES_ELEC] + randint(20) + 20)
+			alter_timed_res(RES_ELEC, randint(20) + 20)
 			object.timeout = rand_int(50) + 50
 		end
 

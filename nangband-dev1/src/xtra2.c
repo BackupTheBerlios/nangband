@@ -841,6 +841,16 @@ bool set_tim_infra(int v)
 	return (TRUE);
 }
 
+/*
+ * Set a timed resistance
+ */
+bool alter_timed_res(int res_idx, int amount)
+{
+	set_timed_res(res_idx, p_ptr->resist_timed[res_idx] + amount);
+
+	return(TRUE);
+}
+
 
 /*
  * Set a timed resistance, notice changes

@@ -720,6 +720,7 @@ extern bool set_protevil(int v);
 extern bool set_invuln(int v);
 extern bool set_tim_invis(int v);
 extern bool set_tim_infra(int v);
+extern bool alter_timed_res(int res_idx, int amount);
 extern bool set_timed_res(int res_idx, int amount);
 extern bool set_stun(int v);
 extern bool set_cut(int v);

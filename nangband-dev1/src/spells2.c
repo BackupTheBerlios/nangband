@@ -1058,7 +1058,7 @@ bool detect_stairs(void)
 
 
 /*
- * Detect any treasure on the current panel
+ * Detect all treasure in a nearby radius.
  */
 bool detect_treasure(void)
 {
@@ -1067,12 +1067,14 @@ bool detect_treasure(void)
 	bool detect = FALSE;
 
 
-	/* Scan the current panel */
-	for (y = p_ptr->wy; y < p_ptr->wy+SCREEN_HGT; y++)
+	/* Scan a set radius */
+	for (y = p_ptr->py - 20; y < p_ptr->py + 20; y++)
 	{
-		for (x = p_ptr->wx; x < p_ptr->wx+SCREEN_WID; x++)
+		for (x = p_ptr->px - 20; x < p_ptr->px + 20; x++)
 		{
 			if (!in_bounds_fully(y, x)) continue;
+
+			if (distance(p_ptr->py, p_ptr->px, y, x) > 25) continue;
 
 			/* Notice embedded gold */
 			if ((cave_feat[y][x] == FEAT_MAGMA_H) ||
@@ -1111,7 +1113,7 @@ bool detect_treasure(void)
 
 
 /*
- * Detect all "gold" objects on the current panel
+ * Detect all money in a nearby radius.
  */
 bool detect_objects_gold(void)
 {
@@ -1136,7 +1138,7 @@ bool detect_objects_gold(void)
 		x = o_ptr->ix;
 
 		/* Only detect nearby objects */
-		if (!panel_contains(y, x)) continue;
+		if (distance(p_ptr->py, p_ptr->px, y, x) > 20) continue;
 
 		/* Detect "gold" objects */
 		if (o_ptr->tval == TV_GOLD)
@@ -1145,7 +1147,7 @@ bool detect_objects_gold(void)
 			o_ptr->marked = TRUE;
 
 			/* Redraw */
-			lite_spot(y, x);
+			if (panel_contains(y, x)) lite_spot(y, x);
 
 			/* Detect */
 			detect = TRUE;
@@ -1164,7 +1166,7 @@ bool detect_objects_gold(void)
 
 
 /*
- * Detect all "normal" objects on the current panel
+ * Detect all normal objects in a nearby radius.
  */
 bool detect_objects_normal(void)
 {
@@ -1189,7 +1191,7 @@ bool detect_objects_normal(void)
 		x = o_ptr->ix;
 
 		/* Only detect nearby objects */
-		if (!panel_contains(y, x)) continue;
+		if (distance(p_ptr->py, p_ptr->px, y, x) > 20) continue;
 
 		/* Detect "real" objects */
 		if (o_ptr->tval != TV_GOLD)
@@ -1198,7 +1200,7 @@ bool detect_objects_normal(void)
 			o_ptr->marked = TRUE;
 
 			/* Redraw */
-			lite_spot(y, x);
+			if (panel_contains(y, x)) lite_spot(y, x);
 
 			/* Detect */
 			detect = TRUE;
@@ -1248,7 +1250,7 @@ bool detect_objects_magic(void)
 		x = o_ptr->ix;
 
 		/* Only detect nearby objects */
-		if (!panel_contains(y, x)) continue;
+		if (distance(p_ptr->py, p_ptr->px, y, x) > 20) continue;
 
 		/* Examine the tval */
 		tv = o_ptr->tval;
@@ -1265,7 +1267,7 @@ bool detect_objects_magic(void)
 			o_ptr->marked = TRUE;
 
 			/* Redraw */
-			lite_spot(y, x);
+			if (panel_contains(y, x)) lite_spot(y, x);
 
 			/* Detect */
 			detect = TRUE;
@@ -1307,7 +1309,7 @@ bool detect_monsters_normal(void)
 		x = m_ptr->fx;
 
 		/* Only detect nearby monsters */
-		if (!panel_contains(y, x)) continue;
+		if (m_ptr->cdis > 20) continue;
 
 		/* Detect all non-invisible monsters */
 		if (!(r_ptr->flags2 & (RF2_INVISIBLE)))
@@ -1363,7 +1365,7 @@ bool detect_monsters_invis(void)
 		x = m_ptr->fx;
 
 		/* Only detect nearby monsters */
-		if (!panel_contains(y, x)) continue;
+		if (m_ptr->cdis > 20) continue;
 
 		/* Detect invisible monsters */
 		if (r_ptr->flags2 & (RF2_INVISIBLE))
@@ -1430,7 +1432,7 @@ bool detect_monsters_evil(void)
 		x = m_ptr->fx;
 
 		/* Only detect nearby monsters */
-		if (!panel_contains(y, x)) continue;
+		if (m_ptr->cdis > 20) continue;
 
 		/* Detect evil monsters */
 		if (r_ptr->flags3 & (RF3_EVIL))

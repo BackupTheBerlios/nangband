@@ -1,0 +1,13 @@
+config.log
+config.status
+depcomp
+install-sh
+missing
+mkinstalldirs
+nangband
+resources/
+Makefile
+Makefile.in
+ChangeLog
+autoconf.h
+l-*.c

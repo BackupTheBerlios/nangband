@@ -10,6 +10,18 @@
 
 #include "angband.h"
 
+/*
+ * This function should be moved elsewhere.
+ *
+ * This "caps" _damage_ to _cap_.
+ */
+static int cap(int damage, int cap)
+{
+	if (damage > cap) damage = cap;
+
+	return (damage);
+}
+
 
 #ifdef DRS_SMART_OPTIONS
 
@@ -393,6 +405,9 @@ static void breath(int m_idx, int typ, int dam_hp)
 
 	/* Target the player with a ball attack */
 	(void)project(m_idx, rad, py, px, dam_hp, typ, flg);
+
+	/* Return */
+	return;
 }
 
 
@@ -773,16 +788,12 @@ bool make_attack_spell(int m_idx)
 
 #endif /* DRS_SMART_OPTIONS */
 
-#ifdef MONSTER_AI
-
 	/* Check whether summons and bolts are worth it. */
 	if (smart_monsters && !(r_ptr->flags2 & (RF2_STUPID)))
 	{
 		/* Check for a clean bolt shot */
-		if ((f4 & (RF4_BOLT_MASK) ||
-			 f5 & (RF5_BOLT_MASK) ||
-			 f6 & (RF6_BOLT_MASK)) &&
-			!clean_shot(m_ptr->fy, m_ptr->fx, py, px))
+		if ((f4 & (RF4_BOLT_MASK) || f5 & (RF5_BOLT_MASK) || f6 & (RF6_BOLT_MASK)) &&
+			 !clean_shot(m_ptr->fy, m_ptr->fx, py, px))
 		{
 			/* Remove spells that will only hurt friends */
 			f4 &= ~(RF4_BOLT_MASK);
@@ -802,7 +813,6 @@ bool make_attack_spell(int m_idx)
 		/* No spells left */
 		if (!f4 && !f5 && !f6) return (FALSE);
 	}
-#endif /* MONSTER_AI */
 
 	/* Handle "leaving" */
 	if (p_ptr->leaving) return (FALSE);
@@ -824,7 +834,6 @@ bool make_attack_spell(int m_idx)
 	/* Abort if no spell was chosen */
 	if (!thrown_spell) return (FALSE);
 
-#ifdef MONSTER_AI
 	/* Calculate spell failure rate */
 	failrate = 25 - (rlev + 3) / 4;
 
@@ -839,7 +848,6 @@ bool make_attack_spell(int m_idx)
 
 		return (TRUE);
 	}
-#endif /* MONSTER_AI */
 
 	/* Cast the spell. */
 	switch (thrown_spell)
@@ -916,11 +924,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+8:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes acid.", m_name);
-			breath(m_idx, GF_ACID,
-			       ((m_ptr->hp / 3) > 1600 ? 1600 : (m_ptr->hp / 3)));
+
+			breath(m_idx, GF_ACID, cap(m_ptr->hp / 3, (r_ptr->level * 10)));
+
 			update_smart_learn(m_idx, DRS_RES_ACID);
+
 			break;
 		}
 
@@ -928,11 +939,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+9:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes lightning.", m_name);
-			breath(m_idx, GF_ELEC,
-			       ((m_ptr->hp / 3) > 1600 ? 1600 : (m_ptr->hp / 3)));
+
+			breath(m_idx, GF_ELEC, cap(m_ptr->hp / 3, (r_ptr->level * 10)));
+
 			update_smart_learn(m_idx, DRS_RES_ELEC);
+
 			break;
 		}
 
@@ -940,11 +954,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+10:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes fire.", m_name);
-			breath(m_idx, GF_FIRE,
-			       ((m_ptr->hp / 3) > 1600 ? 1600 : (m_ptr->hp / 3)));
+
+			breath(m_idx, GF_FIRE, cap(m_ptr->hp / 3, (r_ptr->level * 10)));
+
 			update_smart_learn(m_idx, DRS_RES_FIRE);
+
 			break;
 		}
 
@@ -952,11 +969,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+11:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes frost.", m_name);
-			breath(m_idx, GF_COLD,
-			       ((m_ptr->hp / 3) > 1600 ? 1600 : (m_ptr->hp / 3)));
+
+			breath(m_idx, GF_COLD, cap(m_ptr->hp / 3, (r_ptr->level * 10)));
+
 			update_smart_learn(m_idx, DRS_RES_COLD);
+
 			break;
 		}
 
@@ -964,11 +984,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+12:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes gas.", m_name);
-			breath(m_idx, GF_POIS,
-			       ((m_ptr->hp / 3) > 800 ? 800 : (m_ptr->hp / 3)));
+
+			breath(m_idx, GF_POIS, cap(m_ptr->hp / 3, (r_ptr->level * 10)));
+
 			update_smart_learn(m_idx, DRS_RES_POIS);
+
 			break;
 		}
 
@@ -976,23 +999,21 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+13:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes nether.", m_name);
-			breath(m_idx, GF_NETHER,
-			       ((m_ptr->hp / 6) > 550 ? 550 : (m_ptr->hp / 6)));
+
+			breath(m_idx, GF_NETHER, cap(m_ptr->hp / 3, (r_ptr->level * 10)));
+
 			update_smart_learn(m_idx, DRS_RES_NETHR);
+
 			break;
 		}
 
 		/* RF4_BR_LITE */
 		case RF4_OFFSET+14:
 		{
-			disturb(1, 0);
-			if (blind) msg_format("%^s breathes.", m_name);
-			else msg_format("%^s breathes light.", m_name);
-			breath(m_idx, GF_LITE,
-			       ((m_ptr->hp / 6) > 400 ? 400 : (m_ptr->hp / 6)));
-			update_smart_learn(m_idx, DRS_RES_LITE);
+			/* XXX XXX XXX Removed - remove XXX XXX XXX */
 			break;
 		}
 
@@ -1000,11 +1021,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+15:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes darkness.", m_name);
-			breath(m_idx, GF_DARK,
-			       ((m_ptr->hp / 6) > 400 ? 400 : (m_ptr->hp / 6)));
+
+			breath(m_idx, GF_DARK, cap(m_ptr->hp / 6, (r_ptr->level * 5)));
+
 			update_smart_learn(m_idx, DRS_RES_DARK);
+
 			break;
 		}
 
@@ -1012,11 +1036,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+16:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes confusion.", m_name);
-			breath(m_idx, GF_CONFUSION,
-			       ((m_ptr->hp / 6) > 400 ? 400 : (m_ptr->hp / 6)));
+
+			breath(m_idx, GF_CONFUSION, cap(m_ptr->hp / 6, (r_ptr->level * 5)));
+
 			update_smart_learn(m_idx, DRS_RES_CONFU);
+
 			break;
 		}
 
@@ -1024,11 +1051,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+17:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes sound.", m_name);
-			breath(m_idx, GF_SOUND,
-			       ((m_ptr->hp / 6) > 500 ? 500 : (m_ptr->hp / 6)));
+
+			breath(m_idx, GF_SOUND, cap(m_ptr->hp / 6, (r_ptr->level * 5)));
+
 			update_smart_learn(m_idx, DRS_RES_SOUND);
+
 			break;
 		}
 
@@ -1036,11 +1066,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+18:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes chaos.", m_name);
-			breath(m_idx, GF_CHAOS,
-			       ((m_ptr->hp / 6) > 500 ? 500 : (m_ptr->hp / 6)));
+
+			breath(m_idx, GF_CHAOS, cap(m_ptr->hp / 6, (r_ptr->level * 5)));
+
 			update_smart_learn(m_idx, DRS_RES_CHAOS);
+
 			break;
 		}
 
@@ -1048,11 +1081,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+19:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes disenchantment.", m_name);
-			breath(m_idx, GF_DISENCHANT,
-			       ((m_ptr->hp / 6) > 500 ? 500 : (m_ptr->hp / 6)));
+
+			breath(m_idx, GF_DISENCHANT, cap(m_ptr->hp / 6, (r_ptr->level * 5)));
+
 			update_smart_learn(m_idx, DRS_RES_DISEN);
+
 			break;
 		}
 
@@ -1060,11 +1096,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+20:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes nexus.", m_name);
-			breath(m_idx, GF_NEXUS,
-			       ((m_ptr->hp / 6) > 400 ? 400 : (m_ptr->hp / 6)));
+
+			breath(m_idx, GF_NEXUS, cap(m_ptr->hp / 6, (r_ptr->level * 5)));
+
 			update_smart_learn(m_idx, DRS_RES_NEXUS);
+
 			break;
 		}
 
@@ -1072,10 +1111,12 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+21:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes time.", m_name);
-			breath(m_idx, GF_TIME,
-			       ((m_ptr->hp / 3) > 150 ? 150 : (m_ptr->hp / 3)));
+
+			breath(m_idx, GF_TIME, cap(m_ptr->hp / 3, 150));
+
 			break;
 		}
 
@@ -1083,10 +1124,12 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+22:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes inertia.", m_name);
-			breath(m_idx, GF_INERTIA,
-			       ((m_ptr->hp / 6) > 200 ? 200 : (m_ptr->hp / 6)));
+
+			breath(m_idx, GF_INERTIA, cap(m_ptr->hp / 6, 200));
+
 			break;
 		}
 
@@ -1094,10 +1137,12 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+23:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes gravity.", m_name);
-			breath(m_idx, GF_GRAVITY,
-			       ((m_ptr->hp / 3) > 200 ? 200 : (m_ptr->hp / 3)));
+
+			breath(m_idx, GF_GRAVITY, cap(m_ptr->hp / 3, 200));
+
 			break;
 		}
 
@@ -1105,11 +1150,14 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+24:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes shards.", m_name);
-			breath(m_idx, GF_SHARD,
-			       ((m_ptr->hp / 6) > 500 ? 500 : (m_ptr->hp / 6)));
+
+			breath(m_idx, GF_GRAVITY, cap(m_ptr->hp / 6, (r_ptr->level * 5)));
+
 			update_smart_learn(m_idx, DRS_RES_SHARD);
+
 			break;
 		}
 
@@ -1117,10 +1165,12 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+25:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes plasma.", m_name);
-			breath(m_idx, GF_PLASMA,
-			       ((m_ptr->hp / 6) > 150 ? 150 : (m_ptr->hp / 6)));
+
+			breath(m_idx, GF_PLASMA, cap(m_ptr->hp / 6, 150));
+
 			break;
 		}
 
@@ -1128,10 +1178,12 @@ bool make_attack_spell(int m_idx)
 		case RF4_OFFSET+26:
 		{
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s breathes.", m_name);
 			else msg_format("%^s breathes force.", m_name);
-			breath(m_idx, GF_FORCE,
-			       ((m_ptr->hp / 6) > 200 ? 200 : (m_ptr->hp / 6)));
+
+			breath(m_idx, GF_FORCE, cap(m_ptr->hp / 6, 200));
+
 			break;
 		}
 
@@ -1647,11 +1699,13 @@ bool make_attack_spell(int m_idx)
 		case RF5_OFFSET+29:
 		{
 			if (!direct) break;
+
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s mumbles, and you hear puzzling noises.", m_name);
 			else msg_format("%^s creates a mesmerising illusion.", m_name);
 
-			if (resist_check(RES_CONF))
+			if (resist_check((byte) RES_CONF))
 			{
 				msg_print("You disbelieve the feeble spell.");
 			}
@@ -1659,7 +1713,9 @@ bool make_attack_spell(int m_idx)
 			{
 				(void)set_confused(p_ptr->confused + rand_int(4) + 4);
 			}
+
 			update_smart_learn(m_idx, DRS_RES_CONFU);
+
 			break;
 		}
 
@@ -1669,6 +1725,7 @@ bool make_attack_spell(int m_idx)
 			if (!direct) break;
 			disturb(1, 0);
 			msg_format("%^s drains power from your muscles!", m_name);
+
 			if (p_ptr->free_act)
 			{
 				msg_print("You are unaffected!");
@@ -1681,6 +1738,7 @@ bool make_attack_spell(int m_idx)
 			{
 				(void)set_slow(p_ptr->slow + rand_int(4) + 4);
 			}
+
 			update_smart_learn(m_idx, DRS_FREE);
 			break;
 		}

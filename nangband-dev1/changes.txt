@@ -1,6 +1,12 @@
 Nangband ChangeLog
 ==================
 
+2002-04-06
+----------
+- Instead of being capped at 1600, many monster breaths are now capped
+  at their dungeon level * 10. Suggested by JLE and Nathan Mahon.
+  (takkaria)
+
 2002-04-01
 ----------
 - Finished off the object recall && started adding the character dump

@@ -55,7 +55,7 @@ bool resist_check(byte res_idx)
 {
 	byte n = resist_player_current(res_idx);
 
-	if (randint(100) > n) return(FALSE);
+	if (randint(100) < n) return(FALSE);
 
 	return (TRUE);
 }

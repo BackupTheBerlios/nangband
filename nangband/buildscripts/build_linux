@@ -1,0 +1,46 @@
+mkdir ../angband-291
+mkdir ../angband-291/lib
+mkdir ../angband-291/lib/apex
+mkdir ../angband-291/lib/bone
+mkdir ../angband-291/lib/data
+mkdir ../angband-291/lib/edit
+mkdir ../angband-291/lib/file
+mkdir ../angband-291/lib/help
+mkdir ../angband-291/lib/info
+mkdir ../angband-291/lib/pref
+mkdir ../angband-291/lib/save
+mkdir ../angband-291/lib/user
+mkdir ../angband-291/lib/xtra
+mkdir ../angband-291/lib/xtra/graf
+
+cp lib/apex/delete.me ../angband-291/lib/apex/delete.me
+cp lib/bone/delete.me ../angband-291/lib/bone/delete.me
+cp lib/data/delete.me ../angband-291/lib/data/delete.me
+cp lib/info/delete.me ../angband-291/lib/info/delete.me
+cp lib/pref/delete.me ../angband-291/lib/pref/delete.me
+cp lib/save/delete.me ../angband-291/lib/save/delete.me
+
+cp readme.txt ../angband-291/
+cp changes.txt ../angband-291/
+cp angband ../angband-291/
+
+cp lib/edit/*.txt ../angband-291/lib/edit/
+
+cp lib/file/*.txt ../angband-291/lib/file/
+
+cp lib/help/*.txt ../angband-291/lib/help/
+cp lib/help/*.hlp ../angband-291/lib/help/
+
+cp lib/user/*.prf ../angband-291/lib/user/
+
+cp lib/xtra/graf/8x8.bmp ../angband-291/lib/xtra/graf/
+cp lib/xtra/graf/16x16.bmp ../angband-291/lib/xtra/graf/
+
+cd ..
+chown -R games angband-291
+chgrp -R users angband-291
+chmod +x angband-291/angband
+tar cvf angband-291-linux.tar angband-291
+gzip -9 angband-291-linux.tar
+mv angband-291-linux.tar.gz angband-291-linux.tgz
+

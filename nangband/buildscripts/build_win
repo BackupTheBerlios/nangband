@@ -1,0 +1,53 @@
+mkdir angband-293
+mkdir angband-293/lib
+mkdir angband-293/lib/apex
+mkdir angband-293/lib/bone
+mkdir angband-293/lib/data
+mkdir angband-293/lib/edit
+mkdir angband-293/lib/file
+mkdir angband-293/lib/help
+mkdir angband-293/lib/info
+mkdir angband-293/lib/pref
+mkdir angband-293/lib/save
+mkdir angband-293/lib/user
+mkdir angband-293/lib/xtra
+mkdir angband-293/lib/xtra/font
+mkdir angband-293/lib/xtra/graf
+mkdir angband-293/lib/xtra/music
+mkdir angband-293/lib/xtra/sound
+
+cp lib/apex/delete.me angband-293/lib/apex
+cp lib/bone/delete.me angband-293/lib/bone
+cp lib/data/delete.me angband-293/lib/data
+cp lib/info/delete.me angband-293/lib/info
+cp lib/save/delete.me angband-293/lib/save
+cp lib/user/delete.me angband-293/lib/user
+
+cp angband.exe angband-293
+cp readme.txt angband-293
+cp changes.txt angband-293
+
+cp lib/edit/*.txt angband-293/lib/edit
+
+cp lib/file/*.txt angband-293/lib/file
+
+cp lib/help/*.txt angband-293/lib/help
+cp lib/help/*.hlp angband-293/lib/help
+
+cp lib/pref/*.prf angband-293/lib/pref
+
+cp lib/xtra/font/*.fon angband-293/lib/xtra/font
+
+cp lib/xtra/graf/8x8.bmp angband-293/lib/xtra/graf
+cp lib/xtra/graf/16x16.bmp angband-293/lib/xtra/graf
+cp lib/xtra/graf/mask.bmp angband-293/lib/xtra/graf
+
+cp lib/xtra/sound/sound.cfg angband-293/lib/xtra/sound
+cp lib/xtra/sound/*.wav angband-293/lib/xtra/sound
+
+upx -9 angband-293/angband.exe
+
+zip -9 -r angband-293-win.zip angband-293
+
+rm -r angband-293
+

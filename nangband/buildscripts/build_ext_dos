@@ -1,0 +1,24 @@
+mkdir ext-dos
+mkdir ext-dos/src
+mkdir ext-dos/lib
+mkdir ext-dos/lib/xtra
+mkdir ext-dos/lib/xtra/font
+mkdir ext-dos/lib/xtra/graf
+mkdir ext-dos/lib/xtra/sound
+
+cp lib/xtra/font/*.fnt ext-dos/lib/xtra/font/
+
+cp lib/xtra/sound/sound.cfg ext-dos/lib/xtra/sound/
+cp lib/xtra/sound/*.wav ext-dos/lib/xtra/sound/
+
+cp src/main-dos.c ext-dos/src/
+cp src/main-ibm.c ext-dos/src/
+
+cp angdos.cfg ext-dos/
+
+cd ext-dos
+zip -9 -r ../ext-dos.zip *
+
+cd ..
+rm -r ext-dos
+

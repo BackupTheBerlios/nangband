@@ -18,6 +18,8 @@ days.</p>
 <p>There is no release as of yet, because it is very much in development. However, you may download via CVS,
 or you can wait for a near-stable prerelease which should happen in the next week or two. The estimated
 release date of Nangband 0.1.0 is the first week of April.</p>
+<p><font size="+1">The CVS entered unplayable (not unstable) state at 
+21:03 GMT time, 2002-03-08 (ceyr-mm-dd).</font></p>
 <p><em>Berlios.de</em> is hosting the project, including the CVS, the website, file releases and the mailing
 lists. If you are interested in this project, please join 'nangband-discussion'. A direct link to the
 mailing page is: <a href="http://developer.berlios.de/mail/?group_id=266">http://developer.berlios.de/mail/?group_id=266</a>. 

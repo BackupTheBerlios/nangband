@@ -10,7 +10,7 @@
 $included = true;
 include('layout.php');
 
-// Ensure we always have a page. and style
+// Ensure we always have a page, and style
 if (!$page) $page = 'main';
 if (!$cstyle) $style = 'clean';
          else $style = $cstyle;
@@ -25,6 +25,10 @@ if (($newstyle == 'sidebar') ||
 	// Set the current style
 	$style = $newstyle;
 }
+
+// Include some stuff from "extras/"
+include('extras/gmtime.inc');
+include('extras/rtime.inc');
 
 // Come up with a page "title"
 switch ($page)

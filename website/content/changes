@@ -1,26 +1,2 @@
-<?php
-// We need gmtime()
-include('gmtime.inc');
-
-// Given a UNIX timestamp, we make a readable date of the form:
-//   "5 years, 4 days, 2 hours, 44 minutes, and 25 seconds"
-//   "3 days, 17 hours, 0 minutes and 7 seconds"
-// Note the last example showing "0 minutes".  This method was
-// chosen as making it say "3 days, 17 hours, and 7 seconds"
-// was vastly less efficient.
-function readable_date($time)
-{
-	$times = gmtime($time, 1);
-
-	$times[tm_year] -= 70;
-
-	if ($times[tm_year]) $result .= $times[tm_year]. ' years, ';
-	if ($times[tm_yday]) $result .= $times[tm_yday]. ' days, ';
-	if ($times[tm_hour]) $result .= $times[tm_hour]. ' hours, ';
-	if ($times[tm_min])  $result .= $times[tm_min]. ' minutes, ';
-	$result .= 'and ' .$times[tm_sec]. ' seconds';
-
-	return $result;
-}
-?><p>In the short time Nangband has been in development (<?= readable_date(time() - 1013454487);?>), it has
-made some interesting changes.</p>
+<p>In the short time Nangband has been in development (<?=rtime(time()-1013454487);?>), it has made some 
+interesting changes.</p>

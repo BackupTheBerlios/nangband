@@ -51,25 +51,4 @@ function gmtime($dTimestamp = '', $bAssoc = 0) {
 		return $aGMTTime;
 	} // End [IF] return associative array?
 } // End [FUNCTION] gmttime
-
-function readable_date($time)
-{
-	$times = gmtime($time, 1);
-
-	$times[tm_year] -= 70;
-
-	if ($times[tm_year]) $result .= $times[tm_year]. ' years, ';
-	if ($times[tm_yday]) $result .= $times[tm_yday]. ' days, ';
-	if ($times[tm_hour]) $result .= $times[tm_hour]. ' hours, ';
-	if ($times[tm_min])  $result .= $times[tm_min]. ' minutes, ';
-	$result .= 'and ' .$times[tm_sec]. ' seconds';
-
-	return $result;
-}
-?><p>In the short time Nangband has been in development (<?php
-// time since start - nangband devel started at 1013454487.
-$tss = (time() - 1013454487);
-
-// format it nicely
-echo readable_date($tss);
-?>), it has made some changes.</p>
+?>

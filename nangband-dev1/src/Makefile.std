@@ -41,7 +41,7 @@ ANGOBJS = \
 	cmd1.o cmd2.o cmd3.o cmd4.o cmd5.o cmd6.o \
 	resist.o interface.o \
 	help.o xmlbulp.o \
-	store.o birth.o load.o readdib.o \
+	store.o birth.o load.o \
 	wizard1.o wizard2.o \
 	generate.o dungeon.o init1.o init2.o randart.o \
 	main-cap.o main-gcu.o main-x11.o main-xaw.o main-win.o main.o \
@@ -272,7 +272,7 @@ cygwin: LUALIBS := -s -mno-cygwin
 cygwin: LIBS := -s -mno-cygwin -mwindows -e _mainCRTStartup -lwinmm
 cygwin: CFLAGS := -Wall -pedantic -mno-cygwin -O2 -fno-strength-reduce \
 	-DWINDOWS
-cygwin: ANGOBJS += angband.res
+cygwin: ANGOBJS += angband.res readdib.o
 cygwin: nangband
 
 # Set up other stuff

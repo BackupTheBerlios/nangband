@@ -34,6 +34,8 @@ EXOBJS = \
 	cmd4.o \
 	cmd5.o \
 	cmd6.o \
+	help.o xmlbulp.o \
+	resist.o \
 	dungeon.o \
 	files.o \
 	generate.o \

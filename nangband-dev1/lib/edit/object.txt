@@ -65,8 +65,10 @@
 # together.
 
 # Version stamp (required)
-
 V:1.0.0
+
+# Meta-version - see monster.txt for the meaning of this
+M:1
 
 ### Non-kind (contains the "pile" picture) ###
 

@@ -19,7 +19,6 @@
  */
 static lua_State* L = NULL;
 
-
 static int xxx_build_script_path(lua_State *L)
 {
 	char buf[1024];
@@ -32,11 +31,17 @@ static int xxx_build_script_path(lua_State *L)
 
 	path_build(buf, 1024, ANGBAND_DIR_SCRIPT, filename);
 
+#ifdef ACORN
+	{
+		char *converted = riscosify_name(buf);
+		tolua_pushstring(L, converted);
+	}
+#else
 	tolua_pushstring(L, buf);
+#endif
 
 	return 1;
 }
-
 
 static int xxx_object_desc(lua_State *L)
 {
@@ -611,7 +616,14 @@ bool script_do_file(cptr filename)
 {
 	if (!L) return FALSE;
 
+#ifdef ACORN
+	{
+		char *converted = riscosify_name(filename); 
+		if (!lua_dofile(L, converted)) return TRUE;
+	}
+#else
 	if (!lua_dofile(L, filename)) return TRUE;
+#endif
 
 	return FALSE;
 }

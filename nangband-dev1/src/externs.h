@@ -810,3 +810,8 @@ extern void repeat_check(void);
 /* object1.c */
 extern void show_floor(const int *floor_list, int floor_num);
 #endif /* ALLOW_EASY_FLOOR */
+
+#ifdef ACORN
+/* main-ros.c */ 
+extern char *riscosify_name(const char *path);
+#endif

@@ -1009,8 +1009,7 @@ static char *translate_name( const char *path, int trunc )
 	return buf;
 }
 
-
-static char *riscosify_name( const char *path )
+extern char *riscosify_name( const char *path )
 {
 	return translate_name( path, TRUE );
 }
@@ -1150,7 +1149,7 @@ errr fd_close( int handle )
 
 
 /* Read some bytes from a file */
-errr fd_read( int handle, char *buf, huge nbytes )
+errr fd_read( int handle, char *buf, size_t nbytes )
 {
 	int unread;
 
@@ -1162,7 +1161,7 @@ errr fd_read( int handle, char *buf, huge nbytes )
 
 
 /* Write some bytes to a file */
-errr fd_write( int handle, const char *buf, huge nbytes )
+errr fd_write( int handle, const char *buf, size_t nbytes )
 {
 	int unwritten;
 

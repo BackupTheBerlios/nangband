@@ -551,10 +551,12 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	/* Inscription? */
 	if (temp)
 	{
-		cptr note = NULL;
+		cptr note;
+		char buffer[200];
 
 		/* Get the note */
 		if (type == PUT) note = quark_str(o_ptr->note);
+		else note = buffer;
 
 		/* Get the inscription */
 		savefile_do_string((char *) note, type);
@@ -1194,9 +1196,9 @@ static void savefile_do_block_messages(bool type, int ver)
 	/* Dump the messages, oldest first */
 	for (i = num - 1; i >= 0; i--)
 	{
-
 		/* Write the type */
-		cptr message = NULL;
+		cptr message;
+		char buffer[200];
 		u16b mess_type = 0;
 
 		/* Obtain values on saving */
@@ -1204,6 +1206,10 @@ static void savefile_do_block_messages(bool type, int ver)
 		{
 			message = message_str((s16b) i);
 			mess_type = message_type((s16b) i);
+		}
+		else
+		{
+			message = buffer;
 		}
 
 		/* Do the message and it's type */

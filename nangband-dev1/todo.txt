@@ -10,6 +10,7 @@ Todo list for Nangband
   + Remove haggling.
   + Make IMPACT weapons have high critical chances.
   + Throwing potions should cause the potions effect on the target.
+  + Add something similar to ToME's history editing.
 
 = Bugs
   + Ego-items are pretty broken.

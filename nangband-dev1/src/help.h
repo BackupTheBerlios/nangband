@@ -4,7 +4,7 @@
  * needed internally by that file, at present at least.
  *
  * Copyright (c) 2002 Antony Sidwell
- * 
+ *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
  * are included in all such copies.  Other copyrights may also apply.
@@ -70,7 +70,7 @@ typedef struct {
 	int  end_line;
 	} block_blk;
 
-typedef int *table_blk;   
+typedef int *table_blk;
 
 /* Holds a ton of information about a parsed help file */
 typedef struct {
@@ -88,12 +88,12 @@ typedef struct {
 
 	/* The number of lines in the file */
 	int total_lines;
-	
+
 	} helpfile_blk;
 
 
 /* Modes of operation for the system */
-#define MODE_NAV 0    
+#define MODE_NAV 0
 #define MODE_LINK 1
 
 /* List flags */
@@ -113,7 +113,7 @@ typedef struct {
 #define REDRAW_CODE_BLOCKSTART 3
 #define REDRAW_CODE_BLOCKEND 0
 #define REDRAW_CODE_COLOUR 1
-#define REDRAW_CODE_UNDERLINE 6  
+#define REDRAW_CODE_UNDERLINE 6
 #define REDRAW_CODE_MEGAUNDERLINE 7
 #define REDRAW_CODE_LINKPOINT 2
 #define REDRAW_CODE_LINKREF 4
@@ -144,7 +144,7 @@ typedef struct {
 /* Reasonable values for buffers and things */
 #define REASONABLE_LINELENGTH 120
 #define MAX_CHARENTITY_LENGTH 20
-#define HISTORY_DEPTH 10      
+#define HISTORY_DEPTH 10
 #define MAX_LINKPOINT_LENGTH 49
 #define XMLHELP_FILENAME_LENGTH 100
 #define PAGE_BORDER 1
@@ -190,7 +190,7 @@ typedef struct {
 #define EMPH_COLOUR TERM_L_UMBER
 #define STRONG_COLOUR TERM_RED
 
-#define LINK_TYPE_END 0     
+#define LINK_TYPE_END 0
 #define LINK_TYPE_POINT 1
 #define LINK_TYPE_REF 2
 
@@ -201,9 +201,9 @@ typedef struct {
  */
 #define LINK_TYPE_BACK 3
 #define LINK_TYPE_EXIT 4
-#define LINK_TYPE_FORWARD 5    
+#define LINK_TYPE_FORWARD 5
 #define LINK_TYPE_RETURN 6
-                                                        
+
 /* Function-like macros */
 #define FILE_TITLE(block) (char *)(block + sizeof(int))
 #define DISPLAY_BLOCK(block) (block + WORDALIGN(strlen(FILE_TITLE(block)) + 5))
@@ -243,7 +243,7 @@ typedef struct {
 #define ACTION_BACK 13
 #define ACTION_FORWARD 14
 #define ACTION_NOTHING 15
-                                                             
+
 char *help_path_build(char *buffer, char *file, char *lastfile, history_blk *stack);
 bool parse_body(BULP *bptr,char **display, char **links, int *link_no, int *block_no, bool block_change, int *table_info, list_blk *list_info, char *err_message);
 bool history_add(history_blk *stack, char *file, int line_no);

@@ -1794,8 +1794,8 @@ int qsort_hook(const void *arg1, const void *arg2)
 	if (comp1->bonus != comp2->bonus)
 	{
 		/* A zero is lower than anything else */
-		if (comp1->bonus == 0) return (-1);
-		if (comp2->bonus == 0) return (+1);
+		if (comp1->bonus == 0) return (+1);
+		if (comp2->bonus == 0) return (-1);
 	}
 
 	return (comp1->bonus - comp2->bonus);
@@ -1822,6 +1822,7 @@ void obj_info_resists(byte *resists, bool shorten, char *buffer)
 		bonus_data stat[RES_MAX];
 		int current_stat = 0;
 		int n = 0, iter = 0;
+		int pluses = 0, minuses = 0;
 
 		/* Make the structure */
 		for (n = 0; n < RES_MAX; n++)
@@ -1833,8 +1834,28 @@ void obj_info_resists(byte *resists, bool shorten, char *buffer)
 		/* Sort the stats */
 		qsort((void *) stat, RES_MAX, sizeof(bonus_data), qsort_hook);
 
+		/* So we can start on 1, and avoid (n - 1) < 0 problems with array access */
+		if (stat[0].bonus < 0) minuses ++;
+
+		/* Loop over negative bonuses */
+		for (n = 1; (n < RES_MAX) && (stat[n].bonus < 0); n++)
+		{
+			if (stat[n - 1].bonus != stat[n].bonus) minuses ++;
+		}
+
+		/* So we can avoid (n - 1) < 0 problems with array access */
+		if (n < RES_MAX && stat[n].bonus > 0) pluses ++;
+
+		/* Loop over negative bonuses */
+		for (; (n < RES_MAX) && (stat[n].bonus > 0); n++)
+		{
+			if (stat[n - 1].bonus != stat[n].bonus) pluses ++;
+		}
+
 		/* Intro */
 		if (!shorten) strcat(buffer, "It increases your resistance to ");
+
+		n = 0;
 
 		/* Loop - zeroes are at the bottom, we can stop at the first one */
 		while (current_stat < RES_MAX && stat[current_stat].bonus != 0)
@@ -1865,20 +1886,27 @@ void obj_info_resists(byte *resists, bool shorten, char *buffer)
 			/* Write out the bonus */
 			strcat(buffer, "by ");
 			strcat(buffer, format("%i", ABS(stat[current_stat].bonus)));
+			strcat(buffer, "%");
 
 			/* Move on */
 			current_stat += no_the_same;
 
+			n ++;
+
 			/* Is there another stat to print? */
 			if ((current_stat < RES_MAX) && (stat[current_stat].bonus))
 			{
-				strcat(buffer, ", and ");
-
-				/* Output this only on a change of sign */
-				if ((stat[current_stat].bonus > 0)  && (stat[current_stat - no_the_same].bonus < 0))
+				strcat(buffer, ", ");
+				if (stat[current_stat].bonus > 0)
 				{
-					strcat(buffer, "increases");
+					if (n == pluses - 1) strcat(buffer, "and ");
 				}
+				else
+				{
+					if (n == minuses - 1) strcat(buffer, "and ");
+				}
+
+				strcat(buffer, "to ");
 			}
 		}
 
@@ -2373,6 +2401,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 		bonus_data stat[A_MAX];
 		int current_stat = 0;
 		int n = 0, iter = 0;
+		int pluses = 0, minuses = 0;
 
 		/* Make the structure */
 		for (n = 0; n < A_MAX; n++)
@@ -2384,12 +2413,32 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 		/* Sort the stats */
 		qsort((void *) stat, A_MAX, sizeof(bonus_data), qsort_hook);
 
+		/* So we can start on 1, and avoid (n - 1) < 0 problems with array access */
+		if (stat[0].bonus < 0) minuses ++;
+
+		/* Loop over negative bonuses */
+		for (n = 1; (n < A_MAX) && (stat[n].bonus < 0); n++)
+		{
+			if (stat[n - 1].bonus != stat[n].bonus) minuses ++;
+		}
+
+		/* So we can avoid (n - 1) < 0 problems with array access */
+		if (n < A_MAX && stat[n].bonus > 0) pluses ++;
+
+		/* Loop over negative bonuses */
+		for (; (n < A_MAX) && (stat[n].bonus > 0); n++)
+		{
+			if (stat[n - 1].bonus != stat[n].bonus) pluses ++;
+		}
+
 		/* Intro */
 		text_out("It ");
 
 		/* Value */
 		if (stat[current_stat].bonus > 0) text_out_c(TERM_L_GREEN, "increases");
 		else if (stat[current_stat].bonus < 0) text_out_c(TERM_ORANGE, "decreases");
+
+		n = 0;
 
 		/* Loop - zeroes are at the bottom, we can stop at the first one */
 		while (current_stat < A_MAX && stat[current_stat].bonus != 0)
@@ -2427,18 +2476,26 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 			/* Move on */
 			current_stat += no_the_same;
 
+			n ++;
+
 			/* Is there another stat to print? */
 			if ((current_stat < A_MAX) && (stat[current_stat].bonus))
-			{                
-				/* Output this only on a change of sign */
-				if ((stat[current_stat].bonus > 0)  && (stat[current_stat - no_the_same].bonus < 0))
+			{
+				text_out(", ");
+				if (stat[current_stat].bonus > 0)
 				{
-					text_out(", but also increases ");
+					if (stat[current_stat - no_the_same].bonus < 0)
+					{
+						text_out(", but also increases ");
+						n = 0;
+					}
+					if (n == pluses - 1) text_out("and ");
 				}
 				else
-				{  
-					text_out(", and ");
+				{
+					if (n == minuses - 1) text_out("and ");
 				}
+				text_out("your ");
 			}
 		}
 

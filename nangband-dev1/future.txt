@@ -1,0 +1,29 @@
+Nangband Future Directions
+==========================
+
+This file contains "todo"/"may do" list items that are too long to sensibly
+fit on one or two lines.
+
+Add something similar to the Blood of Life patch.  Make it restore the player
+to full HP when it gets below 1.
+
+Add parts of the Macro FAQ to the Nangband help system.
+[Reference URL: http://thangorodrim.angband.org/help/macrofaq.txt]
+
+Rewrite enchant() to work on forumulas instead of a table.  Also change it
+so it gets harder to enchant to-dam as you get nearer the maximum damage
+the weapon can do.  So a 1d4 dagger is easy to get +1 dam, fairly easy to get
++2 dam, fairly hard to get +3 dam, and hard to get +4 dam.
+
+There should be a macro in defines.h to check if an item is *id*'d.  Personally,
+I think "levels" of ID should be removed and have it on a "use-and-find-out"
+model.  This will require a whole load of work, though.
+
+Some cheat options can be removed. cheat_know can be made into a one-off debug
+command. cheat_live can be made a birth option. cheat_live shoud be a birth
+option.  Debug mode characters should also be able to turn birth options on
+and off.
+
+All gameplay options possible should be removed; this makes the game more
+balanced.
+

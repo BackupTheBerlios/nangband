@@ -400,6 +400,9 @@ static void object_stat_bonuses_aux(int mode, const object_type *o_ptr, s16b *mo
 	bool fully_known = FALSE;
 	int n;
 
+	/* Unused parameter */
+	(void) mode;
+
 	/* Make k_ptr useful */
 	k_ptr = &k_info[o_ptr->k_idx];
 
@@ -416,14 +419,8 @@ static void object_stat_bonuses_aux(int mode, const object_type *o_ptr, s16b *mo
 	if (ego_item_p(o_ptr)) fully_known = TRUE;
 #endif /* SPOIL_ARTIFACTS */
 
-	if (mode == OBJECT_AUX_FULL) fully_known = TRUE;
-	if (o_ptr->ident & (IDENT_MENTAL)) fully_known = TRUE;
-
-	/* Must be identified */
-	if (!fully_known)
-	{
-		if (!object_known_p(o_ptr)) return;
-	}
+	/* Stat bonuses always show up. */
+	if (object_known_p(o_ptr)) fully_known = TRUE;
 
 	/* Get the resists from the base object */
 	for (n = 0; n < A_MAX; n++)
@@ -488,8 +485,8 @@ static void object_resists_aux(int mode, const object_type *o_ptr, byte *resists
 	if (ego_item_p(o_ptr)) fully_known = TRUE;
 #endif /* SPOIL_ARTIFACTS */
 
-  if (mode == OBJECT_AUX_FULL) fully_known = TRUE;
-  if (o_ptr->ident & (IDENT_MENTAL)) fully_known = TRUE;
+	if (mode == OBJECT_AUX_FULL) fully_known = TRUE;
+	if (o_ptr->ident & (IDENT_MENTAL)) fully_known = TRUE;
 
 	/* Must be identified */
 	if (!fully_known)
@@ -1840,7 +1837,7 @@ void obj_info_resists(byte *resists, bool shorten, char *buffer)
 		if (!shorten) strcat(buffer, "It increases your resistance to ");
 
 		/* Loop - zeroes are at the bottom, we can stop at the first one */
-		while (current_stat < A_MAX && stat[current_stat].bonus != 0)
+		while (current_stat < RES_MAX && stat[current_stat].bonus != 0)
 		{
 			/* Temp */
 			int no_the_same = 0;

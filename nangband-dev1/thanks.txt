@@ -5,6 +5,7 @@ The DevTeam:
     * Andrew Sidwell [takkaria] <nevermiah@hotmail.com>: Main developer
     * Grahame White [grahame]: Secondry Developer
     * Marshall A. Scott [parodyingbird]: Secondry Developer
+    * Antony Sidwell [ajps]: Tertiary Developer
 
 Previous maintainers:
     * Robert Ruehlmann <rr9@angband.org>: Current Maintainer of Angband
@@ -14,15 +15,11 @@ Previous maintainers:
     * Robert Alan Koeneke, Jimmey Wayne Todd Jr.: "VMS Moria"
     * James E. Wilson: "Unix Moria" [Umoria]
 
-Contributors:
--------------
-
 Thanks go to the following people:
-
-Antony Sidwell: for the excellent new help system
+----------------------------------
 
 Many thanks go to the following people who have contributed patches,
-bugfixes, and other stuff for Angband:
+bugfixes, and generic other stuff for Angband:
 
 Peter Berger, Andrew Hill, Werner Baer, Tom Morton, "Cyric the Mad",
 Chris Kern, Jurriaan Kalkman, Alexander Wilkins, Mauro Scarpa, "facade",
@@ -83,7 +80,7 @@ Mark Howson
 Improvements to the Amiga code
 
 Musus Umbra
-Improvements to the Acorn RISC OS code
+The RISC OS frontend.
 
 Hallvard B. Furuseth
 Many improvements to the autoconf support, code-cleanups, and small

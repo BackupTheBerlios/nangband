@@ -11,6 +11,9 @@ Todo list for Nangband
   + Make IMPACT weapons have high critical chances.
   + Throwing potions should cause the potions effect on the target.
 
+= Bugs
+  + Ego-items are pretty broken.
+
 = User Interface
   + Add inscriptions that exclude items from the using list.
   + Allow stacking of rods, wands, and staves with different charges.
@@ -31,7 +34,6 @@ Todo list for Nangband
     The clients could be written in almost any programming language and
     have minimal hardware requirements.
   + Extend the use of scripts for customization.
-
 
 = Data files
   + Externalize more stuff; things that have been suggested are equipment

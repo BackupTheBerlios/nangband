@@ -1,0 +1,24 @@
+<?php
+/*
+ * changes.php - an overview of changes for nangband.
+ * --------------------------------------------------
+ *
+ * started on:  16/03/02
+ * by:          takkaria
+ */
+
+include('general/layout.php');
+
+$creators = 'Andrew Sidwell';
+page_header('Download', 'download');
+?>
+<p><b>There are no releases yet, as Nangband is in pre-alpha form.</b></p>
+
+<p>However, there are some plans as to what will be relased.  The first 
+'proper' release will be 1.0.0, but there will be varying public betas 
+before this.  The first public beta will be labelled as 0.5.4, because I 
+like that number.  It will be released sometime in May.  Future betas are 
+not planned yet.</p>
+<?
+page_footer($creators);
+?>

@@ -1491,6 +1491,9 @@ errr Term_addstr(int n, byte a, cptr s)
 
 	int w = Term->wid;
 
+	int no_control_chars = 0;
+	int count = 0;
+
 	errr res = 0;
 
 	/* Handle "unusable" cursor */
@@ -1500,16 +1503,52 @@ errr Term_addstr(int n, byte a, cptr s)
 	k = (n < 0) ? (w + 1) : n;
 
 	/* Obtain the usable string length */
-	for (n = 0; (n < k) && s[n]; n++) /* loop */;
+/*	for (n = 0; (n < k) && s[n]; n++)*/ /* loop *//*;*/
+
+	/* Obtain the usable string length */
+	for (n = 0; (n < (k + no_control_chars)) && s[n]; n++)
+	{
+		/*
+		 * For the control char 1, we skip the next character, as
+		 * it could be a zero, and mean premature termination of
+		 * the string.
+		 */
+		if (s[n] == '\1')
+		{
+			no_control_chars += 2;
+			n++;
+		}
+	}
 
 	/* React to reaching the edge of the screen */
-	if (Term->scr->cx + n >= w) res = n = w - Term->scr->cx;
+	if (Term->scr->cx + n - no_control_chars >= w) res = n = w - Term->scr->cx;
 
-	/* Queue the first "n" characters for display */
-	Term_queue_chars(Term->scr->cx, Term->scr->cy, n, a, s);
+	/* go through all of the characters in the string */
+	for (count = 0; count < n; count++)
+	{
+		/* Code 1 is a change of attr value */
+		if (s[count] == '\1')
+		{
+			/* Set attribute to the value specified */
+			a = s[count + 1];
 
-	/* Advance the cursor */
-	Term->scr->cx += n;
+			/* Skip the attr value */
+			count++;
+
+			/* Go back to the start of the loop. */
+			continue;
+		}
+		else
+		{
+			/* Queue the first "n" characters for display */
+			/* Term_queue_chars(Term->scr->cx, Term->scr->cy, n, a, s); */
+			Term_queue_char(Term->scr->cx, Term->scr->cy, a, s[count], 0, 0);
+
+			/* Advance the cursor */
+			/* Term->scr->cx += n; */
+			Term->scr->cx++;
+		}
+    }
 
 	/* Hack -- Notice "Useless" cursor */
 	if (res) Term->scr->cu = 1;

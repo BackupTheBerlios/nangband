@@ -21,37 +21,6 @@ static FILE *fff = NULL;
 
 
 /*
- * Extract a textual representation of an attribute
- */
-static cptr attr_to_text(byte a)
-{
-	switch (a)
-	{
-		case TERM_DARK:    return ("Dark");
-		case TERM_WHITE:   return ("White");
-		case TERM_SLATE:   return ("Slate");
-		case TERM_ORANGE:  return ("Orange");
-		case TERM_RED:     return ("Red");
-		case TERM_GREEN:   return ("Green");
-		case TERM_BLUE:    return ("Blue");
-		case TERM_UMBER:   return ("Umber");
-		case TERM_L_DARK:  return ("L.Dark");
-		case TERM_L_WHITE: return ("L.Slate");
-		case TERM_VIOLET:  return ("Violet");
-		case TERM_YELLOW:  return ("Yellow");
-		case TERM_L_RED:   return ("L.Red");
-		case TERM_L_GREEN: return ("L.Green");
-		case TERM_L_BLUE:  return ("L.Blue");
-		case TERM_L_UMBER: return ("L.Umber");
-	}
-
-	/* Oops */
-	return ("Icky");
-}
-
-
-
-/*
  * A tval grouper
  */
 typedef struct
@@ -354,7 +323,8 @@ static void spoil_obj_desc(cptr fname)
 
 
 /*
- * Artifact Spoilers by: randy@PICARD.tamu.edu (Randy Hutson)
+ * Artifact Spoilers [originally] by: randy@PICARD.tamu.edu (Randy Hutson)
+ * Now uses the new recall code in object1.c
  */
 
 

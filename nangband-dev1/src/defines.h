@@ -3204,3 +3204,16 @@ extern int PlayerUID;
  * Given an array, determine how many elements are in the array.
  */
 #define N_ELEMENTS(a) (sizeof(a) / sizeof((a)[0]))
+
+/*
+ * Alignment codes for aligning text.
+ */              
+#define ALIGN_LEFT 0
+#define ALIGN_RIGHT 1
+#define ALIGN_CENTRE 2
+#define ALIGN_CENTER ALIGN_CENTRE
+                 
+/*
+ * Control characters for "fancy" printing.
+ */
+#define CONTROL_CHAR_ATTR '\1'

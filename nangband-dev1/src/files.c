@@ -3329,8 +3329,8 @@ static void death_examine(void)
 		/* Describe */
 		msg_format("Examining %s...", o_name);
 
-		/* Describe it fully */
-		identify_fully_aux(o_ptr);
+		/* Show the player's knowledge */
+		item_show_knowledge(o_ptr);
 	}
 
 	return;

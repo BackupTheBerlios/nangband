@@ -1,7 +1,15 @@
 Nangband ChangeLog
 ==================
 
-2002-19-31
+2002-04-01
+----------
+- Finished off the object recall && started adding the character dump
+  version. (takkaria)
+- Written a (hopefully) better screen output hook. (ajps)
+- Written a new block output function. (ajps)
+- Changed some unction names. (takkaria)
+
+2002-03-31
 ----------
 - Made the object recall code usable; there's still a little more to do
   on it. (takkaria)

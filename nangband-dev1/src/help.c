@@ -75,7 +75,7 @@ static char link_help[80]=
 /* -------------------------------------------------------- takkaria ---
  * Converts a string to a terminal colour byte.
  * --------------------------------------------------------------------- */
-byte text_to_colour(char *string)
+static byte text_to_colour(char *string)
 {
 	if (bulp_stricmp(string, "dark") == 0) return (TERM_DARK);
 	if (bulp_stricmp(string, "white") == 0) return (TERM_WHITE);
@@ -101,7 +101,7 @@ byte text_to_colour(char *string)
 /* ------------------------------------------------------------ ajps ---
  * Draws a horizontal rule, well a line of dashes really.
  * --------------------------------------------------------------------- */
-void horiz_rule(int x, int y, int width, char attr)
+static void horiz_rule(int x, int y, int width, char attr)
 {
 	/* Counter */
 	int n;
@@ -117,7 +117,7 @@ void horiz_rule(int x, int y, int width, char attr)
  * Write a block header to the display block for a plain text block,
  * (rather than a table or list) given a block_style block.
  * --------------------------------------------------------------------- */
-void write_textblock_header(char **display, block_style *header)
+static void write_textblock_header(char **display, block_style *header)
 {
 	/* Simply put the information into the appropriate places */
 	(*display)[0] = REDRAW_CODE_BLOCKSTART;
@@ -134,7 +134,7 @@ void write_textblock_header(char **display, block_style *header)
 /* ------------------------------------------------------------ ajps ---
  * Draws a vertical rule, well a line of dashes really.
  * --------------------------------------------------------------------- */
-void vert_rule(int x, int y, int height, char attr)
+static void vert_rule(int x, int y, int height, char attr)
 {
 	/* Counter */
 	u16b n;
@@ -156,7 +156,7 @@ void vert_rule(int x, int y, int height, char attr)
  * separately but they will NOT terminate the string unless they are the
  * end-of-block code or the start-of-block code.
  * --------------------------------------------------------------------- */
-u32b get_word_length(char **cptr, u32b *control_chars)
+static u32b get_word_length(char **cptr, u32b *control_chars)
 {
 	u32b length=0;
 
@@ -246,7 +246,7 @@ u32b get_word_length(char **cptr, u32b *control_chars)
  * isn't NULL, we fill it with the last valid reference code, still
  * returning NULL.
  * --------------------------------------------------------------------- */
-link_blk *link_info(char *links, int ref, int *last)
+static link_blk *link_info(char *links, int ref, int *last)
 {
 	/* Set ptr to the first link in the block */
 	link_blk *ptr = (link_blk *)links;
@@ -287,7 +287,7 @@ link_blk *link_info(char *links, int ref, int *last)
 /* ------------------------------------------------------------ ajps ---
  * Returns a block number given the id of a link point.
  * --------------------------------------------------------------------- */
-int link_point_block(char *links, char *id)
+static int link_point_block(char *links, char *id)
 {
 	/* Set ptr to the first link in the block */
 	link_blk *ptr = (link_blk *)links;
@@ -323,7 +323,7 @@ int link_point_block(char *links, char *id)
  * Pretty much as you'd expect, it links to a file (with reference to a
  * mark point, or not).  Straightforward.
  * --------------------------------------------------------------------- */
-void link_to_file(char *link_file, char *filename, char *mark, history_blk *history)
+static void link_to_file(char *link_file, char *filename, char *mark, history_blk *history)
 {
 	/* This is used to sotre the position of the mark id within the link */
 	char *markpt=NULL;
@@ -375,7 +375,7 @@ void link_to_file(char *link_file, char *filename, char *mark, history_blk *hist
  * selected - load a new file, move back or forward through the history,
  * or exit the help system with or without a return value.
  * --------------------------------------------------------------------- */
-bool go_to_link(link_blk *linkptr, char *filename, char *mark, history_blk *history, u32b *passback)
+static bool go_to_link(link_blk *linkptr, char *filename, char *mark, history_blk *history, u32b *passback)
 {
 	/* This isn't really a link */
 	if (linkptr == NULL) return (TRUE);
@@ -460,7 +460,7 @@ bool go_to_link(link_blk *linkptr, char *filename, char *mark, history_blk *hist
  * Returns a pointer to the currently highlighted link, and (optionally)
  * its reference number.
  * --------------------------------------------------------------------- */
-link_blk *get_selected_link(char *links, int *ref)
+static link_blk *get_selected_link(char *links, int *ref)
 {
 	/* Start at the first link in the block */
 	link_blk *ptr = (link_blk *)links;
@@ -497,7 +497,7 @@ link_blk *get_selected_link(char *links, int *ref)
 /* ------------------------------------------------------------ ajps ---
  * Finds the link that corresponds to a keycode.
  * --------------------------------------------------------------------- */
-link_blk *find_link_from_key(char *links, char key)
+static link_blk *find_link_from_key(char *links, char key)
 {
 	/* Start at the beginning of the links block */
 	link_blk *ptr = (link_blk *)links;
@@ -528,7 +528,7 @@ link_blk *find_link_from_key(char *links, char key)
  * We need this because of the use of tables, where a link can be much
  * later in the file than it appears on screen.
  * --------------------------------------------------------------------- */
-link_blk *next_link(char *links, link_blk *ptr)
+static link_blk *next_link(char *links, link_blk *ptr)
 {
 	/*
 	 * current_winner holds the location of the link which seems
@@ -637,7 +637,7 @@ link_blk *next_link(char *links, link_blk *ptr)
  * We need this because of the use of tables, where a link can be much
  * later in the file than it appears on screen.
  * --------------------------------------------------------------------- */
-link_blk *prev_link(char *links, link_blk *ptr)
+static link_blk *prev_link(char *links, link_blk *ptr)
 {
 	/*
 	 * This is the current link that is closest to ptr but before
@@ -732,7 +732,7 @@ link_blk *prev_link(char *links, link_blk *ptr)
  * We determine what is on screen by the top and bottom line number
  * which is passed to us.
  * --------------------------------------------------------------------- */
-void select_first_link(char *links, int top, int bottom)
+static void select_first_link(char *links, int top, int bottom)
 {
 	link_blk *linkptr;
 
@@ -762,7 +762,7 @@ void select_first_link(char *links, int top, int bottom)
  * This selected the last link on the visible page, specified by the
  * top and bottom line we are passed.
  * --------------------------------------------------------------------- */
-void select_last_link(char *links, int top, int bottom)
+static void select_last_link(char *links, int top, int bottom)
 {
 	link_blk *linkptr;
 
@@ -800,7 +800,7 @@ void select_last_link(char *links, int top, int bottom)
  * the screen (specified by top and bottom line), go to the first link
  * on screen instead.
  * --------------------------------------------------------------------- */
-void link_sel_down(char *links, int top, int bottom)
+static void link_sel_down(char *links, int top, int bottom)
 {
 	link_blk *linkptr;
 
@@ -845,7 +845,7 @@ void link_sel_down(char *links, int top, int bottom)
  * Move the link selection up by one.  If this takes it off the screen
  * or past the first link, we go to the bottom link on the page.
  * --------------------------------------------------------------------- */
-void link_sel_up(char *links, int top, int bottom)
+static void link_sel_up(char *links, int top, int bottom)
 {
 	link_blk *linkptr;
 
@@ -894,7 +894,7 @@ void link_sel_up(char *links, int top, int bottom)
 /* ------------------------------------------------------------ ajps ---
  * Puts information into the links block, returns length of block.
  * --------------------------------------------------------------------- */
-int store_link(link_blk *links, int link_type, int flag, int key, char *help_text, char *string)
+static int store_link(link_blk *links, int link_type, int flag, int key, char *help_text, char *string)
 {
 	int size;
 	char *ptr;

@@ -1934,8 +1934,8 @@ bool identify_fully(void)
 		           o_name);
 	}
 
-	/* Describe it fully */
-	identify_fully_aux(o_ptr);
+	/* Show the player's new knowledge */
+	item_show_knowledge(o_ptr);
 
 	/* Success */
 	return (TRUE);

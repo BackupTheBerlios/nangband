@@ -5674,14 +5674,12 @@ diff --recursive --unified=4 angband-291/src/object1.c antiband/src/object1.c
 +
 +		for (i = 0; i < vn; i++)
  		{
--			return "breathe sound (130) every 450+d450 turns";
 +			roff(vp[i]);
 +			if (i < vn - 2)
 +				roff(", ");
 +			else if (i < vn - 1)
 +				roff(" and ");
  		}
--		case SV_DRAGON_CHAOS:
 +
 +		roff(".  ");
 +		worked = TRUE;

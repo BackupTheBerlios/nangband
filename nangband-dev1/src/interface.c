@@ -198,7 +198,7 @@ bool Window_Prompt(int window_width, char *question)
 
     Window_Make(x1, y1, x2, y2);
 
-    putstr_multi(x1 + 2, y1 + 1, window_width - 1, TERM_L_BLUE, question);
+    put_text_block(x1 + 2, y1 + 1, window_width - 2, question, TERM_L_BLUE, FALSE, ALIGN_CENTRE);
 
     Term_putstr(a1 - 2, b1, -1, TERM_WHITE, ">"); 
 

@@ -529,8 +529,8 @@ void do_cmd_observe(void)
 	/* Describe */
 	msg_format("Examining %s...", o_name);
 
-	/* Describe it fully */
-	identify_fully_aux(o_ptr);
+	/* Show the item's description */
+	item_show_knowledge(o_ptr);
 
 	return;
 }

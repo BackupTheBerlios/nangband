@@ -10,11 +10,9 @@
 
 #include "angband.h"
 
-
-
 #ifdef SET_UID
 
-# ifndef HAVE_USLEEP
+#ifndef HAVE_USLEEP
 
 /*
  * For those systems that don't have "usleep()" but need it.
@@ -23,7 +21,7 @@
  */
 int usleep(huge usecs)
 {
-	struct timeval      Timer;
+	struct timeval	  Timer;
 
 	int nfds = 0;
 
@@ -1663,7 +1661,7 @@ char inkey(void)
 	{
 		/* Hack -- Handle "inkey_scan" */
 		if (!inkey_base && inkey_scan &&
-		    (0 != Term_inkey(&kk, FALSE, FALSE)))
+			(0 != Term_inkey(&kk, FALSE, FALSE)))
 		{
 			break;
 		}
@@ -2439,13 +2437,13 @@ void messages_free(void)
  * usually is closest to 1.7.  The converted value for each of the five
  * different "quarter" values is given below:
  *
- *  Given     Gamma 1.0       Gamma 1.5       Gamma 1.7     Hex 1.7
- *  -----       ----            ----            ----          ---
- *   0/4        0.00            0.00            0.00          #00
- *   1/4        0.25            0.27            0.28          #47
- *   2/4        0.50            0.55            0.56          #8f
- *   3/4        0.75            0.82            0.84          #d7
- *   4/4        1.00            1.00            1.00          #ff
+ *  Given	 Gamma 1.0	   Gamma 1.5	   Gamma 1.7	 Hex 1.7
+ *  -----	   ----			----			----		  ---
+ *   0/4		0.00			0.00			0.00		  #00
+ *   1/4		0.25			0.27			0.28		  #47
+ *   2/4		0.50			0.55			0.56		  #8f
+ *   3/4		0.75			0.82			0.84		  #d7
+ *   4/4		1.00			1.00			1.00		  #ff
  *
  * Note that some machines (i.e. most IBM machines) are limited to a
  * hard-coded set of colors, and so the information above is useless.
@@ -2835,18 +2833,8 @@ void prt(cptr str, int row, int col)
 
 
 /*
- * Print some (colored) text to the screen at the current cursor position,
- * automatically "wrapping" existing text (at spaces) when necessary to
- * avoid placing any text into the last column, and clearing every line
- * before placing any text in that line.  Also, allow "newline" to force
- * a "wrap" to the next line.  Advance the cursor as needed so sequential
- * calls to this function will work correctly.
- *
- * Once this function has been called, the cursor should not be moved
- * until all the related "text_out()" calls to the window are complete.
- *
- * This function will correctly handle any width up to the maximum legal
- * value of 256, though it works best for a standard 80 character width.
+ * Passes the text to put_continuous_text, starting at the current
+ * cursor position. 
  */
 void text_out_to_screen(byte a, cptr str)
 {
@@ -2854,91 +2842,15 @@ void text_out_to_screen(byte a, cptr str)
 
 	int w, h;
 
-	cptr s;
-
-
 	/* Obtain the size */
 	(void)Term_get_size(&w, &h);
 
 	/* Obtain the cursor */
 	(void)Term_locate(&x, &y);
 
-	/* Process the string */
-	for (s = str; *s; s++)
-	{
-		char ch;
+	put_continuous_text(x, y, (char *) str, a, TRUE);
 
-		/* Force wrap */
-		if (*s == '\n')
-		{
-			/* Wrap */
-			x = 0;
-			y++;
-
-			/* Clear line, move cursor */
-			Term_erase(x, y, 255);
-
-			continue;
-		}
-
-		/* Clean up the char */
-		ch = (isprint(*s) ? *s : ' ');
-
-		/* Wrap words as needed */
-		if ((x >= w - 1) && (ch != ' '))
-		{
-			int i, n = 0;
-
-			byte av[256];
-			char cv[256];
-
-			/* Wrap word */
-			if (x < w)
-			{
-				/* Scan existing text */
-				for (i = w - 2; i >= 0; i--)
-				{
-					/* Grab existing attr/char */
-					Term_what(i, y, &av[i], &cv[i]);
-
-					/* Break on space */
-					if (cv[i] == ' ') break;
-
-					/* Track current word */
-					n = i;
-				}
-			}
-
-			/* Special case */
-			if (n == 0) n = w;
-
-			/* Clear line */
-			Term_erase(n, y, 255);
-
-			/* Wrap */
-			x = 0;
-			y++;
-
-			/* Clear line, move cursor */
-			Term_erase(x, y, 255);
-
-			/* Wrap the word (if any) */
-			for (i = n; i < w - 1; i++)
-			{
-				/* Dump */
-				Term_addch(av[i], cv[i]);
-
-				/* Advance (no wrap) */
-				if (++x > w) x = w;
-			}
-		}
-
-		/* Dump */
-		Term_addch(a, ch);
-
-		/* Advance */
-		if (++x > w) x = w;
-	}
+	return;
 }
 
 
@@ -4050,99 +3962,573 @@ void build_gamma_table(int gamma)
 
 #endif /* SUPPORT_GAMMA */
 
+#if 0
+
 /* ------------------------------------------------------- ajps, 20/10/01 ---
  * Displays a string over a number of lines, given a starting point and
  * a width.  Breaks at newline characters or white space at the end of a line.
+ * Optional clearing of lines on which text is to be printed.
  * ----------------------------------------------------------------------- */
-void putstr_multi(int x_pos, int y_pos, int width, int attr, char *txt)
+void putstr_multi(int x_pos, int y_pos, int width, int attr, char *txt, bool clear)
 {
-    char *start_ptr;
-    char *ptr;
-    char *temp_ptr;
-    int  y = y_pos;
-    char temp_ch;
-    int  n;
-    
-    /* 
-     * If we pass 0 as the width, it prints up to the edge of screen,
-     * -1 leaves a gap of 1 character at the right of the terminal,
-     * -2 leaves a gap of 2, and so on.
-     */
-    if ( width <= 0 ) width += Term->wid - x_pos + 1;
-    /*
-     * If all of that fiddling leaves us with an unusable width, we
-     * just print to the edge of the terminal.
-     */
-    if ( width <=0 ) width = Term->wid - x_pos;
-    
+	char *start_ptr;
+	char *ptr;
+	char *temp_ptr;
+	int  y = y_pos;
+	char temp_ch;
+	int  n;
+
+	/*
+	 * If we pass 0 as the width, it prints up to the edge of screen,
+	 * -1 leaves a gap of 1 character at the right of the terminal,
+	 * -2 leaves a gap of 2, and so on.
+	 */
+	if (width <= 0) width += Term->wid - x_pos + 1;
+
+	/*
+	 * If all of that fiddling leaves us with an unusable width, we
+	 * just print to the edge of the terminal.
+	 */
+	if (width <= 0) width = Term->wid - x_pos;
+
+	/* Counts length of string (including control chars) */
 	for (n = 0; txt[n]; n++)
 	{
-	    /*
-	     * For the control char 1, we skip the next character, as
-	     * it could be a zero, and mean premature termination of
-	     * the string.
-	     */
-        if ( txt[n] == '\1' ) n++;
+		/*
+		 * For the control char 1, we skip the next character, as
+		 * it could be a zero, and mean premature termination of
+		 * the string.
+		 */
+		if (txt[n] == '\1') n++;
 	}
-    
-    start_ptr = txt;
-    while ( TRUE )
-    { 
-        if ( n <= width )
-        {        
-            Term_putstr(x_pos,y,-1,attr,start_ptr);
-            return;
-        }
-        else
-        {
-            /* First deal with a newline */
-            if ( ( strchr(start_ptr,'\n') < ( start_ptr + width ) ) && ( strchr(start_ptr,'\n') != NULL ) )
-            {
-                ptr = strchr(start_ptr,'\n');
-                ptr[0]=0;
-                Term_putstr(x_pos,y,-1,attr,start_ptr);
-                y++;
-                ptr[0]='\n';
-                n -= ( ptr - start_ptr ) + 1;
-                start_ptr = ptr + 1;
-                continue;
-            }
-            
-            /* Then look for white space */
-            ptr = start_ptr;
-            temp_ptr = strchr(start_ptr,' ');
-            while ( ( temp_ptr < ( start_ptr + width ) ) && ( temp_ptr != NULL ) )
-            {
-                ptr = temp_ptr;
-                temp_ptr = strchr(ptr+1,' ');
-            }
-            temp_ptr = strchr(ptr,'\t');
-            while ( ( temp_ptr < ( start_ptr + width ) ) && ( temp_ptr != NULL ) )
-            {
-                ptr = temp_ptr;
-                temp_ptr = strchr(ptr+1,'\t');
-            }
-            
-            if ( ptr == start_ptr )
-            {
-                temp_ch = start_ptr[width];
-                start_ptr[width]=0;
-                Term_putstr(x_pos,y,-1,attr,start_ptr);
-                y++;
-                start_ptr[width] = temp_ch;
-                start_ptr += width;
-                n -= width;
-            }
-            else
-            {
-                temp_ch = ptr[0];
-                ptr[0]=0;
-                Term_putstr(x_pos,y,-1,attr,start_ptr);
-                y++;
-                ptr[0] = temp_ch;
-                n -= ( ptr - start_ptr ) + 1;
-                start_ptr = ptr + 1;
-            }
-        }
-    } 
+
+	/* Set start_ptr to point to the start of the text */
+	start_ptr = txt;
+
+	/* Just loop */
+	while (TRUE)
+	{
+		/*
+		 * If the number of characters is less than the printable width,
+		 * Do it the easy way.
+		 */
+		if (n <= width)
+		{
+			Term_putstr(x_pos,y,-1,attr,start_ptr);
+			return;
+		}
+		else
+		{
+			/* First deal with a newline */
+			if ((strchr(start_ptr,'\n') < (start_ptr + width)) && (strchr(start_ptr,'\n') != NULL))
+			{
+				ptr = strchr(start_ptr,'\n');
+				ptr[0]=0;
+				Term_putstr(x_pos,y,-1,attr,start_ptr);
+				y++;
+				ptr[0]='\n';
+				n -= ( ptr - start_ptr ) + 1;
+				start_ptr = ptr + 1;
+				continue;
+			}
+
+			/* Then look for white space */
+			ptr = start_ptr;
+			temp_ptr = strchr(start_ptr,' ');
+			while ( ( temp_ptr < ( start_ptr + width ) ) && ( temp_ptr != NULL ) )
+			{
+				ptr = temp_ptr;
+				temp_ptr = strchr(ptr+1,' ');
+			}
+			temp_ptr = strchr(ptr,'\t');
+			while ( ( temp_ptr < ( start_ptr + width ) ) && ( temp_ptr != NULL ) )
+			{
+				ptr = temp_ptr;
+				temp_ptr = strchr(ptr+1,'\t');
+			}
+
+			if ( ptr == start_ptr )
+			{
+				temp_ch = start_ptr[width];
+				start_ptr[width]=0;
+				Term_putstr(x_pos,y,-1,attr,start_ptr);
+				y++;
+				start_ptr[width] = temp_ch;
+				start_ptr += width;
+				n -= width;
+			}
+			else
+			{
+				temp_ch = ptr[0];
+				ptr[0] = 0;
+				Term_putstr(x_pos,y,-1,attr,start_ptr);
+				y++;
+				ptr[0] = temp_ch;
+				n -= ( ptr - start_ptr ) + 1;
+				start_ptr = ptr + 1;
+			}
+		}
+	}
  }
+
+#endif
+               
+/* ------------------------------------------------------------ ajps ---
+ * Returns the length of the word starting at cptr.
+ *
+ * White space before the word is counted, and the count stops at
+ * the first white space in the string, or at a zero-terminator.
+ *
+ * Control characters are considered non-printable, and so are counted
+ * separately but they will NOT terminate the string unless they are zero.
+ * --------------------------------------------------------------------- */
+static u32b get_word_length(char **cptr, u32b *control_chars)
+{
+	u32b length=0;
+
+	/* include whitespace before the text */
+	while (((*cptr)[0] == ' ') || ((*cptr)[0] == '\t'))
+	{
+		(*cptr)++;
+		length++;
+	}
+
+	/* while the current character isn't whitespace */
+	while ((*cptr)[0] != ' ' && (*cptr)[0] != '\t' && (*cptr)[0] != '\r' && (*cptr)[0] != '\n')
+	{
+		/* check the current character */
+		switch ((*cptr)[0])
+		{
+			case 0:
+			{
+				/* The word has finished */
+				return (length);
+
+				break;
+			}
+
+			case CONTROL_CHAR_ATTR:
+			{
+				/*
+				 * These are control codes which need a character
+				 * afterwards as a parameter, so we skip the next
+				 * two characters.
+				 */
+				(*cptr) += 2;
+
+				/* Increase the control character counter by two */
+				(*control_chars) += 2;
+
+				break;
+			}
+
+			default:
+			{
+				/* These are normal (printable) ASCII characters */
+				if ((*cptr)[0] >= 32) length++;
+
+				/* Move onto the next character */
+				(*cptr)++;
+			}
+		}
+	}
+
+	/* Return the measured word length */
+	return (length);
+}
+
+
+#define CONTINUOUS_MIN_X 0
+#define CONTINUOUS_MAX_X Term->wid
+
+/* ------------------------------------------------ ajps, 2002-04-01 ---
+ * This writes "text" "full-width" across the "terminal", "word"-wrapping
+ * at the "edge" and going onto the "next" line, starting from the "edge".
+ *
+ * It deals correctly with the control-character "extensions" to the
+ * printing "code", whereby you can "embed" changes of "colour" into the
+ * text.  I call this "fancy text".
+ * --------------------------------------------------------------------- */
+void put_continuous_text(int x_pos, int y_pos, char *txt, byte attr, bool clear)
+{
+	/* Actual printing positions */
+	u32b print_x = x_pos, print_y = y_pos;
+
+	/* Current ptr inside text, initialise to the start */
+	char *current = txt;
+
+	/* Process the string until we reach the end of it */
+	while (current[0] != 0)
+	{
+		u32b word_length = 0;
+
+		/* actual length of printable line within the width */
+		u32b line_length = 0;
+
+		/* Counters for 'real' characters and control codes respectively */
+		u32b n = 0, m = 0;
+
+		/* number of control characters in line */
+		u32b controls = 0;
+
+		/* Temp variables, mirroring ptr and controls */
+		char *temp_ptr = current, *ptr = current;
+		u32b temp_controls = 0;
+
+		/* Clear the line if such an action was requested */
+		if (clear) Term_erase(print_x, print_y, CONTINUOUS_MAX_X - print_x);
+
+		/*
+		 * Establish how many (printable) characters we can
+		 * fit on this line.
+		 */
+		while ((line_length + word_length) <= (u32b) CONTINUOUS_MAX_X - print_x)
+		{
+			/* This word fits, so add it to the line */
+			line_length += word_length;
+
+			/* Move the pointer forward to the next word */
+			ptr = temp_ptr;
+
+			/* Inrease the number of control characters appropriately */
+			controls += temp_controls;
+
+			/* We stop looking at newlines and string endings */
+			if ((ptr[0] == '\n') || (ptr[0] == 0)) break;
+
+			/* Reset the control character counter */
+			temp_controls = 0;
+
+			/* Find the length of the next word */
+			word_length = get_word_length(&temp_ptr, &temp_controls);
+		}
+
+		/* We only need to test this when we are working on a full line */
+		if (print_x == CONTINUOUS_MIN_X)
+		{
+			/* If there is no word break, we character break instead. */
+			if (line_length == 0 && ptr[0] != '\n' && ptr[0] != '\r')
+			{
+				/* Set the line width to fill the width */
+				line_length = CONTINUOUS_MAX_X - CONTINUOUS_MIN_X;
+	
+				/* Make sure we have no control characters at the end of line */
+				while (ptr[line_length - 1] < 32)
+				{
+					line_length--;
+				}
+	
+				/* count control characters */
+				for (n = 0; n < line_length; n++)
+				{
+					if (ptr[n] < 32) controls++;
+				}
+	
+				/* Make the line length shorter still. */
+				line_length -= controls;
+			}
+		}
+
+		/* Reset counters */
+		n = 0; m = 0;
+
+		/* Analyse the line character-by-character */
+		while ((n < line_length) || (m < controls))
+		{
+			/* current[0] is the first character at the read position */
+			switch (current[0])
+			{
+				/* Change colour */
+				case CONTROL_CHAR_ATTR:
+				{
+					/* The next byte contains the colour code */
+					attr = current[1];
+
+					/* Move read position by 2 */
+					current += 2;
+
+					/* Increment the control character counter */
+					m += 2;
+
+					break;
+				}
+
+				/* Print the character to screen! */
+				default:
+				{
+					/* Print the character */
+					Term_putch(print_x, print_y, attr, current[0]);
+					
+					/* Move the print position by one */
+					print_x++;
+
+					/* Move past the character we've just printed */
+					current++;
+
+					/* Count the normal character we've printed */
+					n++;
+				}
+			}
+		}
+		/* We've now finished that line */
+
+		/* If the next character is a newline */
+		if (current[0] == '\n')
+		{
+			/* Deal with consecutive newlines */
+			while (current[0] == '\n')
+			{
+				/* Count in any extra lines we've used */
+				print_y++;
+				print_x = CONTINUOUS_MIN_X;
+				Term_gotoxy(print_x, print_y);
+				if (clear) Term_erase(print_x, print_y, CONTINUOUS_MAX_X - print_x);
+
+				/* Move the read position past the newline */
+				current++;
+			}
+		}
+		/* If the next character isn't a newline */
+		else
+		{
+			/* Increase the count by the usual single line */
+			print_y++;   
+			print_x = CONTINUOUS_MIN_X;       
+
+			/* Strip the whitespace at the start of the next line */
+			while (current[0] == ' ') current++;
+		}
+	}
+
+	/* We are done */
+	return;
+}
+
+/* ------------------------------------------------------------ ajps ---
+ * This writes a block of text to the screen, starting from x_pos, y_pos
+ * across a width _width_.
+ *
+ * _attr_ specifies the starting attribute (ie. colour, currently).
+ *
+ * _clear_ specifies whether or not each line should be cleared before
+ * being printed on (for neatness).
+ *
+ * _align_ specifies an alignment.
+ *
+ * Additionally, if you pass zero as the width, text is printed from
+ * x_pos to the edge of the screen, with negative numbers defining a
+ * "right margin", so that -1 leaves a character gap at the edge of the
+ * screen.
+ * --------------------------------------------------------------------- */
+void put_text_block(int x_pos, int y_pos, int width, char *txt, byte attr, bool clear, byte align)
+{
+	/* Actual printing positions */
+	u32b print_x = x_pos, print_y = y_pos;
+
+	/* Current ptr inside text, initialise to the start */
+	char *current = txt;
+
+	/*
+	 * If we pass 0 as the width, it prints up to the edge of screen,
+	 * -1 leaves a gap of 1 character at the right of the terminal,
+	 * -2 leaves a gap of 2, and so on.
+	 */
+	if (width <= 0) width += Term->wid - x_pos + 1;
+
+	/*
+	 * If all of that fiddling leaves us with an unusable width, we
+	 * just print to the edge of the terminal.
+	 */
+	if (width <= 0) width = Term->wid - x_pos;
+
+	/* Process the string until we reach the end of it */
+	while (current[0] != 0)
+	{
+		u32b word_length = 0;
+
+		/* actual length of printable line within the width */
+		u32b line_length = 0;
+
+		/* Counters for 'real' characters and control codes respectively */
+		u32b n = 0, m = 0;
+
+		/* number of control characters in line */
+		u32b controls = 0;
+
+		/* Temp variables, mirroring ptr and controls */
+		char *temp_ptr = current, *ptr = current;
+		u32b temp_controls = 0;
+
+		/* Clear the line if such an action was requested */
+		if (clear) Term_erase(0, print_y, Term->wid);
+
+		/*
+		 * Establish how many (printable) characters we can
+		 * fit on this line.
+		 */
+		while ((line_length + word_length) <= (u32b) width)
+		{
+			/* This word fits, so add it to the line */
+			line_length += word_length;
+
+			/* Move the pointer forward to the next word */
+			ptr = temp_ptr;
+
+			/* Inrease the number of control characters appropriately */
+			controls += temp_controls;
+
+			/* We stop looking at newlines and string endings */
+			if ((ptr[0] == '\n') || (ptr[0] == 0)) break;
+
+			/* Reset the control character counter */
+			temp_controls = 0;
+
+			/* Find the length of the next word */
+			word_length = get_word_length(&temp_ptr, &temp_controls);
+		}
+
+		/* If there is no word break, we character break instead. */
+		if (line_length == 0 && ptr[0] != '\n' && ptr[0] != '\r')
+		{
+			/* Set the line width to fill the width */
+			line_length = width;
+
+			/* Make sure we have no control characters at the end of line */
+			while (ptr[line_length - 1] < 32)
+			{
+				line_length--;
+			}
+
+			/* count control characters */
+			for (n = 0; n < line_length; n++)
+			{
+				if (ptr[n] < 32) controls++;
+			}
+
+			/* Make the line length shorter still. */
+			line_length -= controls;
+		}
+
+		/* Set print_x according to alignment (not the D&D type) */
+		switch (align)
+		{
+			case ALIGN_RIGHT:
+			{
+				print_x = x_pos + width - (int) line_length;
+				break;
+			}
+
+			case ALIGN_CENTRE:
+			{
+				print_x = x_pos + ((width - (int) line_length) / 2);
+				break;
+			}
+
+			default:
+			{
+				print_x = x_pos;
+				break;
+			}
+		}
+
+		/* Reset counters */
+		n = 0; m = 0;
+
+		/* Analyse the line character-by-character */
+		while ((n < line_length) || (m < controls))
+		{
+			/* current[0] is the first character at the read position */
+			switch (current[0])
+			{
+				/* Change colour */
+				case CONTROL_CHAR_ATTR:
+				{
+					/* The next byte contains the colour code */
+					attr = current[1];
+
+					/* Move read position by 2 */
+					current += 2;
+
+					/* Increment the control character counter */
+					m += 2;
+
+					break;
+				}
+
+				/* Print the character to screen! */
+				default:
+				{
+					/* Print the character */
+					Term_putch(print_x, print_y, attr, current[0]);
+					
+					/* Move the print position by one */
+					print_x++;
+
+					/* Move past the character we've just printed */
+					current++;
+
+					/* Count the normal character we've printed */
+					n++;
+				}
+			}
+		}
+		/* We've now finished that line */
+
+		/* If the next character is a newline */
+		if (current[0] == '\n')
+		{
+			/* Deal with consecutive newlines */
+			while (current[0] == '\n')
+			{
+				/* Count in any extra lines we've used */
+				print_y++;
+
+				/* Move the read position past the newline */
+				current++;
+			}
+		}
+		/* If the next character isn't a newline */
+		else
+		{
+			/* Increase the count by the usual single line */
+			print_y++;
+
+			/* Strip the whitespace at the start of the next line */
+			while (current[0] == ' ') current++;
+		}
+	}
+
+	/* We are done */
+	return;
+}
+
+
+/*
+ * Extract a textual representation of an attribute
+ */
+cptr attr_to_text(byte a)
+{
+	switch (a)
+	{
+		case TERM_DARK:	return ("Dark");
+		case TERM_WHITE:   return ("White");
+		case TERM_SLATE:   return ("Slate");
+		case TERM_ORANGE:  return ("Orange");
+		case TERM_RED:	 return ("Red");
+		case TERM_GREEN:   return ("Green");
+		case TERM_BLUE:	return ("Blue");
+		case TERM_UMBER:   return ("Umber");
+		case TERM_L_DARK:  return ("L.Dark");
+		case TERM_L_WHITE: return ("L.Slate");
+		case TERM_VIOLET:  return ("Violet");
+		case TERM_YELLOW:  return ("Yellow");
+		case TERM_L_RED:   return ("L.Red");
+		case TERM_L_GREEN: return ("L.Green");
+		case TERM_L_BLUE:  return ("L.Blue");
+		case TERM_L_UMBER: return ("L.Umber");
+	}
+
+	/* Oops */
+	return ("Icky");
+}
+

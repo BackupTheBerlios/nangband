@@ -469,7 +469,7 @@ extern void object_desc(char *buf, const object_type *o_ptr, int pref, int mode)
 extern void object_desc_store(char *buf, const object_type *o_ptr, int pref, int mode);
 extern void describe_item_activation(const object_type *o_ptr);
 extern void identify_backend(const object_type *o_ptr);
-extern bool identify_fully_aux(const object_type *o_ptr);
+extern void item_show_knowledge(const object_type *o_ptr);
 extern char index_to_label(int i);
 extern s16b label_to_inven(int c);
 extern s16b label_to_equip(int c);
@@ -712,7 +712,8 @@ extern uint damroll(uint num, uint sides);
 extern uint maxroll(uint num, uint sides);
 extern bool is_a_vowel(int ch);
 extern int color_char_to_attr(char c);
-extern void putstr_multi(int x_pos, int y_pos, int width, int attr, char *txt);
+extern void put_text_block(int x_pos, int y_pos, int width, char *txt, byte attr, bool clear, byte align);
+extern void put_continuous_text(int x_pos, int y_pos, char *txt, byte attr, bool clear);
 
 #ifdef SUPPORT_GAMMA
 extern void build_gamma_table(int gamma);

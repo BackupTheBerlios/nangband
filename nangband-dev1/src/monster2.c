@@ -1843,7 +1843,7 @@ bool alloc_monster(int dis, bool slp)
 	int px = p_ptr->px;
 
 	int y, x;
-	int	attempts_left = 10000;
+	int attempts_left = 10000;
 
 	/* Find a legal, distant, unoccupied, space */
 	while (--attempts_left)

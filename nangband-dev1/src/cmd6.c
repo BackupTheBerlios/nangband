@@ -748,6 +748,9 @@ static bool item_tester_hook_activate(const object_type *o_ptr)
 	/* Extract the flags */
 	object_flags(o_ptr, &f1, &f2, &f3);
 
+	/* Cursed, non-artifacts can't be activated */
+	if (cursed_p(o_ptr) && !artifact_p(o_ptr)) return (FALSE);
+
 	/* Check activation flag */
 	if (f3 & (TR3_ACTIVATE)) return (TRUE);
 
@@ -768,9 +771,7 @@ void do_cmd_activate(void)
 	int item, lev, chance;
 	bool ident;
 	object_type *o_ptr;
-
 	cptr q, s;
-
 
 	/* Prepare the hook */
 	item_tester_hook = item_tester_hook_activate;
@@ -799,8 +800,9 @@ void do_cmd_activate(void)
 	/* Extract the item level */
 	lev = k_info[o_ptr->k_idx].level;
 
-	/* Hack -- use artifact level instead */
-	if (artifact_p(o_ptr)) lev = a_info[o_ptr->name1].level;
+	/* Use artifact level instead */
+	if (o_ptr->name1) lev = a_info[o_ptr->name1].level;
+	if (o_ptr->name3) lev = x_info[o_ptr->name3].level;
 
 	/* Base chance of success */
 	chance = p_ptr->skill_dev;
@@ -827,4 +829,7 @@ void do_cmd_activate(void)
 
 	/* Activate the object */
 	(void)use_object(o_ptr, &ident);
+
+	/* We are done. */
+	return;
 }

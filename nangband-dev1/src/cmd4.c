@@ -2769,6 +2769,9 @@ static void do_cmd_knowledge_artifacts(void)
 				/* Ignore known items */
 				if (object_known_p(o_ptr)) continue;
 
+				/* Ignore randarts */
+				if (!o_ptr->name1) continue;
+
 				/* Note the artifact */
 				okay[o_ptr->name1] = FALSE;
 			}
@@ -2788,6 +2791,9 @@ static void do_cmd_knowledge_artifacts(void)
 
 		/* Ignore known items */
 		if (object_known_p(o_ptr)) continue;
+
+		/* Ignore randarts */
+		if (!o_ptr->name1) continue;
 
 		/* Note the artifact */
 		okay[o_ptr->name1] = FALSE;

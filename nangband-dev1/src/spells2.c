@@ -3304,6 +3304,7 @@ bool curse_armor(void)
 		/* Blast the armor */
 		o_ptr->name1 = 0;
 		o_ptr->name2 = EGO_BLASTED;
+		o_ptr->name3 = 0;
 		o_ptr->to_a = 0 - randint(5) - randint(5);
 		o_ptr->to_h = 0;
 		o_ptr->to_d = 0;
@@ -3368,6 +3369,7 @@ bool curse_weapon(void)
 		/* Shatter the weapon */
 		o_ptr->name1 = 0;
 		o_ptr->name2 = EGO_SHATTERED;
+		o_ptr->name3 = 0;
 		o_ptr->to_h = 0 - randint(5) - randint(5);
 		o_ptr->to_d = 0 - randint(5) - randint(5);
 		o_ptr->to_a = 0;

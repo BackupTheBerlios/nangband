@@ -734,6 +734,7 @@ struct object_type
 
 	byte name1;			/* Artifact type, if any */
 	byte name2;			/* Ego-Item type, if any */
+	byte name3;			/* Randart, if any */
 
 	byte xtra1;			/* Extra info type */
 	byte xtra2;			/* Extra info index */
@@ -850,6 +851,29 @@ struct artifact_type
 	u16b randtime;		/* Activation time dice */
 };
 
+/*
+ * Information about "random artifacts".
+ *
+ * This holds much less data than artifact_type, because much
+ * of the dats is stored in the object itself.
+ */
+struct randart_type
+{
+	char name[20];               /* Randart name */
+
+	s32b cost;                   /* "Cost" */
+
+	u32b flags1;
+	u32b flags2;
+	u32b flags3; /* Flags; sets 1-3 */
+
+	byte level;                  /* Randart level */
+
+	byte activation;             /* Activation */
+	u16b time;                   /* Randart charge time */
+	u16b randtime;               /* Randart charge time dice */
+};
+
 
 struct ego_item_type
 {
@@ -892,6 +916,7 @@ extern char *k_text;
 extern artifact_type a_info[z_info->a_max];
 extern char *a_name;
 extern char *a_text;
+extern randart_type x_info[z_info->randart_max];
 extern ego_item_type e_info[z_info->e_max];
 extern char *e_name;
 extern char *e_text;

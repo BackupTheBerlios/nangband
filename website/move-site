@@ -8,7 +8,6 @@
 
 cd ../
 
-scp -r nang-web/* $1@shell.berlios.de:/home/groups/nangband/htdocs/ \
-       nang-web/styles/ $1@shell.berlios.de:/home/groups/nangband/htdocs/styles/
+scp -r nang-web/ $1@shell.berlios.de:/home/groups/nangband/htdocs/nang-web/
 
 # EOF

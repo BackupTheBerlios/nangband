@@ -2934,76 +2934,6 @@ void forget_monster_light(void)
 }
 
 
-/*
- * A helper function for update_monster_light.
- * Code framework taken from Steven Fuerst's work for ZAngband.
- *
- * Determine if a grid (y, x) should be added to the temporary list of
- * monster-lit locations. (my, mx) is the location of the light source.
- *
- * Inline this if there's a portable way to do so...
- */
-
-/* Monster location */
-static int monster_light_my, monster_light_mx;
-
-static bool need_update(int y, int x)
-{
-	byte info;
-
-	/* Reject out-of-bound grids */
-	if (!in_bounds(y, x)) return (FALSE);
-
-	/* Already illuminated */
-	if (cave_info2[y][x] & (CAVE2_MLIGHT)) return (FALSE);
-
-	/* Access basic flags */
-	info = cave_info[y][x];
-
-	/* Ignore locations outside of the current field of view */
-	if (info & (CAVE_VIEW)) return (FALSE);
-
-	/* Wall illumination is always complicated */
-	if (info & (CAVE_WALL))
-	{
-		int dy1, dx1, dy2, dx2;
-
-		/* Get player-grid and light source-grid vectors */
-		dy1 = p_ptr->py - y;
-		dx1 = p_ptr->px - x;
-		dy2 = monster_light_my - y;
-		dx2 = monster_light_mx - x;
-
-		/*
-		 * Use a dot product to determine angle of illumination so that
-		 * only the correct sides of walls are illuminated.
-		 */
-		if (dx1 * dx2 + dy1 * dy2 < 0) return (FALSE);
-	}
-
-	/* Nothing prevents the location from illuminated */
-	return (TRUE);
-}
-
-
-/*
- * XXX XXX A helper macro for update_monster_light.
- * Add a location (y, x) to the list of monster-lit grids if it's necessary.
- */
-#define monster_light_hack(y, x) \
-	if (need_update(y, x)) \
-	{ \
-		/* Convert to grid */ \
-		g = GRID(y, x); \
-		/* Add the grid to the temporary list */ \
-		fast_temp_g[fast_temp_n++] = g; \
-		/* Mark the grid as lit by monster light source */ \
-		fast_cave_info2[g] |= CAVE2_MLIGHT; \
-		/* Mark the grid as seen by the player */ \
-		fast_cave_info[g] |= CAVE_SEEN; \
-	}
-
-
 /* Test if a location (y, x) is both in_bounds and cave_floor_bold */
 #define in_bounds_floor(Y, X) \
 	(in_bounds(Y, X) && cave_floor_bold(Y, X))
@@ -3133,6 +3063,15 @@ void update_monster_light(void)
 		int rad;
 		int fy, fx;
 
+		/* XXX */
+		byte queue_y[40];
+		byte queue_x[40];
+		int queue_n, q;
+
+		/* XXX XXX */
+		#define enqueue_loc(Y, X) \
+			queue_y[queue_n] = Y; queue_x[queue_n] = X; queue_n++
+
 
 		/* Skip dead monsters */
 		if (!m_ptr->r_idx) continue;
@@ -3150,9 +3089,8 @@ void update_monster_light(void)
 		fy = m_ptr->fy;
 		fx = m_ptr->fx;
 
-		/* Save it for need_update() */
-		monster_light_my = fy;
-		monster_light_mx = fx;
+		/* Clear queue */
+		queue_n = 0;
 
 		/*
 		 * Because the following sections might look intimidating...
@@ -3179,19 +3117,19 @@ void update_monster_light(void)
 		/** Radius 0 **/
 
 		/* the square it is on **/
-		monster_light_hack(fy,     fx);
+		enqueue_loc(fy,     fx    );
 
 		/** Radius 1 **/
 
 		/* Adjacent grids */
-		monster_light_hack(fy,     fx + 1);
-		monster_light_hack(fy,     fx - 1);
-		monster_light_hack(fy + 1, fx,   );
-		monster_light_hack(fy - 1, fx,   );
-		monster_light_hack(fy + 1, fx + 1);
-		monster_light_hack(fy - 1, fx + 1);
-		monster_light_hack(fy + 1, fx - 1);
-		monster_light_hack(fy - 1, fx - 1);
+		enqueue_loc(fy,     fx + 1);
+		enqueue_loc(fy,     fx - 1);
+		enqueue_loc(fy + 1, fx    );
+		enqueue_loc(fy - 1, fx    );
+		enqueue_loc(fy + 1, fx + 1);
+		enqueue_loc(fy - 1, fx + 1);
+		enqueue_loc(fy + 1, fx - 1);
+		enqueue_loc(fy - 1, fx - 1);
 
 		if (rad < 2) continue;
 
@@ -3200,28 +3138,28 @@ void update_monster_light(void)
 		/* South of the monster */
 		if (in_bounds_floor(fy + 1, fx))
 		{
-			monster_light_hack(fy + 2, fx + 1);
-			monster_light_hack(fy + 2, fx    );
-			monster_light_hack(fy + 2, fx - 1);
+			enqueue_loc(fy + 2, fx + 1);
+			enqueue_loc(fy + 2, fx    );
+			enqueue_loc(fy + 2, fx - 1);
 
 			/* Radius 3 */
 			if (rad >= 3)
 			{
 				if (in_bounds_floor(fy + 2, fx))
 				{
-					monster_light_hack(fy + 3, fx + 1);
-					monster_light_hack(fy + 3, fx    );
-					monster_light_hack(fy + 3, fx - 1);
+					enqueue_loc(fy + 3, fx + 1);
+					enqueue_loc(fy + 3, fx    );
+					enqueue_loc(fy + 3, fx - 1);
 				}
 				else
 				{
 					if (in_bounds_floor(fy + 2, fx + 1))
 					{
-						monster_light_hack(fy + 3, fx + 1);
+						enqueue_loc(fy + 3, fx + 1);
 					}
 					if (in_bounds_floor(fy + 2, fx - 1))
 					{
-						monster_light_hack(fy + 3, fx - 1);
+						enqueue_loc(fy + 3, fx - 1);
 					}
 				}
 			}
@@ -3230,28 +3168,28 @@ void update_monster_light(void)
 		/* North of the monster */
 		if (in_bounds_floor(fy - 1, fx))
 		{
-			monster_light_hack(fy - 2, fx + 1);
-			monster_light_hack(fy - 2, fx    );
-			monster_light_hack(fy - 2, fx - 1);
+			enqueue_loc(fy - 2, fx + 1);
+			enqueue_loc(fy - 2, fx    );
+			enqueue_loc(fy - 2, fx - 1);
 
 			/* Radius 3 */
 			if (rad >= 3)
 			{
 				if (in_bounds_floor(fy - 2, fx))
 				{
-					monster_light_hack(fy - 3, fx + 1);
-					monster_light_hack(fy - 3, fx    );
-					monster_light_hack(fy - 3, fx - 1);
+					enqueue_loc(fy - 3, fx + 1);
+					enqueue_loc(fy - 3, fx    );
+					enqueue_loc(fy - 3, fx - 1);
 				}
 				else
 				{
 					if (in_bounds_floor(fy - 2, fx + 1))
 					{
-						monster_light_hack(fy - 3, fx + 1);
+						enqueue_loc(fy - 3, fx + 1);
 					}
 					if (in_bounds_floor(fy - 2, fx - 1))
 					{
-						monster_light_hack(fy - 3, fx - 1);
+						enqueue_loc(fy - 3, fx - 1);
 					}
 				}
 			}
@@ -3260,28 +3198,28 @@ void update_monster_light(void)
 		/* East of the monster */
 		if (in_bounds_floor(fy, fx + 1))
 		{
-			monster_light_hack(fy + 1, fx + 2);
-			monster_light_hack(fy    , fx + 2);
-			monster_light_hack(fy - 1, fx + 2);
+			enqueue_loc(fy + 1, fx + 2);
+			enqueue_loc(fy    , fx + 2);
+			enqueue_loc(fy - 1, fx + 2);
 
 			/* Radius 3 */
 			if (rad >= 3)
 			{
 				if (in_bounds_floor(fy, fx + 2))
 				{
-					monster_light_hack(fy + 1, fx + 3);
-					monster_light_hack(fy    , fx + 3);
-					monster_light_hack(fy - 1, fx + 3);
+					enqueue_loc(fy + 1, fx + 3);
+					enqueue_loc(fy    , fx + 3);
+					enqueue_loc(fy - 1, fx + 3);
 				}
 				else
 				{
 					if (in_bounds_floor(fy + 1, fx + 2))
 					{
-						monster_light_hack(fy + 1, fx + 3);
+						enqueue_loc(fy + 1, fx + 3);
 					}
 					if (in_bounds_floor(fy - 1, fx + 2))
 					{
-						monster_light_hack(fy - 1, fx + 3);
+						enqueue_loc(fy - 1, fx + 3);
 					}
 				}
 			}
@@ -3290,28 +3228,28 @@ void update_monster_light(void)
 		/* West of the monster */
 		if (in_bounds_floor(fy, fx - 1))
 		{
-			monster_light_hack(fy + 1, fx - 2);
-			monster_light_hack(fy    , fx - 2);
-			monster_light_hack(fy - 1, fx - 2);
+			enqueue_loc(fy + 1, fx - 2);
+			enqueue_loc(fy    , fx - 2);
+			enqueue_loc(fy - 1, fx - 2);
 
 			/* Radius 3 */
 			if (rad >= 3)
 			{
 				if (in_bounds_floor(fy, fx - 2))
 				{
-					monster_light_hack(fy + 1, fx - 3);
-					monster_light_hack(fy    , fx - 3);
-					monster_light_hack(fy - 1, fx - 3);
+					enqueue_loc(fy + 1, fx - 3);
+					enqueue_loc(fy    , fx - 3);
+					enqueue_loc(fy - 1, fx - 3);
 				}
 				else
 				{
 					if (in_bounds_floor(fy + 1, fx - 2))
 					{
-						monster_light_hack(fy + 1, fx - 3);
+						enqueue_loc(fy + 1, fx - 3);
 					}
 					if (in_bounds_floor(fy - 1, fx - 2))
 					{
-						monster_light_hack(fy - 1, fx - 3);
+						enqueue_loc(fy - 1, fx - 3);
 					}
 				}
 			}
@@ -3322,16 +3260,82 @@ void update_monster_light(void)
 		/** Radius 3 diagonal **/
 
 		/* South-East of the monster */
-		if (in_bounds_floor(fy + 1, fx + 1)) monster_light_hack(fy + 2, fx + 2);
+		if (in_bounds_floor(fy + 1, fx + 1))
+		{
+			enqueue_loc(fy + 2, fx + 2);
+		}
 
 		/* South-West of the monster */
-		if (in_bounds_floor(fy + 1, fx - 1)) monster_light_hack(fy + 2, fx - 2);
+		if (in_bounds_floor(fy + 1, fx - 1))
+		{
+			enqueue_loc(fy + 2, fx - 2);
+		}
 
 		/* North-East of the monster */
-		if (in_bounds_floor(fy - 1, fx + 1)) monster_light_hack(fy - 2, fx + 2);
+		if (in_bounds_floor(fy - 1, fx + 1))
+		{
+			enqueue_loc(fy - 2, fx + 2);
+		}
 
 		/* North-West of the monster */
-		if (in_bounds_floor(fy - 1, fx - 1)) monster_light_hack(fy - 2, fx - 2);
+		if (in_bounds_floor(fy - 1, fx - 1))
+		{
+			enqueue_loc(fy - 2, fx - 2);
+		}
+
+		/* XXX XXX */
+		#undef enqueue_loc
+
+
+		/* Process queued positions */
+		for (q = 0; q < queue_n; q++)
+		{
+			/* Monster-lit location */
+			y = queue_y[q];
+			x = queue_x[q];
+
+			/* Reject out-of-bound grids */
+			if (!in_bounds(y, x)) continue;
+
+			/* Already illuminated */
+			if (cave_info2[y][x] & (CAVE2_MLIGHT)) continue;
+
+			/* Access basic flags */
+			info = cave_info[y][x];
+
+			/* Ignore locations outside of the current field of view */
+			if (info & (CAVE_VIEW)) continue;
+
+			/* Wall illumination is always complicated */
+			if (info & (CAVE_WALL))
+			{
+				int dy1, dx1, dy2, dx2;
+
+				/* Get player-grid and light source-grid vectors */
+				dy1 = p_ptr->py - y;
+				dx1 = p_ptr->px - x;
+				dy2 = fy - y;
+				dx2 = fx - x;
+
+				/*
+				 * Use a dot product to determine angle of illumination so that
+				 * only the correct sides of walls are illuminated.
+				 */
+				if (dx1 * dx2 + dy1 * dy2 < 0) continue;
+			}
+
+			/* Convert coordinate to grid */
+			g = GRID(y, x);
+
+			/* Add the grid to the temporary list */
+			fast_temp_g[fast_temp_n++] = g;
+
+			/* Mark the grid as lit by monster light source */
+			fast_cave_info2[g] |= (CAVE2_MLIGHT);
+
+			/* Mark the grid as seen by the player */
+			fast_cave_info[g] |= (CAVE_SEEN);
+		}
 	}
 
 

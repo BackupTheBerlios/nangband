@@ -854,7 +854,7 @@ static errr savefile_do_block_player(bool type, int ver)
 	int i = 0, n = 0;
 
 	/* Add number of past lives */
-	if (ver < 2)
+	if (ver < 3)
 	{
 		u16b temp;
 

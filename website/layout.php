@@ -17,7 +17,7 @@ function page_header($title, $type)
 	echo '</head>';
 	echo '<body bgcolor="#000000" text="#ffffff" link="#d090ff" alink="#00ffff" vlink="#77ff44">';
 	/* echo '<h1 align="center">' . $title . '</h1>'; */
-	echo '<img src="images/nangband.gif">';
+	echo '<img src="images/nangband.gif" align="center">';
 	echo '<div align="center">';
 
 	echo '[ <a href="index.php">Main Page</a> | ';

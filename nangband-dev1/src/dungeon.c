@@ -974,28 +974,36 @@ static void process_world(void)
 			/* Sound */
 			sound(MSG_TPLEVEL);
 
-			/* Determine the level */
-			if (p_ptr->depth)
+
+			if (!adult_astral)
 			{
-				msg_print("You feel yourself yanked upwards!");
 
-				/* New depth */
-				p_ptr->depth = 0;
+				/* Determine the level */
+				if (p_ptr->depth)
+				{
+					msg_print("You feel yourself yanked upwards!");
 
-				/* Leaving */
-				p_ptr->leaving = TRUE;
+					/* New depth */
+					p_ptr->depth = 0;
+
+					/* Leaving */
+					p_ptr->leaving = TRUE;
+				}
+				else
+				{
+					msg_print("You feel yourself yanked downwards!");
+
+					/* New depth */
+					p_ptr->depth = p_ptr->max_depth;
+					if (p_ptr->depth < 1) p_ptr->depth = 1;
+
+					/* Leaving */
+					p_ptr->leaving = TRUE;
+				}
 			}
 			else
-			{
-				msg_print("You feel yourself yanked downwards!");
+				msg_print("The migical aura leaves the air.");
 
-				/* New depth */
-				p_ptr->depth = p_ptr->max_depth;
-				if (p_ptr->depth < 1) p_ptr->depth = 1;
-
-				/* Leaving */
-				p_ptr->leaving = TRUE;
-			}
 		}
 	}
 }

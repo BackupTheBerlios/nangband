@@ -732,6 +732,7 @@ struct player_class
 	u32b title[10];		/* Titles - offset */
 
 	s16b c_adj[A_MAX];	/* Class stat modifier */
+	s16b auto_weight[A_MAX];	/* Autoroller default weighting */
 
 	s16b c_dis;			/* class disarming */
 	s16b c_dev;			/* class magic devices */

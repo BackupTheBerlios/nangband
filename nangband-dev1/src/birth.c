@@ -919,8 +919,13 @@ static bool player_birth_aux_1(void)
 
 /*
  * Initial stat costs (initial stats always range from 10 to 18 inclusive).
+ *
+ * Stat | 10 11 12 13 14 15 16 17 18
+ * -----+---------------------------
+ * Old  |  0  1  2  4  7 11 16 22 30
+ * New  |  0  1  2  4  7 11 17 25 40
  */
-static const int birth_stat_costs[(18-10)+1] = { 0, 1, 2, 4, 7, 11, 16, 22, 30 };
+static const int birth_stat_costs[(18-10)+1] = { 0, 1, 2, 4, 7, 11, 17, 25, 40 };
 
 
 /*
@@ -1000,6 +1005,9 @@ static bool player_birth_aux_2(void)
 
 			/* Total cost */
 			cost += birth_stat_costs[stats[i] - 10];
+
+			/* Stat limit */
+			p_ptr->stat_lim[i] = stat_limit(stats[i]);
 		}
 
 		/* Restrict cost */

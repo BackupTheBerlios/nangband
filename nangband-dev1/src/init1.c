@@ -2676,6 +2676,41 @@ errr parse_c_info(char *buf, header *head)
 		}
 	}
 
+	/* Process 'A' for "Stats" (one line only) */
+	else if (buf[0] == 'A')
+	{
+		int adj;
+
+		/* There better be a current pc_ptr */
+		if (!pc_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
+
+		/* Start the string */
+		s = buf+1;
+
+		/* For each stat */
+		for (j = 0; j < A_MAX; j++)
+		{
+			/* Find the colon before the subindex */
+			s = strchr(s, ':');
+
+			/* Verify that colon */
+			if (!s) return (PARSE_ERROR_GENERIC);
+
+			/* Nuke the colon, advance to the subindex */
+			*s++ = '\0';
+
+			/* Get the value */
+			adj = atoi(s);
+
+			/* Save the value */
+			pc_ptr->auto_weight[j] = adj;
+
+			/* Next... */
+			continue;
+		}
+	}
+
+
 	/* Process 'C' for "Class Skills" (one line only) */
 	else if (buf[0] == 'C')
 	{

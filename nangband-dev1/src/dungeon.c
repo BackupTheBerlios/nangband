@@ -548,7 +548,7 @@ static void process_world(void)
 	/*** Check the Food, and Regenerate ***/
 
 	/* Digest normally */
-	if (p_ptr->food < PY_FOOD_MAX | ((p_ptr->food < (PY_FOOD_MAX * 2) / 3) & p_ptr->hunger))
+	if (p_ptr->food < PY_FOOD_MAX || ((p_ptr->food < (PY_FOOD_MAX * 2) / 3) && p_ptr->hunger))
 	{
 		/* Every 100 game turns */
 		if (!(turn % 100))

@@ -12,7 +12,6 @@
 
 
 
-
 /*
  * Global array for looping through the "keypad directions".
  */
@@ -1336,7 +1335,12 @@ cptr stat_names_reduced[A_MAX] =
  */
 char *stat_names_full[A_MAX] =
 {
-	"strength", "intelligence", "wisdom", "dexterity", "constitution", "charisma"
+	"strength",
+	"intelligence",
+	"wisdom",
+	"dexterity",
+	"constitution",
+	"charisma"
 };
 
 /*
@@ -1350,8 +1354,14 @@ cptr res_names[RES_MAX] =
 	"cold",
 	"poison",
 	"fear",
-	"light",
-	"dark"
+	"doom",
+	"dark",
+	"confusion",
+	"sound",
+	"shards",
+	"nexus",
+	"nether",
+	"chaos"
 };
 
 /*

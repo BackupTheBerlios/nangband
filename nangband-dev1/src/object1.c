@@ -1768,149 +1768,14 @@ void object_desc_store(char *buf, const object_type *o_ptr, int pref, int mode)
 	/* Force "aware" for description */
 	k_info[i_ptr->k_idx].aware = TRUE;
 
-
 	/* Describe the object */
 	object_desc(buf, i_ptr, pref, mode);
-
 
 	/* Restore "flavor" value */
 	k_info[i_ptr->k_idx].flavor = hack_flavor;
 
 	/* Restore "aware" flag */
 	k_info[i_ptr->k_idx].aware = hack_aware;
-}
-
-/*
- * Print a given object's resists/immunities.
- */
-void obj_info_resists(byte *resists, bool shorten, char *buffer)
-{
-	/* Texts */
- 	int vn;
-	cptr text[RES_MAX];
-
-	/* Percentages */
-	int pc;
-	int percentages[RES_MAX];
-
-	/* Collect the resists */
-	vn = pc = 0;
-
-	if (resists[RES_ACID])
-	{
-		text[vn++] = "acid";
-		percentages[pc++] = resists[RES_ACID];
-	}
-
-	if (resists[RES_ELEC])
-	{
-		text[vn++] = "electricity";
-		percentages[pc++] = resists[RES_ELEC];
-	}
-	
-	if (resists[RES_FIRE])
-	{
-		text[vn++] = "fire";
-		percentages[pc++] = resists[RES_FIRE];
-	}
-
-	if (resists[RES_COLD])
-	{
-		text[vn++] = "cold";
-		percentages[pc++] = resists[RES_COLD];
-	}
-
-	if (resists[RES_POIS])
-	{
-		text[vn++] = "poison";
-		percentages[pc++] = resists[RES_POIS];
-	}
-
-	if (resists[RES_DARK])
-	{
-		text[vn++] = "dark";
-		percentages[pc++] = resists[RES_DARK];
-	}
-
-	if (resists[RES_DOOM])
-	{
-		text[vn++] = "the pressures of doom";
-		percentages[pc++] = resists[RES_DOOM];
-	}
-
-	if (resists[RES_FEAR])
-	{
-		text[vn++] = "fear";
-		percentages[pc++] = resists[RES_FEAR];
-	}
-
-	if (resists[RES_CONF])
-	{
-		text[vn++] = "confusion";
-		percentages[pc++] = resists[RES_CONF];
-	}
-
-	if (resists[RES_SOUND])
-	{
-		text[vn++] = "sound";
-		percentages[pc++] = resists[RES_SOUND];
-	}
-
-	if (resists[RES_SHARDS])
-	{
-		text[vn++] = "shards";
-		percentages[pc++] = resists[RES_SHARDS];
-	}
-
-	if (resists[RES_NEXUS])
-	{
-		text[vn++] = "nexus";
-		percentages[pc++] = resists[RES_NEXUS];
-	}
-
-	if (resists[RES_NETHER])
-	{
-		text[vn++] = "nether";
-		percentages[pc++] = resists[RES_NETHER];
-	}
-
-	if (resists[RES_CHAOS])
-	{
-		text[vn++] = "chaos";
-		percentages[pc++] = resists[RES_CHAOS];
-	}
-
-	/* Describe */
-	if (vn)
-	{
-		int n;
-
-		/* Intro */
-        if (!shorten) strcat(buffer, "It grants you ");
-
-		/* List the resists */
-		for (n = 0; n < vn; n++)
-		{
-			/* Print the percentage */
-			strcat(buffer, format("%i", percentages[n]));
-
-            /* Add description (if any) */
-            if (shorten) strcat(buffer, " ");
-			else strcat(buffer, "% resistance to ");
-
-            /* Add the resist */
-			strcat(buffer, text[n]);
-
-			/* Connectives */
-			if (n == vn && !shorten) strcat(buffer, "and ");
-			else if (n < (vn - 1)) strcat(buffer, ", ");
-			else if (n == (vn - 1)) strcat(buffer, ".  ");
-			else strcat(buffer, " and ");
-		}
-	}
-
-    /* We are done. */
-	return;
 }
 
 /* A structure to hold bonuses and their names */
@@ -1943,6 +1808,90 @@ int qsort_hook(const void *arg1, const void *arg2)
 #define IDENTIFY_STATUS_NONE	0
 #define IDENTIFY_STATUS_KNOWN	1
 #define IDENTIFY_STATUS_MENTAL	2
+
+/*
+ * Print a given object's resists/immunities.
+ */
+void obj_info_resists(byte *resists, bool shorten, char *buffer)
+{
+	int vn = 0, i;
+
+	/* Count the stats affected */
+	for (i = 0; i < RES_MAX; i++) if (resists[i]) vn++;
+
+	/* Describe */
+	if (vn)
+	{
+		bonus_data stat[RES_MAX];
+		int current_stat = 0;
+		int n = 0, iter = 0;
+
+		/* Make the structure */
+		for (n = 0; n < RES_MAX; n++)
+		{
+			stat[n].name = (char *) res_names[n];
+			stat[n].bonus = resists[n];
+		}
+
+		/* Sort the stats */
+		qsort((void *) stat, RES_MAX, sizeof(bonus_data), qsort_hook);
+
+		/* Intro */
+		if (!shorten) strcat(buffer, "It increases your resistance to ");
+
+		/* Loop - zeroes are at the bottom, we can stop at the first one */
+		while (current_stat < A_MAX && stat[current_stat].bonus != 0)
+		{
+			/* Temp */
+			int no_the_same = 0;
+
+			/* Count number of identical stats bounuses / penalties */
+			vn = current_stat;
+			while ((vn < RES_MAX) && (stat[vn].bonus == stat[current_stat].bonus))
+			{
+				no_the_same++;
+				vn++;
+			}
+
+			/* Do the stats */
+			for (iter = 0; iter < no_the_same; iter ++)
+			{
+				/* Stat name */
+				strcat(buffer, stat[current_stat + iter].name);
+
+				/* Connectives */
+				if (iter == (no_the_same - 2)) strcat(buffer, " and ");
+				else if (iter < (no_the_same - 2)) strcat(buffer, ", ");
+				else strcat(buffer, " ");
+			}
+
+			/* Write out the bonus */
+			strcat(buffer, "by ");
+			strcat(buffer, format("%i", ABS(stat[current_stat].bonus)));
+
+			/* Move on */
+			current_stat += no_the_same;
+
+			/* Is there another stat to print? */
+			if ((current_stat < RES_MAX) && (stat[current_stat].bonus))
+			{
+				strcat(buffer, ", and ");
+
+				/* Output this only on a change of sign */
+				if ((stat[current_stat].bonus > 0)  && (stat[current_stat - no_the_same].bonus < 0))
+				{
+					strcat(buffer, "increases");
+				}
+			}
+		}
+
+		/* Finish */
+		strcat(buffer, ".  ");
+	}
+
+	/* We are done. */
+	return;
+}
 
 /*
  * Output a brief "description" of an item.
@@ -2351,8 +2300,8 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	int vn;
 	cptr vp[32];
 
-    /* Temp */
-    char temp[256];
+	/* Temp */
+	char temp[256];
 
 	/* The item's flags, bonuses && resists */
 	u32b f1, f2, f3;
@@ -2458,8 +2407,8 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 			vn = current_stat;
 			while ((vn < A_MAX) && (stat[vn].bonus == stat[current_stat].bonus))
 			{
-				no_the_same ++;
-				vn ++;
+				no_the_same++;
+				vn++;
 			}
 
 			/* Do the stats */
@@ -2469,14 +2418,14 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 				text_out(stat[current_stat + iter].name);
 
 				/* Connectives */
-				if (no_the_same == 1) text_out(" "); 
-                else if (iter == (no_the_same - 2)) text_out(" and ");
-                else if (iter < (no_the_same - 2)) text_out(", ");
+				if (iter == (no_the_same - 2)) text_out(" and ");
+				else if (iter < (no_the_same - 2)) text_out(", ");
+				else text_out(" ");
 			}
 
 			/* Write out the bonus */
 			text_out("by ");
-			text_out(format("%i", ABS(stat[current_stat].bonus)));
+			text_out_c(TERM_L_GREEN, format("%i", ABS(stat[current_stat].bonus)));
 
 			/* Move on */
 			current_stat += no_the_same;
@@ -2487,8 +2436,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 				/* Output this only on a change of sign */
 				if ((stat[current_stat].bonus > 0)  && (stat[current_stat - no_the_same].bonus < 0))
 				{
-					text_out(", but also ");
-					text_out_c(TERM_L_GREEN, "increases");
+					text_out(", but also increases ");
 				}
 				else
 				{  
@@ -2499,6 +2447,8 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 		/* Finish */
 		text_out(".  ");
+
+		/* The object has abilities */
 		abilities = TRUE;
 	}
 
@@ -2512,10 +2462,8 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	if (f2 & (TR2_SUST_CHR)) vp[vn++] = "charisma";
 
 	/* Hack - shorten to "all stats" if appropriate */
-	if (vn == 6)
-		text_out("It sustains all your stats.  ");
-
-	else if (vn > 0)
+	if (vn == 6) text_out("It sustains all your stats.  ");
+	else if (vn)
 	{
 		int n;
 

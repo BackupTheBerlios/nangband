@@ -76,7 +76,7 @@
 /*
  * Version of random artifact code.
  */
-#define RANDART_VERSION	62
+#define RANDART_VERSION		62
 
 
 /*
@@ -139,16 +139,16 @@
 /*
  * Total number of stores and indeces (see store.c, etc)
  */
-#define MAX_STORES	8
+#define MAX_STORES           8
 
-#define STORE_GENERAL	0
-#define STORE_ARMOR		1
-#define STORE_WEAPON	2
-#define STORE_TEMPLE	3
-#define STORE_ALCHEMY	4
-#define STORE_MAGIC		5
-#define STORE_B_MARKET	6
-#define STORE_HOME		7
+#define STORE_GENERAL        0
+#define STORE_ARMOR          1
+#define STORE_WEAPON         2
+#define STORE_TEMPLE         3
+#define STORE_ALCHEMY        4
+#define STORE_MAGIC          5
+#define STORE_B_MARKET       6
+#define STORE_HOME           7
 
 /*
  * Maximum number of player "sex" types (see "table.c", etc)

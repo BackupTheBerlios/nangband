@@ -12,13 +12,7 @@
 
            By Andrew Sidwell <nevermiah@hotmail.com> and Grahame White.
 
-         Based on Angband 2.9.6alpha4 - credits in the credits.txt file
-                                                   
+         Based on Vanilla Angband CVS - credits in the credits.txt file
+
                    newsgroup: rec.games.rougelike.angband
                     webpage: http://nangband.berlios.de/
-
-                         Press '?' in-game for help.
-
-
-
--------------------------------------------------------------------------------

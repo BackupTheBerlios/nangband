@@ -1,88 +1,50 @@
 # File: Makefile.std
-
+# Pupose: A simple makefile designed for *nix systems
 #
-# Note that you may have to make modifications below according
-# to your machine, available libraries, compilation options,
-# and your "visual module" of choice.  This Makefile is intended
-# for use with Unix machines running X11, gtk, (n)curses, termcap,
-# or VT100, Slang, Linux VCS or SVGA library, or possibly for "Atari"
-# or "Amiga" computers with "Curses" ports, see below for more
-# information.
+# You may have to make modifications for your own, personal system.
+# This makefile currently supports the GTK, X11, (n)curses, termcap, VT100, Slang,
+# amd Linux VCS/SVGA visual modules.
 #
-# Note that "main-mac.c", the visual module for the Macintosh,
-# must be compiled in a special way, see elsewhere.
+# Note that main-mac.c, main-win.c, main-ibm.c, main-dos.c and main-emx.c 
+# must be all be compiled in a special way.
 #
-# Note that "main-win.c", the visual module for Windows,
-# must be compiled in a special way, except for cygwin.
-# Makefile.cyg may be incoporated into this makefile at some point.
+# main-ros.c and main-ami.c need to use their own, special, makefiles.
 #
-# Note that "main-ibm.c", "main-dos.c", and "main-emx.c",
-# the visual modules for various types of IBM-PC computers,
-# must be compiled with special Makefiles, see elsewhere.
-#
-# Note that "main-ros.c", the visual module for RISC OS,
-# must be compiled with "Makefile.ros", see elsewhere.
-#
-# Note that "main-ami.c", the visual module for the Amiga,
-# must be compiled with "Makefile.ami", see elsewhere.
+# Typing 'make gtk' at the command line will compile using the Makefile.gtk
+# makefile. Similarly, typing 'make cygwin' will compile using Makefile.cyg.
 #
 # If you are able to construct "main-xxx.c" and/or "Makefile.xxx"
 # files for a currently unsupported system, please send them to
-# Robert Ruehlmann < rr9@angband.org > for inclusion in future versions.
-#
-# This Makefile comes with "default" dependencies that may be obsolete.
-#
-
-# Comment out the following line if you do not have mkstemp()
-HAVE_MKSTEMP = -DHAVE_MKSTEMP
+# Robert Ruehlmann <rr9@angband.org> for inclusion in future versions.
 
 LUAOBJS = \
-  lua/lapi.o lua/ldebug.o lua/lmem.o lua/lstrlib.o lua/lvm.o \
-  lua/tolua_lb.o lua/lauxlib.o lua/ldo.o lua/lobject.o lua/ltable.o \
-  lua/lzio.o lua/tolua_rg.o lua/lbaselib.o lua/lfunc.o lua/lparser.o \
-  lua/ltests.o lua/tolua_bd.o lua/tolua_tm.o lua/lcode.o lua/lgc.o \
-  lua/lstate.o lua/ltm.o lua/tolua_eh.o lua/tolua_tt.o lua/ldblib.o \
-  lua/llex.o lua/lstring.o lua/lundump.o lua/tolua_gp.o
+	lua/lapi.o lua/ldebug.o lua/lmem.o lua/lstrlib.o lua/lvm.o \
+	lua/tolua_lb.o lua/lauxlib.o lua/ldo.o lua/lobject.o lua/ltable.o \
+	lua/lzio.o lua/tolua_rg.o lua/lbaselib.o lua/lfunc.o lua/lparser.o \
+	lua/ltests.o lua/tolua_bd.o lua/tolua_tm.o lua/lcode.o lua/lgc.o \
+	lua/lstate.o lua/ltm.o lua/tolua_eh.o lua/tolua_tt.o lua/ldblib.o \
+	lua/llex.o lua/lstring.o lua/lundump.o lua/tolua_gp.o
 
 TOLUAOBJS = \
-  lua/tolua.o lua/tolualua.o lua/liolib.o \
-  $(LUAOBJS)
+	lua/tolua.o lua/tolualua.o lua/liolib.o $(LUAOBJS)
 
-ANGSRCS = \
-  z-util.c z-virt.c z-form.c z-rand.c z-term.c \
-  variable.c tables.c util.c cave.c \
-  object1.c object2.c monster1.c monster2.c \
-  xtra1.c xtra2.c spells1.c spells2.c \
-  melee1.c melee2.c save.c files.c \
-  cmd1.c cmd2.c cmd3.c cmd4.c cmd5.c cmd6.c \
-  store.c birth.c load.c \
-  wizard1.c wizard2.c \
-  generate.c dungeon.c init1.c init2.c randart.c \
-  main-cap.c main-gcu.c main-x11.c main-xaw.c main.c \
-  main-gtk.c main-lsl.c main-sla.c main-vcs.c main-xpj.c \
-  maid-x11.c \
-  script.c use-obj.c \
-  l-monst.c l-object.c l-player.c l-random.c l-ui.c \
-  l-misc.c l-spell.c
+BORGOBJS = \
+	borg1.c borg2.c borg3.c borg4.c borg5.c borg6.c borg7.c borg8.c borg9.c
 
 ANGOBJS = \
-  z-util.o z-virt.o z-form.o z-rand.o z-term.o \
-  variable.o tables.o util.o cave.o \
-  object1.o object2.o monster1.o monster2.o \
-  xtra1.o xtra2.o spells1.o spells2.o \
-  melee1.o melee2.o save.o files.o \
-  cmd1.o cmd2.o cmd3.o cmd4.o cmd5.o cmd6.o \
-  store.o birth.o load.o \
-  wizard1.o wizard2.o \
-  generate.o dungeon.o init1.o init2.o randart.o \
-  main-cap.o main-gcu.o main-x11.o main-xaw.o main.o \
-  main-gtk.o main-lsl.o main-sla.o main-vcs.o main-xpj.o \
-  maid-x11.o \
-  script.o use-obj.o \
-  l-monst.o l-object.o l-player.o l-random.o l-ui.o \
-  l-misc.o l-spell.o \
-  $(LUAOBJS)
-
+	z-util.o z-virt.o z-form.o z-rand.o z-term.o \
+	variable.o tables.o util.o cave.o \
+	object1.o object2.o monster1.o monster2.o \
+	xtra1.o xtra2.o spells1.o spells2.o \
+	melee1.o melee2.o save.o files.o \
+	cmd1.o cmd2.o cmd3.o cmd4.o cmd5.o cmd6.o \
+	store.o birth.o load.o \
+	wizard1.o wizard2.o \
+	generate.o dungeon.o init1.o init2.o randart.o \
+	main-cap.o main-gcu.o main-x11.o main-xaw.o main.o \
+	main-gtk.o main-lsl.o main-sla.o main-vcs.o main-xpj.o maid-x11.o \
+	script.o use-obj.o l-monst.o l-object.o l-player.o l-random.o l-ui.o l-misc.o l-spell.o \
+	$(LUAOBJS)
 
 ##
 ## Following are some "system" definitions
@@ -108,22 +70,20 @@ ANGOBJS = \
 ## This is not intended to be a "good" Makefile, just a "simple" one.
 ##
 
+# Comment out the following line if you do not have mkstemp()
+HAVE_MKSTEMP = -DHAVE_MKSTEMP
 
-#
-# This is my compiler of choice, it seems to work most everywhere.
-#
+# This is your compiler
 CC = gcc
 
 
 #
 # Standard version (see main-x11.c and main-gcu.c)
 #
-# This version supports both "X11" and "curses" in a single executable.
+# This version supports both X11 and curses in a single executable.
 #
 # You may have to add various X11 include/library directories to the
 # "CFLAGS", if your machine places files in a weird location.
-#
-# You may be able to remove "-ltermcap" on some machines (ex: Solaris).
 #
 # You may have to replace "-lcurses" with "-lncurses" to use the
 # "new curses" library instead of the "old curses" library, and
@@ -133,8 +93,8 @@ CC = gcc
 # including "USE_GETCH" and "USE_CURS_SET".  Note that "config.h" will
 # attempt to "guess" at many of these flags based on your system.
 #
-CFLAGS = -Wall -O1 -pipe -g -D"USE_X11" -D"USE_GCU"
-LIBS = -lX11 -lcurses -ltermcap
+CFLAGS = -Wall -O1 -pipe -g -DUSE_X11 -DUSE_GCU $(HAVE_MKSTEMP)
+LIBS = -lX11 -lcurses -ltermcap -L/usr/X11R6/lib
 
 
 ##
@@ -278,59 +238,32 @@ LIBS = -lX11 -lcurses -ltermcap
 #LIBS = -lslang
 
 
-#
-# Default target.
-#
-all: angband
+# Build the binary
+nangband: $(ANGOBJS) $(BORGOBJS)
+	$(CC) $(CFLAGS) $(HAVE_MKSTEMP) $(LDFLAGS) -o nangband $(ANGOBJS) $(BORGOBJS) $(LIBS)
 
-
-#
-# Install the game.
-#
-
-install: cp angband ../
-
-#
-# Make the GTK port
-#
+# Make the GTK or cygwin port
 gtk:
 	make -f Makefile.gtk
 
-#
-# Make the cygwin port
-#
 cygwin:
 	make -f Makefile.cyg
 
-#
-# Build the "Angband" program
-#
 
-angband: $(ANGOBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o angband $(ANGOBJS) $(LIBS)
+# Move the binary one level up.
+install: nangband
+	 cp nangband ../
 
-
-#
-# Clean up old junk
-#
-
+# Clean up object files
 clean:
 	\rm -f *.o angband
 	\rm -f ./lua/*.o ./lua/tolua
 
-
-#
 # Generate dependencies automatically
-#
-
 depend:
 	makedepend -D__MAKEDEPEND__ $(SRCS)
 
-
-#
 # Lua stuff
-#
-
 lua/tolua: $(TOLUAOBJS)
 	$(CC) -o lua/tolua $(TOLUAOBJS) $(LDFLAGS) $(LIBS)
 

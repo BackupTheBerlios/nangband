@@ -22,7 +22,7 @@ nangband_SOURCES = \
   cmd1.c cmd2.c cmd3.c cmd4.c cmd5.c cmd6.c \
   resist.c interface.c \
   xmlbulp.c help.c \
-  store.c birth.c load.c \
+  store.c birth.c \
   wizard1.c wizard2.c \
   main-cap.c main-gcu.c main-x11.c main-xaw.c main.c \
   main-win.c main-xpj.c main-vcs.c main-gtk.c \

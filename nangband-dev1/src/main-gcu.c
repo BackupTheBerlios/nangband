@@ -967,14 +967,20 @@ errr init_gcu(int argc, char **argv)
 	int num_term = MAX_TERM_DATA, next_win = 0;
 
 	bool use_big_screen = FALSE;
+	bool force_use_colour = FALSE;
 
-	
 	/* Parse args */
 	for (i = 1; i < argc; i++)
 	{
 		if (prefix(argv[i], "-b"))
 		{
 			use_big_screen = TRUE;
+			continue;
+		}
+
+		if (prefix(argv[i], "-c"))
+		{
+			force_use_colour = TRUE;
 			continue;
 		}
 
@@ -1017,14 +1023,28 @@ errr init_gcu(int argc, char **argv)
 	/*** Init the Color-pairs and set up a translation table ***/
 
 	/* Do we have color, and enough color, available? */
-	can_use_color = ((start_color() != ERR) && has_colors() &&
-	                 (COLORS >= 8) && (COLOR_PAIRS >= 8));
+	if (!force_use_colour)
+	{
+		can_use_color = ((start_color() != ERR) && has_colors() &&
+		         (COLORS >= 8) && (COLOR_PAIRS >= 8));
+	}
+	else
+	{
+		can_use_color = TRUE;
+	}
 
 #ifdef REDEFINE_COLORS
 
 	/* Can we change colors? */
-	can_fix_color = (can_use_color && can_change_color() &&
-	                 (COLORS >= 16) && (COLOR_PAIRS > 8));
+	if (!force_use_colour)
+	{
+		can_fix_color = (can_use_color && can_change_color() &&
+		         (COLORS >= 16) && (COLOR_PAIRS > 8));
+	}
+	else
+	{
+		can_fix_color = TRUE;
+	}
 
 #endif
 

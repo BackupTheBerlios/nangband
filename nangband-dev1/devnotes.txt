@@ -4,9 +4,41 @@ Developer Notes
 This is a place designed for developer discussion.  Comment at
 appropriate places.
 
+2: New method to enchant
+------------------------
+Here's a cut-n-paste from #angband:
 
-Behaviour of new monster lighting
----------------------------------
+<takkaria> parody; I'm thinking about allowing scrolls of enchant
+armour/to-hit/to-dam to work on anything which can have those bonuses...
+<takkaria> parody; so an amulet of slaying can have to-hit/to-dam scrolls
+read on it
+<parody> takk, an additional type for these?
+<parody> takk, perhaps they should be deeper/rarer/more expensive as well...
+<parody> you have the standard armor/weapon enchantment scrolls, and
+a special type for adding armor or combat bonuses to misc. equipment
+
+<_458_jir> how about adding 'enchant' to chance of destroying the item?
+<_458_jir> you can enchant till +15 in place of +9, with risk of destroying it
+
+<takkaria> I had the following plan ages ago:
+<takkaria> Rewrite enchant() to work on forumulas instead of a table. 
+<takkaria> Also change it so it gets harder to enchant to-dam as you get
+<takkaria> nearer the maximum damage the weapon can do.  So a 1d4 dagger
+<takkaria> is easy to get +1 dam, fairly easy to get +2 dam, fairly hard
+<takkaria> to get +3 dam, and hard to get +4 dam.
+<takkaria> [end]
+<_458_jir> Scroll of enchant amulet To-Dam?
+<takkaria> scroll of Equipment Enhancement, maybe
+<takkaria> so you'd have to have seperate scrolls if I ever did the above
+<parody> something of that nature...
+that would allow you to add combat bonuses to something like belts...
+
+--moose-- a decent name will be fun to come up with :)  other than
+that, what do people think of this?
+
+
+1: Behaviour of new monster lighting
+------------------------------------
 ABSORB_LIGHT monsters will absorb nearby light, reducing the practical
 radius of the light to 0.
 

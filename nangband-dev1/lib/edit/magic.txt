@@ -1,0 +1,63 @@
+# File: nangband/lib/edit/magic.txt
+# Purpose: Magic information for Nangband
+
+# Modifying this file could result in system crashes, broken savefiles
+# or the game refusing to start. Always keep backups.
+
+# === Understanding magic.txt ===
+
+# B: book number : book name
+# T: tval : sval
+# N: number of spells in book
+
+# N: serial number : spell name
+# I: book number : position : spell constant
+# F: flag | flag | etc
+
+# 'N' indicates the beginning of an entry. The serial number must
+# increase for each new item.
+
+### Define the books
+
+# Magic for Beginners
+B:1:Magic for Beginners
+T:91:0
+N:9
+
+### Define the spells
+## Book One
+# Magic Missile
+N:0:Magic Missile
+I:1:1:MAGIC_MISSILE
+
+# Detect Monsters
+N:1:Detect Monsters
+I:1:2:DETECT_MONSTERS
+
+# Phase Door
+N:2:Phase Door
+I:1:3:PHASE_DOOR
+
+# Light Area
+N:3:Light Area
+I:1:4:LIGHT_AREA
+
+# Treasure Detection
+N:4:Treasure Detection
+I:1:5:TREASURE_DETECTION
+
+# Cure Light Wounds
+N:5:Cure Light Wounds
+I:1:6:CURE_LIGHT_WOUNDS
+
+# Object Detection
+N:6:Object Detection
+I:1:7:OBJECT_DETECTION
+
+# Find Traps/Doors
+N:7:Find Traps/Doors
+I:1:8:FIND_TRAPS_DOORS
+
+# Stinking Cloud
+N:8:Stinking Cloud
+I:1:9:STINKING_CLOUD

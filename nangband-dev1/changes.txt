@@ -1,6 +1,11 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-05-18
+----------
+- Moved divisions after multiplications in resist_player_current in
+  two places, so that precisions aren't lost. (pelpel)
+
 2002-05-12
 ----------
 - Made timed resists decrement over time; quite cool code, don't know

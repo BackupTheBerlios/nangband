@@ -48,11 +48,11 @@ byte resist_player_current(byte res_idx)
 	/* Do some complex math to work out timed resist */
 	if ((p_ptr->resist_timed[res_idx] * 100) <= (75 * p_ptr->resist_tim_max[res_idx]))
 	{
-		x += 50 - ((-30/75) * p_ptr->resist_timed[res_idx]);
+		x += 50 - ((-30 * p_ptr->resist_timed[res_idx]) / 75);
 	}
 	else
 	{
-		x += 20 - ((-20/25) * (p_ptr->resist_timed[res_idx] - 20));
+		x += 20 - ((-20 * (p_ptr->resist_timed[res_idx] - 20)) / 25);
 	}
 
 	/* Return the total resistance */

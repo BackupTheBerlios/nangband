@@ -41,7 +41,7 @@ s16b resist_player_current(s16b res_idx)
 	resist_check_valid(&res_idx);
 
 	x = p_ptr->resist_cur[res_idx];
-	y = p_ptr->resist_timed[res_idx];
+	y = (p_ptr->resist_timed[res_idx] ? 20 : 0);
 
 	/* [note to self - do the clever timed resist decrement stuff] */
 

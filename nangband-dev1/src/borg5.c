@@ -93,7 +93,7 @@ static cptr *borg_unique_text;      /* Names of uniques */
 
 static int borg_normal_size;        /* Number of normals */
 static s16b *borg_normal_what;      /* Indexes of normals */
-9~static cptr *borg_normal_text;      /* Names of normals */
+static cptr *borg_normal_text;      /* Names of normals */
 
 
 

@@ -21,7 +21,6 @@ function page_header($title, $type)
 	echo '<div align="center">';
 	echo '[ <a href="index.php">Main Page</a> | ';
 	echo '<a href="changes.php">Changes</a> | ';
-	echo '<a href="bugs.php">Bugs</a> | ';
 	echo '<a href="download.php">Download</a> | ';
 	echo '<a href="http://developer.berlios.de/projects/nangband">Project Page</a> ] ';
 	echo '</div>';

@@ -1945,7 +1945,7 @@
 #define TR2_LITE2           0x00000080L /* (reserved) */
 #define TR2_LITE3           0x00000100L /* (reserved) */
 #define TR2_LITE4           0x00000200L /* (reserved) */
-#define TR2_XXX5            0x00000400L /* (reserved) */
+#define TR2_NEEDS_FUEL      0x00000400L /* (reserved) */
 #define TR2_XXX6            0x00000800L /* (reserved) */
 #define TR2_IM_ACID         0x00001000L /* Immunity to acid */
 #define TR2_IM_ELEC         0x00002000L /* Immunity to elec */

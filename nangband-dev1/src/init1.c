@@ -411,7 +411,7 @@ static cptr k_info_flags2[] =
 	"LITE2",
 	"LITE3",
 	"LITE4",
-	"XXX5",
+	"NEEDS_FUEL",
 	"XXX6",
 	"IM_ACID",
 	"IM_ELEC",

@@ -1651,11 +1651,21 @@ static void calc_torch(void)
 		/* Extract the flags */
 		object_flags(o_ptr, &f1, &f2, &f3);
 
-		/* does this item glow? */
-		if (f2 & TR2_LITE1) p_ptr->cur_lite += 1;
-		if (f2 & TR2_LITE2) p_ptr->cur_lite += 2;
-		if (f2 & TR2_LITE3) p_ptr->cur_lite += 3;
+		/* Does this item need fuel? */
+		if ((f2 & (TR2_NEEDS_FUEL)) && (o_ptr->pval == 0))
+		{
+			continue;
+		} 
+
+		/* Does the item emit light? */
+		if (f2 & (TR2_LITE1)) p_ptr->cur_lite += 1;
+		if (f2 & (TR2_LITE2)) p_ptr->cur_lite += 2;
+		if (f2 & (TR2_LITE3)) p_ptr->cur_lite += 3;
+		if (f2 & (TR2_LITE4)) p_ptr->cur_lite += 4;
 	}
+
+	/* Make sure we're not exessive */
+	if (p_ptr->cur_lite > 5) p_ptr->cur_lite = 5;
 
 	/* Reduce lite when running if requested */
 	if (p_ptr->running && view_reduce_lite)

@@ -15,7 +15,7 @@
  * Max sizes of the following arrays.
  */
 #define MAX_TITLES     50       /* Used with scrolls (min 48) */
-#define MAX_SYLLABLES 158       /* Used with scrolls (see below) */
+#define MAX_SYLLABLES 160       /* Used with scrolls (see below) */
 
 
 /*
@@ -43,7 +43,7 @@ static cptr syllables[MAX_SYLLABLES] =
 	"tem", "ther", "ti", "tox", "trol", "tue", "turs", "u",
 	"ulk", "um", "un", "uni", "ur", "val", "viv", "vly",
 	"vom", "wah", "wed", "werg", "wex", "whon", "wun", "x",
-	"yerg", "yp", "zun", "tri", "blaa"
+	"yerg", "yp", "zun", "tri", "timo", "petelia", "blaa"
 };
 
 

@@ -13,27 +13,21 @@ $sidebar_links_end   = '</td></tr>';
 // Output all the links using flexible formatting.
 function do_links($start, $end, $has_pipes)
 {
-        if ($start) echo $start;
-        echo '<a href="?page=main">main page</a>';
-        if ($has_pipes) echo ' | ';
-        if ($end) echo $end;
+	global $titles, $pages, $no_pages;
 
-        if ($start) echo $start;
-        echo '<a href="?page=changes">changes</a>';
-        if ($has_pipes) echo ' | ';
-        if ($end) echo $end;
+	for ($i = 0; $i < ($no_pages - 1); $i++)
+	{
+		if ($start) echo $start;
+		echo '<a href="?page=' .$pages[$i]. '">'.$titles[$pages[$i]].'</a>';
+		if ($has_pipes) echo ' | ';
+		if ($end) echo $end;
+	}
 
-        if ($start) echo $start;
-        echo '<a href="?page=download">download</a>';
-        if ($has_pipes) echo ' | ';
+	if ($start) echo $start;
+	echo '<a href="?page='.$pages[$no_pages-1].'">'.$titles[$pages[$no_pages-1]].'</a>';
+	if ($end) echo $end;
 
-        if ($end) echo $end;
-
-        if ($start) echo $start;
-        echo '<a href="?page=project">project page</a>';
-        if ($end) echo $end;
-
-        return;
+	return;
 }
 
 function do_styles($type)

@@ -35,16 +35,19 @@ if ($dir = @opendir('extras/'))
 	}
 }
 
-// Come up with a page "title" - done in files.php
+// Include the file lists
 include('files.php');
-$page_okay = (file_exists('content/' .$page) && !is_dir('content/' .$page));
-if (!$page_okay) $title = 'page not found';
+
+// Check for a filename's validity
+if ($titles[$page]) $title = $titles[$page];
+$okay = (file_exists('content/'.$page) && !is_dir('content/'.$page));
+if (!$okay) $title = 'page not found';
 
 // Output the header
 page_header($title, $page, $pagestyle);
 
 // Include the data
-if ($page_okay)
+if ($okay)
 {
 	include('content/'.$page);
 }

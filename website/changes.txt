@@ -1,6 +1,11 @@
 Nangband Website changelog
 ==========================
 
+07-07-02
+--------
+- Made the site much more flexible and added references to a few
+  pages which don't exist.  (takkaria)
+
 05-07-02
 --------
 - Added a timing counter to the Nangband changes page for fun.  It

@@ -22,15 +22,14 @@ Todo list for Nangband
   + Add optional support for the metric system.
   + Add a command to display the 'time of day'.
   + Store interface needs changing.
-      Status:  Comments are being collected about this.
   + "Panic saves" shouldn't overwrite "normal" savefiles.
   + Write a KDE/Qt port.
   + Allow a restricted amount of functions to be used by the player
     for macros and add a better macro recorder.
   + Add a main-net.c modules that sends/receives term-updates via TCP/IP.
-     This allows slim clients on machines where Angband isn't available.
-     The clients could be written in almost any programming language and
-     have minimal hardware requirements.
+    This allows slim clients on machines where Angband isn't available.
+    The clients could be written in almost any programming language and
+    have minimal hardware requirements.
   + Extend the use of scripts for customization.
 
 

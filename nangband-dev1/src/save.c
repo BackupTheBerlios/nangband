@@ -241,6 +241,15 @@ static byte savefile_do_byte(byte *v, bool type)
 	/* Increase the "used" counter */
 	savefile_blockused++;
 
+	if (savefile_blockused > savefile_blocksize)
+	{
+        printf("Ouch.  Out-of-bounds access.\n");
+	}
+	if (savefile_blockused == savefile_blocksize)
+	{
+        printf("Reached end of savefile block.\n");
+	}
+
 	/* We are done */
  	return(*v);
 }

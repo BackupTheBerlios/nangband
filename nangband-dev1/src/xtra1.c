@@ -1599,7 +1599,6 @@ static void calc_torch(void)
 
 	s16b old_lite = p_ptr->cur_lite;
 
-
 	/* Assume no light */
 	p_ptr->cur_lite = 0;
 
@@ -1611,38 +1610,13 @@ static void calc_torch(void)
 		/* Skip empty slots */
 		if (!o_ptr->k_idx) continue;
 
-		/* Examine actual lites */
-		if (o_ptr->tval == TV_LITE)
-		{
-			/* Artifact Lites provide permanent, bright, lite */
-			if (artifact_p(o_ptr))
-			{
-				p_ptr->cur_lite += 3;
-				continue;
-			}
-			
-			/* Lanterns (with fuel) provide more lite */
-			if ((o_ptr->sval == SV_LITE_LANTERN) && (o_ptr->pval > 0))
-			{
-				p_ptr->cur_lite += 2;
-				continue;
-			}
-			
-			/* Torches (with fuel) provide some lite */
-			if ((o_ptr->sval == SV_LITE_TORCH) && (o_ptr->pval > 0))
-			{
-				p_ptr->cur_lite += 1;
-				continue;
-			}
-		}
-		else
-		{
-			/* Extract the flags */
-			object_flags(o_ptr, &f1, &f2, &f3);
+		/* Extract the flags */
+		object_flags(o_ptr, &f1, &f2, &f3);
 
-			/* does this item glow? */
-			if (f3 & TR3_LITE) p_ptr->cur_lite++;
-		}
+		/* does this item glow? */
+		if (f2 & TR2_LITE1) p_ptr->cur_lite += 1;
+		if (f2 & TR2_LITE2) p_ptr->cur_lite += 2;
+		if (f2 & TR2_LITE3) p_ptr->cur_lite += 3;
 	}
 
 

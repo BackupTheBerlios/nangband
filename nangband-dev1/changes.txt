@@ -1,7 +1,14 @@
 Nangband ChangeLog
 ==================
 
-2002-03-05
+2002-03-16
+----------
+- Remember to add Livingstones, Phase Reavers and the joke monster
+  'The Iron Lady'. (takkaria)
+- Added in Antiband's new roller code, along with changes to init1.c
+  so defaults can be non-hardcoded. (takkaria)
+
+2002-03-15
 ----------
 - Rewrote small chunks of the store code for better displaying. (takkaria)
 - Added bigscreen support for the stores. (takkaria)

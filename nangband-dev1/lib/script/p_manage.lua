@@ -24,24 +24,78 @@ function powers.invoke(index)
 	return powers[index].effect()
 end
 
+-- Get the stat used for this power
+function powers.stat(index)
+
+	-- If "index" is a function, then return it's result
+	if type(powers[index].level) == "function" then
+		return powers[index].stat()
+	end
+
+	-- Otherwise, just return the stat
+	return powers[index].stat
+end
+
+-- Get the requirement for the stat
+function powers.require(index)
+
+	-- If "minstat" is a function, then return it's result
+	if type(powers[index].minstat) == "function" then
+		return powers[index].stat()
+	end
+
+	-- Otherwise, just return the requirement
+	return powers[index].minstat
+end
+
 -- Get minumum level for a power.
 function powers.minlevel(index)
-	return powers[index].minlevel
+
+	-- If "level" is a function, then return it's result
+	if type(powers[index].level) == "function" then
+		return powers[index].level()
+	end
+
+	-- Otherwise, just return the energy
+	return powers[index].level
 end
 
 -- Get amount of energy needed for a power.
 function powers.energy(index)
-	return powers[index].energy()
+
+	-- If "energy" is a function, then return it's result
+	if type(powers[index].energy) == "function" then
+		return powers[index].energy()
+	end
+
+	-- Otherwise, just return the energy
+	return powers[index].energy
 end
 
 -- Get a power's name.
 function powers.name(index)
+
+	-- If "name" is a function, then return it's result
+	if type(powers[index].name) == "function" then
+		return powers[index].name()
+	end
+
+	-- Otherwise, just return the name
 	return powers[index].name
 end
 
 -- Get extra info about a spell (damage, duration, ...)
 function powers.description(index)
-	local desc = powers[index].desc
+	local desc
+
+	-- If the description is a name, call it
+	if type(powers[index].desc) == "function" then
+		desc = powers[index].desc()
+	else
+		-- Otherwise, just use it
+		desc = powers[index].desc
+	end
+
 	if not desc then return "" end
 
 	return desc

@@ -7,10 +7,12 @@ powers.class_power(CLASS_WARRIOR,
 	stat = A_STR,
 	minstat = 14,
 	energy = function()
-		if player.plev < 10 then return 15 end
+		if player.lev < 10 then return 15 end
 		return 10
 	end,
-	effect = function() msg_print("Silly Message") end,
+	effect = function()
+		msg_print("Silly Message")
+	end,
 })
 
 -- Human power
@@ -21,6 +23,8 @@ powers.race_power(RACE_HUMAN,
 	level = 5,
 	stat = A_STR,
 	minstat = 14,
-	energy = function() return 15 end,
-	effect = function() msg_print("Testing ... 1 2 3") end,
+	energy = 15,
+	effect = function()
+		msg_print("Testing ... 1 2 3")
+	end,
 })

@@ -6,6 +6,7 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
 - Reorganized the lua files.  Also, updated the Vanilla's spell code -
   it looks much nicer.  Added the basics of class/race powers.
   Moved debugging stuff into lib/script/debug/.  (takkaria)
+- Made the powers interface a bit more flexible.  (takkaria)
 
 2002-07-29
 ----------

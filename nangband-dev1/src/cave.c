@@ -2934,11 +2934,6 @@ void forget_monster_light(void)
 }
 
 
-/* Test if a location (y, x) is both in_bounds and cave_floor_bold */
-#define in_bounds_floor(Y, X) \
-	(in_bounds(Y, X) && cave_floor_bold(Y, X))
-
-
 /*
  * A helper function for update_monster_light.
  *
@@ -2965,6 +2960,11 @@ static int monster_light_radius(monster_race *r_ptr)
 	/* Done */
 	return (rad);
 }
+
+
+/* Test if a location (y, x) is both in_bounds and cave_floor_bold */
+#define in_bounds_floor(Y, X) \
+	(in_bounds(Y, X) && cave_floor_bold(Y, X))
 
 
 /*
@@ -3131,161 +3131,160 @@ void update_monster_light(void)
 		enqueue_loc(fy + 1, fx - 1);
 		enqueue_loc(fy - 1, fx - 1);
 
-		if (rad < 2) continue;
-
 		/** Radius 2 and non-diagonal radius 3 **/
-
-		/* South of the monster */
-		if (in_bounds_floor(fy + 1, fx))
+		if (rad >= 2)
 		{
-			enqueue_loc(fy + 2, fx + 1);
-			enqueue_loc(fy + 2, fx    );
-			enqueue_loc(fy + 2, fx - 1);
-
-			/* Radius 3 */
-			if (rad >= 3)
+			/* South of the monster */
+			if (in_bounds_floor(fy + 1, fx))
 			{
-				if (in_bounds_floor(fy + 2, fx))
+				enqueue_loc(fy + 2, fx + 1);
+				enqueue_loc(fy + 2, fx    );
+				enqueue_loc(fy + 2, fx - 1);
+
+				/* Radius 3 */
+				if (rad >= 3)
 				{
-					enqueue_loc(fy + 3, fx + 1);
-					enqueue_loc(fy + 3, fx    );
-					enqueue_loc(fy + 3, fx - 1);
-				}
-				else
-				{
-					if (in_bounds_floor(fy + 2, fx + 1))
+					if (in_bounds_floor(fy + 2, fx))
 					{
 						enqueue_loc(fy + 3, fx + 1);
-					}
-					if (in_bounds_floor(fy + 2, fx - 1))
-					{
+						enqueue_loc(fy + 3, fx    );
 						enqueue_loc(fy + 3, fx - 1);
 					}
+					else
+					{
+						if (in_bounds_floor(fy + 2, fx + 1))
+						{
+							enqueue_loc(fy + 3, fx + 1);
+						}
+						if (in_bounds_floor(fy + 2, fx - 1))
+						{
+							enqueue_loc(fy + 3, fx - 1);
+						}
+					}
 				}
 			}
-		}
 
-		/* North of the monster */
-		if (in_bounds_floor(fy - 1, fx))
-		{
-			enqueue_loc(fy - 2, fx + 1);
-			enqueue_loc(fy - 2, fx    );
-			enqueue_loc(fy - 2, fx - 1);
-
-			/* Radius 3 */
-			if (rad >= 3)
+			/* North of the monster */
+			if (in_bounds_floor(fy - 1, fx))
 			{
-				if (in_bounds_floor(fy - 2, fx))
+				enqueue_loc(fy - 2, fx + 1);
+				enqueue_loc(fy - 2, fx    );
+				enqueue_loc(fy - 2, fx - 1);
+
+				/* Radius 3 */
+				if (rad >= 3)
 				{
-					enqueue_loc(fy - 3, fx + 1);
-					enqueue_loc(fy - 3, fx    );
-					enqueue_loc(fy - 3, fx - 1);
-				}
-				else
-				{
-					if (in_bounds_floor(fy - 2, fx + 1))
+					if (in_bounds_floor(fy - 2, fx))
 					{
 						enqueue_loc(fy - 3, fx + 1);
-					}
-					if (in_bounds_floor(fy - 2, fx - 1))
-					{
+						enqueue_loc(fy - 3, fx    );
 						enqueue_loc(fy - 3, fx - 1);
 					}
+					else
+					{
+						if (in_bounds_floor(fy - 2, fx + 1))
+						{
+							enqueue_loc(fy - 3, fx + 1);
+						}
+						if (in_bounds_floor(fy - 2, fx - 1))
+						{
+							enqueue_loc(fy - 3, fx - 1);
+						}
+					}
 				}
 			}
-		}
 
-		/* East of the monster */
-		if (in_bounds_floor(fy, fx + 1))
-		{
-			enqueue_loc(fy + 1, fx + 2);
-			enqueue_loc(fy    , fx + 2);
-			enqueue_loc(fy - 1, fx + 2);
-
-			/* Radius 3 */
-			if (rad >= 3)
+			/* East of the monster */
+			if (in_bounds_floor(fy, fx + 1))
 			{
-				if (in_bounds_floor(fy, fx + 2))
+				enqueue_loc(fy + 1, fx + 2);
+				enqueue_loc(fy    , fx + 2);
+				enqueue_loc(fy - 1, fx + 2);
+
+				/* Radius 3 */
+				if (rad >= 3)
 				{
-					enqueue_loc(fy + 1, fx + 3);
-					enqueue_loc(fy    , fx + 3);
-					enqueue_loc(fy - 1, fx + 3);
-				}
-				else
-				{
-					if (in_bounds_floor(fy + 1, fx + 2))
+					if (in_bounds_floor(fy, fx + 2))
 					{
 						enqueue_loc(fy + 1, fx + 3);
-					}
-					if (in_bounds_floor(fy - 1, fx + 2))
-					{
+						enqueue_loc(fy    , fx + 3);
 						enqueue_loc(fy - 1, fx + 3);
 					}
+					else
+					{
+						if (in_bounds_floor(fy + 1, fx + 2))
+						{
+							enqueue_loc(fy + 1, fx + 3);
+						}
+						if (in_bounds_floor(fy - 1, fx + 2))
+						{
+							enqueue_loc(fy - 1, fx + 3);
+						}
+					}
 				}
 			}
-		}
 
-		/* West of the monster */
-		if (in_bounds_floor(fy, fx - 1))
-		{
-			enqueue_loc(fy + 1, fx - 2);
-			enqueue_loc(fy    , fx - 2);
-			enqueue_loc(fy - 1, fx - 2);
-
-			/* Radius 3 */
-			if (rad >= 3)
+			/* West of the monster */
+			if (in_bounds_floor(fy, fx - 1))
 			{
-				if (in_bounds_floor(fy, fx - 2))
+				enqueue_loc(fy + 1, fx - 2);
+				enqueue_loc(fy    , fx - 2);
+				enqueue_loc(fy - 1, fx - 2);
+
+				/* Radius 3 */
+				if (rad >= 3)
 				{
-					enqueue_loc(fy + 1, fx - 3);
-					enqueue_loc(fy    , fx - 3);
-					enqueue_loc(fy - 1, fx - 3);
-				}
-				else
-				{
-					if (in_bounds_floor(fy + 1, fx - 2))
+					if (in_bounds_floor(fy, fx - 2))
 					{
 						enqueue_loc(fy + 1, fx - 3);
-					}
-					if (in_bounds_floor(fy - 1, fx - 2))
-					{
+						enqueue_loc(fy    , fx - 3);
 						enqueue_loc(fy - 1, fx - 3);
+					}
+					else
+					{
+						if (in_bounds_floor(fy + 1, fx - 2))
+						{
+							enqueue_loc(fy + 1, fx - 3);
+						}
+						if (in_bounds_floor(fy - 1, fx - 2))
+						{
+							enqueue_loc(fy - 1, fx - 3);
+						}
 					}
 				}
 			}
 		}
 
-		if (rad < 3) continue;
-
 		/** Radius 3 diagonal **/
-
-		/* South-East of the monster */
-		if (in_bounds_floor(fy + 1, fx + 1))
+		if (rad >= 3)
 		{
-			enqueue_loc(fy + 2, fx + 2);
-		}
+			/* South-East of the monster */
+			if (in_bounds_floor(fy + 1, fx + 1))
+			{
+				enqueue_loc(fy + 2, fx + 2);
+			}
 
-		/* South-West of the monster */
-		if (in_bounds_floor(fy + 1, fx - 1))
-		{
-			enqueue_loc(fy + 2, fx - 2);
-		}
+			/* South-West of the monster */
+			if (in_bounds_floor(fy + 1, fx - 1))
+			{
+				enqueue_loc(fy + 2, fx - 2);
+			}
 
-		/* North-East of the monster */
-		if (in_bounds_floor(fy - 1, fx + 1))
-		{
-			enqueue_loc(fy - 2, fx + 2);
-		}
+			/* North-East of the monster */
+			if (in_bounds_floor(fy - 1, fx + 1))
+			{
+				enqueue_loc(fy - 2, fx + 2);
+			}
 
-		/* North-West of the monster */
-		if (in_bounds_floor(fy - 1, fx - 1))
-		{
-			enqueue_loc(fy - 2, fx - 2);
+			/* North-West of the monster */
+			if (in_bounds_floor(fy - 1, fx - 1))
+			{
+				enqueue_loc(fy - 2, fx - 2);
+			}
 		}
 
 		/* XXX XXX */
 		#undef enqueue_loc
-
 
 		/* Process queued positions */
 		for (q = 0; q < queue_n; q++)

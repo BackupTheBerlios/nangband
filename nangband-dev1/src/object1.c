@@ -1842,7 +1842,6 @@ void obj_info_resists(byte *resists)
 static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 {
 	bool known = FALSE;
-	bool needs_fuel = FALSE;
 	bool stat_boost = FALSE;
 	bool id = FALSE;
 
@@ -1878,24 +1877,21 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		known = TRUE;
 	}
 
-	/* Describe light sources */
-	if (f2 & (TR2_NEEDS_FUEL)) needs_fuel = TRUE;
-
-	/* Collect the radius value */
-	vn = 0;
-	if (f2 & (TR2_LITE1)) vp[vn++] = "radius 1";
-	if (f2 & (TR2_LITE2)) vp[vn++] = "radius 2";
-	if (f2 & (TR2_LITE3)) vp[vn++] = "radius 3";
-	if (f2 & (TR2_LITE4)) vp[vn++] = "radius 4";
-
-	/* Describe */
-	if (vn)
+	/* Describe lights */
+	if (f2 & ((TR2_LITE1) | (TR2_LITE2) | (TR2_LITE3) | (TR2_LITE4)))
 	{
-		/* Intro */
+		/* Describe */
 		text_out("It provides ");
-		text_out_c(TERM_L_DARK, vp[0]);
+
+		/* Show the radius */
+		if (f2 & (TR2_LITE1)) text_out("radius 1");
+		if (f2 & (TR2_LITE2)) text_out("radius 2");
+		if (f2 & (TR2_LITE3)) text_out("radius 3");
+		if (f2 & (TR2_LITE4)) text_out("radius 4");
+
+		/* Complete the sentence */
 		text_out(" light ");
-		if (needs_fuel) text_out("when it is fueled");
+		if (f2 & (TR2_NEEDS_FUEL)) text_out("when it is fueled");
 		else text_out("permanently");
 
 		/* Finish */
@@ -2316,38 +2312,46 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
  */
 bool identify_fully_aux(const object_type *o_ptr)
 {
-	bool known = FALSE;
+	char o_name[80];
 
 	/* Save the screen */
 	screen_save();
 
+	/* Begin recall */
+	Term_erase(0, 1, 255);
+
 	/* Redirect output to the temporary file. */
 	text_out_hook = text_out_to_screen;
-
-	text_out("\n");
 
 	/* Display the object description */
 	if (k_info[o_ptr->k_idx].text)
 	{
-		known = TRUE;
-		text_out(k_text + k_info[o_ptr->k_idx].text);
+		text_out_c(TERM_ORANGE, k_text + k_info[o_ptr->k_idx].text);
 		text_out("\n\n");
 	}
 
 	/* Output the flag descriptions */
-	if (identify_fully_aux2(o_ptr, OBJECT_AUX_KNOWN))
-		known = TRUE;
+	identify_fully_aux2(o_ptr, OBJECT_AUX_KNOWN);
 
-	/* Prompt the user */
-	text_out_c(TERM_L_BLUE, "\n(press any key to continue)\n");
+	/* Clear the top line */
+	Term_erase(0, 0, 255);
 
-	/* XXX XXX XXX Wait for a keypress */
-	inkey();
+	/* Reset the cursor */
+	Term_gotoxy(0, 0);
+
+	/* Get the object description */
+	object_desc(o_name, o_ptr, TRUE, 3);
+
+	/* Show the name */
+	Term_addstr(-1, TERM_WHITE, format("%^s", o_name));
+
+	/* Wait for a keypress */
+	(void)inkey();
 
 	/* Load the screen */
 	screen_load();
 
-	return (known);
+	return (TRUE);
 }
 
 

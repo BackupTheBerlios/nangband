@@ -47,6 +47,18 @@ static birther prev;
 static s16b stat_use[A_MAX];
 
 
+/*
+ * --RML
+ */
+static int stat_limit(int stat)
+{
+	if (stat <= 18)
+	{
+		return (18+100 + 5 * (stat - 14));
+	}
+
+	return (18+120 + (stat - 18) / 2;
+}
 
 /*
  * Save the currently rolled data for later.
@@ -125,6 +137,9 @@ static void load_prev_data(void)
 	{
 		p_ptr->stat_max[i] = prev.stat[i];
 		p_ptr->stat_cur[i] = prev.stat[i];
+
+		/* Stat limit */
+		p_ptr->stat_lim[i] = stat_limit(prev.stat[i]);
 	}
 
 	/* Load the history */
@@ -154,6 +169,10 @@ static void load_prev_data(void)
 	{
 		strcpy(prev.history[i], temp.history[i]);
 	}
+
+	p_ptr->stat_lim[i] = stat_limit(p_ptr->stat_max[i]);
+
+	return;
 }
 
 

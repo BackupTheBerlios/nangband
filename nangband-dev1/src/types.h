@@ -860,6 +860,7 @@ struct player_type
 
 	s16b stat_max[A_MAX];	/* Current "maximal" stat values */
 	s16b stat_cur[A_MAX];	/* Current "natural" stat values */
+	s16b stat_lim[A_MAX];	/* Absolute maximum stat values */
 
 	s16b fast;			/* Timed -- Fast */
 	s16b slow;			/* Timed -- Slow */

@@ -289,14 +289,13 @@ lua/tolua: $(TOLUAOBJS)
 #
 
 # Remove the binary
-rmbin:; rm ../nangband
+rmbin:; -rm -f ../nangband nangband
 
 # Move the binary one level up.
 install: nangband; cp nangband ../
 
-# Clean up object files
-clean:; -rm -f *.o angband
-	-rm -f ./lua/*.o ./lua/tolua
+# Clean up object files (and auto-generated files)
+clean:; -rm -f *.o nangband lua/*.o ./lua/tolua
 
 #
 # Headers used for dependencies

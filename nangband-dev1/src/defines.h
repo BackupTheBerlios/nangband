@@ -2666,7 +2666,7 @@
 #define OPT_adult_no_stores		(OPT_ADULT+5)
 #define OPT_adult_no_artifacts	(OPT_ADULT+6)
 #define OPT_adult_evil_mode		(OPT_ADULT+7)
-#define OPT_adult_rand_artifacts	(OPT_ADULT+8)
+#define OPT_adult_no_stacking		(OPT_ADULT+8)
 /* xxx xxx */
 #define OPT_score_peek				(OPT_SCORE+0)
 #define OPT_score_hear				(OPT_SCORE+1)

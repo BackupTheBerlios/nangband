@@ -17,7 +17,7 @@ RM = remove
 tolua = lua.tolua
 
 # Flags:
-CCFLAGS = -throwback -Wall -depend !Depend
+CCFLAGS = -throwback -Wand -depend !Depend
 LDFLAGS = -aif
 SQFLAGS = 
 

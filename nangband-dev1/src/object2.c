@@ -2742,6 +2742,7 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		if (e_ptr->xtra)
 		{
 			o_ptr->xtra1 = e_ptr->xtra;
+
 			switch (o_ptr->xtra1)
 			{
 				case OBJECT_XTRA_TYPE_SUSTAIN:
@@ -2773,11 +2774,19 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		/* Hack -- apply extra penalties if needed */
 		if (cursed_p(o_ptr) || broken_p(o_ptr))
 		{
+            int i;
+            
 			/* Hack -- obtain bonuses */
 			if (e_ptr->max_to_h > 0) o_ptr->to_h -= randint(e_ptr->max_to_h);
 			if (e_ptr->max_to_d > 0) o_ptr->to_d -= randint(e_ptr->max_to_d);
 			if (e_ptr->max_to_a > 0) o_ptr->to_a -= randint(e_ptr->max_to_a);
 
+            /* Hack -- obtain stat bonuses */
+            for (i = 0; i < A_MAX; i++)
+            {
+                if (e_ptr->stat_mods[i] > 0) o_ptr->stat_mods[i] -= randint(e_ptr->stat_mods[i]);
+            }
+            
 			/* Hack -- obtain pval */
 			if (e_ptr->max_pval > 0) o_ptr->pval -= randint(e_ptr->max_pval);
 		}
@@ -2785,11 +2794,19 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		/* Hack -- apply extra bonuses if needed */
 		else
 		{
+            int i;
+            
 			/* Hack -- obtain bonuses */
 			if (e_ptr->max_to_h > 0) o_ptr->to_h += randint(e_ptr->max_to_h);
 			if (e_ptr->max_to_d > 0) o_ptr->to_d += randint(e_ptr->max_to_d);
 			if (e_ptr->max_to_a > 0) o_ptr->to_a += randint(e_ptr->max_to_a);
 
+            /* Hack -- obtain stat bonuses */
+            for (i = 0; i < A_MAX; i++)
+            {
+              if (e_ptr->stat_mods[i] > 0) o_ptr->stat_mods[i] += randint(e_ptr->stat_mods[i]);
+            }
+            
 			/* Hack -- obtain pval */
 			if (e_ptr->max_pval > 0) o_ptr->pval += randint(e_ptr->max_pval);
 		}

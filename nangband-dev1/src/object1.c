@@ -1020,7 +1020,7 @@ flavor_info[k_ptr->flavor].text; */
 		/* Hack -- Default -- Used in the "inventory" routine */
 		default:
 		{
-			strcpy(buf, "(no valid item name)");
+			strcpy(buf, "(nothing)");
 			return;
 		}
 	}
@@ -1694,15 +1694,15 @@ void object_desc_store(char *buf, const object_type *o_ptr, int pref, int mode)
 /*
  * Print a given object's resists/immunities.
  */
-void obj_info_resists(byte *resists)
+void obj_info_resists(byte *resists, bool shorten, char *buffer)
 {
 	/* Texts */
  	int vn;
-	cptr text[32];
+	cptr text[RES_MAX];
 
 	/* Percentages */
 	int pc;
-	int percentages[32];
+	int percentages[RES_MAX];
 
 	/* Collect the resists */
 	vn = pc = 0;
@@ -1795,26 +1795,32 @@ void obj_info_resists(byte *resists)
 	if (vn)
 	{
 		int n;
-
+        
 		/* Intro */
-		text_out("It grants you ");
+        if (!shorten) strcat(buffer, "It grants you");
 
 		/* List the resists */
 		for (n = 0; n < vn; n++)
 		{
 			/* Print the percentage */
-			text_out_c(TERM_L_GREEN, format("%i", percentages[n]));
-			text_out("% resistance to ");
-			text_out(text[n]);
+			strcat(buffer, format("%i", percentages[n]));
+
+            /* Add description (if any) */
+            if (shorten) strcat(buffer, " ");
+			else strcat(buffer, "% resistance to ");
+            
+            /* Add the resist */
+			strcat(buffer, text[n]);
 
 			/* Connectives */
-			if (n == vn) text_out("and ");
-			else if (n < (vn - 1)) text_out(", ");
-			else if (n == (vn - 1)) text_out(".  ");
-			else text_out(" and ");
+			if (n == vn && !shorten) strcat(buffer, "and ");
+			else if (n < (vn - 1)) strcat(buffer, ", ");
+			else if (n == (vn - 1)) strcat(buffer, ".  ");
+			else strcat(buffer, " and ");
 		}
 	}
 
+    /* We are done. */
 	return;
 }
 
@@ -1838,6 +1844,9 @@ static void item_info_brief(const object_type *o_ptr, int mode)
 	/* An "object kind" */
 	object_kind *k_ptr;
 
+    /* Temp */
+    char temp[256];
+    
 	/* Eric. */
 	int i = 0;
 
@@ -2110,7 +2119,9 @@ static void item_info_brief(const object_type *o_ptr, int mode)
 	}
 
 	/* Describe the resists/immunities */
-	obj_info_resists(resists);
+	obj_info_resists(resists, TRUE, temp);
+    text_out(temp);
+    text_out("\n");
 
 	/* Describe other (weird) things */
 	if (f2 & (TR2_NO_BLIND)) text_out("\nIt grants you immunity to blindness.  ");
@@ -2224,6 +2235,9 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	int vn;
 	cptr vp[32];
 
+    /* Temp */
+    char temp[256];
+    
 	/* The item's flags && resists */
 	u32b f1, f2, f3;
 	byte resists[RES_MAX];
@@ -2551,7 +2565,8 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	}
 
 	/* Describe the resists/immunities */
-	obj_info_resists(resists);
+	obj_info_resists(resists, FALSE, temp);
+    text_out(temp);
 
 	/* Describe other (weird) things */
 	if (f2 & (TR2_NO_BLIND)) text_out("It grants you immunity to blindness.  ");

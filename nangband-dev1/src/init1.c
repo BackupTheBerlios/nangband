@@ -764,7 +764,7 @@ errr parse_z_info(char *buf, header *head)
 	}
 
 	/* Process 'X' for "Maximum x_info[] index" */
-	if (buf[2] == 'X')
+	else if (buf[2] == 'X')
 	{
 		int max;
 

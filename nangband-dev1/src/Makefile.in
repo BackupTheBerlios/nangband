@@ -105,7 +105,9 @@ angband_SOURCES = \
   z-virt.h main.h \
   script.c script.h \
   l-monst.c l-object.c l-player.c l-random.c l-ui.c l-misc.c l-spell.c \
-  use-obj.c
+  use-obj.c \
+  borg1.c borg2.c borg3.c borg4.c borg5.c borg6.c borg7.c borg8.c \
+  borg9.c
 
 
 EXTRA_angband_SOURCES = \
@@ -145,7 +147,9 @@ am_angband_OBJECTS = z-util.$(OBJEXT) z-virt.$(OBJEXT) z-form.$(OBJEXT) \
 	randart.$(OBJEXT) script.$(OBJEXT) l-monst.$(OBJEXT) \
 	l-object.$(OBJEXT) l-player.$(OBJEXT) l-random.$(OBJEXT) \
 	l-ui.$(OBJEXT) l-misc.$(OBJEXT) l-spell.$(OBJEXT) \
-	use-obj.$(OBJEXT)
+	use-obj.$(OBJEXT) borg1.$(OBJEXT) borg2.$(OBJEXT) \
+	borg3.$(OBJEXT) borg4.$(OBJEXT) borg5.$(OBJEXT) borg6.$(OBJEXT) \
+	borg7.$(OBJEXT) borg8.$(OBJEXT) borg9.$(OBJEXT)
 angband_OBJECTS = $(am_angband_OBJECTS)
 angband_LDFLAGS =
 
@@ -155,40 +159,44 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/birth.Po $(DEPDIR)/cave.Po \
-@AMDEP_TRUE@	$(DEPDIR)/cmd1.Po $(DEPDIR)/cmd2.Po \
-@AMDEP_TRUE@	$(DEPDIR)/cmd3.Po $(DEPDIR)/cmd4.Po \
-@AMDEP_TRUE@	$(DEPDIR)/cmd5.Po $(DEPDIR)/cmd6.Po \
-@AMDEP_TRUE@	$(DEPDIR)/dungeon.Po $(DEPDIR)/files.Po \
-@AMDEP_TRUE@	$(DEPDIR)/generate.Po $(DEPDIR)/init1.Po \
-@AMDEP_TRUE@	$(DEPDIR)/init2.Po $(DEPDIR)/l-misc.Po \
-@AMDEP_TRUE@	$(DEPDIR)/l-monst.Po $(DEPDIR)/l-object.Po \
-@AMDEP_TRUE@	$(DEPDIR)/l-player.Po $(DEPDIR)/l-random.Po \
-@AMDEP_TRUE@	$(DEPDIR)/l-spell.Po $(DEPDIR)/l-ui.Po \
-@AMDEP_TRUE@	$(DEPDIR)/load.Po $(DEPDIR)/maid-x11.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main-ami.Po $(DEPDIR)/main-cap.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main-dos.Po $(DEPDIR)/main-emx.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main-gcu.Po $(DEPDIR)/main-gtk.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main-ibm.Po $(DEPDIR)/main-lsl.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main-mac.Po $(DEPDIR)/main-ros.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main-sla.Po $(DEPDIR)/main-vcs.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main-vme.Po $(DEPDIR)/main-win.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main-x11.Po $(DEPDIR)/main-xaw.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main-xpj.Po $(DEPDIR)/main-xxx.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main.Po $(DEPDIR)/melee1.Po \
-@AMDEP_TRUE@	$(DEPDIR)/melee2.Po $(DEPDIR)/monster1.Po \
-@AMDEP_TRUE@	$(DEPDIR)/monster2.Po $(DEPDIR)/object1.Po \
-@AMDEP_TRUE@	$(DEPDIR)/object2.Po $(DEPDIR)/randart.Po \
-@AMDEP_TRUE@	$(DEPDIR)/readdib.Po $(DEPDIR)/save.Po \
-@AMDEP_TRUE@	$(DEPDIR)/script.Po $(DEPDIR)/spells1.Po \
-@AMDEP_TRUE@	$(DEPDIR)/spells2.Po $(DEPDIR)/store.Po \
-@AMDEP_TRUE@	$(DEPDIR)/tables.Po $(DEPDIR)/use-obj.Po \
-@AMDEP_TRUE@	$(DEPDIR)/util.Po $(DEPDIR)/variable.Po \
-@AMDEP_TRUE@	$(DEPDIR)/wizard1.Po $(DEPDIR)/wizard2.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xtra1.Po $(DEPDIR)/xtra2.Po \
-@AMDEP_TRUE@	$(DEPDIR)/z-form.Po $(DEPDIR)/z-rand.Po \
-@AMDEP_TRUE@	$(DEPDIR)/z-term.Po $(DEPDIR)/z-util.Po \
-@AMDEP_TRUE@	$(DEPDIR)/z-virt.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/birth.Po $(DEPDIR)/borg1.Po \
+@AMDEP_TRUE@	$(DEPDIR)/borg2.Po $(DEPDIR)/borg3.Po \
+@AMDEP_TRUE@	$(DEPDIR)/borg4.Po $(DEPDIR)/borg5.Po \
+@AMDEP_TRUE@	$(DEPDIR)/borg6.Po $(DEPDIR)/borg7.Po \
+@AMDEP_TRUE@	$(DEPDIR)/borg8.Po $(DEPDIR)/borg9.Po \
+@AMDEP_TRUE@	$(DEPDIR)/cave.Po $(DEPDIR)/cmd1.Po \
+@AMDEP_TRUE@	$(DEPDIR)/cmd2.Po $(DEPDIR)/cmd3.Po \
+@AMDEP_TRUE@	$(DEPDIR)/cmd4.Po $(DEPDIR)/cmd5.Po \
+@AMDEP_TRUE@	$(DEPDIR)/cmd6.Po $(DEPDIR)/dungeon.Po \
+@AMDEP_TRUE@	$(DEPDIR)/files.Po $(DEPDIR)/generate.Po \
+@AMDEP_TRUE@	$(DEPDIR)/init1.Po $(DEPDIR)/init2.Po \
+@AMDEP_TRUE@	$(DEPDIR)/l-misc.Po $(DEPDIR)/l-monst.Po \
+@AMDEP_TRUE@	$(DEPDIR)/l-object.Po $(DEPDIR)/l-player.Po \
+@AMDEP_TRUE@	$(DEPDIR)/l-random.Po $(DEPDIR)/l-spell.Po \
+@AMDEP_TRUE@	$(DEPDIR)/l-ui.Po $(DEPDIR)/load.Po \
+@AMDEP_TRUE@	$(DEPDIR)/maid-x11.Po $(DEPDIR)/main-ami.Po \
+@AMDEP_TRUE@	$(DEPDIR)/main-cap.Po $(DEPDIR)/main-dos.Po \
+@AMDEP_TRUE@	$(DEPDIR)/main-emx.Po $(DEPDIR)/main-gcu.Po \
+@AMDEP_TRUE@	$(DEPDIR)/main-gtk.Po $(DEPDIR)/main-ibm.Po \
+@AMDEP_TRUE@	$(DEPDIR)/main-lsl.Po $(DEPDIR)/main-mac.Po \
+@AMDEP_TRUE@	$(DEPDIR)/main-ros.Po $(DEPDIR)/main-sla.Po \
+@AMDEP_TRUE@	$(DEPDIR)/main-vcs.Po $(DEPDIR)/main-vme.Po \
+@AMDEP_TRUE@	$(DEPDIR)/main-win.Po $(DEPDIR)/main-x11.Po \
+@AMDEP_TRUE@	$(DEPDIR)/main-xaw.Po $(DEPDIR)/main-xpj.Po \
+@AMDEP_TRUE@	$(DEPDIR)/main-xxx.Po $(DEPDIR)/main.Po \
+@AMDEP_TRUE@	$(DEPDIR)/melee1.Po $(DEPDIR)/melee2.Po \
+@AMDEP_TRUE@	$(DEPDIR)/monster1.Po $(DEPDIR)/monster2.Po \
+@AMDEP_TRUE@	$(DEPDIR)/object1.Po $(DEPDIR)/object2.Po \
+@AMDEP_TRUE@	$(DEPDIR)/randart.Po $(DEPDIR)/readdib.Po \
+@AMDEP_TRUE@	$(DEPDIR)/save.Po $(DEPDIR)/script.Po \
+@AMDEP_TRUE@	$(DEPDIR)/spells1.Po $(DEPDIR)/spells2.Po \
+@AMDEP_TRUE@	$(DEPDIR)/store.Po $(DEPDIR)/tables.Po \
+@AMDEP_TRUE@	$(DEPDIR)/use-obj.Po $(DEPDIR)/util.Po \
+@AMDEP_TRUE@	$(DEPDIR)/variable.Po $(DEPDIR)/wizard1.Po \
+@AMDEP_TRUE@	$(DEPDIR)/wizard2.Po $(DEPDIR)/xtra1.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xtra2.Po $(DEPDIR)/z-form.Po \
+@AMDEP_TRUE@	$(DEPDIR)/z-rand.Po $(DEPDIR)/z-term.Po \
+@AMDEP_TRUE@	$(DEPDIR)/z-util.Po $(DEPDIR)/z-virt.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -275,6 +283,15 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/birth.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/borg1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/borg2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/borg3.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/borg4.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/borg5.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/borg6.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/borg7.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/borg8.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/borg9.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cave.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cmd1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cmd2.Po@am__quote@

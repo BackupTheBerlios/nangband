@@ -51,6 +51,12 @@ if test "$GCC" = yes; then
   CFLAGS="$CFLAGS -fno-strength-reduce"
 fi
 
+dnl Checks for the borg.
+AC_ARG_ENABLE(borg, [  --enable-borg           enable the borg])
+if test "X${enable_borg}" != Xno ; then
+  CFLAGS="$CFLAGS -DALLOW_BORG"
+fi
+
 dnl Checks for libraries.
 
 AC_CYGWIN
@@ -121,7 +127,7 @@ else
     AC_PATH_XTRA
   fi
 
-  AC_ARG_ENABLE(gtk, [  --enable-gtk            enable the GTK X11 module])
+  AC_ARG_ENABLE(gtk,  [  --enable-gtk            enable the GTK X11 module])
 
   if test "x${enable_gtk-no}" != xno || test "$no_x" != "yes"; then
     ANGBAND_OBJS="maid-x11.o"

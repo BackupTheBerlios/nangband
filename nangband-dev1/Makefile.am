@@ -2,6 +2,7 @@
 
 AUTOMAKE_OPTIONS = foreign
 
-EXTRA_DIST = readme.txt changes.txt compile.txt acconfig.h
+EXTRA_DIST = readme.txt changes.txt compile.txt acconfig.h todo.txt \
+             readme.borg thanks.txt licence.txt
 
 SUBDIRS = src lib

@@ -992,7 +992,6 @@ struct player_type
 	s16b stat_ind[A_MAX];	/* Indexes into stat tables */
 
 	bool resist_blind;	/* Resist blindness */
-	bool resist_confu;	/* Resist confusion */
 	bool resist_sound;	/* Resist sound */
 	bool resist_shard;	/* Resist shards */
 	bool resist_nexus;	/* Resist nexus */

@@ -2366,7 +2366,9 @@ void update_smart_learn(int m_idx, int what)
 
 		case DRS_RES_CONFU:
 		{
-			if (p_ptr->resist_confu) m_ptr->smart |= (SM_RES_CONFU);
+			if (p_ptr->resist_cur[RES_CONF] || p_ptr->resist_timed[RES_CONF])
+				m_ptr->smart |= (SM_RES_CONFU);
+
 			break;
 		}
 

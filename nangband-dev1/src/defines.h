@@ -1967,7 +1967,7 @@
 #define TR2_XXX12           0x00400000L /* (reserved) */
 #define TR2_XXX13           0x00800000L /* (reserved) */
 #define TR2_XXX14           0x01000000L /* (reserved) */
-#define TR2_RES_CONFU       0x02000000L /* Resist confusion */
+#define TR2_XXX15           0x02000000L /* (reserved) */
 #define TR2_RES_SOUND       0x04000000L /* Resist sound */
 #define TR2_RES_SHARD       0x08000000L /* Resist shards */
 #define TR2_RES_NEXUS       0x10000000L /* Resist nexus */

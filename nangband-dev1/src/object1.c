@@ -1767,6 +1767,13 @@ void obj_info_resists(byte *resists)
 		percentages[pc++] = resists[RES_FEAR];
 	}
 
+	if (resists[RES_CONF])
+	{
+		text[vn++] = "confusion";
+		colours[cn++] = TERM_RED;
+		percentages[pc++] = resists[RES_CONF];
+	}
+
 	/* Describe */
 	if (vn)
 	{
@@ -2120,12 +2127,6 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	if (f2 & (TR2_NO_BLIND))
 	{
 		text_out("It grants you immunity to blindness.  ");
-		known = TRUE;
-	}
-
-	if (f2 & (TR2_RES_CONFU))
-	{
-		text_out("It provides resistance to confusion.  ");
 		known = TRUE;
 	}
 

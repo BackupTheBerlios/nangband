@@ -12,7 +12,6 @@
  *
  * Functions that are still needed for this file:
  *   - Decrease the % gain for timed resists as the time runs out.
- *   - Access the res_names[] data and return he string length.
  */
 
 /*
@@ -46,6 +45,18 @@ int resist_player_current(byte res_idx)
 	/* [note to self - do the clever timed resist decrement stuff] */
 
 	return(x + y);
+}
+
+/*
+ * Check a resist.
+ */
+bool resist_check(byte res_idx)
+{
+	int n = resist_player_current(res_idx);
+
+	if (randint(100) > n) return(FALSE);
+
+	return (TRUE);
 }
 
 /*

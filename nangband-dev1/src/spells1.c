@@ -3387,7 +3387,7 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ)
 			{
 				(void)set_stun(p_ptr->stun + randint(40));
 			}
-			if (!p_ptr->resist_confu)
+			if (!resist_check(RES_CONF))
 			{
 				(void)set_confused(p_ptr->confused + randint(5) + 5);
 			}
@@ -3403,7 +3403,7 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ)
 			{
 				dam *= 6; dam /= (randint(6) + 6);
 			}
-			if (!p_ptr->resist_confu)
+			if (!resist_check(RES_CONF))
 			{
 				(void)set_confused(p_ptr->confused + rand_int(20) + 10);
 			}
@@ -3468,15 +3468,19 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ)
 		/* Pure confusion */
 		case GF_CONFUSION:
 		{
+			int res_percent;
+
+			/* Apply the resist */
+			res_percent = resist_player_current(RES_CONF);
+			resist_apply(res_percent, dam);
+
 			if (fuzzy) msg_print("You are hit by something!");
-			if (p_ptr->resist_confu)
-			{
-				dam *= 5; dam /= (randint(6) + 6);
-			}
-			if (!p_ptr->resist_confu)
+
+			if (!resist_check(RES_CONF))
 			{
 				(void)set_confused(p_ptr->confused + randint(20) + 10);
 			}
+
 			take_hit(dam, killer);
 			break;
 		}

@@ -7,6 +7,7 @@ Nangband ChangeLog
   on it. (takkaria)
 - Added the view_player_colour option from Zangband CVS; this changes the 
   colour of your '@' depending on how much HP you have left. (takkaria)
+- Removed the unused 'alert_failure' option. (takkaria)
 
 2002-03-30
 ----------

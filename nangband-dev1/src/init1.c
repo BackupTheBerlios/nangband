@@ -50,6 +50,27 @@
 /*** Helper arrays for parsing ascii template files ***/
 
 /*
+ * Table of resist names.
+ */
+static cptr resist_flag_names[RES_MAX] = 
+{
+	"ACID",
+	"ELEC",
+	"FIRE",
+	"COLD",
+	"POIS",
+	"FEAR",
+	"DOOM",
+	"DARK",
+	"CONF",
+	"SOUND",
+	"SHARDS",
+	"NEXUS",
+	"NETHER",
+	"CHAOS"
+};
+
+/*
  * Terrain flags.
  */
 static cptr feature_flags_1[32] =
@@ -754,6 +775,26 @@ static u32b add_name(header *head, cptr buf)
 /*
  * Grab one flag from a textual string
  */
+static errr grab_resist_index(int *resist_index, cptr what)
+{
+	int i;
+
+	/* Check flags */
+	for (i = 0; i < RES_MAX; i++)
+	{
+		if (prefix(what, resist_flag_names[i]))
+		{
+			(*resist_index) = i;
+			return (0);
+		}
+	}
+
+	return (-1);
+}
+
+/*
+ * Grab one flag from a textual string
+ */
 static errr grab_one_flag(u32b *flags, cptr names[], cptr what)
 {
 	int i;
@@ -1414,7 +1455,6 @@ static errr grab_one_resist(sbyte *resists, cptr what)
  */
 static errr grab_one_kind_flag(object_kind *k_ptr, cptr what)
 {
-
 	/* Grab item flags */
 	if (grab_one_flag(&k_ptr->flags1, k_info_flags1, what) == 0)
 		return (0);
@@ -1441,8 +1481,6 @@ static errr grab_one_kind_flag(object_kind *k_ptr, cptr what)
 }
 
 
-
-
 /*
  * Initialize the "k_info" array, by parsing an ascii "template" file
  */
@@ -1454,7 +1492,6 @@ errr parse_k_info(char *buf, header *head)
 
 	/* Current entry */
 	static object_kind *k_ptr = NULL;
-
 
 	/* Process 'N' for "New/Number/Name" */
 	if (buf[0] == 'N')
@@ -1665,6 +1702,25 @@ errr parse_k_info(char *buf, header *head)
 		k_ptr->to_h = th;
 		k_ptr->to_d = td;
 		k_ptr->to_a =  ta;
+	}
+
+	/* 'R' for resists */
+	else if (buf[0] == 'R')
+	{
+		/* There better be a current k_ptr */
+		if (!k_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
+
+		/* Ensure */
+		if (buf[1] != ':') return (PARSE_ERROR_GENERIC);
+		buf += 2;
+
+		/* Paranoia */
+		if (!(s = strchr(buf, ':'))) return (PARSE_ERROR_GENERIC);
+
+		(*s) = 0;
+		s++;
+		grab_resist_index(&i, buf);
+		k_ptr->resists[i] = atoi(s);
 	}
 
 	/* Hack -- Process 'F' for flags */

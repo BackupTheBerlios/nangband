@@ -1,6 +1,14 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-08-08
+----------
+- Added a new "R" line to object.txt; this defines resists and should be used
+  in preference to RES_blah<n>.  All the definitions in object.txt have been
+  changed, and I will add the code for the rest tomorrow. (takkaria)
+- Created a timeplan.  Should be in the CVS tomorrow, when I'm not using a
+  remote session to do all my code. (takkaria)
+
 from 2002-08-04 to 2002-08-07
 -----------------------------
 - Some clever debugging code added; this was originally in running.c (as it

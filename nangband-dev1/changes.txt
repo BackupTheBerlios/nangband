@@ -1,6 +1,21 @@
 Nangband ChangeLog
 ==================
 
+2002-03-03
+----------
+- Made the title screen bigscreen-compliant. (takkaria)
+- Improved object recall. (takkaria)
+
+2002-02-02
+----------
+- Added the new XML help system. (ajps)
+- The title screen is now an AHML file. (ajps)
+- Fixed the mac and windows ports comewhat. (takkaria)
+
+2002-02-01
+----------
+- Code cleanup. (takkaria)
+
 2002-02-29
 ----------
 - Fixed the bug with the new resist system timed resists. Many thanks

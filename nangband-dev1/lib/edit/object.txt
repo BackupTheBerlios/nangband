@@ -3646,5 +3646,5 @@ I:8:0:1
 W:0:100:5:50000
 P:0:2d8:0:0:0
 F:IGNORE_FIRE | RES_FIRE | LITE3 |
-F:RES_ACID
-D:An orb glowing red, it's eternal flame lights your path.
+F:RES_ACID | CON
+D:An glowing red orb, it's flame lights your path.

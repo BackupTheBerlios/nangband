@@ -1638,9 +1638,9 @@ F:STR | CHR | STEALTH | SPEED |
 F:SLAY_EVIL | KILL_UNDEAD | SLAY_GIANT | SLAY_ANIMAL | 
 F:RES_NETHER25 | RES_FEAR25 | RES_DARK35 | RES_COLD10
 
-# New Artifact (137): The Rope Belt 'Aaragorn'
+# New Artifact (137): The Rope Belt 'Aragorn'
 
-N:137:'Aaragorn'
+N:137:'Aragorn'
 I:29:0:3
 W:30:45:5:30000
 P:2:1d1:5:6:12

@@ -119,7 +119,6 @@
 #define GET    TRUE
 
 /* Variables needed by the code */
-static byte *savefile_head;      /* Current block's header */
 static byte savefile_head_type;  /* The type of block */
 static byte savefile_head_ver;   /* The version of this block */
 static byte *savefile_block;     /* Current block */
@@ -197,7 +196,7 @@ static bool wearable_p(const object_type *o_ptr)
  * If more memory is needed, it allocates more memory, and makes
  * savefile_block point to it.
  */
-static void savefile_do_byte(byte *v, bool type)
+static byte savefile_do_byte(byte *v, bool type)
 {
 	/* See if we need to allocate more memory */
 	if ((savefile_blocksize == savefile_blockused) && (type == PUT))
@@ -236,13 +235,13 @@ static void savefile_do_byte(byte *v, bool type)
 	savefile_blockused++;
 
 	/* We are done */
- 	return;
+ 	return(*v);
 }
 
 /*
  * This function gets/puts an unsigned 16-bit integer.
  */
-static void savefile_do_u16b(u16b *v, bool type)
+static u16b savefile_do_u16b(u16b *v, bool type)
 {
 	byte i;
 
@@ -256,23 +255,21 @@ static void savefile_do_u16b(u16b *v, bool type)
 	}
 	else
 	{
-		byte i;
-
 		savefile_do_byte(&i, GET);
 		(*v) = i;
 
 		savefile_do_byte(&i, GET);
-		(*v) |= ((u32b) i << 8);
+		(*v) |= (i << 8);
 	}
 
 	/* We are done */
-	return;
+	return (*v);
 }
 
 /*
  * This function gets/puts an unsigned 32-bit integer.
  */
-static void savefile_do_u32b(u32b *v, bool type)
+static u32b savefile_do_u32b(u32b *v, bool type)
 {
 	byte i;
 
@@ -306,36 +303,35 @@ static void savefile_do_u32b(u32b *v, bool type)
 	}
 
 	/* We are done */
-	return;
+	return (*v);
 }
 
 /*
- * Either put or get a string.
+ * Either put or get a string.  Maximum length is 255 characters,
+ * Behaviour for longer strings is undefined.
  */
-static void savefile_do_string(char *str, bool record, bool type)
+static char *savefile_do_string(char *str, bool type)
 {
 	byte i = 255;
-	int pos = 0;
+	
+	/* Counter */
+	int n = 0;
 
 	/* Count */
-	if (type == PUT) i = (byte) strlen(str);
+	if (type == PUT) i = (byte) strlen(str) + 1;
 
 	/* Put/Get the length of the string first */
-	if (record) savefile_do_byte(&i, type);
+	savefile_do_byte(&i, type);
 
 	/* Put/Get the string, one byte at a time */
-	while (TRUE)
+	for (n = 0; n < i; n++)
 	{
 		/* Put the byte */
-		savefile_do_byte((byte *) &str[pos], type);
-
-		/* Check the value */
-		if (str[pos - 1] != '\0' || pos < i) pos++;
-		else break;
+		savefile_do_byte((byte *) &str[n], type);
 	}
 
 	/* We are done */
-	return;
+	return (str);
 }
 
 /* Here we define space-saving macros */
@@ -445,9 +441,6 @@ static void savefile_do_string(char *str, bool record)
  */
 static void savefile_new_block(int type, int ver)
 {
-	/* Make the header */
-	C_MAKE(savefile_head, BLOCK_HEAD_SIZE, byte);
-
 	/* Make the block */
 	C_MAKE(savefile_block, BLOCK_INCREMENT, byte);
 
@@ -467,6 +460,10 @@ static void savefile_new_block(int type, int ver)
 static void savefile_write_block(vptr block, int fd)
 {
 	int pos = 0;
+	byte *savefile_head;
+ 
+	/* Make the header */
+	C_MAKE(savefile_head, BLOCK_HEAD_SIZE, byte);
 
 	/* Create the header - first, the type */
 	savefile_head[pos++] = (savefile_head_type & 0xFF);
@@ -594,10 +591,10 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 		char buffer[128];
 
 		/* Get the inscription */
-		savefile_do_string((char *) &buffer, TRUE, type);
+		savefile_do_string((char *) &buffer, type);
 
 		/* Check if we should do anything */
-		if (buffer[0] != '¬') o_ptr->note = quark_add(buffer);
+		if (buffer[0]) o_ptr->note = quark_add(buffer);
 	}
 
 	/* Save the inscription (if any) */
@@ -605,10 +602,16 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	{
 		char buffer[128];
 
-		if (o_ptr->note) sprintf(buffer, "%s", (char *) quark_str(o_ptr->note));
-		else sprintf(buffer, "%c", '¬');
+		if (o_ptr->note)
+		{
+			sprintf(buffer, "%s", (char *) quark_str(o_ptr->note));
+		}
+		else
+		{
+			buffer[0] = 0;
+		}
 
-		savefile_do_string(buffer, TRUE, type);
+		savefile_do_string(buffer, type);
 	}
 
 	/* We might be done. */
@@ -865,6 +868,7 @@ static void savefile_helper_store(store_type *st_ptr, bool type)
 static void savefile_start(int fd)
 {
 	byte *header_pos;
+	byte *savefile_head;
 
 	/* Make the block */
 	C_MAKE(savefile_head, 6, byte);
@@ -902,7 +906,7 @@ static void savefile_do_block_header(bool type, int ver)
 	    v_x = VERSION_EXTRA;
 
 	/* Add the variant string */
-	savefile_do_string(v_name, TRUE, type);
+	savefile_do_string(v_name, type);
 
 	/* Add the version number */
 	savefile_do_byte(&v_j, type);
@@ -1003,10 +1007,10 @@ static errr savefile_do_block_player(bool type, int ver)
 		savefile_do_byte(&p_ptr->spell_order[i], type);
 
 	/* What the player's name is */
-	savefile_do_string(op_ptr->full_name, TRUE, type);
+	savefile_do_string(op_ptr->full_name, type);
 
 	/* What the player died from */
-	savefile_do_string(p_ptr->died_from, TRUE, type);
+	savefile_do_string(p_ptr->died_from, type);
 
 #if 0
 	/* Player's history */
@@ -1219,7 +1223,7 @@ static void savefile_do_block_messages(bool type, int ver)
 		}
 
 		/* Write the string */
-		savefile_do_string((char *) &buffer, TRUE, type);
+		savefile_do_string((char *) &buffer, type);
 
 		/* Write the type */
 		savefile_do_u16b(&mess_type, type);

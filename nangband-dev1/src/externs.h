@@ -527,7 +527,7 @@ extern void display_koff(int k_idx);
 extern bool make_ego_item(object_type *o_ptr, bool cursed, int level);
 
 /* randart.c */
-// extern s32b artifact_power(object_type *o_ptr);
+extern s32b artifact_power(object_type *o_ptr);
 extern bool make_randart_stupid(object_type *o_ptr);
 extern bool make_randart(object_type *o_ptr, bool curse);
 

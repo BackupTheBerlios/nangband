@@ -178,7 +178,7 @@ struct object_kind
 	byte level;			/* Level */
 	byte extra;			/* Something */
 
-	byte resists[RES_MAX];	/* Item resists */
+	sbyte resists[RES_MAX];	/* Item resists */
 	s16b stat_mods[A_MAX];  /* stat mods */
 
 	byte d_attr;		/* Default object attribute */
@@ -260,6 +260,8 @@ struct randart_type
 
 	u32b flags1, flags2, flags3; /* Flags; sets 1-3 */
 
+	sbyte resists[RES_MAX];      /* Item resists */
+
 	byte level;                  /* Randart level */
 
 	byte activation;             /* Activation */
@@ -306,7 +308,7 @@ struct ego_item_type
 
 	u32b flags3;		/* Ego-Item Flags, set 3 */
 
-	byte resists[STRUCT_RES_MAX];	/* Item resists */
+	sbyte resists[RES_MAX];	/* Item resists */
 };
 
 
@@ -736,7 +738,7 @@ struct player_race
 
 	s16b hist;			/* Starting history index */
 
-	byte resists[RES_MAX];	/* Racial resists */
+	sbyte resists[RES_MAX];	/* Racial resists */
 
 	u32b flags1;		/* Racial Flags, set 1 */
 	u32b flags2;		/* Racial Flags, set 2 */
@@ -918,10 +920,10 @@ struct player_type
 	s16b tim_invis;		/* Timed -- See Invisible */
 	s16b tim_infra;		/* Timed -- Infra Vision */
 
-	byte resist_timed[RES_MAX];	/* Timed resistances */
-	byte resist_tim_max[RES_MAX];	/* Original time of resistance */
-	byte resist_cur[RES_MAX];	/* Current % resistances */
-	byte resist_dis[RES_MAX];	/* Displayed resistances */
+	sbyte resist_timed[RES_MAX];	/* Timed resistances */
+	sbyte resist_tim_max[RES_MAX];	/* Original time of resistance */
+	sbyte resist_cur[RES_MAX];	/* Current % resistances */
+	sbyte resist_dis[RES_MAX];	/* Displayed resistances */
 
 	s16b word_recall;	/* Word of recall counter */
 

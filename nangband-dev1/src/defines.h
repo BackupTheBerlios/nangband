@@ -1969,10 +1969,10 @@
 #define TR2_SUST_DEX        0x00000008L /* Sustain DEX */
 #define TR2_SUST_CON        0x00000010L /* Sustain CON */
 #define TR2_SUST_CHR        0x00000020L /* Sustain CHR */
-#define TR2_LIGHT1           0x00000040L /* Provides light rad1 */
-#define TR2_LIGHT2           0x00000080L /* Provides light rad2 */
-#define TR2_LIGHT3           0x00000100L /* Provides light rad3 */
-#define TR2_LIGHT4           0x00000200L /* Provides light rad4 */
+#define TR2_LIGHT1          0x00000040L /* Provides light rad1 */
+#define TR2_LIGHT2          0x00000080L /* Provides light rad2 */
+#define TR2_LIGHT3          0x00000100L /* Provides light rad3 */
+#define TR2_LIGHT4          0x00000200L /* Provides light rad4 */
 #define TR2_NEEDS_FUEL      0x00000400L /* Light source needs fuel */
 #define TR2_XXX1            0x00000800L /* (reserved) */
 #define TR2_NO_DISENCHANT   0x00001000L /* Item cannot be disenchanted */
@@ -1998,7 +1998,7 @@
 
 #define TR3_SLOW_DIGEST     0x00000001L /* Slow digest */
 #define TR3_FEATHER         0x00000002L /* Feather Falling */
-#define TR3_XXX1            0x00000004L /* Perma-Light */
+#define TR3_XXX1            0x00000004L
 #define TR3_REGEN           0x00000008L /* Regeneration */
 #define TR3_TELEPATHY       0x00000010L /* Telepathy */
 #define TR3_SEE_INVIS       0x00000020L /* See Invis */
@@ -2016,8 +2016,8 @@
 #define TR3_IGNORE_ELEC     0x00020000L /* Item ignores Elec Damage */
 #define TR3_IGNORE_FIRE     0x00040000L /* Item ignores Fire Damage */
 #define TR3_IGNORE_COLD     0x00080000L /* Item ignores Cold Damage */
-#define TR3_XXX6            0x00100000L /* (reserved) */
-#define TR3_XXX7            0x00200000L /* (reserved) */
+#define TR3_XXX6            0x00100000L
+#define TR3_XXX7            0x00200000L
 #define TR3_BLESSED         0x00400000L /* Item has been blessed */
 #define TR3_ACTIVATE        0x00800000L /* Item can be activated */
 #define TR3_INSTA_ART       0x01000000L /* Item makes an artifact */
@@ -2045,6 +2045,11 @@
 	(TR3_IGNORE_ACID | TR3_IGNORE_ELEC | TR3_IGNORE_FIRE | \
 	 TR3_IGNORE_COLD )
 
+/*
+ * Flag set 3 -- mask for "curse" flags.
+ */
+#define TR3_CURSED_MASK \
+   (TR3_LIGHT_CURSE | TR3_HEAVY_CURSE | TR3_PERMA_CURSE)
 
 /*
  * Hack -- special "xtra" object flag info (type)

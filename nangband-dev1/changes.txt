@@ -5,6 +5,9 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ----------
 - Updated to the latest [v] CVS; this brings some niceties.
   (takkaria)
+- [v] also brought a nasty; in character dumps, objects' abilities
+  were shown on-screen rather than in the file - fixed. (takkaria)
+- Fixed a typo in thanks.txt. (takkaria)
 
 2002-05-26
 ----------

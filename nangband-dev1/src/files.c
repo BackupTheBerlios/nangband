@@ -1263,12 +1263,16 @@ static void display_player_xtra_info(void)
 	int xthn, xthb, xfos, xsrh;
 	int xdis, xdev, xsav, xstl;
 
-	object_type *o_ptr;
-
 	cptr desc;
 
+	/* Temporary object pointer */
+	object_type *o_ptr;
+
+	/* Buffer */
 	char buf[160];
 
+	/* Old text_out_hook */
+	void (*old_text_out_hook)(byte a, cptr str);
 
 	/* Upper middle */
 	col = 26;
@@ -1499,9 +1503,14 @@ static void display_player_xtra_info(void)
 	desc = likert(xsrh, 6);
 	c_put_str(likert_color, format("%9s", desc), 17, col+14);
 
+	/* Set the old text_out hook */
+	old_text_out_hook = text_out_hook;
+
 	/* Output to the screen and wrap at column 72 */
 	text_out_hook = text_out_to_screen;
 	text_out_wrap = 72;
+
+	/* And indent to one character in */
 	text_out_indent = 1;
 
 	/* History */
@@ -1511,6 +1520,7 @@ static void display_player_xtra_info(void)
 	/* Reset text_out() vars */
 	text_out_wrap = 0;
 	text_out_indent = 0;
+	text_out_hook = old_text_out_hook;
 
 	/* We are done. */
 	return;
@@ -2124,14 +2134,12 @@ errr file_character(cptr name, bool full)
 	/* Invalid file */
 	if (!fff) return (-1);
 
-
+	/* Set the appropriate out hooks */
 	text_out_hook = text_out_to_file;
 	text_out_file = fff;
 
 	/* Begin dump */
-	fprintf(fff, "  [%s %s Character Dump]\n\n",
-	        VERSION_NAME, VERSION_STRING);
-
+	fprintf(fff, "  [%s %s Character Dump]\n\n", VERSION_NAME, VERSION_STRING);
 
 	/* Display player */
 	display_player(0);

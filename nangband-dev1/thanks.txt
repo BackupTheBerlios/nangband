@@ -7,7 +7,7 @@ The DevTeam:
     * Marshall A. Scott [parodyingbird]: Secondary Developer
     * Antony Sidwell [ajps]: Tertiary Developer
 
-Previous maintainers:
+Previous maintainers (of Vanilla):
     * Robert Ruehlmann <rr9@angband.org>: Current Maintainer of Angband
     * Ben Harrison <benh@phial.com>: Angband 2.7.0 - 2.8.5
     * Alex Cutler, Andy Astrand, Sean Marsh, Geoff Hill, Charles Teague,

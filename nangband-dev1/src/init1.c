@@ -1739,7 +1739,7 @@ errr parse_e_info(char *buf, header *head)
 		if (!e_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
 
 		/* Scan for the values */
-		if (sscanf(buf+2, "%d:%d", &rating, &xtra) != 2)
+		if (2 != sscanf(buf+2, "%d:%d", &rating, &xtra))
 			return (PARSE_ERROR_GENERIC);
 
 		/* Save the values */
@@ -1764,11 +1764,11 @@ errr parse_e_info(char *buf, header *head)
 		e_ptr->min_sval[cur_t] = (byte)sval1;
 		e_ptr->max_sval[cur_t] = (byte)sval2;
 
-		/* increase counter for 'possible tval' index */
+		/* Increase counter for 'possible tval' index */
 		cur_t++;
 
-		/* only three T: lines allowed */
-		if (cur_t > 5) return (PARSE_ERROR_GENERIC);
+		/* Only allow EGO_MAX_TVALS T: lines */
+		if (cur_t > EGO_MAX_TVALS) return (PARSE_ERROR_GENERIC);
 	}
 
 	/* Hack -- Process 'C' for "creation" */

@@ -2124,7 +2124,6 @@ void do_cmd_jump(void)
 	do_cmd_walk_or_jump(TRUE);
 }
 
-
 /*
  * Start running.
  *
@@ -2158,7 +2157,6 @@ void do_cmd_run(void)
 	/* Start run */
 	run_step(dir);
 }
-
 
 
 /*

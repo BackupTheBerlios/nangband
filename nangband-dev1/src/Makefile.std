@@ -37,7 +37,7 @@ ANGOBJS = \
 	xtra1.o xtra2.o spells1.o spells2.o \
 	melee1.o melee2.o save.o files.o \
 	cmd1.o cmd2.o cmd3.o cmd4.o cmd5.o cmd6.o \
-	resist.o interface.o \
+	resist.o interface.o running.o \
 	help.o xmlbulp.o \
 	store.o birth.o \
 	wizard1.o wizard2.o \

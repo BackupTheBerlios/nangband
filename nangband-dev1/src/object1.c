@@ -2484,11 +2484,15 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 			/* Is there another stat to print? */
 			if ((current_stat < A_MAX) && (stat[current_stat].bonus))
 			{                
-				text_out(", and ");
 				/* Output this only on a change of sign */
 				if ((stat[current_stat].bonus > 0)  && (stat[current_stat - no_the_same].bonus < 0))
 				{
+					text_out(", but also ");
 					text_out_c(TERM_L_GREEN, "increases");
+				}
+				else
+				{  
+					text_out(", and ");
 				}
 			}
 		}

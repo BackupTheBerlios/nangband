@@ -24,14 +24,14 @@ function do_links($start, $end, $has_pipes)
         if ($has_pipes) echo ' | ';
         if ($end) echo $end;
 
-        if ($start) echo $changes;
+        if ($start) echo $start;
         echo '<a href="?page=changes">changes</a>';
         if ($has_pipes) echo ' | ';
         if ($end) echo $end;
 
         if ($start) echo $start;
         echo '<a href="?page=download">download</a>';
-        if ($has_pipes) echo ' | ';o
+        if ($has_pipes) echo ' | ';
 
         if ($end) echo $end;
 
@@ -71,7 +71,7 @@ function do_styles($type)
 
 function page_header($title, $type)
 {
-	global $style;
+	global $style, $sidebar_links_start, $sidebar_links_end;
 
 	echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
 	echo '<html>';
@@ -87,7 +87,7 @@ function page_header($title, $type)
 <body bgcolor="#ffffff">
 <table width="95%" align="center" cellspacing="1" cellpadding="0" border="0">
 	<tr><td>
-		<table width="100%" align="center" callspacing="0" cellpadding="4" border="0">
+		<table width="100%" align="center" cellspacing="0" cellpadding="4" border="0">
 		<tr><td bgcolor="#eeeeee" align="center">
 			<font face="Verdana" color="#555555" size="+2">
 			<b>nangband - <?php echo $title; ?></b></font>
@@ -113,7 +113,7 @@ function page_header($title, $type)
 			</table>
 		</td>
 		<td valign="top">
-			<table width="100%" callspacing="0" cellpadding="4" border="0">
+			<table width="100%" cellspacing="0" cellpadding="4" border="0">
 				<tr><td bgcolor="#eeeeee" align="center">
 					<font size="+2">nangband - <? echo $title; ?></font>
 					<br>

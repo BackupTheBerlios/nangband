@@ -1,6 +1,13 @@
 Nangband Website changelog
 ==========================
 
+01-07-02
+--------
+- Cleaned up some code in layout.php - the links code is now much
+  nicer; it'll get cleaned up even more when I have the time.
+  (takkaria)
+- Forgot to add the main page to CVS! (takkaria)
+
 30-06-02
 --------
 - Started keeping this changelog. (takkaria)
@@ -18,5 +25,3 @@ Nangband Website changelog
   completely broken. (takkaria)
 - Made cookies expire a few years after setting. (takkaria)
 - Move the stylesheets into styles/. (takkaria)
-- Cleaned up some code in layout.php.  (takkaria)
-- Forgot to add the main page to CVS! (takkaria)

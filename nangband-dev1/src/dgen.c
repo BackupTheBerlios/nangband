@@ -61,7 +61,7 @@ static void generate_dungeon(map_grid_t **dungeon, int width, int height, int le
 	}
 	
 	/* Pick a random point in the dungeon */
-	this_grid = dungeon[rand_int(width)][rand_int(height)];
+	this_grid = &dungeon[rand_int(width)][rand_int(height)];
 	
 	/* Return control */
 	return;

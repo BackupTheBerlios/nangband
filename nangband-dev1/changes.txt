@@ -4,6 +4,7 @@ Nangband ChangeLog
 2002-02-22
 ----------
 - Improved the object recall code.
+- Added belts of starvation as a new ego type. (grahame)
 
 2002-02-21
 ----------
@@ -20,6 +21,8 @@ Previous
 --------
 - Added Orbs. These are permanent, non-artifact light sources.
   Very few exist at the moment. (takkaria)
+- Added the HUNGER flag which vastly increases the amount of food
+  required by the player (grahame)
 - Added a belt slot and some belts to wear in those. There are also
   ego-item belts. (grahame)
 

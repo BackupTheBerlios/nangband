@@ -849,7 +849,7 @@ static void savefile_do_block_header(bool type, int ver)
 	}
 
 	/* Add the variant string */
-	savefile_do_string(&v_name, type);
+	savefile_do_string(v_name, type);
 
 	/* Add the version number */
 	savefile_do_byte(&v_j, type);

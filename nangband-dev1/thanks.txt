@@ -40,11 +40,11 @@ Shayne Steele, Dr. Andrew White, Chris Carr, Greg Flint, Christopher Jeris,
 Ian Parkhouse, "Warhammer", Scott Holder, Brent Ross, Kazuo Ito,
 Willem Siemelink, "Luthien", David J. Grabiner, Ilya Bely, "chungkuo",
 Kieron Dunbar, Timo Pietla, George W. Harris, Willem Siemelink,
-Joseph Oberlander, Paul Moore, Andreas Tophinke, Leon Marrick
+Joseph Oberlander, Paul Moore, Andreas Tophinke, Leon Marrick, Peter J. Rowe
 
 Greg Wooledge < greg@wooledge.org >
 Basic autoconf support, random artifacts, and various ideas for rebalancing
-the game
+the game, including the new list of mage spells.
 
 Tim Baker < dbaker@direct.ca >
 Made the "easy patch" and organized the patches for the Angband 2.8.5 beta
@@ -97,6 +97,10 @@ Improvements to the Acorn RISC OS code
 Hallvard B. Furuseth
 Many improvements to the autoconf support, code-cleanups, and small
 bugfixes
+
+The devlopers of the Lua scripting language and the 'tolua' wrapper
+generators for a nice scripting language that is not only easy to learn
+and use, but also incredibly small and fast!
 
 The UPX team (Markus Oberhumer and Laszlo Molnar)
 The UPX packer for executables < http://upx.tsx.org/ > is used to reduce

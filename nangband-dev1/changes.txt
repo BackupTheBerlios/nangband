@@ -1,6 +1,32 @@
 Nangband ChangeLog
 ==================
 
+2002-03-21
+----------
+- Replaced the mage, rogue, and ranger spell-lists with the spell-list from
+  Greg Wooledge's GWAngband. This gives magic-users a much broader range of
+  attack-spells to choose from including chaos, nether, sound, shards, and
+  gravity effects.  Other big changes are the removal of the 'Globe of 
+  Invulnerability' and the addition of 'Rune of Protection'. The new
+  spellbooks are more "themed" with 9 books specialized on 'detection',
+  'teleportation', 'protection', ... plus a beginner book containing a mix
+  of spells similar to the good old "Magic for Beginners".  The depths where
+  the spellbooks are common and the prices for spellbooks were changed
+  accordingly.
+- ***** WARNING *****: All spells known by magic-users are discarded when
+  importing an old savefile, so that the player can choose freely from the
+  new spell-list.  Don't forget to relearn your spells before trying to
+  use them. Macros/keymaps with old spells probably won't work anymore -
+  change them if necessary.
+- Standing on a glyph no longer protects the player from melee attacks.
+- Increased the range of infravision granted by potions of infravision to
+  +5.
+
+2002-03-20
+----------
+- The RISC OS port is now completely broken. The lua scripts take a part
+  in this. I'm trying to fix it.
+
 2002-03-16
 ----------
 - Remember to add Livingstones, Phase Reavers and the joke monster

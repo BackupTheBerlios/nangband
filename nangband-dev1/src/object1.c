@@ -1756,8 +1756,15 @@ void obj_info_resists(byte *resists)
 	if (resists[RES_DOOM])
 	{
 		text[vn++] = "the pressures of doom";
-		colours[cn++] = TERM_WHITE;
+		colours[cn++] = TERM_L_DARK;
 		percentages[pc++] = resists[RES_DOOM];
+	}
+
+	if (resists[RES_FEAR])
+	{
+		text[vn++] = "fear";
+		colours[cn++] = TERM_L_DARK;
+		percentages[pc++] = resists[RES_FEAR];
 	}
 
 	/* Describe */
@@ -2108,16 +2115,7 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	}
 
 	/* Describe the resists/immunities */
-	if (id)
-	{
-		obj_info_resists(resists);
-	}
-
-	if (f2 & (TR2_RES_FEAR))
-	{
-		text_out("It provides resistance to fear.\n");
-		known = TRUE;
-	}
+	if (id) obj_info_resists(resists);
 
 	if (f2 & (TR2_NO_BLIND))
 	{
@@ -2127,13 +2125,13 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 
 	if (f2 & (TR2_RES_CONFU))
 	{
-		text_out("It provides resistance to confusion.\n");
+		text_out("It provides resistance to confusion.  ");
 		known = TRUE;
 	}
 
 	if (f2 & (TR2_RES_SOUND))
 	{
-		text_out("It provides resistance to sound.\n");
+		text_out("It provides resistance to sound.  ");
 		known = TRUE;
 	}
 

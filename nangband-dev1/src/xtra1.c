@@ -1831,7 +1831,6 @@ static void calc_bonuses(void)
 	p_ptr->sustain_con = FALSE;
 	p_ptr->sustain_dex = FALSE;
 	p_ptr->sustain_chr = FALSE;
-	p_ptr->resist_fear = FALSE;
 	p_ptr->resist_blind = FALSE;
 	p_ptr->resist_confu = FALSE;
 	p_ptr->resist_sound = FALSE;
@@ -1882,6 +1881,9 @@ static void calc_bonuses(void)
 	/* Extract the player flags */
 	player_flags(&f1, &f2, &f3);
 
+	/* deal with silly flags --takkaria */
+	if ((cp_ptr->flags & (CF_BRAVERY_30)) && (p_ptr->lev > 29)) p_ptr->resist_cur[RES_FEAR] += 30;
+
 	/* Good flags */
 	if (f3 & (TR3_SLOW_DIGEST)) p_ptr->slow_digest = TRUE;
 	if (f3 & (TR3_FEATHER)) p_ptr->ffall = TRUE;
@@ -1908,7 +1910,6 @@ static void calc_bonuses(void)
 	if (f3 & (TR3_DRAIN_EXP)) p_ptr->exp_drain = TRUE;
 
 	/* Resistance flags */
-	if (f2 & (TR2_RES_FEAR)) p_ptr->resist_fear = TRUE;
 	if (f2 & (TR2_NO_BLIND)) p_ptr->resist_blind = TRUE;
 	if (f2 & (TR2_RES_CONFU)) p_ptr->resist_confu = TRUE;
 	if (f2 & (TR2_RES_SOUND)) p_ptr->resist_sound = TRUE;
@@ -2000,7 +2001,6 @@ static void calc_bonuses(void)
 		if (f3 & (TR3_DRAIN_EXP)) p_ptr->exp_drain = TRUE;
 
 		/* Resistance flags */
-		if (f2 & (TR2_RES_FEAR)) p_ptr->resist_fear = TRUE;
 		if (f2 & (TR2_NO_BLIND)) p_ptr->resist_blind = TRUE;
 		if (f2 & (TR2_RES_CONFU)) p_ptr->resist_confu = TRUE;
 		if (f2 & (TR2_RES_SOUND)) p_ptr->resist_sound = TRUE;
@@ -2180,13 +2180,27 @@ static void calc_bonuses(void)
 		p_ptr->see_infra++;
 	}
 
+/*
+ NOTE FROM TAKKARIA:
+
+ HACK! HACK! HACK! HACK!
+ BIG HACK!
+
+ HACK!
+ NASTY HACK!
+
+ HACK!
+ HACK!
+
+ * Thanks for listening. Bye.
+ */
 
 	/*** Special flags ***/
 
 	/* Hack -- Hero/Shero -> Res fear */
 	if (p_ptr->hero || p_ptr->shero)
 	{
-		p_ptr->resist_fear = TRUE;
+		p_ptr->resist_cur[RES_FEAR] += 50;
 	}
 
 

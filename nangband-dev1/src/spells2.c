@@ -551,11 +551,6 @@ void self_knowledge(void)
 		info[i++] = "You have a firm hold on your life force.";
 	}
 
-	if (p_ptr->resist_fear)
-	{
-		info[i++] = "You are completely fearless.";
-	}
-
 	if (p_ptr->resist_blind)
 	{
 		info[i++] = "Your eyes are resistant to blindness.";

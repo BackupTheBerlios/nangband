@@ -1525,10 +1525,7 @@ void player_flags(u32b *f1, u32b *f2, u32b *f3)
 	(*f2) |= rp_ptr->flags2;
 	(*f3) |= rp_ptr->flags3;
 
-	if (cp_ptr->flags & CF_BRAVERY_30)
-	{
-		if (p_ptr->lev >= 30) (*f2) |= (TR2_RES_FEAR);
-	}
+	return;
 }
 
 

@@ -1607,11 +1607,8 @@ bool make_attack_spell(int m_idx)
 			disturb(1, 0);
 			if (blind) msg_format("%^s mumbles, and you hear scary noises.", m_name);
 			else msg_format("%^s casts a fearful illusion.", m_name);
-			if (p_ptr->resist_fear)
-			{
-				msg_print("You refuse to be frightened.");
-			}
-			else if (rand_int(100) < p_ptr->skill_sav)
+
+			if (rand_int(100) < resist_player_current(RES_FEAR))
 			{
 				msg_print("You refuse to be frightened.");
 			}

@@ -869,12 +869,7 @@ bool make_attack_normal(int m_idx)
 					take_hit(damage, ddesc);
 
 					/* Increase "afraid" */
-					if (p_ptr->resist_fear)
-					{
-						msg_print("You stand your ground!");
-						obvious = TRUE;
-					}
-					else if (rand_int(100) < p_ptr->skill_sav)
+					if (rand_int(100) < resist_player_current(RES_FEAR))
 					{
 						msg_print("You stand your ground!");
 						obvious = TRUE;

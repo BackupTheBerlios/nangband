@@ -1963,10 +1963,10 @@
 #define TR2_XXX8            0x00040000L /* (reserved) */
 #define TR2_XXX9            0x00080000L /* (reserved) */
 #define TR2_XXX10           0x00100000L /* (reserved) */
-#define TR2_RES_FEAR        0x00200000L /* Resist fear */
-#define TR2_XXX11           0x00400000L /* Resist lite */
-#define TR2_XXX12           0x00800000L /* Resist dark */
-#define TR2_XXX13           0x01000000L /* Resist blind */
+#define TR2_XXX11           0x00200000L /* (reserved) */
+#define TR2_XXX12           0x00400000L /* (reserved) */
+#define TR2_XXX13           0x00800000L /* (reserved) */
+#define TR2_XXX14           0x01000000L /* (reserved) */
 #define TR2_RES_CONFU       0x02000000L /* Resist confusion */
 #define TR2_RES_SOUND       0x04000000L /* Resist sound */
 #define TR2_RES_SHARD       0x08000000L /* Resist shards */

@@ -2344,7 +2344,9 @@ void update_smart_learn(int m_idx, int what)
 
 		case DRS_RES_FEAR:
 		{
-			if (p_ptr->resist_fear) m_ptr->smart |= (SM_RES_FEAR);
+			if (p_ptr->resist_cur[RES_FEAR] || p_ptr->resist_timed[RES_FEAR])
+				m_ptr->smart |= (SM_RES_FEAR);
+
 			break;
 		}
 

@@ -499,8 +499,8 @@ static const flag_desc brand_flags_desc[] =
 
 static const flag_desc resist_flags_desc[] =
 {
-	{ TR2_RES_FEAR,   "Fear" },
-/*	{ TR2_RES_LITE,   "Light" },
+/*	{ TR2_RES_FEAR,   "Fear" },
+	{ TR2_RES_LITE,   "Light" },
 	{ TR2_RES_DARK,   "Dark" }, */
 	{ TR2_RES_CONFU,  "Blindness" },
 	{ TR2_RES_CONFU,  "Confusion" },

@@ -1,12 +1,8 @@
-# File: monster.txt
+# File: nangband/lib/edit/monster.txt
+# Purpose: Monster race definitions for Nangband
 
-
-# This file is used to initialize the "lib/data/monster.raw" file, which is
-# used to initialize the "monster race" information for the Angband game.
-
-# Do not modify this file unless you know exactly what you are doing,
-# unless you wish to risk possible system crashes and broken savefiles.
-# After modifying this file, delete the "lib/data/monster.raw" file.
+# Modifying thie file could result in system crashes, broken savefiles
+# or the game refusing to start.  Always keep backups.
 
 # === Understanding monster.txt ===
 
@@ -23,17 +19,8 @@
 # 'N' indicates the beginning of an entry. The serial number must
 # increase for each new item. Entry 0 is used for the player.
 
-# 'G' is for graphics - symbol and color. There are 16 colors, as
-# follows:
-
-# D - Dark Gray    w - White          s - Gray          o - Orange
-# r - Red          g - Green          b - Blue          u - Brown
-# d - Black        W - Light Gray     v - Violet        y - Yellow
-# R - Light Red    G - Light Green    B - Light Blue    U - Light Brown
-
-# (note that "black" is the same color as the screen background, and
-# thus the monster will appear to be an empty black space if its
-# color is "d".)
+# 'G' is for graphics - symbol and color.  These represent the monster
+# on-screen.
 
 # 'I' is for information - speed, health, vision in tens of feet,
 # armor class, and alertness. 110 is normal speed. Alertness ranges
@@ -95,9 +82,10 @@
 
 
 # Version stamp (required)
-
 V:1.0.0
 
+# Meta-version - increment this each time monsters are changed.
+M:1
 
 ##### Non-race (contains the "player" picture) #####
 

@@ -15,8 +15,6 @@
 - Added tins of caviar as a new deep food source (grahame).
 - Improved the layout of the birthscreen. Implemented the first
   (excessive) use of 'Window Popups'.
-- The RISC OS port is now completely broken. The lua scripts take a part
-  in this. I'm trying to fix it. (takkaria)
 - Remember to add Livingstones, Phase Reavers and the joke monster
   'The Iron Lady'. (takkaria)
 - Added in Antiband's new roller code, along with changes to init1.c

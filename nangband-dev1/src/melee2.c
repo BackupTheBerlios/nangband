@@ -1872,20 +1872,19 @@ bool make_attack_spell(int m_idx)
 		{
 			if (!direct) break;
 			disturb(1, 0);
+
 			if (blind) msg_format("%^s mumbles strangely.", m_name);
 			else msg_format("%^s gestures at your feet.", m_name);
-			if (p_ptr->resist_nexus)
+
+			if (resist_check(RES_NEXUS))
 			{
 				msg_print("You are unaffected!");
-			}
-			else if (rand_int(100) < p_ptr->skill_sav)
-			{
-				msg_print("You resist the effects!");
 			}
 			else
 			{
 				teleport_player_level();
 			}
+
 			update_smart_learn(m_idx, DRS_RES_NEXUS);
 			break;
 		}

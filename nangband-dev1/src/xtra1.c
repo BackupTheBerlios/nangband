@@ -1834,7 +1834,6 @@ static void calc_bonuses(void)
 	p_ptr->resist_blind = FALSE;
 	p_ptr->resist_chaos = FALSE;
 	p_ptr->resist_disen = FALSE;
-	p_ptr->resist_nexus = FALSE;
 	p_ptr->resist_nethr = FALSE;
 
 

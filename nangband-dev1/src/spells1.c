@@ -3504,16 +3504,17 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ)
 		/* Nexus -- see above */
 		case GF_NEXUS:
 		{
+			/* Apply the resist */
+			resist_apply(resist_player_current(RES_NEXUS), dam);
+
 			if (fuzzy) msg_print("You are hit by something strange!");
-			if (p_ptr->resist_nexus)
-			{
-				dam *= 6; dam /= (randint(6) + 6);
-			}
-			else
+
+			if (!resist_check(RES_CONF))
 			{
 				apply_nexus(m_ptr);
 			}
-			take_hit(dam, killer);
+
+ 			take_hit(dam, killer);
 			break;
 		}
 

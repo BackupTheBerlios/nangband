@@ -1,6 +1,13 @@
 Nangband ChangeLog
 ==================
 
+2002-19-31
+----------
+- Made the object recall code usable; there's still a little more to do
+  on it. (takkaria)
+- Added the view_player_colour option from Zangband CVS; this changes the 
+  colour of your '@' depending on how much HP you have left. (takkaria)
+
 2002-03-30
 ----------
 - Added SAT_HUNGER as an activation (grahame).

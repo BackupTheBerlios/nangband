@@ -285,6 +285,9 @@ static void prt_hp(void)
 
 	byte color;
 
+	/* Taken from Zangband - player colouring */
+	monster_race *r_ptr = &r_info[0];
+	byte old_attr = r_ptr->x_attr;
 
 	put_str("Max HP ", ROW_MAXHP, COL_MAXHP);
 
@@ -312,8 +315,38 @@ static void prt_hp(void)
 	}
 
 	c_put_str(color, tmp, ROW_CURHP, COL_CURHP + 7);
-}
 
+
+	/* Hack - only change the colour if in character mode */
+	if (r_ptr->x_char != '@') return;
+	
+	/* Only change colour if asked */
+	if (!view_player_colour)
+	{
+		/* Normal colour is white */
+		color = TERM_WHITE;
+	}
+	else
+	{
+		/* Normal colour is white */
+		if (color == TERM_L_GREEN) color = TERM_WHITE;
+	
+		/* Orange is better than yellow */
+		if (color == TERM_YELLOW) color = TERM_ORANGE;
+	}
+	
+	/* Redraw the player ? */
+	if (old_attr != color)
+	{
+		/* Change the player colour */
+		r_ptr->x_attr = color;
+
+		/* Show the change */
+		if (character_dungeon) lite_spot(p_ptr->px, p_ptr->py);
+	}
+
+	return;
+}
 
 /*
  * Prints players max/cur spell points

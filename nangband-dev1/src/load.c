@@ -120,7 +120,8 @@ static bool wearable_p(const object_type *o_ptr)
 		case TV_HAFTED:
 		case TV_POLEARM:
 		case TV_SWORD:
-		case TV_BOOTS:
+	        case TV_BELT:
+	        case TV_BOOTS:
 		case TV_GLOVES:
 		case TV_HELM:
 		case TV_CROWN:

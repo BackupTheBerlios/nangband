@@ -13,6 +13,8 @@ function page_header($title, $type)
 	echo '<head><title>Nangband - ' . $title . '</title></head>';
 	echo '<body bgcolor="#000000" text="#ffffff">';
 	echo '<h1 align="center">' . $title . '</h1>';
+	echo '[ <a href="http://developer.berlios.de/projects/nangband">Berlios Project Page</a> ] ';
+	echo '[ <a href="index.php">Main</a> ]';
 	echo '<hr width="50%" size="1" align="center">';
 
 	return;

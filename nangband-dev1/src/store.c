@@ -1409,7 +1409,7 @@ static void display_inventory(void)
 	int i, k;
 
 	/* Display all the items we can */
-	for (k = 0; k < (size_y - 11); k++)
+	for (k = 0; k < (size_y - 6); k++)
 	{
 		/* Stop when we run out of items */
 		if (top_item + k >= st_ptr->stock_num) break;
@@ -1419,17 +1419,10 @@ static void display_inventory(void)
 	}
 
 	/* Erase the extra lines and the "more" prompt */
-	for (i = k; i < (size_y - 11); i++) prt("", 6 + i, 0);
+	for (i = k; i < (size_y - 6); i++) prt("", 6 + i, 0);
 
 	/* Assume "no current page" */
 	put_str("        ", 5, 20);
-
-	/* Visual reminder of "more items" */
-	if (top_item + k < st_ptr->stock_num)
-	{
-		/* Show "more" reminder (after the last object) */
-		c_prt(TERM_L_BLUE, "more >>", 6 + k, 3);
-	}
 
 	/* Tell the player if there are more items */
 	if (top_item + k < st_ptr->stock_num)
@@ -3305,7 +3298,7 @@ void do_cmd_store(void)
 		tmp_chr = p_ptr->stat_use[A_CHR];
 
 		/* Clear */
-		clear_from(21);
+		clear_from(size_y - 3);
 
 		/* Basic commands */
 		prt(" ESC) Exit from Building.", size_y - 1, 0);

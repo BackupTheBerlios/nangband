@@ -36,7 +36,8 @@ test_use_object_hook(TV_FOOD, {
 		SV_FOOD_SLIME_MOLD,
 		SV_FOOD_WAYBREAD,
 		SV_FOOD_PINT_OF_ALE,
-		SV_FOOD_PINT_OF_WINE})
+		SV_FOOD_PINT_OF_WINE
+		SV_FOOD_CAVIAR})
 
 -- Test the potions
 test_use_object_hook(TV_POTION, {

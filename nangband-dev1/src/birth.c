@@ -57,7 +57,7 @@ static int stat_limit(int stat)
 		return (18+100 + 5 * (stat - 14));
 	}
 
-	return (18+120 + (stat - 18) / 2;
+	return (18+120 + (stat - 18) / 2);
 }
 
 /*

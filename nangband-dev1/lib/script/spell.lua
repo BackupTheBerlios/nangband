@@ -742,20 +742,19 @@ function cast_spell(index)
 	elseif index == SPELL_MASS_GENOCIDE then
 		mass_genocide()
 	elseif index == SPELL_RESIST_FIRE then
-		set_oppose_fire(player.oppose_fire + randint(20) + 20)
+		set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + randint(20) + 20)
 	elseif index == SPELL_RESIST_COLD then
-		set_oppose_cold(player.oppose_cold + randint(20) + 20)
+		set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + randint(20) + 20)
 	elseif index == SPELL_RESIST_ACID then
-		set_oppose_acid(player.oppose_acid + randint(20) + 20)
+		set_timed_res(RES_ACID, player.resist_timed[RES_ACID] + randint(20) + 20)
 	elseif index == SPELL_RESIST_POISON then
-		set_oppose_pois(player.oppose_pois + randint(20) + 20)
+		set_timed_res(RES_POIS, player.resist_timed[RES_POIS] + randint(20) + 20)
 	elseif index == SPELL_RESISTANCE then
 		local time = randint(20) + 20
-		set_oppose_acid(player.oppose_acid + time)
-		set_oppose_elec(player.oppose_elec + time)
-		set_oppose_fire(player.oppose_fire + time)
-		set_oppose_cold(player.oppose_cold + time)
-		set_oppose_pois(player.oppose_pois + time)
+		set_timed_res(RES_ACID, player.resist_timed[RES_ACID] + time)
+		set_timed_res(RES_POIS, player.resist_timed[RES_POIS] + time)
+		set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + time)
+		set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + time)
 	elseif index == SPELL_HEROISM then
 		hp_player(10)
 		set_hero(player.hero + randint(25) + 25)
@@ -823,8 +822,8 @@ function pray(index)
 	elseif index == PRAYER_REMOVE_CURSE then
 		remove_curse()
 	elseif index == PRAYER_RESIST_HEAT_COLD then
-		set_oppose_fire(player.oppose_fire + randint(10) + 10)
-		set_oppose_cold(player.oppose_cold + randint(10) + 10)
+		set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + randint(10) + 10)
+		set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + randint(10) + 10)
 	elseif index == PRAYER_NEUTRALIZE_POISON then
 		set_poisoned(0)
 	elseif index == PRAYER_ORB_OF_DRAINING then

@@ -69,26 +69,40 @@ ANGOBJS = \
 ## you wish to use, and commenting out "standard" block below.
 ##
 
-# Comment out the following line if you do not have mkstemp()
-HAVE_MKSTEMP = -DHAVE_MKSTEMP
-
-# Uncomment this line to allow the borg
-#ALLOW_BORG = -DALLOW_BORG
-
-# This is your compiler
+# This is your compiler - gcc is normal, with a default level of warnings.
 CC = gcc
 WARNINGS = -Wall
 
-# Use GCC 3.1 with extranaeous warning options
-#WARNINGS = -pedantic -W -Wmissing-prototypes -Wmissing-declarations -Wno-long-long \
-#	-Wwrite-strings -Wpointer-arith -Wbad-function-cast -Wsign-compare -Waggregate-return \
-#	-Wstrict-prototypes -Wredundant-decls -Wdisabled-optimization -Wall
-#CC = gcc-3.1
+## OPTION: The system which Nangband is being run on has mkstemp().
+##         This is default; if you get errors including "mkstemp()",
+##         comment out the following line.
+#
+HAVE_MKSTEMP = -DHAVE_MKSTEMP
 
-# Default target
+## OPTION: Allow the borg.
+##         Uncomment the following line to enable it.
+#
+# ALLOW_BORG = -DALLOW_BORG
+
+## OPTION: Use gcc 3.1 with extraneous warning options
+##         Uncomment the following lines to enable it.
+#
+# CC = gcc-3.1
+# WARNINGS = -pedantic -W -Wmissing-prototypes -Wmissing-declarations \
+# 	-Wwrite-strings -Wpointer-arith -Wbad-function-cast -Wsign-compare \
+# 	-Waggregate-return -Wstrict-prototypes -Wredundant-decls \
+# 	-Wdisabled-optimization -Wall
+
+#
+# Default target; this is one of "x11-gcu", "only-x11", "only-gcu",
+#                 "gtk", or "s-lang".
+#
 default: x11-gcu
 
+#
 # This version supports both X11 and curses in a single executable.
+#
+# To compile, use the "x11-gcu" target.
 #
 # You may have to replace "-lcurses" with "-lncurses" to use the
 # "new curses" library instead of the "old curses" library, and
@@ -98,13 +112,19 @@ x11-gcu: CFLAGS = -O1 -pipe -g -DUSE_X11 -DUSE_GCU -I/usr/X11R6/lib
 x11-gcu: LIBS = -lcurses -ltermcap -L/usr/X11R6/lib -lX11
 x11-gcu: nangband
 
-# This version supports (only) X11.
+#
+# This version supports only X11.
+#
+# To compile, use the "only-x11" target.
 #
 only-x11: CFLAGS = -O1 -pipe -g -D"USE_X11"
 only-x11: LIBS = -L/usr/X11R6/lib -lX11
 only-x11: nangband
 
-# This version supports (only) curses.
+#
+# This version supports only curses.
+#
+# To compile, use the "only-gcu" target.
 #
 # You may have to replace "-lcurses" with "-lncurses" to use the
 # "new curses" library instead of the "old curses" library, and
@@ -114,7 +134,10 @@ only-gcu: CFLAGS = -Wall -O1 -pipe -g -D"USE_GCU"
 only-gcu: LIBS = -lncurses -ltermcap
 only-gcu: nangband
 
-# This version supports X11, GTK and GCU.
+#
+# This version supports X11, GTK and curses in a single executable.
+#
+# To compile, use the "gtk" target.
 #
 # You may have to replace "-lcurses" with "-lncurses" to use the
 # "new curses" library instead of the "old curses" library, and
@@ -230,69 +253,54 @@ gtk: nangband
 #LIBS = -lz -lvgagl -lvga
 
 
-##
-## Variation -- Support Linux "vcs" (Virtual Console memory) module
-##
-#CFLAGS = -Wall -O2 -fno-strength-reduce -D"USE_VCS"
-#LIBS =
+#
+# This version supports linux VCS (Virtual ConSole memory).
+#
+# To compile, use the "vcs" target.
+#
+# Note that this module is not well-tested.
+#
+vcs: CFLAGS = -Wall -O2 -fno-strength-reduce -D"USE_VCS"
+vcs: LIBS =
+
+#
+# This version supports S-Lang.
+#
+# To compile, use the "s-lang" target.
+#
+s-lang: CFLAGS = -Wall -O2 -fno-strength-reduce -D"USE_SLA" -I/usr/include/slang
+s-lang: LIBS = -lslang
 
 
-##
-## Variation -- Support S-Lang library
-##
-slang: CFLAGS = -Wall -O2 -fno-strength-reduce -D"USE_SLA" -I/usr/include/slang
-slang: LIBS = -lslang
+#
+# Dependency rules
+#
 
-# Build the binary
+nangband: CFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
+nangband: LINKFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
 nangband: $(ANGOBJS) $(BORGOBJS)
 	$(CC) $(CFLAGS) $(LINKFLAGS) $(LDFLAGS) -o nangband $(ANGOBJS) $(BORGOBJS) $(LIBS)
 
-# Lua stuff
 lua/tolua: $(TOLUAOBJS)
 	$(CC) -o lua/tolua $(TOLUAOBJS) $(LDFLAGS) $(LUALIBS)
 
-# Set up the cygwin port
-cygwin: CC := gcc
-cygwin: HAVE_MKSTEMP := -UHAVE_MKSTEMP
-cygwin: WRES := windres
-cygwin: LUALIBS := -s -mno-cygwin
-cygwin: LIBS := -s -mno-cygwin -mwindows -lwinmm -g
-cygwin: CFLAGS := -Wall -pedantic -mno-cygwin -O2 -fno-strength-reduce -DWINDOWS -g
-cygwin: ANGOBJS += angband.res readdib.o
-cygwin: nangband
-
-
-
-# Use GCC 3.0 with extranaeous warning options
-gcc-3.0-warnings: WARNINGS = -Wwrite-strings -Wpointer-arith -Wbad-function-cast -Wconversion \
-	-Wsign-compare -Waggregate-return \
-	-Wredundant-decls -Wunreachable-code -Wdisabled-optimization -Wall
-gcc-3.0-warnings: CC = gcc-3.0
-gcc-3.0-warnings: nangband
-
-# Use GCC 3.0
-gcc-3.0: WARNINGS = -Wall
-gcc-3.0: CC = gcc-3.0
-gcc-3.0: nangband
+#
+# Various targets.
+#
 
 # Remove the binary
-rmbin:
-	rm ../nangband
+rmbin:; rm ../nangband
 
 # Move the binary one level up.
-install: nangband
-	cp nangband ../
+install: nangband; cp nangband ../
 
 # Clean up object files
-clean:
-	-rm -f *.o angband
+clean:; -rm -f *.o angband
 	-rm -f ./lua/*.o ./lua/tolua
 
-# Add stuff
-nangband: CFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
-nangband: LINKFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
-
-# Some file dependencies
+#
+# Headers used for dependencies
+#
 
 HDRS = \
   h-basic.h \
@@ -303,6 +311,9 @@ INCS = \
   config.h defines.h types.h externs.h \
   z-term.h z-rand.h z-util.h z-virt.h z-form.h $(HDRS)
 
+#
+# Dependency information
+#
 
 birth.o: birth.c $(INCS)
 cave.o: cave.c $(INCS)
@@ -344,9 +355,7 @@ object1.o: object1.c $(INCS)
 object2.o: object2.c $(INCS)
 randart.o: randart.c $(INCS) init.h
 save.o: save.c $(INCS)
-script.o: script.c $(INCS) script.h \
-		lua/lauxlib.h lua/lua.h lua/luadebug.h lua/lualib.h lua/tolua.h \
-		lua/luadebug.h
+script.o: script.c $(INCS) script.h
 spells1.o: spells1.c $(INCS)
 spells2.o: spells2.c $(INCS)
 store.o: store.c $(INCS)
@@ -363,15 +372,6 @@ z-rand.o: z-rand.c $(HDRS) z-rand.h
 z-term.o: z-term.c $(HDRS) z-term.h z-virt.h
 z-util.o: z-util.c $(HDRS) z-util.h
 z-virt.o: z-virt.c $(HDRS) z-virt.h z-util.h
-
-#
-# Cygwin-specific stuff
-#
-#readdib.o: readdib.c readdib.h
-#	$(CC) $(CFLAGS) -DNEAR= $(INCDIRS) -c -o $@ $<
-
-angband.res: angband.rc
-	$(WRES) $< -O coff -o $@
 
 #
 # Build wrappers

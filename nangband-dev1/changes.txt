@@ -1,6 +1,12 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-06-29
+----------
+- Fiddled around with the cygwin and "standard" makefiles - they are
+  (should be) much smaller in file size. (takkaria)
+- Fixed a compiler warning in util.c. (takkaria)
+
 2002-06-26
 ----------
 - Added "evil mode" to Nangband - tread lightly! :) (takkaria)

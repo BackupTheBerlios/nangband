@@ -4096,6 +4096,9 @@ void putstr_multi(int x_pos, int y_pos, int width, int attr, char *txt, bool cle
 	char temp_ch;
 	int  n;
 
+	/* Unused parameter */
+	(void)clear;
+
 	/*
 	 * If we pass 0 as the width, it prints up to the edge of screen,
 	 * -1 leaves a gap of 1 character at the right of the terminal,

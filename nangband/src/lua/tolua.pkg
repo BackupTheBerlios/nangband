@@ -1,0 +1,26 @@
+/* tolua own binding
+** tolua uses itself to export some utility functions to lua.
+** This is the package file used to generate the 'tolua_bd.c' file.
+** $Id: tolua.pkg,v 1.1 2002/12/21 11:52:44 takkaria Exp $
+*/
+
+$#define tolua_using(module)       (tolua_using)(tolua_S,module)
+$#define tolua_type(lo)            (tolua_type)(tolua_S,lo)
+$#define tolua_foreach(lo,f)       (tolua_foreach)(tolua_S,lo,f)
+$#define tolua_class(derived,base) (tolua_class)(tolua_S,derived,base)
+$#define tolua_instance(inst,cobj) (tolua_instance)(tolua_S,inst,cobj)
+$#define tolua_base(lo)            (tolua_base)(tolua_S,lo)
+$#define tolua_cast(lo,type)       (tolua_cast)(tolua_S,lo,type)
+$#define tolua_takeownership(lo)   (tolua_takeownership)(tolua_S,lo)
+
+module tolua
+{
+ void tolua_using@using (LUA_VALUE module);
+ char* tolua_type@type (LUA_VALUE lo);
+ void tolua_foreach@foreach (LUA_VALUE lo, LUA_VALUE f);
+ void tolua_class@class (LUA_VALUE derived, LUA_VALUE base);
+ void tolua_instance@instance (LUA_VALUE instance, LUA_VALUE classobj);
+ LUA_VALUE tolua_base@base (LUA_VALUE lo);
+ LUA_VALUE tolua_cast@cast (LUA_VALUE lo, char* type);
+ void tolua_takeownership@takeownership (LUA_VALUE lo);
+}

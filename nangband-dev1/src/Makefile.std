@@ -237,10 +237,6 @@ only-gcu: nangband
 slang: CFLAGS = -Wall -O2 -fno-strength-reduce -D"USE_SLA" -I/usr/include/slang
 slang: LIBS = -lslang
 
-# Add stuff
-nangband: CFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
-nangband: LINKFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
-
 # Build the binary
 nangband: $(ANGOBJS) $(BORGOBJS)
 	$(CC) $(CFLAGS) $(LINKFLAGS) $(LDFLAGS) -o nangband $(ANGOBJS) $(BORGOBJS) $(LIBS)
@@ -251,6 +247,7 @@ lua/tolua: $(TOLUAOBJS)
 
 # Set up the cygwin port
 cygwin: CC := gcc
+cygwin: HAVE_MKSTEMP := -UHAVE_MKSTEMP
 cygwin: WRES := windres
 cygwin: LUALIBS := -s -mno-cygwin
 cygwin: LIBS := -s -mno-cygwin -mwindows -lwinmm -g
@@ -280,6 +277,10 @@ install: nangband
 clean:
 	-rm -f *.o angband
 	-rm -f ./lua/*.o ./lua/tolua
+
+# Add stuff
+nangband: CFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
+nangband: LINKFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
 
 # Some file dependencies
 

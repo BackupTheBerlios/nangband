@@ -78,6 +78,7 @@
 
 /* The possible types of block */
 #define BLOCK_TYPE_ERROR         0
+#define BLOCK_TYPE_END           0
 #define BLOCK_TYPE_HEADER        1
 #define BLOCK_TYPE_OPTIONS       2
 #define BLOCK_TYPE_PLAYER        3
@@ -1071,6 +1072,8 @@ static errr savefile_do_block_player(bool type, int ver)
 	/* Character level */
 	savefile_do_s16b(&p_ptr->lev, type);
 
+    note(format("Player level is %i", p_ptr->lev), type);
+    
 	/* Verify player level */
 	if ((p_ptr->lev < 1) || (p_ptr->lev > PY_MAX_LEVEL))
 	{
@@ -2107,6 +2110,11 @@ static bool write_savefile(int fd)
 	savefile_new_block(BLOCK_TYPE_DUNGEON, BLOCK_VERSION_DUNGEON);
 	savefile_do_block_dungeon(PUT, savefile_head_ver);
 	savefile_write_block(savefile_block, fd);
+    
+    /* End the file */
+    savefile_new_block(BLOCK_TYPE_END, 0);
+    savefile_do_string("Eric! Eric! Eric!", PUT);
+    savefile_write_block(savefile_block, fd);
 
 #if 0
 	/* End the savefile */
@@ -2123,8 +2131,9 @@ static bool write_savefile(int fd)
 static errr read_savefile(int fd)
 {
 	byte *savefile_head;
+    bool finished = FALSE;
 
-	while (TRUE)
+	while (!finished)
 	{
 		byte i;
 		int pos = 0;
@@ -2216,10 +2225,10 @@ static errr read_savefile(int fd)
 			case BLOCK_TYPE_INVENTORY:
 				savefile_do_block_inventory(GET, savefile_head_ver);
 				break;
+            case BLOCK_TYPE_END:
+                finished = TRUE;
+                break;
 		}
-
-		/* Whoops */
-		if (!savefile_block) break;
 
 		/* Free the memory */
 		KILL(savefile_block);
@@ -2528,6 +2537,8 @@ bool load_player(void)
 		if (err) what = "Broken savefile";
 	}
 
+    inkey();
+    
 	if (!err)
 	{
 		/* Player is dead */

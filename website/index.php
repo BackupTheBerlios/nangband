@@ -55,6 +55,7 @@ else $incdir = 'content/';
 
 // Check for existance
 $okay = (file_exists($incdir.$dpage) && !is_dir($incdir.$dpage)); 
+if (file_exists('styles/'.$style.'.common')) include('styles/'.$style.'.common');
 if (!$okay) $title = 'page not found';
 if (isset($source)) $title = 'source';
 

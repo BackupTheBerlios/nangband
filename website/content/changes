@@ -1,3 +1,12 @@
+<p>The next daily compile will happen in <b><?php
+
+$realtime = time()+28800;
+$t = localtime($realtime);
+$aimtime = mktime(5, 0, 0, $t['tm_mon'], $t['tm_yday'], $t['tm_year']);
+echo rtime($aimtime);
+
+?></b>.</p>
+
 <p>In the short time Nangband has been in development (<?=rtime(time()-1013454487);?>), it has made some 
 interesting changes.  Here is a condensed list of many of them, as they were on the 19th of July, 2002.</p>
 

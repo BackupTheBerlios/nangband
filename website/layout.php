@@ -19,7 +19,7 @@ function make_link($data)
 }
 
 // Output all the links using flexible formatting.
-function do_links($has_pipes = true, $uc = false, $start = 0, $end = 0)
+function do_links($has_pipes = true, $uc = false, $start = 0, $end = 0, $sep = ' | ')
 {
 	global $titles, $pages, $page;
 
@@ -36,14 +36,14 @@ function do_links($has_pipes = true, $uc = false, $start = 0, $end = 0)
 		else
 			echo $echo_text;
 
-		if ($has_pipes && ($i < ($x - 1))) echo ' | ';
+		if ($has_pipes && ($i < ($x - 1))) echo $sep;
 		if ($end) echo $end;
 	}
 
 	return;
 }
 
-function do_styles($has_pipes = true, $uc = false, $start = 0, $end = 0)
+function do_styles($has_pipes = true, $uc = false, $start = 0, $end = 0, $sep = ' | ')
 {
 	global $styles, $image, $page, $style;
 
@@ -61,7 +61,7 @@ function do_styles($has_pipes = true, $uc = false, $start = 0, $end = 0)
 		else
 			echo $echo_text;
 
-		if ($has_pipes && ($i < ($x - 1))) echo ' | ';
+		if ($has_pipes && ($i < ($x - 1))) echo $sep;
 		if ($end) echo $end;
 	}
 

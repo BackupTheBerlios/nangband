@@ -361,12 +361,12 @@ static cptr r_info_flags6[] =
  */
 static cptr k_info_flags1[] =
 {
-	"STR",
-	"INT",
-	"WIS",
-	"DEX",
-	"CON",
-	"CHR",
+	"NULL",
+	"NULL",
+	"NULL",
+	"NULL",
+	"NULL",
+	"NULL",
 	"XXX1",
 	"XXX2",
 	"STEALTH",
@@ -1140,6 +1140,50 @@ static errr grab_one_flag(u32b *flags, cptr names[], cptr what)
 }
 
 /*
+ * Do stat bonuses.
+ */ 
+static errr grab_one_statbonus(cptr what, s16b *stat_bonuses, s16b pval)
+{
+	if (prefix(what, "STR"))
+	{
+		stat_bonuses[A_STR] = pval;
+		return (0);
+	}
+    
+    	if (prefix(what, "DEX"))
+	{
+		stat_bonuses[A_DEX] = pval;
+		return (0);
+	}
+    
+    	if (prefix(what, "CON"))
+	{
+		stat_bonuses[A_CON] = pval;
+		return (0);
+	}
+    
+    	if (prefix(what, "CHR"))
+	{
+		stat_bonuses[A_CHR] = pval;
+		return (0);
+	}
+    
+    	if (prefix(what, "INT"))
+	{
+		stat_bonuses[A_INT] = pval;
+		return (0);
+	}
+    
+    	if (prefix(what, "WIS"))
+	{
+		stat_bonuses[A_WIS] = pval;
+		return (0);
+	}
+    
+    return (-1);
+}
+
+/*
  * Grab one resist for a object_kind. XXX XXX
  */
 static errr grab_one_resist(byte *resists, cptr what)
@@ -1268,6 +1312,11 @@ static errr grab_one_kind_flag(object_kind *k_ptr, cptr what)
 	if (grab_one_resist(k_ptr->resists, what) == 0)
 		return (0);
 
+       if (grab_one_statbonus(what, k_ptr->stat_mods, k_ptr->pval) == 0)
+        return (0);
+        
+        /* Hello!  grab_one_statbonus is just above here. Go! Hello? Hello? hello? Go! Go I tell y*/
+
 	/* Oops */
 	msg_format("Unknown object flag '%s'.", what);
 
@@ -1325,6 +1374,42 @@ errr parse_k_info(char *buf, header *head)
 			return (PARSE_ERROR_OUT_OF_MEMORY);
 	}
 
+	/* Process 'S' for "Stats" (one line only) */
+	else if (buf[0] == 'S')
+	{
+		int adj;
+        int j;
+
+		/* There better be a current pc_ptr */
+		if (!k_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
+
+		/* Start the string */
+		s = buf+1;
+
+		/* For each stat */
+		for (j = 0; j < A_MAX; j++)
+		{
+			/* Find the colon before the subindex */
+			s = strchr(s, ':');
+
+			/* Verify that colon */
+			if (!s) return (PARSE_ERROR_GENERIC);
+
+			/* Nuke the colon, advance to the subindex */
+			*s++ = '\0';
+
+			/* Get the value */
+			adj = atoi(s);
+
+			/* Save the value */
+			k_ptr->stat_mods[j] = adj;
+
+			/* Next... */
+			continue;
+		}
+	}
+
+    
 	/* Process 'G' for "Graphics" (one line only) */
 	else if (buf[0] == 'G')
 	{
@@ -1516,6 +1601,9 @@ static errr grab_one_artifact_flag(artifact_type *a_ptr, cptr what)
 	if (grab_one_resist(a_ptr->resists, what) == 0)
 		return (0);
         
+           if (grab_one_statbonus(what, a_ptr->stat_mods, a_ptr->pval) == 0)
+        return (0);
+        
 	/* Oops */
 	msg_format("Unknown artifact flag '%s'.", what);
 
@@ -1639,6 +1727,41 @@ errr parse_a_info(char *buf, header *head)
 		a_ptr->cost = cost;
 	}
 
+	/* Process 'S' for "Stats" (one line only) */
+	else if (buf[0] == 'S')
+	{
+		int adj;
+        int j;
+        
+		/* There better be a current pc_ptr */
+		if (!a_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
+
+		/* Start the string */
+		s = buf+1;
+
+		/* For each stat */
+		for (j = 0; j < A_MAX; j++)
+		{
+			/* Find the colon before the subindex */
+			s = strchr(s, ':');
+
+			/* Verify that colon */
+			if (!s) return (PARSE_ERROR_GENERIC);
+
+			/* Nuke the colon, advance to the subindex */
+			*s++ = '\0';
+
+			/* Get the value */
+			adj = atoi(s);
+
+			/* Save the value */
+			a_ptr->stat_mods[j] = adj;
+
+			/* Next... */
+			continue;
+		}
+	}
+    
 	/* Process 'P' for "power" and such */
 	else if (buf[0] == 'P')
 	{
@@ -1746,6 +1869,9 @@ static bool grab_one_ego_item_flag(ego_item_type *e_ptr, cptr what)
 	if (grab_one_resist(e_ptr->resists, what) == 0)
 		return (0);
         
+           if (grab_one_statbonus(what, e_ptr->stat_mods, 1) == 0)
+        return (0);
+        
 	/* Oops */
 	msg_format("Unknown ego-item flag '%s'.", what);
 
@@ -1828,6 +1954,41 @@ errr parse_e_info(char *buf, header *head)
 		e_ptr->cost = cost;
 	}
 
+	/* Process 'S' for "Stats" (one line only) */
+	else if (buf[0] == 'S')
+	{
+		int adj;
+        int j;
+
+		/* There better be a current pc_ptr */
+		if (!e_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
+
+		/* Start the string */
+		s = buf+1;
+
+		/* For each stat */
+		for (j = 0; j < A_MAX; j++)
+		{
+			/* Find the colon before the subindex */
+			s = strchr(s, ':');
+
+			/* Verify that colon */
+			if (!s) return (PARSE_ERROR_GENERIC);
+
+			/* Nuke the colon, advance to the subindex */
+			*s++ = '\0';
+
+			/* Get the value */
+			adj = atoi(s);
+
+			/* Save the value */
+			e_ptr->stat_mods[j] = adj;
+
+			/* Next... */
+			continue;
+		}
+	}
+    
 	/* Process 'X' for "Xtra" (one line only) */
 	else if (buf[0] == 'X')
 	{

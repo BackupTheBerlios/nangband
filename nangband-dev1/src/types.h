@@ -179,6 +179,7 @@ struct object_kind
 	byte extra;			/* Something */
 
 	byte resists[RES_MAX];	/* Item resists */
+    s16b stat_mods[A_MAX];  /* stat mods */
 
 	byte d_attr;		/* Default object attribute */
 	char d_char;		/* Default object character */

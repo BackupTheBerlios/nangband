@@ -6,7 +6,7 @@ Nangband ChangeLog
 - Added SAT_HUNGER as an activation (grahame).
 - Added tins of caviar as a new deep food source (grahame).
 - Added the rope belt 'Aaragorn' as an artifact (grahame).
-
+- Fixed a potential bug with ELEMENTAL activation not working (grahame)
 
 2002-03-22
 ----------

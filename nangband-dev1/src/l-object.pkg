@@ -710,8 +710,10 @@ typedef int sint;
 #define ACT_STARLIGHT           47
 #define ACT_MANA_BOLT           48
 #define ACT_BERSERKER           49
+#define ACT_ELEMENTS		50
+#define ACT_SAT_HUNGER		51
 
-#define ACT_MAX                 50
+#define ACT_MAX                 52
 
 
 /***** Types *****/

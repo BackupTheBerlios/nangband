@@ -9,6 +9,7 @@ function eat_food(object)
 	local ident = FALSE
 
 	if object.sval == SV_FOOD_RATION or
+	   object.sval == SV_FOOD_CAVIAR or
 	   object.sval == SV_FOOD_BISCUIT or
 	   object.sval == SV_FOOD_JERKY or
 	   object.sval == SV_FOOD_SLIME_MOLD or

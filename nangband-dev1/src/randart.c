@@ -674,7 +674,6 @@ static void build_prob(cptr learn)
 	while (c_next != '\0');
 }
 
-
 /*
  * Use W. Sheldon Simms' random name generator.  Generate a random word using
  * the probability tables we built earlier.  Relies on the ASCII character
@@ -709,7 +708,6 @@ startover:
 		c_next = 0;
 		r = rand_int(ltotal[c_prev][c_cur]);
 		totalfreq = lprobs[c_prev][c_cur][c_next];
-
 		while (totalfreq <= r)
 		{
 			c_next++;
@@ -727,12 +725,14 @@ startover:
 			*cp = '\0';
 			break;
 		}
-
 		if (lnum >= MAX_NAME_LEN) goto startover;
 
-		*cp = I2A(c_next);
-
-		if (is_a_vowel(*cp)) vow++;
+		*cp = c_next + 'a';	/* ASCII */
+		switch (*cp)
+		{
+			case 'a': case 'e': case 'i': case 'o': case 'u':
+				vow++;
+		}
 
 		cp++;
 		lnum++;
@@ -741,8 +741,7 @@ startover:
 	}
 
 	word_buf[0] = toupper(word_buf[0]);
-
-	return (word_buf);
+	return word_buf;
 }
 
 

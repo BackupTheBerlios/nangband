@@ -10,6 +10,8 @@ Nangband Website changelog
   now. (takkaria)
 - Really got the site valid, and added links to the validators at
   the bottom of the page. (takkaria)
+- Reorganized stuff; now there are extras in "extras/"; this directory
+  is scanned and all files are included from there.  (takkaria)
 
 01-07-02
 --------

@@ -26,9 +26,14 @@ if (($newstyle == 'sidebar') ||
 	$style = $newstyle;
 }
 
-// Include some stuff from "extras/"
-include('extras/gmtime.inc');
-include('extras/rtime.inc');
+// Include stuff from 'extras'
+if ($dir = @opendir('extras/'))
+{
+	while (($file = readdir($dir)) != false)
+	{
+		if (!is_dir($file)) include('extras/'.$file);
+	}
+}
 
 // Come up with a page "title"
 switch ($page)

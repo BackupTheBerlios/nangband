@@ -1,6 +1,11 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-08-04
+----------
+- Forgot to call note_spot in the monster light update code (in one place),
+  causing ABSORB_LIGHT to interact strangely with maps. (pelpel)
+
 2002-08-02
 ----------
 - Added the USE_CHOICE_PATH option; with this defined, PRIVATE_USER_PATH

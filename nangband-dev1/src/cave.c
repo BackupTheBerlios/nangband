@@ -3484,7 +3484,7 @@ void update_monster_light(void)
 	}
 
 
-	/*** Step 3 -- process old grids ***/
+	/*** Step 4 -- process old grids ***/
 	for (i = 0; i < fast_light_n; i++)
 	{
 		/* Access grids */
@@ -3511,6 +3511,9 @@ void update_monster_light(void)
 				fast_cave_info[g] &= ~(CAVE_TEMP);
 				fast_cave_info2[g] &= ~(CAVE2_TEMP);
 
+				/* Note if seen */
+				note_spot(y, x);
+
 				/* See if there was a visible monster */
 				if (player_has_los_bold(y, x) && m_idx)
 				{
@@ -3526,7 +3529,7 @@ void update_monster_light(void)
 		}
 	}
 
-	/*** Step 4 -- copy the temp array into the light array ***/
+	/*** Step 5 -- copy the temp array into the light array ***/
 	for (i = 0; i < fast_temp_n; i++)
 	{
 		/* Access grids */

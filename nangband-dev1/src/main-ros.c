@@ -147,9 +147,11 @@
  */
 /* #define FE_DEBUG_INFO */
 
-/* Constants, etc. ---------------------------------------------------------*/
+/*
+ * Constants, etc.
+ */
 
-/* Deal with any weird file-caching symbols */
+/* Deal with any weird file-caching configurations */
 #ifndef USE_FILECACHE
 # undef ABBR_FILECACHE
 # undef SMART_FILECACHE
@@ -174,10 +176,10 @@
 #define TERM_MENU_WINDOWS		3
 
 /* Icon numbers */
-#define SND_VOL_SLIDER			0
-#define SND_VOL_DOWN			1
-#define SND_VOL_UP				2
-#define SND_ENABLE				3
+#define SND_VOL_SLIDER      0
+#define SND_VOL_DOWN        1
+#define SND_VOL_UP          2
+#define SND_ENABLE          3
 
 #define GAMMA_ICN				0
 #define GAMMA_DOWN				1
@@ -199,7 +201,6 @@
 #define SOUND_VOL_MAX			176
 
 /*--------------------------------------------------------------------------*/
-
 
 #undef rename
 #undef remove
@@ -241,10 +242,10 @@
 /*--------------------------------------------------------------------------*/
 
 /*
- | We use the hourglass around calls to Wimp_Poll in an attempt to stop
- | users thinking that the game has 'hung'.
- | Kamband/Zangband and the Borg in particular can have quite long delays at
- | times.
+ * We use the hourglass around calls to Wimp_Poll in an attempt to stop
+ * users thinking that the game has 'hung'.
+ * Kamband/Zangband and the Borg in particular can have quite long delays at
+ * times.
  */
 #define Start_Hourglass \
 	{ if ( use_glass && !glass_on ) { glass_on=1; Hourglass_Start(50); } }
@@ -257,7 +258,7 @@
 /*--------------------------------------------------------------------------*/
 
 /*
- | A ZapRedraw block
+ * A ZapRedraw block
  */
 typedef struct
 {
@@ -314,9 +315,9 @@ ZapRedrawBlock;
 
 
 /*
- | We cache font data using an array of 'font handles' (since there is a
- | known maximum no. of fonts required).
- | This is what a font 'handle' looks like:
+ * We cache font data using an array of 'font handles' (since there is a
+ * known maximum no. of fonts required).
+ * This is what a font 'handle' looks like:
  */
 typedef struct
 {
@@ -330,7 +331,7 @@ typedef struct
 ZapFont;
 
 /*
- | A struct to hold all the data relevant to a term window
+ * A struct to hold all the data relevant to a term window
  */
 typedef struct
 {
@@ -382,7 +383,7 @@ term_data;
 
 
 /*
- | Other SWI numbers that aren't defined in DeskLib's SWI.h:
+ * Other SWI numbers that aren't defined in DeskLib's SWI.h:
  */
 #define SWI_OS_ScreenMode 0x65
 #define SWI_OS_DynamicArea 0x66
@@ -393,14 +394,14 @@ term_data;
 
 
 /*--------------------------------------------------------------------------*
- | File scope variables													 |
+ * File scope variables													 |
  *--------------------------------------------------------------------------*/
 static int ftype = 0xffd;	/* hack so saved games get the right type */
 static int filehandle[16];	/* we keep track of open files with this */
 static int openfiles = 0;	/* how many files are currently open */
 
 /*
- | Paths we use...
+ * Paths we use...
  */
 static char resource_path[260] = "";	/* Path pointng to "!Angband.Lib." */
 static char scrap_path[260] = "";	/* Path to create scrap files on */
@@ -409,16 +410,16 @@ static char choices_file[3][260] =
 static char alarm_file[2][260] =
 { "", "" };	/* Alarm choices paths (read/write, mirror, read) */
 /*
- | So we can use something more meaningful later...
- | NB: Mirror is only meaningful for Choices and we don't
- | even reserve space for alarm_file[CHFILE_MIRROR].
+ * So we can use something more meaningful later...
+ * NB: Mirror is only meaningful for Choices and we don't
+ * even reserve space for alarm_file[CHFILE_MIRROR].
  */
 #define CHFILE_WRITE 0
 #define CHFILE_READ 1
 #define CHFILE_MIRROR 2
 
 /*
- | Other 'globals':
+ * Other 'globals':
  */
 static int initialised = 0;	/* Used to determine whether to try to save */
 static int game_in_progress = 0;	/* if Quit (or core() is called),  etc. */
@@ -589,32 +590,32 @@ errr cached_fgets(FILE *fch, char *buffer, int max_len);
 #endif
 
 /*
- | These functions act as malloc/free, but (if possible) using memory
- | in the 'Game' Dynamic Area created by init_memory()
- | We attach these functions to the ralloc_aux and rnfree_aux hooks
- | that z-virt.c provides.
+ * These functions act as malloc/free, but (if possible) using memory
+ * in the 'Game' Dynamic Area created by init_memory()
+ * We attach these functions to the ralloc_aux and rnfree_aux hooks
+ * that z-virt.c provides.
  */
 static vptr g_malloc(huge size);
 static vptr g_free(vptr blk);
 
 
 /*
- | These functions act as malloc/free, but (if possible) using memory
- | in the 'Fonts' Dynamic Area created by init_memory()
+ * These functions act as malloc/free, but (if possible) using memory
+ * in the 'Fonts' Dynamic Area created by init_memory()
  */
 static void *f_malloc(size_t size);
 static void f_free(void *blk);
 
 
 /*
- | These two functions perpetrate great evil to stop IClear from mucking
- | with the cursor keys in fullscreen mode.
+ * These two functions perpetrate great evil to stop IClear from mucking
+ * with the cursor keys in fullscreen mode.
  */
 static void iclear_hack(void);
 static void remove_iclear_hack(void);
 
 /*
- | We use this to locate the choices file(s)...
+ * We use this to locate the choices file(s)...
  */
 static char *find_choices(int write);
 static char *find_choices_mirror(void);
@@ -623,16 +624,16 @@ static char *find_alarmfile(int write);
 
 
 /*
- | This function is supplied as a wrapper to the save_player function.
+ * This function is supplied as a wrapper to the save_player function.
  |
- | Its purpose is to change the filename that the game will be saved with
- | the leafname "!!PANIC!!" so that panic saves that break the savefile
- | won't overwrite the original savefile.
+ * Its purpose is to change the filename that the game will be saved with
+ * the leafname "!!PANIC!!" so that panic saves that break the savefile
+ * won't overwrite the original savefile.
  |
- | To get this to work, you'll need to ammend files.c and change the call
- | to save_player in the panic save function(s) (search for "panic save")
- | to a call to save_player_panic_acn.  You can declare a prototype for
- | the function if you like.
+ * To get this to work, you'll need to ammend files.c and change the call
+ * to save_player in the panic save function(s) (search for "panic save")
+ * to a call to save_player_panic_acn.  You can declare a prototype for
+ * the function if you like.
  */
 
 extern int save_player_panic_acn(void)
@@ -767,11 +768,11 @@ static int myFile_Extent(const int handle)
 
 
 /*
- | Determine if one file is newer than another.
+ * Determine if one file is newer than another.
  |
- | The filenames should be specified in RISC OS style.
+ * The filenames should be specified in RISC OS style.
  |
- | Returns -1 if 'a' is newer than 'b'.
+ * Returns -1 if 'a' is newer than 'b'.
  */
 static int file_is_newer(const char *a, const char *b)
 {
@@ -839,8 +840,8 @@ return 0;
 
 
 /*
- | As fprintf, but outout to all files (if their handles are non zero).
- | NB: void type.
+ * As fprintf, but outout to all files (if their handles are non zero).
+ * NB: void type.
  */
 static void f2printf(FILE *a, FILE *b, char *fmt, ...)
 {
@@ -883,8 +884,8 @@ static void final_acn(void)
 		set_keys(FALSE);
 
 		/*
-		   | Hack: Early WIMP versions do the "Press SPACE" thing, or something
-		   | odd.  It's bloody annoying, whatever it is...
+		   * Hack: Early WIMP versions do the "Press SPACE" thing, or something
+		   * odd.  It's bloody annoying, whatever it is...
 		 */
 		if (event_wimpversion < 300)
 			Wimp_CommandWindow(-1);
@@ -907,14 +908,14 @@ static void final_acn(void)
 
 
 /*--------------------------------------------------------------------------*
- | Various UNIX-like support funtions									   |
+ * Various UNIX-like support funtions									   |
  *--------------------------------------------------------------------------*/
 
 /*
- | Hack: determine whether filenames should be truncated to 10 chars or not.
+ * Hack: determine whether filenames should be truncated to 10 chars or not.
  |
- | Needed since RO2 (and RO3 with Truncate configured off) will return
- | errors instead of automatically truncating long filenames.
+ * Needed since RO2 (and RO3 with Truncate configured off) will return
+ * errors instead of automatically truncating long filenames.
  */
 static int truncate_names(void)
 {
@@ -936,17 +937,17 @@ static int truncate_names(void)
 
 
 /*
- | The PathName translation is now done by two separate functions:
- | unixify_name() and riscosify_name().
+ * The PathName translation is now done by two separate functions:
+ * unixify_name() and riscosify_name().
  |
- | This is done because only the UNIX=>RISCOS translation should
- | ever affect the length of the leafname (ie. by truncating it to
- | 10 chars if necessary).
+ * This is done because only the UNIX=>RISCOS translation should
+ * ever affect the length of the leafname (ie. by truncating it to
+ * 10 chars if necessary).
  |
- | Note that the two functions are identical but for the truncation
- | check so all that's really been done is that translate_name() now
- | takes an extra argument: 'trunc' that controls whether truncation
- | is applied, and riscosify and unixify just call translate_name().
+ * Note that the two functions are identical but for the truncation
+ * check so all that's really been done is that translate_name() now
+ * takes an extra argument: 'trunc' that controls whether truncation
+ * is applied, and riscosify and unixify just call translate_name().
  */
 static char *translate_name(const char *path, int trunc)
 {
@@ -967,11 +968,11 @@ static char *translate_name(const char *path, int trunc)
 	while (c);					/* Terminator /is/ copied */
 
 	/*
-	   | When saving a game, the old game is renamed as
-	   | "SavedGame.old", the new one is saved as "SavedGame.new",
-	   | "SavedGame.old" is deleted, "SavedGame.new" is renamed
-	   | as "SavedGame". This will go wrong on a Filecore based filing
-	   | system if the saved game has a leafname > 8 chars.
+	   * When saving a game, the old game is renamed as
+	   * "SavedGame.old", the new one is saved as "SavedGame.new",
+	   * "SavedGame.old" is deleted, "SavedGame.new" is renamed
+	   * as "SavedGame". This will go wrong on a Filecore based filing
+	   * system if the saved game has a leafname > 8 chars.
 	 */
 
 	if ((p = strstr(buf, "/old")) == NULL)
@@ -994,7 +995,7 @@ memmove(q + 6, p, 5);
 	}
 
 	/*
-	   | Hack: Do we need to truncate the leafname?
+	   * Hack: Do we need to truncate the leafname?
 	 */
 	if (trunc)
 	{
@@ -1002,16 +1003,16 @@ memmove(q + 6, p, 5);
 		{
 			char *a, *b;
 			/*
-			   | Assume that only the leafname needs attention
-			   | (this should be true for any variant)
+			   * Assume that only the leafname needs attention
+			   * (this should be true for any variant)
 			 */
 			for (a = b = buf; *a; a++)
 				if (*a == '.')
 					b = a + 1;
 			/*
-			   | Now b points to the start of the leafname.
-			   | If the leafname is >10 chars, write over the 10th with a
-			   | terminator.
+			   * Now b points to the start of the leafname.
+			   * If the leafname is >10 chars, write over the 10th with a
+			   * terminator.
 			 */
 			if (strlen(b) > 10)
 			{
@@ -1049,8 +1050,8 @@ FILE *my_fopen(const char *f, const char *m)
 	fp = fopen(n, m);
 
 	/* If it succeded and the file was opened for binary output
-	   | then set the type according to the 'ftype' hack.
-	   | NB: This will fail on some filing systems.
+	   * then set the type according to the 'ftype' hack.
+	   * NB: This will fail on some filing systems.
 	 */
 
 	if (fp && strstr(m, "wb"))
@@ -1238,8 +1239,8 @@ errr path_temp(char *buf, int max)
 {
 
 	/*
-	   | New in 1.25 - use the scrap path we decided on earlier, or
-	   | fall back on tmpnam() if that fails for some reason.
+	   * New in 1.25 - use the scrap path we decided on earlier, or
+	   * fall back on tmpnam() if that fails for some reason.
 	 */
 	if (*scrap_path)
 	{
@@ -1330,10 +1331,10 @@ errr path_build(char *buf, int max, cptr path, cptr file)
 /*--------------------------------------------------------------------------*/
 
 /*
- | Cache the system font as fonts[0]
- | Returns 1 for sucess or 0 for failure.
- | NB: The n_bpp data is *not* cached, just the 1bpp data and font info.
- | Also, the usage is never affected.
+ * Cache the system font as fonts[0]
+ * Returns 1 for sucess or 0 for failure.
+ * NB: The n_bpp data is *not* cached, just the 1bpp data and font info.
+ * Also, the usage is never affected.
  */
 static int cache_system_font(void)
 {
@@ -1379,7 +1380,7 @@ return 0;
 
 
 /*
- | Prepare the font system
+ * Prepare the font system
  */
 static void initialise_fonts(void)
 {
@@ -1393,8 +1394,8 @@ static void initialise_fonts(void)
 
 
 /*
- | Find a font (by name) in the array.
- | Returns 0 if the font isn't loaded, or a ZapFont* for it if it is.
+ * Find a font (by name) in the array.
+ * Returns 0 if the font isn't loaded, or a ZapFont* for it if it is.
  */
 static ZapFont *find_font_by_name(char *name)
 {
@@ -1407,7 +1408,7 @@ static ZapFont *find_font_by_name(char *name)
 }
 
 /*
- | Find a free slot in the fonts array
+ * Find a free slot in the fonts array
  */
 static ZapFont *find_free_font(void)
 {
@@ -1423,10 +1424,10 @@ return &(fonts[i]);
 
 
 /*
- | Load a font from disc and set up the header info, etc.
- | NB: doesn't cache the nbpp data, just the 1bpp data.
- | (Sets usage to 1)
- | Returns NULL if failed.
+ * Load a font from disc and set up the header info, etc.
+ * NB: doesn't cache the nbpp data, just the 1bpp data.
+ * (Sets usage to 1)
+ * Returns NULL if failed.
  */
 static ZapFont *load_font(char *name, ZapFont *f)
 {
@@ -1443,8 +1444,8 @@ static ZapFont *load_font(char *name, ZapFont *f)
 	char *real_name = name;	/* need to preserve this */
 
 	/*
-	   | 1.10 - the first element of the name determines the path to load
-	   | the font from.
+	   * 1.10 - the first element of the name determines the path to load
+	   * the font from.
 	 */
 
 	/* The font paths start <RISCOS_VARIANT>$ */
@@ -1542,9 +1543,9 @@ return NULL;
 
 
 /*
- | Cache a font at a suitable number of bpp for the current mode
- | Returns 0 for failure, 1 for sucess.
- | If the call fails then the font's bpp_n entry will be NULL.
+ * Cache a font at a suitable number of bpp for the current mode
+ * Returns 0 for failure, 1 for sucess.
+ * If the call fails then the font's bpp_n entry will be NULL.
  */
 static int cache_font_for_mode(ZapFont *f)
 {
@@ -1592,8 +1593,8 @@ return 0;
 
 
 /*
- | Stop using a font.
- | If the font's usage drops to zero then the font data is purged.
+ * Stop using a font.
+ * If the font's usage drops to zero then the font data is purged.
  */
 static void lose_font(ZapFont *f)
 {
@@ -1614,7 +1615,7 @@ f_free(f->bpp_n);
 
 
 /*
- | Get a font.
+ * Get a font.
  */
 static ZapFont *find_font(char *name)
 {
@@ -1659,7 +1660,7 @@ return NULL;
 
 
 /*
- | Cache the n_bpp data for all the active fonts (including system)
+ * Cache the n_bpp data for all the active fonts (including system)
  */
 static void cache_fonts(void)
 {
@@ -1695,7 +1696,7 @@ return s + 1;
 }
 
 /*
- | NB: This function is recursive.
+ * NB: This function is recursive.
  */
 static menu_ptr make_zfont_menu(char *dir)
 {
@@ -1818,15 +1819,15 @@ return NULL;
 		m->width = (max_width + 2) * 16;
 		mi[entry - 1].menuflags.data.last = 1;
 		/*
-		   | We could possibly realloc() the storage to fit the
-		   | actual no. of entries read, but this is probably more
-		   | trouble than it's worth.
+		   * We could possibly realloc() the storage to fit the
+		   * actual no. of entries read, but this is probably more
+		   * trouble than it's worth.
 		 */
 	}
 	else
 	{
 		/*
-		   | No point in returning an empty menu.
+		   * No point in returning an empty menu.
 		 */
 		f_free(m);
 		m = NULL;
@@ -1856,7 +1857,7 @@ static void initialise_palette(void)
 
 
 /*
- | Cache the ZapRedraw palette
+ * Cache the ZapRedraw palette
  */
 static void cache_palette(void)
 {
@@ -1913,11 +1914,11 @@ static void cache_palette(void)
 /*--------------------------------------------------------------------------*/
 
 /*
- | Functions for dealing with the SaveBox
+ * Functions for dealing with the SaveBox
  */
 
 /*
- | Create the window and claim various handlers for it
+ * Create the window and claim various handlers for it
  */
 static void init_save_window(void)
 {
@@ -1930,9 +1931,9 @@ static void init_save_window(void)
 }
 
 /*
- | Hack: can't use Str.h without defining HAS_STRICMP.  Rather than
- | require that the header files are altered we simply provide our
- | own strnicmp() function.
+ * Hack: can't use Str.h without defining HAS_STRICMP.  Rather than
+ * require that the header files are altered we simply provide our
+ * own strnicmp() function.
  */
 static int my_strnicmp(char *a, char *b, int n)
 {
@@ -1949,9 +1950,9 @@ static int my_strnicmp(char *a, char *b, int n)
 
 
 /*
- | This is the handler called when a 'save' occurrs.
- | All it does is to update the game's own savefile setting and
- | then (if possible) save the character.
+ * This is the handler called when a 'save' occurrs.
+ * All it does is to update the game's own savefile setting and
+ * then (if possible) save the character.
  */
 static BOOL SaveHnd_FileSave(char *filename, void *ref)
 {
@@ -2000,8 +2001,8 @@ static BOOL SaveHnd_FileSave(char *filename, void *ref)
 
 
 /*
- | Init the handlers for the savebox (eg. as a result of a menuwarning
- | being received for the savebox)
+ * Init the handlers for the savebox (eg. as a result of a menuwarning
+ * being received for the savebox)
  */
 
 static void init_savehandlers(void)
@@ -2031,7 +2032,7 @@ static void init_savehandlers(void)
 
 
 /*
- | Handle a MenuWarning message for the savebox
+ * Handle a MenuWarning message for the savebox
  */
 static BOOL Hnd_SaveWarning(event_pollblock * pb, void *ref)
 {
@@ -2060,9 +2061,9 @@ Msgs_ReportFatal(0, "err.swi", __LINE__, e->errmess);
 
 
 /*
- | Initialise the r_data array
- | Mainly we just set up the line offset pointers and make sure that the
- | lines themselves are 'safe' by writing end-of-line codes to them.
+ * Initialise the r_data array
+ * Mainly we just set up the line offset pointers and make sure that the
+ * lines themselves are 'safe' by writing end-of-line codes to them.
  */
 static void initialise_r_data(void)
 {
@@ -2082,10 +2083,10 @@ static void initialise_r_data(void)
 
 
 /*
- | Create the r_data array for a term
- | This is typically quite fast (1ms or so on a RPC700)
- | so we don't bother caching r_data for each term or using the
- | 'frosh' concept.
+ * Create the r_data array for a term
+ * This is typically quite fast (1ms or so on a RPC700)
+ * so we don't bother caching r_data for each term or using the
+ * 'frosh' concept.
  */
 static void make_r_data(term_data *t)
 {
@@ -2142,7 +2143,7 @@ static void make_r_data(term_data *t)
 
 
 /*
- | Set up 'zrb' for the current screen mode.
+ * Set up 'zrb' for the current screen mode.
  */
 static void set_up_zrb_for_mode(void)
 {
@@ -2159,8 +2160,8 @@ static void set_up_zrb_for_mode(void)
 
 
 /*
- | Set up the ZapRedrawBlock ready to redraw term 't'
- | (caches the r_data as part of the process)
+ * Set up the ZapRedrawBlock ready to redraw term 't'
+ * (caches the r_data as part of the process)
  */
 static void set_up_zrb(term_data *t)
 {
@@ -2303,14 +2304,14 @@ static void refresh_windows(void)
 
 
 /*
- | Set the size of a window.
- | If the window grows but has no scroll bars then it is re-sized to
- | the new extent.  If it shrinks then it is resized regardless.
+ * Set the size of a window.
+ * If the window grows but has no scroll bars then it is re-sized to
+ * the new extent.  If it shrinks then it is resized regardless.
  |
- | If the window isn't open then it is opened behind the backwindow,
- | resized and then closed again...  I /did/ have a reason for doing this
- | rather than simply recreating the window at the new size, but for the
- | life of me I can't remember what it was...
+ * If the window isn't open then it is opened behind the backwindow,
+ * resized and then closed again...  I /did/ have a reason for doing this
+ * rather than simply recreating the window at the new size, but for the
+ * life of me I can't remember what it was...
  */
 static void set_window_size(window_handle w, int width, int height)
 {
@@ -2364,7 +2365,7 @@ static void set_window_size(window_handle w, int width, int height)
 
 
 /*
- | Change the size of a window to suit the font displayed in it
+ * Change the size of a window to suit the font displayed in it
  */
 static void resize_term_for_font(term_data *t)
 {
@@ -2416,10 +2417,10 @@ static BOOL Hnd_Caret(event_pollblock * pb, void *ref)
 
 
 /*
- | Attach a (named) font to the specified term.
- | If 'font' is NULL then the system font is attached.
- | The bpp_n data is calculated if necessary
- | returns:
+ * Attach a (named) font to the specified term.
+ * If 'font' is NULL then the system font is attached.
+ * The bpp_n data is calculated if necessary
+ * returns:
  |	1 => the font was attached OK
  |	0 => the system font was substituted
  */
@@ -2465,19 +2466,19 @@ Msgs_Report(1, "err.font_c", font);
 
 
 /*
- | Create a menu of all the (probable!) fonts in the specified location
- | NB: Any file of type 'data' is considered a font.
+ * Create a menu of all the (probable!) fonts in the specified location
+ * NB: Any file of type 'data' is considered a font.
  |
- | Subdirectories are recursively searched.
+ * Subdirectories are recursively searched.
  |
- | 1.10 - Uses <variant>$FontPaths to get a (space separated) list of paths
- | to search.  For each path name, the menu text will be the name and the
- | path searched will be <variant>$<name>$FontPath
+ * 1.10 - Uses <variant>$FontPaths to get a (space separated) list of paths
+ * to search.  For each path name, the menu text will be the name and the
+ * path searched will be <variant>$<name>$FontPath
  |
- | Eg. (for angband):
- | Angband$FontPaths Zap Angband
- | Angband$Zap$FontPath ZapFonts:
- | Angband$Angband$FontPath Angband:xtra.fonts.
+ * Eg. (for angband):
+ * Angband$FontPaths Zap Angband
+ * Angband$Zap$FontPath ZapFonts:
+ * Angband$Angband$FontPath Angband:xtra.fonts.
  */
 static void make_font_menu(void)
 {
@@ -2502,8 +2503,8 @@ t = "";
 	strcpy(buffer, t);
 
 	/*
-	   | Count how many paths there are, build an array of pointers to them
-	   | and terminate them in the buffer
+	   * Count how many paths there are, build an array of pointers to them
+	   * and terminate them in the buffer
 	 */
 	paths = 1;					/* including the system font fake path '<System>' */
 	for (t = buffer; *t; t++)
@@ -2523,7 +2524,7 @@ t = "";
 	}
 
 	/*
-	   | Create the menu
+	   * Create the menu
 	 */
 	path[0] = SYSTEM_FONT->name;
 
@@ -2560,12 +2561,12 @@ core("Out of memory (building font menu)");
 	mi[i - 1].menuflags.data.last = 1;
 
 	/*
-	   | Hack: add a dotted line after the system font entry if appropriate
+	   * Hack: add a dotted line after the system font entry if appropriate
 	 */
 	if (paths > 1) mi[0].menuflags.data.dotted = 1;
 
 	/*
-	   | Iterate over the paths, building the appropriate submenus
+	   * Iterate over the paths, building the appropriate submenus
 	 */
 	for (i = 1; i < paths; i++)
 	{
@@ -2624,7 +2625,7 @@ static void create_info_box(void)
 }
 
 /*
- | Create the various menus
+ * Create the various menus
  */
 static void init_menus(void)
 {
@@ -2699,7 +2700,7 @@ static void grab_caret(void)
 
 
 /*
- | (Recursively) clear all ticks from the specified menu
+ * (Recursively) clear all ticks from the specified menu
  */
 static void clear_all_menu_ticks(menu_ptr mp)
 {

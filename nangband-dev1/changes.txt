@@ -1,11 +1,15 @@
 Nangband ChangeLog
 ==================
 
+CVS ENTERS PLAYABLE STATE: 2002-03-12
+=====================================
+
 2002-03-12
 ----------
 - Finished converting the resists to the new code. (takkaria)
 - Fixed a minor display bug. (takkaria)
 - Enhanced the object recall code once more. (takkaria)
+- Checked that the RISC OS port works. (takkaria)
 
 2002-03-11
 ----------

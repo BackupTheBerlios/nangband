@@ -3683,30 +3683,32 @@ N:521:Flames
 G:*:r
 I:8:0:2
 W:0:100:5:50000
+S:0:0:0:0:3:0
 P:0:2d8:0:0:0
 F:IGNORE_FIRE | RES_FIRE20 | LITE3 |
-F:RES_ACID | CON | ACTIVATE
+F:RES_ACID10 | ACTIVATE
 D:Inside a thin sheet of glass, a burning furnace glows, although
 D: it's heat does not touch your skin.  The light it emits is strong,
 D: but it does not blind you.
 
 N:522:Burning
 G:*:o
-I:8:1:1
+I:8:1:0
 W:0:100:5:50000
+S:0:0:0:0:1:0
 P:0:2d4:0:0:0
-F:IGNORE_FIRE | RES_FIRE10 | LITE2 |
-F:CON
+F:IGNORE_FIRE | RES_FIRE10 | LITE2
 D:This orb is a globe of lava enclosed in a magical sphere, made
 D: to convert it's heat to light.
 
 N:523:Frost
 G:*:B
-I:8:2:4
+I:8:2:0
 W:0:100:5:50000
+S:0:0:0:3:0:0
 P:0:2d8:0:0:0
 F:IGNORE_COLD | RES_COLD20 | LITE3 |
-F:DEX | ACTIVATE
+F:FREE_ACT | ACTIVATE
 D:A frozen ball, full of images of frozen lakes, cold winters,
 D: freezing temperatures.  Although it gives out no chill, each
 D: time you look into it a shiver goes up your spine. It emits
@@ -3714,11 +3716,11 @@ D: an icy blue glow, which makes everything appear frozen.
 
 N:524:Ice
 G:*:b
-I:8:3:1
+I:8:3:0
 W:0:100:5:50000
+S:0:0:0:1:0:0
 P:0:2d4:0:0:0
-F:IGNORE_COLD | RES_COLD20 | LITE2 |
-F:DEX
+F:IGNORE_COLD | RES_COLD20 | LITE2
 D:A ball of carved ice that glows a dark blue, it reminds you
 D: of long gone cold winters.  It glows with a deep blue.
 
@@ -3735,16 +3737,17 @@ F:ACTIVATE | EASY_KNOW
 
 N:537:Elvenkind
 G:=:d
-I:45:42:4
+I:45:42:0
+S:0:4:0:3:0:4
 W:60:0:2:15000
 A:60/2
-F:INT | DEX | CHR | SEE_INVIS | RES_LITE |
+F:SEE_INVIS | RES_LITE |
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 N:538:Dwarrowkind
 G:=:d
-I:45:43:4
+I:45:43:0
+S:4:0:3:0:4:0
 W:60:0:2:15000
 A:60/2
-F:STR | WIS | CON | NO_BLIND |
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+F:NO_BLIND | IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD

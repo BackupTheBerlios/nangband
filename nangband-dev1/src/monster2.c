@@ -2412,7 +2412,6 @@ void update_smart_learn(int m_idx, int what)
 
 		case DRS_RES_DISEN:
 		{
-			if (p_ptr->resist_disen) m_ptr->smart |= (SM_RES_DISEN);
 			break;
 		}
 	}

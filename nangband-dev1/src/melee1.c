@@ -484,12 +484,8 @@ bool make_attack_normal(int m_idx)
 					/* Take damage */
 					take_hit(damage, ddesc);
 
-					/* Allow complete resist */
-					if (!p_ptr->resist_disen)
-					{
-						/* Apply disenchantment */
-						if (apply_disenchant(0)) obvious = TRUE;
-					}
+					/* Apply disenchantment */
+					if (apply_disenchant(0)) obvious = TRUE;
 
 					/* Learn about the player */
 					update_smart_learn(m_idx, DRS_RES_DISEN);
@@ -1145,7 +1141,7 @@ bool make_attack_normal(int m_idx)
 					take_hit(damage, ddesc);
 
 					/* Increase "image" */
-					if (!p_ptr->resist_chaos)
+					if (!resist_check(RES_CONF))
 					{
 						if (set_image(p_ptr->image + 3 + randint(rlev / 2)))
 						{

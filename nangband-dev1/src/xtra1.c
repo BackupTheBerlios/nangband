@@ -1832,9 +1832,6 @@ static void calc_bonuses(void)
 	p_ptr->sustain_dex = FALSE;
 	p_ptr->sustain_chr = FALSE;
 	p_ptr->resist_blind = FALSE;
-	p_ptr->resist_chaos = FALSE;
-	p_ptr->resist_disen = FALSE;
-
 
 	/*** Extract race/class info ***/
 

@@ -414,6 +414,7 @@ static cptr k_info_flags2[] =
 	"XXX1",
 	"NO_DISENCHANT",
 	"NO_BLIND",
+	"XXX2",
 	"XXX3",
 	"XXX4",
 	"XXX5",
@@ -425,13 +426,12 @@ static cptr k_info_flags2[] =
 	"XXX11",
 	"XXX12",
 	"XXX13",
-	"RES_CONFU",
-	"RES_SOUND",
-	"RES_SHARD",
-	"RES_NEXUS",
-	"RES_NETHR",
-	"RES_CHAOS",
-	"RES_DISEN"
+	"XXX14",
+	"XXX15",
+	"XXX16",
+	"XXX17",
+	"XXX18",
+	"XXX19"
 };
 
 /*

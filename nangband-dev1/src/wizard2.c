@@ -378,11 +378,11 @@ static void wiz_display_item(const object_type *o_ptr)
 	prt_binary(f1, 16, j);
 
 	prt("+------------FLAGS2------------+", 17, j);
-	prt("SUST........IMM.RESIST.........", 18, j);
-	prt("            afecaefcpfldbc s n  ", 19, j);
-	prt("siwdcc      cilocliooeialoshnecd", 20, j);
-	prt("tnieoh      irelierliatrnnnrethi", 21, j);
-	prt("rtsxna......decddcedsrekdfddxhss", 22, j);
+	prt("SUST............................", 18, j);
+	prt("                                ", 19, j);
+	prt("SiWdCc                          ", 20, j);
+	prt("TnIeOh                          ", 21, j);
+	prt("RtSxNa                          ", 22, j);
 	prt_binary(f2, 23, j);
 
 	prt("+------------FLAGS3------------+", 10, j+32);

@@ -1972,8 +1972,8 @@
 #define TR2_XXX15           0x08000000L /* (reserved) */
 #define TR2_XXX16           0x10000000L /* (reserved) */
 #define TR2_XXX17           0x20000000L /* (reserved) */
-#define TR2_RES_CHAOS       0x40000000L /* Resist chaos */
-#define TR2_RES_DISEN       0x80000000L /* Resist disenchant */
+#define TR2_XXX18           0x40000000L /* (reserved) */
+#define TR2_XXX19           0x80000000L /* (reserved) */
 
 #define TR3_SLOW_DIGEST     0x00000001L /* Slow digest */
 #define TR3_FEATHER         0x00000002L /* Feather Falling */

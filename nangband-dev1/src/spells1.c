@@ -1163,7 +1163,7 @@ bool res_stat(int stat)
  *
  * The "mode" is currently unused.
  *
- * Return "TRUE" if the player notices anything.
+ * Return "TRUE" if the player notices something.
  */
 bool apply_disenchant(int mode)
 {
@@ -1173,12 +1173,13 @@ bool apply_disenchant(int mode)
 
 	char o_name[80];
 
+	u32b f1, f2, f3;
 
 	/* Unused parameter */
 	(void)mode;
 
 	/* Pick a random slot */
-	switch (randint(8))
+	switch (randint(9))
 	{
 		case 1: t = INVEN_WIELD; break;
 		case 2: t = INVEN_BOW; break;
@@ -1188,6 +1189,7 @@ bool apply_disenchant(int mode)
 		case 6: t = INVEN_HEAD; break;
 		case 7: t = INVEN_HANDS; break;
 		case 8: t = INVEN_FEET; break;
+		case 9: t = INVEN_WAIST; break;
 	}
 
 	/* Get the item */
@@ -1196,6 +1198,11 @@ bool apply_disenchant(int mode)
 	/* No item, nothing happens */
 	if (!o_ptr->k_idx) return (FALSE);
 
+	/* Get the flags */
+	object_flags(o_ptr, &f1, &f2, &f3);
+
+	/* Can it be disenchanted? */
+	if (f2 & (TR2_NO_DISENCHANT)) return (FALSE);
 
 	/* Nothing to disenchant */
 	if ((o_ptr->to_h <= 0) && (o_ptr->to_d <= 0) && (o_ptr->to_a <= 0))
@@ -1207,7 +1214,6 @@ bool apply_disenchant(int mode)
 
 	/* Describe the object */
 	object_desc(o_name, o_ptr, FALSE, 0);
-
 
 	/* Artifacts have 60% chance to resist */
 	if (artifact_p(o_ptr) && (rand_int(100) < 60))
@@ -1221,18 +1227,21 @@ bool apply_disenchant(int mode)
 		return (TRUE);
 	}
 
-
 	/* Disenchant tohit */
 	if (o_ptr->to_h > 0) o_ptr->to_h--;
 	if ((o_ptr->to_h > 5) && (rand_int(100) < 20)) o_ptr->to_h--;
 
-	/* Disenchant todam */
-	if (o_ptr->to_d > 0) o_ptr->to_d--;
-	if ((o_ptr->to_d > 5) && (rand_int(100) < 20)) o_ptr->to_d--;
+	/* 80% of toning down todam and toac */
+	if (randint(100) < 80)
+	{
+		/* Disenchant todam */
+		if (o_ptr->to_d > 0) o_ptr->to_d--;
+		if ((o_ptr->to_d > 5) && (rand_int(100) < 20)) o_ptr->to_d--;
 
-	/* Disenchant toac */
-	if (o_ptr->to_a > 0) o_ptr->to_a--;
-	if ((o_ptr->to_a > 5) && (rand_int(100) < 20)) o_ptr->to_a--;
+		/* Disenchant toac */
+		if (o_ptr->to_a > 0) o_ptr->to_a--;
+		if ((o_ptr->to_a > 5) && (rand_int(100) < 20)) o_ptr->to_a--;
+	}
 
 	/* Message */
 	msg_format("Your %s (%c) %s disenchanted!",
@@ -3488,14 +3497,9 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ)
 		case GF_DISENCHANT:
 		{
 			if (fuzzy) msg_print("You are hit by something strange!");
-			if (p_ptr->resist_disen)
-			{
-				dam *= 6; dam /= (randint(6) + 6);
-			}
-			else
-			{
-				(void)apply_disenchant(0);
-			}
+
+			(void)apply_disenchant(0);
+
 			take_hit(dam, killer);
 			break;
 		}

@@ -992,8 +992,6 @@ struct player_type
 	s16b stat_ind[A_MAX];	/* Indexes into stat tables */
 
 	bool resist_blind;	/* Resist blindness */
-	bool resist_chaos;	/* Resist chaos */
-	bool resist_disen;	/* Resist disenchant */
 
 	bool sustain_str;	/* Keep strength */
 	bool sustain_int;	/* Keep intelligence */

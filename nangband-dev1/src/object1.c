@@ -2166,9 +2166,9 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		known = TRUE;
 	}
 
-	if (f2 & (TR2_RES_DISEN))
+	if (f2 & (TR2_NO_DISENCHANT))
 	{
-		text_out("It is immune to disenchantment.  ");
+		text_out("It cannot be disenchanted.  ");
 		known = TRUE;
 	}
 

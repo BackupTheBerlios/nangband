@@ -56,7 +56,7 @@ static void generate_dungeon(map_grid_t **dungeon, int width, int height, int le
 		for (y = 0; y < height; y++)
 		{
 			printf("x = %i, y = %i", x, y);
-			*dungeon->feature = TERRAIN_TYPE_WALL;
+			dungeon[x][y].feature = TERRAIN_TYPE_WALL;
 		}
 	}
 	

@@ -1,0 +1,21 @@
+# File: nangband/lib/edit/book.txt
+# Purpose: Magic book information for Nangband
+
+# Modifying this file could result in system crashes, broken savefiles
+# or the game refusing to start. Always keep backups.
+
+# === Understanding book.txt ===
+
+# N: book number : book name
+# T: tval : sval
+# I: number of spells in book
+
+# Required version stamp.
+V:2.9.6
+
+### Define the books
+
+# Magic for Beginners
+N:0:Magic for Beginners
+T:91:0
+I:9

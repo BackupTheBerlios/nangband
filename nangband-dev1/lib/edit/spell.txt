@@ -6,41 +6,38 @@
 
 # === Understanding magic.txt ===
 
-# B: book number : book name
-# T: tval : sval
-# N: number of spells in book
-
 # N: serial number : spell name
 # I: book number : position : spell constant
 # F: flag | flag | etc
+# D: description
 
 # 'N' indicates the beginning of an entry. The serial number must
 # increase for each new item.
 
-### Define the books
-
-# Magic for Beginners
-B:1:Magic for Beginners
-T:91:0
-N:9
+# Required version stamp.
+V:2.9.6
 
 ### Define the spells
 ## Book One
 # Magic Missile
 N:0:Magic Missile
 I:1:1:MAGIC_MISSILE
+D:A magic missile.
 
 # Detect Monsters
 N:1:Detect Monsters
 I:1:2:DETECT_MONSTERS
+D:This spell detects monsters.
 
 # Phase Door
 N:2:Phase Door
 I:1:3:PHASE_DOOR
+D:This spell teleports you a short distance.
 
 # Light Area
 N:3:Light Area
 I:1:4:LIGHT_AREA
+D:This spell lights your surroundings.
 
 # Treasure Detection
 N:4:Treasure Detection

@@ -14,10 +14,10 @@ if ($access != 'arnold')
 
 function do_links()
 {
-	echo '[ <a href="index.php">Main Page</a> | ';
-	echo '<a href="changes.php">Changes</a> | ';
-	echo '<a href="download.php">Download</a> | ';
-	echo '<a href="http://developer.berlios.de/projects/nangband">Project Page</a> ]';
+	echo '[ <a href="?page=main">Main Page</a> | ';
+	echo '<a href="?page=changes">Changes</a> | ';
+	echo '<a href="?page=download">Download</a> | ';
+	echo '<a href="?page=project">Project Page</a> ]';
 
 	return;
 }

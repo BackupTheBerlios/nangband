@@ -1,0 +1,11 @@
+Nangband Website changelog
+==========================
+
+30-06-02
+--------
+- Started keeping this changelog. (takkaria)
+- Rewrote site to only have one PHP page which displays the appropriate
+  content for each page.  Much cleaner than before.  Not tested!
+  (takkaria)
+
+

@@ -35,12 +35,24 @@ switch ($page)
 	                break;
 }
 
-// Output the header
-page_header($title, $page);
+// Redirect if appropriate
+if ($redirect)
+{
+	// This redirects to another page.
+	echo 'Location: ' .$redirect;
+}
+else
+{
+	// Output the header
+	page_header($title, $page);
 
-// Include the data
-include($page);
+	// Include the data
+	include($page);
 
-// Output the footer
-page_footer();
+	// Output the footer
+	page_footer();
+}
+
+// We are done.
+
 ?>

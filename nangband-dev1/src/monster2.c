@@ -457,7 +457,7 @@ s16b get_mon_num(int level)
 
 		/* No town monsters in dungeon, unless otherwise specified */
 		if ((level > 0) && (table[i].level <= 0) &&
-		    !(r_ptr->flags3 & (RF3_ALLOW_DUNGEON)) continue;
+		    !(r_ptr->flags3 & (RF3_ALLOW_DUNGEON))) continue;
 
                 /* Hack -- "unique" monsters must be "unique" */
 		if ((r_ptr->flags1 & (RF1_UNIQUE)) &&

@@ -7,7 +7,7 @@
  * by:				takkaria
  */
 
-include('general/layout.php3');
+include('general/layout.php');
 
 page_header('Main Page', 'index');
 ?>

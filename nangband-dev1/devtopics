@@ -1,0 +1,6 @@
+#!/bin/sh
+# Run this shell script to get a list of all topics in the developer notes.
+# This script by moose/takka.
+
+echo "Topics covered in the developer notes are:"
+grep -i '.*[0-9]:' developer_readme.txt

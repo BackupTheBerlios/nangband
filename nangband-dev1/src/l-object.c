@@ -1,6 +1,6 @@
 /*
 ** Lua binding: object
-** Generated automatically by tolua 4.0a - angband on Sun Feb 10 17:10:03 2002.
+** Generated automatically by tolua 4.0a - angband on Tue Feb 12 08:28:03 2002.
 */
 
 #include "lua/tolua.h"
@@ -4662,12 +4662,6 @@ int tolua_object_open (lua_State* tolua_S)
  tolua_constant(tolua_S,NULL,"TR2_SUST_DEX",TR2_SUST_DEX);
  tolua_constant(tolua_S,NULL,"TR2_SUST_CON",TR2_SUST_CON);
  tolua_constant(tolua_S,NULL,"TR2_SUST_CHR",TR2_SUST_CHR);
- tolua_constant(tolua_S,NULL,"TR2_XXX1",TR2_XXX1);
- tolua_constant(tolua_S,NULL,"TR2_XXX2",TR2_XXX2);
- tolua_constant(tolua_S,NULL,"TR2_XXX3",TR2_XXX3);
- tolua_constant(tolua_S,NULL,"TR2_XXX4",TR2_XXX4);
- tolua_constant(tolua_S,NULL,"TR2_XXX5",TR2_XXX5);
- tolua_constant(tolua_S,NULL,"TR2_XXX6",TR2_XXX6);
  tolua_constant(tolua_S,NULL,"TR2_IM_ACID",TR2_IM_ACID);
  tolua_constant(tolua_S,NULL,"TR2_IM_ELEC",TR2_IM_ELEC);
  tolua_constant(tolua_S,NULL,"TR2_IM_FIRE",TR2_IM_FIRE);
@@ -5591,12 +5585,6 @@ void tolua_object_close (lua_State* tolua_S)
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_SUST_DEX");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_SUST_CON");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_SUST_CHR");
- lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_XXX1");
- lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_XXX2");
- lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_XXX3");
- lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_XXX4");
- lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_XXX5");
- lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_XXX6");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_IM_ACID");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_IM_ELEC");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_IM_FIRE");

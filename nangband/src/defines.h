@@ -1760,104 +1760,104 @@
  * flags, and three cursed flags).
  */
 
-#define TR1_STR             0x00000001L /* STR += "pval" */
-#define TR1_INT             0x00000002L /* INT += "pval" */
-#define TR1_WIS             0x00000004L /* WIS += "pval" */
-#define TR1_DEX             0x00000008L /* DEX += "pval" */
-#define TR1_CON             0x00000010L /* CON += "pval" */
-#define TR1_CHR             0x00000020L /* CHR += "pval" */
-#define TR1_XXX1            0x00000040L /* (reserved) */
-#define TR1_XXX2            0x00000080L /* (reserved) */
-#define TR1_STEALTH         0x00000100L /* Stealth += "pval" */
-#define TR1_SEARCH          0x00000200L /* Search += "pval" */
-#define TR1_INFRA           0x00000400L /* Infra += "pval" */
-#define TR1_TUNNEL          0x00000800L /* Tunnel += "pval" */
-#define TR1_SPEED           0x00001000L /* Speed += "pval" */
-#define TR1_BLOWS           0x00002000L /* Blows += "pval" */
-#define TR1_SHOTS           0x00004000L /* Shots += "pval" */
-#define TR1_MIGHT           0x00008000L /* Might += "pval" */
-#define TR1_SLAY_ANIMAL     0x00010000L /* Weapon slays animals */
-#define TR1_SLAY_EVIL       0x00020000L /* Weapon slays evil */
-#define TR1_SLAY_UNDEAD     0x00040000L /* Weapon slays undead */
-#define TR1_SLAY_DEMON      0x00080000L /* Weapon slays demon */
-#define TR1_SLAY_ORC        0x00100000L /* Weapon slays orc */
-#define TR1_SLAY_TROLL      0x00200000L /* Weapon slays troll */
-#define TR1_SLAY_GIANT      0x00400000L /* Weapon slays giant */
-#define TR1_SLAY_DRAGON     0x00800000L /* Weapon slays dragon */
-#define TR1_KILL_DRAGON     0x01000000L /* Weapon kills dragon */
-#define TR1_KILL_DEMON      0x02000000L /* Weapon kills demon */
-#define TR1_KILL_UNDEAD     0x04000000L /* Weapon "kills" undead */
-#define TR1_BRAND_POIS      0x08000000L /* Weapon has poison brand */
-#define TR1_BRAND_ACID      0x10000000L /* Weapon has acid brand */
-#define TR1_BRAND_ELEC      0x20000000L /* Weapon has elec brand */
-#define TR1_BRAND_FIRE      0x40000000L /* Weapon has fire brand */
-#define TR1_BRAND_COLD      0x80000000L /* Weapon has cold brand */
+#define TR1_STR              (1<<0) /* STR += "pval" */
+#define TR1_INT              (1<<1) /* INT += "pval" */
+#define TR1_WIS              (1<<2) /* WIS += "pval" */
+#define TR1_DEX              (1<<3) /* DEX += "pval" */
+#define TR1_CON              (1<<4) /* CON += "pval" */
+#define TR1_CHR              (1<<5) /* CHR += "pval" */
+#define TR1_XXX1             (1<<6) /* (reserved) */
+#define TR1_XXX2             (1<<7) /* (reserved) */
+#define TR1_STEALTH          (1<<8) /* Stealth += "pval" */
+#define TR1_SEARCH           (1<<9) /* Search += "pval" */
+#define TR1_INFRA           (1<<10) /* Infra += "pval" */
+#define TR1_TUNNEL          (1<<11) /* Tunnel += "pval" */
+#define TR1_SPEED           (1<<12) /* Speed += "pval" */
+#define TR1_BLOWS           (1<<13) /* Blows += "pval" */
+#define TR1_SHOTS           (1<<14) /* Shots += "pval" */
+#define TR1_MIGHT           (1<<15) /* Might += "pval" */
+#define TR1_SLAY_ANIMAL     (1<<16) /* Weapon slays animals */
+#define TR1_SLAY_EVIL       (1<<17) /* Weapon slays evil */
+#define TR1_SLAY_UNDEAD     (1<<18) /* Weapon slays undead */
+#define TR1_SLAY_DEMON      (1<<19) /* Weapon slays demon */
+#define TR1_SLAY_ORC        (1<<20) /* Weapon slays orc */
+#define TR1_SLAY_TROLL      (1<<21) /* Weapon slays troll */
+#define TR1_SLAY_GIANT      (1<<22) /* Weapon slays giant */
+#define TR1_SLAY_DRAGON     (1<<23) /* Weapon slays dragon */
+#define TR1_KILL_DRAGON     (1<<24) /* Weapon kills dragon */
+#define TR1_KILL_DEMON      (1<<25) /* Weapon kills demon */
+#define TR1_KILL_UNDEAD     (1<<26) /* Weapon "kills" undead */
+#define TR1_BRAND_POIS      (1<<27) /* Weapon has poison brand */
+#define TR1_BRAND_ACID      (1<<28) /* Weapon has acid brand */
+#define TR1_BRAND_ELEC      (1<<29) /* Weapon has elec brand */
+#define TR1_BRAND_FIRE      (1<<30) /* Weapon has fire brand */
+#define TR1_BRAND_COLD      (1<<31) /* Weapon has cold brand */
 
-#define TR2_SUST_STR        0x00000001L /* Sustain STR */
-#define TR2_SUST_INT        0x00000002L /* Sustain INT */
-#define TR2_SUST_WIS        0x00000004L /* Sustain WIS */
-#define TR2_SUST_DEX        0x00000008L /* Sustain DEX */
-#define TR2_SUST_CON        0x00000010L /* Sustain CON */
-#define TR2_SUST_CHR        0x00000020L /* Sustain CHR */
-#define TR2_XXX1            0x00000040L /* (reserved) */
-#define TR2_XXX2            0x00000080L /* (reserved) */
-#define TR2_XXX3            0x00000100L /* (reserved) */
-#define TR2_XXX4            0x00000200L /* (reserved) */
-#define TR2_XXX5            0x00000400L /* (reserved) */
-#define TR2_XXX6            0x00000800L /* (reserved) */
-#define TR2_IM_ACID         0x00001000L /* Immunity to acid */
-#define TR2_IM_ELEC         0x00002000L /* Immunity to elec */
-#define TR2_IM_FIRE         0x00004000L /* Immunity to fire */
-#define TR2_IM_COLD         0x00008000L /* Immunity to cold */
-#define TR2_RES_ACID        0x00010000L /* Resist acid */
-#define TR2_RES_ELEC        0x00020000L /* Resist elec */
-#define TR2_RES_FIRE        0x00040000L /* Resist fire */
-#define TR2_RES_COLD        0x00080000L /* Resist cold */
-#define TR2_RES_POIS        0x00100000L /* Resist poison */
-#define TR2_RES_FEAR        0x00200000L /* Resist fear */
-#define TR2_RES_LITE        0x00400000L /* Resist lite */
-#define TR2_RES_DARK        0x00800000L /* Resist dark */
-#define TR2_RES_BLIND       0x01000000L /* Resist blind */
-#define TR2_RES_CONFU       0x02000000L /* Resist confusion */
-#define TR2_RES_SOUND       0x04000000L /* Resist sound */
-#define TR2_RES_SHARD       0x08000000L /* Resist shards */
-#define TR2_RES_NEXUS       0x10000000L /* Resist nexus */
-#define TR2_RES_NETHR       0x20000000L /* Resist nether */
-#define TR2_RES_CHAOS       0x40000000L /* Resist chaos */
-#define TR2_RES_DISEN       0x80000000L /* Resist disenchant */
+#define TR2_SUST_STR         (1<<0) /* Sustain STR */
+#define TR2_SUST_INT         (1<<1) /* Sustain INT */
+#define TR2_SUST_WIS         (1<<2) /* Sustain WIS */
+#define TR2_SUST_DEX         (1<<3) /* Sustain DEX */
+#define TR2_SUST_CON         (1<<4) /* Sustain CON */
+#define TR2_SUST_CHR         (1<<5) /* Sustain CHR */
+#define TR2_XXX1             (1<<6) /* (reserved) */
+#define TR2_XXX2             (1<<7) /* (reserved) */
+#define TR2_XXX3             (1<<8) /* (reserved) */
+#define TR2_XXX4             (1<<9) /* (reserved) */
+#define TR2_XXX5            (1<<10) /* (reserved) */
+#define TR2_XXX6            (1<<11) /* (reserved) */
+#define TR2_IM_ACID         (1<<12) /* Immunity to acid */
+#define TR2_IM_ELEC         (1<<13) /* Immunity to elec */
+#define TR2_IM_FIRE         (1<<14) /* Immunity to fire */
+#define TR2_IM_COLD         (1<<15) /* Immunity to cold */
+#define TR2_RES_ACID        (1<<16) /* Resist acid */
+#define TR2_RES_ELEC        (1<<17) /* Resist elec */
+#define TR2_RES_FIRE        (1<<18) /* Resist fire */
+#define TR2_RES_COLD        (1<<19) /* Resist cold */
+#define TR2_RES_POIS        (1<<20) /* Resist poison */
+#define TR2_RES_FEAR        (1<<21) /* Resist fear */
+#define TR2_RES_LITE        (1<<22) /* Resist lite */
+#define TR2_RES_DARK        (1<<23) /* Resist dark */
+#define TR2_RES_BLIND       (1<<24) /* Resist blind */
+#define TR2_RES_CONFU       (1<<25) /* Resist confusion */
+#define TR2_RES_SOUND       (1<<26) /* Resist sound */
+#define TR2_RES_SHARD       (1<<27) /* Resist shards */
+#define TR2_RES_NEXUS       (1<<28) /* Resist nexus */
+#define TR2_RES_NETHR       (1<<29) /* Resist nether */
+#define TR2_RES_CHAOS       (1<<30) /* Resist chaos */
+#define TR2_RES_DISEN       (1<<31) /* Resist disenchant */
 
-#define TR3_SLOW_DIGEST     0x00000001L /* Slow digest */
-#define TR3_FEATHER         0x00000002L /* Feather Falling */
-#define TR3_LITE            0x00000004L /* Perma-Lite */
-#define TR3_REGEN           0x00000008L /* Regeneration */
-#define TR3_TELEPATHY       0x00000010L /* Telepathy */
-#define TR3_SEE_INVIS       0x00000020L /* See Invis */
-#define TR3_FREE_ACT        0x00000040L /* Free action */
-#define TR3_HOLD_LIFE       0x00000080L /* Hold life */
-#define TR3_XXX1            0x00000100L
-#define TR3_XXX2            0x00000200L
-#define TR3_XXX3            0x00000400L
-#define TR3_XXX4            0x00000800L
-#define TR3_IMPACT          0x00001000L /* Earthquake blows */
-#define TR3_TELEPORT        0x00002000L /* Random teleportation */
-#define TR3_AGGRAVATE       0x00004000L /* Aggravate monsters */
-#define TR3_DRAIN_EXP       0x00008000L /* Experience drain */
-#define TR3_IGNORE_ACID     0x00010000L /* Item ignores Acid Damage */
-#define TR3_IGNORE_ELEC     0x00020000L /* Item ignores Elec Damage */
-#define TR3_IGNORE_FIRE     0x00040000L /* Item ignores Fire Damage */
-#define TR3_IGNORE_COLD     0x00080000L /* Item ignores Cold Damage */
-#define TR3_XXX5            0x00100000L /* (reserved) */
-#define TR3_XXX6            0x00200000L /* (reserved) */
-#define TR3_BLESSED         0x00400000L /* Item has been blessed */
-#define TR3_ACTIVATE        0x00800000L /* Item can be activated */
-#define TR3_INSTA_ART       0x01000000L /* Item makes an artifact */
-#define TR3_EASY_KNOW       0x02000000L /* Item is known if aware */
-#define TR3_HIDE_TYPE       0x04000000L /* Item hides description */
-#define TR3_SHOW_MODS       0x08000000L /* Item shows Tohit/Todam */
-#define TR3_XXX7            0x10000000L /* (reserved) */
-#define TR3_LIGHT_CURSE     0x20000000L /* Item has Light Curse */
-#define TR3_HEAVY_CURSE     0x40000000L /* Item has Heavy Curse */
-#define TR3_PERMA_CURSE     0x80000000L /* Item has Perma Curse */
+#define TR3_SLOW_DIGEST      (1<<0) /* Slow digest */
+#define TR3_FEATHER          (1<<1) /* Feather Falling */
+#define TR3_LITE             (1<<2) /* Perma-Lite */
+#define TR3_REGEN            (1<<3) /* Regeneration */
+#define TR3_TELEPATHY        (1<<4) /* Telepathy */
+#define TR3_SEE_INVIS        (1<<5) /* See Invis */
+#define TR3_FREE_ACT         (1<<6) /* Free action */
+#define TR3_HOLD_LIFE        (1<<7) /* Hold life */
+#define TR3_XXX1             (1<<8)
+#define TR3_XXX2             (1<<9)
+#define TR3_XXX3            (1<<10)
+#define TR3_XXX4            (1<<11)
+#define TR3_IMPACT          (1<<12) /* Earthquake blows */
+#define TR3_TELEPORT        (1<<13) /* Random teleportation */
+#define TR3_AGGRAVATE       (1<<14) /* Aggravate monsters */
+#define TR3_DRAIN_EXP       (1<<15) /* Experience drain */
+#define TR3_IGNORE_ACID     (1<<16) /* Item ignores Acid Damage */
+#define TR3_IGNORE_ELEC     (1<<17) /* Item ignores Elec Damage */
+#define TR3_IGNORE_FIRE     (1<<18) /* Item ignores Fire Damage */
+#define TR3_IGNORE_COLD     (1<<19) /* Item ignores Cold Damage */
+#define TR3_XXX5            (1<<20) /* (reserved) */
+#define TR3_XXX6            (1<<21) /* (reserved) */
+#define TR3_BLESSED         (1<<22) /* Item has been blessed */
+#define TR3_ACTIVATE        (1<<23) /* Item can be activated */
+#define TR3_INSTA_ART       (1<<24) /* Item makes an artifact */
+#define TR3_EASY_KNOW       (1<<25) /* Item is known if aware */
+#define TR3_HIDE_TYPE       (1<<26) /* Item hides description */
+#define TR3_SHOW_MODS       (1<<27) /* Item shows Tohit/Todam */
+#define TR3_XXX7            (1<<28) /* (reserved) */
+#define TR3_LIGHT_CURSE     (1<<29) /* Item has Light Curse */
+#define TR3_HEAVY_CURSE     (1<<30) /* Item has Heavy Curse */
+#define TR3_PERMA_CURSE     (1<<31) /* Item has Perma Curse */
 
 
 /*

@@ -370,19 +370,19 @@ static void wiz_display_item(const object_type *o_ptr)
 	           o_ptr->ident, o_ptr->timeout), 8, j);
 
 	prt("+------------FLAGS1------------+", 10, j);
-	prt("AFFECT..........SLAY.......BRAND", 11, j);
-	prt("                ae      x  paefc", 12, j);
-	prt("siwdcc  ssidsasmnvudotgdd  oclio", 13, j);
-	prt("tnieoh  trnipthgiinmrrnrr  iierl", 14, j);
-	prt("rtsxna..lcfgdkttmldncltgg..sdced", 15, j);
+	prt("AFFECT..........SLAY............", 11, j);
+	prt("                ae      xxx     ", 12, j);
+	prt("siwdcc  ssidsasmnvudotgdddu     ", 13, j);
+	prt("tnieoh  trnipthgiinmrrnrren     ", 14, j);
+	prt("rtsxna..lcfgdkttmldncltggmd.....", 15, j);
 	prt_binary(f1, 16, j);
 
 	prt("+------------FLAGS2------------+", 17, j);
-	prt("SUST............................", 18, j);
+	prt("SUST..LITE..XTRA...........BRAND", 18, j);
 	prt("                                ", 19, j);
-	prt("SiWdCc                          ", 20, j);
-	prt("TnIeOh                          ", 21, j);
-	prt("RtSxNa                          ", 22, j);
+	prt("SiWdCcllllf nn          fceapncn", 20, j);
+	prt("TnIeOhtttte db          rllcieht", 21, j);
+	prt("RtSxNa1234l.sd..........edcdsxoh", 22, j);
 	prt_binary(f2, 23, j);
 
 	prt("+------------FLAGS3------------+", 10, j+32);

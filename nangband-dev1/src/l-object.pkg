@@ -790,11 +790,6 @@ typedef int sint;
 #define TR1_KILL_DRAGON     0x01000000L /* Weapon kills dragon */
 #define TR1_KILL_DEMON      0x02000000L /* Weapon kills demon */
 #define TR1_KILL_UNDEAD     0x04000000L /* Weapon kills undead */
-#define TR1_BRAND_POIS      0x08000000L /* Weapon has poison brand */
-#define TR1_BRAND_ACID      0x10000000L /* Weapon has acid brand */
-#define TR1_BRAND_ELEC      0x20000000L /* Weapon has elec brand */
-#define TR1_BRAND_FIRE      0x40000000L /* Weapon has fire brand */
-#define TR1_BRAND_COLD      0x80000000L /* Weapon has cold brand */
 
 #define TR2_SUST_STR        0x00000001L /* Sustain STR */
 #define TR2_SUST_INT        0x00000002L /* Sustain INT */

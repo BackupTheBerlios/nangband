@@ -2127,12 +2127,14 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 
 	/* Collect the executes */
 	vn = vcn = 0;
-	if (f1 & (TR1_BRAND_ACID)) { vp[vn++] = "acid"; vc[vcn++] = TERM_L_GREEN; }
-	if (f1 & (TR1_BRAND_ELEC)) { vp[vn++] = "electricity"; vc[vcn++] = TERM_L_BLUE; }
-	if (f1 & (TR1_BRAND_FIRE)) { vp[vn++] = "fire"; vc[vcn++] = TERM_RED; }
-	if (f1 & (TR1_BRAND_COLD)) { vp[vn++] = "cold"; vc[vcn++] = TERM_BLUE; }
-	if (f1 & (TR1_BRAND_POIS)) { vp[vn++] = "poison"; vc[vcn++] = TERM_GREEN; }
-	if (f3 & (TR3_BRAND_NETHR)) { vp[vn++] = "nether"; vc[vcn++] = TERM_L_DARK; }
+	if (f2 & (TR2_BRAND_ACID)) { vp[vn++] = "acid"; vc[vcn++] = TERM_L_GREEN; }
+	if (f2 & (TR2_BRAND_ELEC)) { vp[vn++] = "electricity"; vc[vcn++] = TERM_L_BLUE; }
+	if (f2 & (TR2_BRAND_FIRE)) { vp[vn++] = "fire"; vc[vcn++] = TERM_RED; }
+	if (f2 & (TR2_BRAND_COLD)) { vp[vn++] = "cold"; vc[vcn++] = TERM_BLUE; }
+	if (f2 & (TR2_BRAND_POIS)) { vp[vn++] = "poison"; vc[vcn++] = TERM_GREEN; }
+	if (f2 & (TR2_BRAND_NETHER)) { vp[vn++] = "nether"; vc[vcn++] = TERM_L_DARK; }
+	if (f2 & (TR2_BRAND_CHAOS)) { vp[vn++] = "chaos"; vc[vcn++] = TERM_RED; }
+	if (f2 & (TR2_BRAND_NEXUS)) { vp[vn++] = "nexus"; vc[vcn++] = TERM_WHITE; }
 
 	/* Describe */
 	if (vn)

@@ -941,10 +941,10 @@ static s32b artifact_power(int a_idx)
 			if (a_ptr->flags1 & TR1_SLAY_ORC) p = (p * 5) / 4;
 			if (a_ptr->flags1 & TR1_SLAY_GIANT) p = (p * 6) / 5;
 
-			if (a_ptr->flags1 & TR1_BRAND_ACID) p = p * 2;
-			if (a_ptr->flags1 & TR1_BRAND_ELEC) p = (p * 3) / 2;
-			if (a_ptr->flags1 & TR1_BRAND_FIRE) p = (p * 4) / 3;
-			if (a_ptr->flags1 & TR1_BRAND_COLD) p = (p * 4) / 3;
+			if (a_ptr->flags2 & TR2_BRAND_ACID) p = p * 2;
+			if (a_ptr->flags2 & TR2_BRAND_ELEC) p = (p * 3) / 2;
+			if (a_ptr->flags2 & TR2_BRAND_FIRE) p = (p * 4) / 3;
+			if (a_ptr->flags2 & TR2_BRAND_COLD) p = (p * 4) / 3;
 
 			p += (a_ptr->to_d + 2 * sign(a_ptr->to_d)) / 3;
 			if (a_ptr->to_d > 15) p += (a_ptr->to_d - 14) / 2;
@@ -1461,22 +1461,22 @@ static void add_ability(artifact_type *a_ptr)
 				}
 				else if (r < 7)
 				{
-					a_ptr->flags1 |= TR1_BRAND_ACID;
+					a_ptr->flags2 |= TR2_BRAND_ACID;
 					if (rand_int(4) > 0) a_ptr->resists[RES_ACID] += 20;
 				}
 				else if (r < 10)
 				{
-					a_ptr->flags1 |= TR1_BRAND_ELEC;
+					a_ptr->flags2 |= TR2_BRAND_ELEC;
 					if (rand_int(4) > 0) a_ptr->resists[RES_ELEC] += 20;
 				}
 				else if (r < 15)
 				{
-					a_ptr->flags1 |= TR1_BRAND_FIRE;
+					a_ptr->flags2 |= TR2_BRAND_FIRE;
 					if (rand_int(4) > 0) a_ptr->resists[RES_FIRE] += 20;
 				}
 				else if (r < 20)
 				{
-					a_ptr->flags1 |= TR1_BRAND_COLD;
+					a_ptr->flags2 |= TR2_BRAND_COLD;
 					if (rand_int(4) > 0) a_ptr->resists[RES_COLD] += 20;
 				}
 				else if (r < 28)

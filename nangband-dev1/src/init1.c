@@ -388,11 +388,11 @@ static cptr k_info_flags1[] =
 	"KILL_DRAGON",
 	"KILL_DEMON",
 	"KILL_UNDEAD",
-	"BRAND_POIS",
-	"BRAND_ACID",
-	"BRAND_ELEC",
-	"BRAND_FIRE",
-	"BRAND_COLD"
+	"library",
+	"tome",
+	"treewr",
+	"qqq",
+	"R$%£"
 };
 
 /*
@@ -424,14 +424,14 @@ static cptr k_info_flags2[] =
 	"XXX9",
 	"XXX10",
 	"XXX11",
-	"XXX12",
-	"XXX13",
-	"XXX14",
-	"XXX15",
-	"XXX16",
-	"XXX17",
-	"XXX18",
-	"XXX19"
+	"BRAND_FIRE",
+	"BRAND_COLD",
+	"BRAND_ELEC",
+	"BRAND_ACID",
+	"BRAND_POIS",
+	"BRAND_NEXUS",
+	"BRAND_CHAOS",
+	"BRAND_NETHER"
 };
 
 /*
@@ -447,9 +447,9 @@ static cptr k_info_flags3[] =
 	"SEE_INVIS",
 	"FREE_ACT",
 	"HOLD_LIFE",
-	"BRAND_NETHR",
-	"BRAND_NEXUS",
-	"BRAND_CHAOS",
+	"888",
+	"qwert",
+	"poiuy",
 	"XXX4",
 	"IMPACT",
 	"TELEPORT",

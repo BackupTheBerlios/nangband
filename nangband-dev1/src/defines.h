@@ -101,7 +101,7 @@
 #define COL_MAP			13
 
 /* Number of grids in each screen (vertically & horizontally) */
-#define SCREEN_HGT	(Term->hgt - ROW_MAP)
+#define SCREEN_HGT	(Term->hgt - ROW_MAP - 1)
 #define SCREEN_WID	(Term->wid - COL_MAP - 1)
 
 
@@ -1933,14 +1933,14 @@
 #define TR1_SLAY_TROLL      0x00200000L /* Weapon slays troll */
 #define TR1_SLAY_GIANT      0x00400000L /* Weapon slays giant */
 #define TR1_SLAY_DRAGON     0x00800000L /* Weapon slays dragon */
-#define TR1_KILL_DRAGON     0x01000000L /* Weapon kills dragon */
-#define TR1_KILL_DEMON      0x02000000L /* Weapon kills demon */
-#define TR1_KILL_UNDEAD     0x04000000L /* Weapon "kills" undead */
-#define TR1_BRAND_POIS      0x08000000L /* Weapon has poison brand */
-#define TR1_BRAND_ACID      0x10000000L /* Weapon has acid brand */
-#define TR1_BRAND_ELEC      0x20000000L /* Weapon has elec brand */
-#define TR1_BRAND_FIRE      0x40000000L /* Weapon has fire brand */
-#define TR1_BRAND_COLD      0x80000000L /* Weapon has cold brand */
+#define TR1_KILL_DRAGON     0x01000000L /* Great bane of dragons */
+#define TR1_KILL_DEMON      0x02000000L /* Great bane of demons */
+#define TR1_KILL_UNDEAD     0x04000000L /* Great bane of undead */
+#define TR1_XXX3            0x08000000L /* (reserved) */
+#define TR1_XXX4            0x10000000L /* (reserved) */
+#define TR1_XXX5            0x20000000L /* (reserved) */
+#define TR1_XXX6            0x40000000L /* (reserved) */
+#define TR1_XXX7            0x80000000L /* (reserved) */
 
 #define TR2_SUST_STR        0x00000001L /* Sustain STR */
 #define TR2_SUST_INT        0x00000002L /* Sustain INT */
@@ -1966,27 +1966,27 @@
 #define TR2_XXX9            0x00200000L /* (reserved) */
 #define TR2_XXX10           0x00400000L /* (reserved) */
 #define TR2_XXX11           0x00800000L /* (reserved) */
-#define TR2_XXX12           0x01000000L /* (reserved) */
-#define TR2_XXX13           0x02000000L /* (reserved) */
-#define TR2_XXX14           0x04000000L /* (reserved) */
-#define TR2_XXX15           0x08000000L /* (reserved) */
-#define TR2_XXX16           0x10000000L /* (reserved) */
-#define TR2_XXX17           0x20000000L /* (reserved) */
-#define TR2_XXX18           0x40000000L /* (reserved) */
-#define TR2_XXX19           0x80000000L /* (reserved) */
+#define TR2_BRAND_FIRE      0x01000000L /* Fire Brand */
+#define TR2_BRAND_COLD      0x02000000L /* Cold Brand */
+#define TR2_BRAND_ELEC      0x04000000L /* Lightning Brand */
+#define TR2_BRAND_ACID      0x08000000L /* Acid Brand */
+#define TR2_BRAND_POIS      0x10000000L /* Poison Brand */
+#define TR2_BRAND_NEXUS     0x20000000L /* Nexus Brand */
+#define TR2_BRAND_CHAOS     0x40000000L /* Chaos Brand */
+#define TR2_BRAND_NETHER    0x80000000L /* Nether Brand */
 
 #define TR3_SLOW_DIGEST     0x00000001L /* Slow digest */
 #define TR3_FEATHER         0x00000002L /* Feather Falling */
-#define TR3_XXX8            0x00000004L /* Perma-Lite */
+#define TR3_XXX1            0x00000004L /* Perma-Lite */
 #define TR3_REGEN           0x00000008L /* Regeneration */
 #define TR3_TELEPATHY       0x00000010L /* Telepathy */
 #define TR3_SEE_INVIS       0x00000020L /* See Invis */
 #define TR3_FREE_ACT        0x00000040L /* Free action */
 #define TR3_HOLD_LIFE       0x00000080L /* Hold life */
-#define TR3_BRAND_NETHR     0x00000100L
-#define TR3_BRAND_NEXUS     0x00000200L
-#define TR3_BRAND_CHAOS     0x00000400L
-#define TR3_XXX4            0x00000800L
+#define TR3_XXX2            0x00000100L
+#define TR3_XXX3            0x00000200L
+#define TR3_XXX4            0x00000400L
+#define TR3_XXX5            0x00000800L
 #define TR3_IMPACT          0x00001000L /* Earthquake blows */
 #define TR3_TELEPORT        0x00002000L /* Random teleportation */
 #define TR3_AGGRAVATE       0x00004000L /* Aggravate monsters */
@@ -1995,8 +1995,8 @@
 #define TR3_IGNORE_ELEC     0x00020000L /* Item ignores Elec Damage */
 #define TR3_IGNORE_FIRE     0x00040000L /* Item ignores Fire Damage */
 #define TR3_IGNORE_COLD     0x00080000L /* Item ignores Cold Damage */
-#define TR3_XXX5            0x00100000L /* (reserved) */
-#define TR3_XXX6            0x00200000L /* (reserved) */
+#define TR3_XXX6            0x00100000L /* (reserved) */
+#define TR3_XXX7            0x00200000L /* (reserved) */
 #define TR3_BLESSED         0x00400000L /* Item has been blessed */
 #define TR3_ACTIVATE        0x00800000L /* Item can be activated */
 #define TR3_INSTA_ART       0x01000000L /* Item makes an artifact */

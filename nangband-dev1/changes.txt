@@ -1,6 +1,12 @@
 Nangband ChangeLog
 ==================
 
+2002-03-12
+----------
+- Finished converting the resists to the new code. (takkaria)
+- Fixed a minor display bug. (takkaria)
+- Enhanced the object recall code once more. (takkaria)
+
 2002-03-11
 ----------
 - Added lots more resists to the new code. (takkaria)

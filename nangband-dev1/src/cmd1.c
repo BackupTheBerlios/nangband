@@ -324,7 +324,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 			}
 
                        /* Brand (Nether) */
-                       if (f3 & (TR3_BRAND_NETHR))
+                       if (f2 & (TR2_BRAND_NETHER))
                        {
                                /* Notice immunity */
                                if ((r_ptr->flags4 & (RF4_BR_NETH)) || (r_ptr->flags3 && (RF3_UNDEAD)))
@@ -340,7 +340,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
                        }
 
                        /* Brand (Nexus) */
-                       if (f3 & (TR3_BRAND_NEXUS))
+                       if (f2 & (TR2_BRAND_NEXUS))
                        {
                                /* Notice immunity */
                                if (r_ptr->flags4 & (RF4_BR_NEXU))
@@ -356,7 +356,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
                        }
 
                        /* Brand (Chaos) */
-                       if (f3 & (TR3_BRAND_CHAOS))
+                       if (f2 & (TR2_BRAND_CHAOS))
                        {
                                /* Notice immunity */
                                if (r_ptr->flags4 & (RF4_BR_CHAO))
@@ -373,7 +373,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 
 
 			/* Brand (Acid) */
-			if (f1 & (TR1_BRAND_ACID))
+			if (f2 & (TR2_BRAND_ACID))
 			{
 				/* Notice immunity */
 				if (r_ptr->flags3 & (RF3_IM_ACID))
@@ -392,7 +392,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 			}
 
 			/* Brand (Elec) */
-			if (f1 & (TR1_BRAND_ELEC))
+			if (f2 & (TR2_BRAND_ELEC))
 			{
 				/* Notice immunity */
 				if (r_ptr->flags3 & (RF3_IM_ELEC))
@@ -411,7 +411,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 			}
 
 			/* Brand (Fire) */
-			if (f1 & (TR1_BRAND_FIRE))
+			if (f2 & (TR2_BRAND_FIRE))
 			{
 				/* Notice immunity */
 				if (r_ptr->flags3 & (RF3_IM_FIRE))
@@ -430,7 +430,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 			}
 
 			/* Brand (Cold) */
-			if (f1 & (TR1_BRAND_COLD))
+			if (f2 & (TR2_BRAND_COLD))
 			{
 				/* Notice immunity */
 				if (r_ptr->flags3 & (RF3_IM_COLD))
@@ -449,7 +449,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 			}
 
 			/* Brand (Poison) */
-			if (f1 & (TR1_BRAND_POIS))
+			if (f2 & (TR2_BRAND_POIS))
 			{
 				/* Notice immunity */
 				if (r_ptr->flags3 & (RF3_IM_POIS))

@@ -1889,9 +1889,9 @@ static void calc_bonuses(void)
 	if (f3 & (TR3_BLESSED)) p_ptr->bless_blade = TRUE;
 
 	/* Weirder flags */
-	if (f3 & (TR3_BRAND_NETHR)) p_ptr->nethr_brand = TRUE;
-	if (f3 & (TR3_BRAND_NEXUS)) p_ptr->nexus_brand = TRUE;
-	if (f3 & (TR3_BRAND_CHAOS)) p_ptr->chaos_brand = TRUE;
+	if (f2 & (TR2_BRAND_NETHER)) p_ptr->nethr_brand = TRUE;
+	if (f2 & (TR2_BRAND_NEXUS)) p_ptr->nexus_brand = TRUE;
+	if (f2 & (TR2_BRAND_CHAOS)) p_ptr->chaos_brand = TRUE;
 
 	/* Bad flags */
 	if (f3 & (TR3_HUNGER)) p_ptr->hunger = TRUE;

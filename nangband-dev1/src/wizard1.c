@@ -486,11 +486,11 @@ static const flag_desc slay_flags_desc[] =
  */
 static const flag_desc brand_flags_desc[] =
 {
-	{ TR1_BRAND_ACID,         "Acid Brand" },
-	{ TR1_BRAND_ELEC,         "Lightning Brand" },
-	{ TR1_BRAND_FIRE,         "Flame Tongue" },
-	{ TR1_BRAND_COLD,         "Frost Brand" },
-	{ TR1_BRAND_POIS,         "Venom" },
+	{ TR2_BRAND_ACID,         "Acid Brand" },
+	{ TR2_BRAND_ELEC,         "Lightning Brand" },
+	{ TR2_BRAND_FIRE,         "Flame Tongue" },
+	{ TR2_BRAND_COLD,         "Frost Brand" },
+	{ TR2_BRAND_POIS,         "Venom" },
 };
 
 /*
@@ -766,7 +766,7 @@ static void analyze_brand(const object_type *o_ptr, cptr *brand_list)
 
 	object_flags(o_ptr, &f1, &f2, &f3);
 
-	brand_list = spoiler_flag_aux(f1, brand_flags_desc, brand_list,
+	brand_list = spoiler_flag_aux(f2, brand_flags_desc, brand_list,
 	                              N_ELEMENTS(brand_flags_desc));
 
 	/* Terminate the description list */

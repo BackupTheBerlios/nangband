@@ -10,6 +10,8 @@
  */
 #include "angband.h"
 
+#define DEBUGGING
+
 /*
  * Version numbers of the savefile code.
  */
@@ -121,7 +123,7 @@
 
 /* Variables needed by the code */
 static byte savefile_head_type;  /* The type of block */
-static byte savefile_head_ver;   /* The version of this block */
+static int  savefile_head_ver;   /* The version of this block */
 static byte *savefile_block;     /* Current block */
 static u32b savefile_blocksize;  /* Current block's size */
 static u32b savefile_blockused;  /* The amount of the block that has been used */
@@ -144,6 +146,10 @@ static void note(const char *msg, bool type)
 
 	/* Flush it */
 	Term_fresh();
+
+#ifdef DEBUGGING
+	printf("%s\n", msg);
+#endif
 
 	/* We are done */
 	return;
@@ -331,107 +337,18 @@ static char *savefile_do_string(char *str, bool type)
 		savefile_do_byte((byte *) &str[n], type);
 	}
 
+#ifdef DEBUGGING
+	printf("String done: %s\n", str);
+#endif
+
 	/* We are done */
 	return (str);
 }
 
 /* Here we define space-saving macros */
-#define savefile_do_s16b(v, t)     savefile_do_u16b((u16b *) v, t);
-#define savefile_do_s32b(v, t)     savefile_do_u32b((u32b *) v, t);
+#define savefile_do_s16b(v, t)     (s16b) savefile_do_u16b((u16b *) v, t);
+#define savefile_do_s32b(v, t)     (s32b) savefile_do_u32b((u32b *) v, t);
 
-#if 0
-/*
- * This function adds a byte to the savefile block.
- * If more memory is needed, it allocates more memory, and makes
- * savefile_block point to it.
- */
-static void savefile_add_byte(byte v)
-{
-	/* See if we need to allocate more memory */
-	if (savefile_blocksize == savefile_blockused)
-	{
-		byte *savefile_new;
-
-		/* Make space for the new block. */
-		savefile_new = C_RNEW(savefile_blocksize + BLOCK_INCREMENT, byte);
-
-		/* Copy the memory across */
-		COPY(savefile_new, savefile_block, vptr);
-
-		/* Wipe the old block. */
-		KILL(savefile_block);
-
-		/* The new block is now the savefile block. */
-		savefile_block = savefile_new;
-
-		/* Increment variables */
-		savefile_blocksize += BLOCK_INCREMENT;
-	}
-
-	/* Add the byte to the block. */
-	savefile_block[savefile_blockused] = v;
-
-	/* Increase the "used" counter */
-	savefile_blockused++;
-
-	/* We are done */
- 	return;
-}
-
-/*
- * This function adds an unsigned 16-bit integer to the savefile block.
- */
-static void savefile_do_u16b(u16b v)
-{
-	savefile_do_byte((byte)(v & 0xFF));
-	savefile_do_byte((byte)((v >> 8) & 0xFF));
-
-	return;
-}
-/*
- * This function adds an unsigned 32-bit integer to the savefile block.
- */
-static void savefile_do_u32b(u32b v)
-{
-	savefile_do_byte((byte) (v & 0xFF));
-	savefile_do_byte((byte) ((v >> 8) & 0xFF));
-	savefile_do_byte((byte) ((v >> 16) & 0xFF));
-	savefile_do_byte((byte) ((v >> 24) & 0xFF));
-
-	return;
-}
-
-/*
- * This function adds a string to the savefile block.
- */
-static void savefile_do_string(char *str, bool record)
-{
-
-	/* Cycle through the string */
-	if (record)
-	{
-		int i;
-
-		/* Count */
-		i = strlen(str);
-
-		/* Record it */
-		savefile_do_byte((byte) i);
-	}
-
-	/* Put the string, one at a time */
-	for (; *str; *str++) savefile_do_byte(*str);
-	savefile_do_byte(*str);
-
-	/* We are done. */
-	return;
-}
-
-/* Here we define space-saving macros */
-#define savefile_do_s16b(v)     savefile_do_u16b((u16b) v);
-#define savefile_do_s32b(v)     savefile_do_u32b((u32b) v);
-
-#endif
 
 /*
  * Functions to deal with creating, writing, and freeing "blocks".
@@ -440,7 +357,7 @@ static void savefile_do_string(char *str, bool record)
 /*
  * This function starts a new block.
  */
-static void savefile_new_block(int type, int ver)
+static void savefile_new_block(void)
 {
 	/* Make the block */
 	C_MAKE(savefile_block, BLOCK_INCREMENT, byte);
@@ -449,8 +366,9 @@ static void savefile_new_block(int type, int ver)
 	savefile_blocksize = BLOCK_INCREMENT;
 	savefile_blockused = 0;
 
-	savefile_head_type = type;
-	savefile_head_ver = ver;
+#ifdef DEBUGGING
+	printf("New block created.\n");
+#endif
 
 	return;
 }
@@ -458,21 +376,25 @@ static void savefile_new_block(int type, int ver)
 /*
  * This function writes a block to the savefile.
  */
-static void savefile_write_block(vptr block, int fd)
+static void savefile_write_block(int fd, byte type, byte ver)
 {
 	int pos = 0;
 	byte *savefile_head;
- 
+
+#ifdef DEBUGGING
+	printf("Block being written to the savefile: ver = %i, type = %i", ver, type);
+#endif
+
 	/* Make the header */
 	C_MAKE(savefile_head, BLOCK_HEAD_SIZE, byte);
 
 	/* Create the header - first, the type */
-	savefile_head[pos++] = (savefile_head_type & 0xFF);
-	savefile_head[pos++] = ((savefile_head_type >> 8) & 0xFF);
+	savefile_head[pos++] = (type & 0xFF);
+	savefile_head[pos++] = ((type >> 8) & 0xFF);
 
 	/* Add the version of this block. */
-	savefile_head[pos++] = (savefile_head_ver & 0xFF);
-	savefile_head[pos++] = ((savefile_head_ver >> 8) & 0xFF);
+	savefile_head[pos++] = (ver & 0xFF);
+	savefile_head[pos++] = ((ver >> 8) & 0xFF);
 
 	/* Add the size of this block. */
 	savefile_head[pos++] = (savefile_blockused & 0xFF);
@@ -489,10 +411,6 @@ static void savefile_write_block(vptr block, int fd)
 
 	/* Free up the header's memory */
 	KILL(savefile_head);
-
-	/* Reset the header type */
-	savefile_head_type = BLOCK_TYPE_ERROR;
-	savefile_head_ver = BLOCK_VERSION_ERROR;
 
 	/* Write the block */
 	if (savefile_block) fd_write(fd, (cptr) savefile_block, savefile_blockused);
@@ -515,6 +433,8 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 {
 	int temp_kind;
 	object_kind *k_ptr;
+
+	byte temp;
 
 	byte old_dd = 0;
 	byte old_ds = 0;
@@ -587,32 +507,24 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	savefile_do_byte(&o_ptr->xtra2, type);
 
 	/* Do the inscription */
-	if (type == GET)
+	if (o_ptr->note && type == PUT) temp = TRUE;
+	else if (type == PUT) temp = FALSE;
+
+	savefile_do_byte(&temp, type);
+
+	/* Inscription? */
+	if (temp)
 	{
 		char buffer[128];
+
+		/* Get the note */
+		if (type == PUT) sprintf(buffer, "%s", (char *) quark_str(o_ptr->note));
 
 		/* Get the inscription */
 		savefile_do_string((char *) &buffer, type);
 
-		/* Check if we should do anything */
-		if (buffer[0]) o_ptr->note = quark_add(buffer);
-	}
-
-	/* Save the inscription (if any) */
-	if (type == PUT)
-	{
-		char buffer[128];
-
-		if (o_ptr->note)
-		{
-			sprintf(buffer, "%s", (char *) quark_str(o_ptr->note));
-		}
-		else
-		{
-			buffer[0] = 0;
-		}
-
-		savefile_do_string(buffer, type);
+		/* Add the note */
+		if (type == GET) o_ptr->note = quark_add(buffer);
 	}
 
 	/* We might be done. */
@@ -868,30 +780,39 @@ static void savefile_helper_store(store_type *st_ptr, bool type)
  */
 static void savefile_start(int fd)
 {
-	byte *header_pos;
-	byte *savefile_head;
+	int pos = 0;
+	byte *block;
+
+#ifdef DEBUGGING
+	printf("savefile_start() called.\n");
+#endif
 
 	/* Make the block */
-	C_MAKE(savefile_head, 6, byte);
-
-	/* Make a pointer to the block */
-	header_pos = (byte *) savefile_head;
+	C_MAKE(block, 6, byte);
 
 	/* Start with the variant "stamp" */
-	*header_pos++ = 83;
-	*header_pos++ = 97;
-	*header_pos++ = 118;
-	*header_pos++ = 101;
+	block[pos++] = 83;
+	block[pos++] = 97;
+	block[pos++] = 118;
+	block[pos++] = 101;
 
 	/* Now, dump the versions */
-	*header_pos++ = SAVEFILE_VERSION_MAJOR;
-	*header_pos++ = SAVEFILE_VERSION_MINOR;
+	block[pos++] = SAVEFILE_VERSION_MAJOR;
+	block[pos++] = SAVEFILE_VERSION_MINOR;
+
+#ifdef DEBUGGING
+	printf("Block is: %s\n", (char *) block);
+#endif
 
 	/* Write the header */
-	fd_write(fd, (cptr) savefile_head, 6);
+	fd_write(fd, (cptr) block, 6);
 
 	/* Wipe the block */
-	KILL(savefile_head);
+	KILL(block);
+
+#ifdef DEBUGGING
+	printf("savefile_start() returning.\n");
+#endif
 
 	/* We are done. */
 	return;
@@ -906,6 +827,10 @@ static void savefile_do_block_header(bool type, int ver)
 	byte v_j = VERSION_MAJOR, v_m = VERSION_MINOR, v_p = VERSION_PATCH,
 	    v_x = VERSION_EXTRA;
 
+#ifdef DEBUGGING
+	printf("savefile_block_header()\n");
+#endif
+
 	/* Add the variant string */
 	savefile_do_string(v_name, type);
 
@@ -918,6 +843,10 @@ static void savefile_do_block_header(bool type, int ver)
 	/* Tell the user about the savefile */
 	note(format("Loading a %s %i.%i.%i savefile.", v_name, v_j, v_m, v_p, v_x), type);
 
+#ifdef DEBUGGING
+	printf("returning ...\n");
+#endif
+
 	/* We are done. */
 	return;
 }
@@ -929,23 +858,25 @@ static void savefile_do_block_options(bool type, int ver)
 {
 	int n = 0;
 
+#ifdef DEBUGGING
+	printf("savefile_do_block_options()\n");
+#endif
+
 	/* Add delay factor and hitpoint warning "special options" */
 	savefile_do_byte(&op_ptr->delay_factor, type);
 	savefile_do_byte(&op_ptr->hitpoint_warn, type);
 
 	/* Add the "normal" options */
 	for (n = 0; n < OPT_MAX; n++)
-	{
-		byte i;
-
-		if (type == PUT) i = op_ptr->opt[n];
-
-		savefile_do_byte(&i, type);
-	}
+		savefile_do_byte((bool *) &op_ptr->opt[n], type);
 
 	/* Add the "window" options */
 	for (n = 0; n < ANGBAND_TERM_MAX; n++)
 		savefile_do_u32b(&op_ptr->window_flag[n], type);
+
+#ifdef DEBUGGING
+	printf("returning ...\n");
+#endif
 
 	/* We are done. */
 	return;
@@ -2047,74 +1978,79 @@ static bool write_savefile(int fd)
 	savefile_start(fd);
 
 	/* Put information about the variant that saved the file */
-	savefile_new_block(BLOCK_TYPE_HEADER, BLOCK_VERSION_HEADER);
-	savefile_do_block_header(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_new_block();
+	savefile_do_block_header(PUT, BLOCK_VERSION_HEADER);
+	savefile_write_block(fd, BLOCK_TYPE_HEADER, BLOCK_VERSION_HEADER);
+	printf("doing header\n");
 
 	/* Do the player options */
-	savefile_new_block(BLOCK_TYPE_OPTIONS, BLOCK_VERSION_OPTIONS);
-	savefile_do_block_options(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_new_block();
+	savefile_do_block_options(PUT, BLOCK_VERSION_OPTIONS);
+	savefile_write_block(fd, BLOCK_TYPE_OPTIONS, BLOCK_VERSION_OPTIONS);
+	printf("doing options\n");
 
 	/* Do the player information */
-	savefile_new_block(BLOCK_TYPE_PLAYER, BLOCK_VERSION_PLAYER);
-	savefile_do_block_player(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_new_block();
+	savefile_do_block_player(PUT, BLOCK_VERSION_PLAYER);
+	savefile_write_block(fd, BLOCK_TYPE_PLAYER, BLOCK_VERSION_PLAYER);
+	printf("doing player\n");
 
 	/* Do the inventory */
-	savefile_new_block(BLOCK_TYPE_INVENTORY, BLOCK_VERSION_INVENTORY);
-	savefile_do_block_inventory(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_new_block();
+	savefile_do_block_inventory(PUT, BLOCK_VERSION_INVENTORY);
+	savefile_write_block(fd, BLOCK_TYPE_INVENTORY, BLOCK_VERSION_INVENTORY);
+	printf("doing inventory\n");
 
 	/* Do the RNG state */
-	savefile_new_block(BLOCK_TYPE_RNG, BLOCK_VERSION_RNG);
-	savefile_do_block_rng(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_new_block();
+	savefile_do_block_rng(PUT, BLOCK_VERSION_RNG);
+	savefile_write_block(fd, BLOCK_TYPE_RNG, BLOCK_VERSION_RNG);
+	printf("doing RNG\n");
 
 	/* Write player messages */
-	savefile_new_block(BLOCK_TYPE_MESSAGES, BLOCK_VERSION_MESSAGES);
+	savefile_new_block();
 	savefile_do_block_messages(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_write_block(fd, BLOCK_TYPE_MESSAGES, BLOCK_VERSION_MESSAGES);
 
 	/* Write Monster Lore */
-	savefile_new_block(BLOCK_TYPE_MONLORE, BLOCK_VERSION_MONLORE);
-	savefile_do_block_monlore(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_new_block();
+	savefile_do_block_monlore(PUT, BLOCK_VERSION_MONLORE);
+	savefile_write_block(fd, BLOCK_TYPE_MONLORE, BLOCK_VERSION_MONLORE);
 
 	/* Write "Object Lore" */
-	savefile_new_block(BLOCK_TYPE_OBJLORE, BLOCK_VERSION_OBJLORE);
-	savefile_do_block_objlore(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_new_block();
+	savefile_do_block_objlore(PUT, BLOCK_VERSION_OBJLORE);
+	savefile_write_block(fd, BLOCK_TYPE_OBJLORE, BLOCK_VERSION_OBJLORE);
 
 	/* Write Quests */
-	savefile_new_block(BLOCK_TYPE_QUESTS, BLOCK_VERSION_QUESTS);
-	savefile_do_block_quests(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_new_block();
+	savefile_do_block_quests(PUT, BLOCK_VERSION_QUESTS);
+	savefile_write_block(fd, BLOCK_TYPE_QUESTS, BLOCK_VERSION_QUESTS);
 
 	/* Write Artifacts */
-	savefile_new_block(BLOCK_TYPE_ARTIFACTS, BLOCK_VERSION_ARTIFACTS);
-	savefile_do_block_artifacts(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_new_block();
+	savefile_do_block_artifacts(PUT, BLOCK_VERSION_ARTIFACTS);
+	savefile_write_block(fd, BLOCK_TYPE_ARTIFACTS, BLOCK_VERSION_ARTIFACTS);
 
 	/* Write the randarts */
-	savefile_new_block(BLOCK_TYPE_RANDARTS, BLOCK_VERSION_RANDARTS);
-	savefile_do_block_randarts(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_new_block();
+	savefile_do_block_randarts(PUT, BLOCK_VERSION_RANDARTS);
+	savefile_write_block(fd, BLOCK_TYPE_RANDARTS, BLOCK_VERSION_RANDARTS);
 
 	/* Write the stores */
-	savefile_new_block(BLOCK_TYPE_STORES, BLOCK_VERSION_STORES);
-	savefile_do_block_stores(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
+	savefile_new_block();
+	savefile_do_block_stores(PUT, BLOCK_VERSION_STORES);
+	savefile_write_block(fd, BLOCK_TYPE_STORES, BLOCK_VERSION_STORES);
 
 	/* Write the dungeon */
-	savefile_new_block(BLOCK_TYPE_DUNGEON, BLOCK_VERSION_DUNGEON);
-	savefile_do_block_dungeon(PUT, savefile_head_ver);
-	savefile_write_block(savefile_block, fd);
-    
+	savefile_new_block();
+	savefile_do_block_dungeon(PUT, BLOCK_VERSION_DUNGEON);
+	savefile_write_block(fd, BLOCK_TYPE_DUNGEON, BLOCK_VERSION_DUNGEON);
+
     /* End the file */
-    savefile_new_block(BLOCK_TYPE_END, 0);
-    savefile_do_string("Eric! Eric! Eric!", PUT);
-    savefile_write_block(savefile_block, fd);
+    savefile_new_block();
+    savefile_do_string("Eric! Eric! Eric! This ends the file!", PUT);
+    savefile_write_block(fd, BLOCK_TYPE_END, 0);
 
 #if 0
 	/* End the savefile */
@@ -2136,8 +2072,10 @@ static errr read_savefile(int fd)
 	while (!finished)
 	{
 		byte i;
-		int pos = 0;
 		byte temp;
+
+		int pos = 0;
+		int version;
 
 		/* Allocate memory for the header */
 		savefile_head = C_RNEW(BLOCK_HEAD_SIZE, byte);
@@ -2157,7 +2095,7 @@ static errr read_savefile(int fd)
 		i = temp;
 		temp = savefile_head[pos++];
 		i |= ((u32b) i << 8);
-		savefile_head_ver = i;
+		version = i;
 
 		/* Get the size of the block. */
 		temp = savefile_head[pos++];
@@ -2184,46 +2122,43 @@ static errr read_savefile(int fd)
 		switch (savefile_head_type)
 		{
 			case BLOCK_TYPE_HEADER:
-				savefile_do_block_header(GET, savefile_head_ver);
+				savefile_do_block_header(GET, version);
 				break;
 			case BLOCK_TYPE_OPTIONS:
-				savefile_do_block_options(GET, savefile_head_ver);
+				savefile_do_block_options(GET, version);
 				break;
 			case BLOCK_TYPE_PLAYER:
-				savefile_do_block_player(GET, savefile_head_ver);
+				savefile_do_block_player(GET, version);
 				break;
 			case BLOCK_TYPE_RNG:
-				savefile_do_block_rng(GET, savefile_head_ver);
+				savefile_do_block_rng(GET, version);
 				break;
 			case BLOCK_TYPE_MESSAGES:
-				savefile_do_block_messages(GET, savefile_head_ver);
+				savefile_do_block_messages(GET, version);
 				break;
 			case BLOCK_TYPE_MONLORE:
-				savefile_do_block_monlore(GET, savefile_head_ver);
+				savefile_do_block_monlore(GET, version);
 				break;
 			case BLOCK_TYPE_OBJLORE:
-				savefile_do_block_objlore(GET, savefile_head_ver);
+				savefile_do_block_objlore(GET, version);
 				break;
 			case BLOCK_TYPE_QUESTS:
-				savefile_do_block_quests(GET, savefile_head_ver);
+				savefile_do_block_quests(GET, version);
 				break;
 			case BLOCK_TYPE_ARTIFACTS:
-				savefile_do_block_artifacts(GET, savefile_head_ver);
+				savefile_do_block_artifacts(GET, version);
 				break;
 			case BLOCK_TYPE_RANDARTS:
-				savefile_do_block_randarts(GET, savefile_head_ver);
+				savefile_do_block_randarts(GET, version);
 				break;
 			case BLOCK_TYPE_STORES:
-				savefile_do_block_stores(GET, savefile_head_ver);
+				savefile_do_block_stores(GET, version);
 				break;
 			case BLOCK_TYPE_DUNGEON:
-				if (!p_ptr->is_dead)
-				{
-					savefile_do_block_dungeon(GET, savefile_head_ver);
-				}
+				savefile_do_block_dungeon(GET, version);
 				break;
 			case BLOCK_TYPE_INVENTORY:
-				savefile_do_block_inventory(GET, savefile_head_ver);
+				savefile_do_block_inventory(GET, version);
 				break;
             case BLOCK_TYPE_END:
                 finished = TRUE;

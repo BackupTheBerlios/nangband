@@ -1,6 +1,26 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-04-27
+----------
+- Efficientised the o_ptr->note code.  It now reads/writes a byte for
+  whether there is a "note" record.  If there is, it reads/writes it.
+  Combined the code for saving/loading here properly too.
+
+Between 2002-04-21 and 2002-04-27
+---------------------------------
+- Merged the saving and loading code.  Broken.
+- Still broken after a few days debugging.
+- Made some code much more efficient.
+- Moved the stat bonuses from the pval to their own arrayed variable.
+
+2002-04-21
+----------
+- Finished off the new savefile saving code; fixed many bugs, segmentation
+  faults.  Thanks to Antimatter, sfuerst, Kieron, Qlzqqlzup, Varitek on
+  #angband. (takkaria)
+- New makefile.std --> cygwin is incroporated into it now.
+
 2002-04-06
 ----------
 - Instead of being capped at 1600, many monster breaths are now capped

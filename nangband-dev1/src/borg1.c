@@ -1,11 +1,15 @@
-/* File: borg1.c */
-/* Purpose: Low level stuff for the Borg -BEN- */
-
-#include "angband.h"
-
-
+/*
+ * File: borg1.c
+ *
+ * Abstract: Lowest-level stuff for the Borg.
+ *
+ * Authors: Ben Harrison, A.P. White, Andrew Sidwell (takkaria).
+ *
+ * Licence: Traditional Angband licence, see angband.h.
+ */
 #ifdef ALLOW_BORG
 
+#include "angband.h"
 #include "borg1.h"
 
 
@@ -264,14 +268,14 @@ cptr prefix_pref[] =
  * Some variables
  */
 
-bool borg_active;       /* Actually active */
-bool borg_resurrect = FALSE;    /* continous play mode */
+bool borg_active;                /* Actually active */
+bool borg_resurrect = FALSE;     /* continous play mode */
 
-bool borg_cancel;       /* Being cancelled */
+bool borg_cancel;                /* Being cancelled */
 
-char genocide_target;   /* identity of the poor unsuspecting soul */
-int zap_slot;                  /* slot of a wand/staff---to avoid a game bug*/
-bool borg_casted_glyph;        /* because we dont have a launch anymore */
+char genocide_target;            /* "char" of victim to be genocided */
+int zap_slot;                    /* Slot of a wand/staff -- to avoid a game bug */
+bool borg_casted_glyph;          /* Because we don't have a launch anymore. */
 int borg_stop_dlevel = -1;
 int borg_stop_clevel = -1;
 bool borg_stop_king = TRUE;

@@ -390,21 +390,94 @@ void reset_visuals(bool unused)
 #define OBJECT_AUX_FULL   1 /* Full info */
 #define OBJECT_AUX_KNOWN  2 /* Only what's known to the player */
 
+
+/*
+ * Obtain the stat mods for an item
+ */
+static void object_stat_bonuses_aux(int mode, const object_type *o_ptr, s16b *mods)
+{
+	object_kind *k_ptr = NULL;
+	bool fully_known = FALSE;
+	int n;
+
+	/* Make k_ptr useful */
+	k_ptr = &k_info[o_ptr->k_idx];
+
+	/* Clear */
+	for (n = 0; n < A_MAX; n++) mods[n] = 0;
+
+#ifdef SPOIL_ARTIFACTS
+	/* Full knowledge for some artifacts */
+	if (artifact_p(o_ptr)) fully_known = TRUE;
+#endif /* SPOIL_ARTIFACTS */
+
+#ifdef SPOIL_EGO_ITEMS
+	/* Full knowledge for some ego-items */
+	if (ego_item_p(o_ptr)) fully_known = TRUE;
+#endif /* SPOIL_ARTIFACTS */
+
+	if (mode == OBJECT_AUX_FULL) fully_known = TRUE;
+	if (o_ptr->ident & (IDENT_MENTAL)) fully_known = TRUE;
+
+	/* Must be identified */
+	if (!fully_known)
+	{
+		if (!object_known_p(o_ptr)) return;
+	}
+
+	/* Get the resists from the base object */
+	for (n = 0; n < A_MAX; n++)
+	{
+		/* Copy it across */
+		mods[n] += k_ptr->stat_mods[n];
+	}
+
+	/* Show all bonuses if fully known */
+	if (fully_known)
+	{
+		/* Artifact */
+		if (o_ptr->name1)
+		{
+			artifact_type *a_ptr = &a_info[o_ptr->name1];
+
+			for (n = 0; n < A_MAX; n++)
+			{
+				mods[n] += a_ptr->stat_mods[n];
+			}
+		}
+
+		/* Ego-item */
+		if (o_ptr->name2)
+		{
+			ego_item_type *e_ptr = &e_info[o_ptr->name2];
+
+			for (n = 0; n < A_MAX; n++)
+			{
+				mods[n] += e_ptr->stat_mods[n];
+			}
+		}
+	}
+
+	/* We are done. */
+	return;
+}
+
+
 /*
  * Obtain the resists for an item
  */
 static void object_resists_aux(int mode, const object_type *o_ptr, byte *resists)
 {
 	object_kind *k_ptr = NULL;
-  bool fully_known = FALSE;
-  int n;
+	bool fully_known = FALSE;
+	int n;
 
 	/* Make k_ptr useful */
 	k_ptr = &k_info[o_ptr->k_idx];
 
 	/* Clear */
 	for (n = 0; n < RES_MAX; n++) resists[n] = 0;
-	
+
 #ifdef SPOIL_ARTIFACTS
 	/* Full knowledge for some artifacts */
 	if (artifact_p(o_ptr)) fully_known = TRUE;
@@ -418,19 +491,19 @@ static void object_resists_aux(int mode, const object_type *o_ptr, byte *resists
   if (mode == OBJECT_AUX_FULL) fully_known = TRUE;
   if (o_ptr->ident & (IDENT_MENTAL)) fully_known = TRUE;
 
-	/* Must be identified */	
+	/* Must be identified */
 	if (!fully_known)
 	{
 		if (!object_known_p(o_ptr)) return;
 	}
-	
+
 	/* Get the resists from the base object */
 	for (n = 0; n < RES_MAX; n++)
 	{
 		/* Copy it across */
 		resists[n] += k_ptr->resists[n];
 	}
-	
+
 	/* Show all resists if fully known */
 	if (fully_known)
 	{
@@ -456,7 +529,7 @@ static void object_resists_aux(int mode, const object_type *o_ptr, byte *resists
 			}
 		}
 	}
-		
+
 	return;
 }
 
@@ -466,14 +539,14 @@ static void object_resists_aux(int mode, const object_type *o_ptr, byte *resists
 static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b *f2, u32b *f3)
 {
 	object_kind *k_ptr = NULL;
-  bool fully_known = FALSE;
-	
+	bool fully_known = FALSE;
+
 	/* Clear */
 	(*f1) = (*f2) = (*f3) = 0L;
-	
+
 	/* Make k_ptr useful */
 	k_ptr = &k_info[o_ptr->k_idx];
-	
+
 #ifdef SPOIL_ARTIFACTS
 	/* Full knowledge for some artifacts */
 	if (artifact_p(o_ptr)) fully_known = TRUE;
@@ -487,7 +560,7 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
   if (mode == OBJECT_AUX_FULL) fully_known = TRUE;
   if (o_ptr->ident & (IDENT_MENTAL)) fully_known = TRUE;
 
-	/* Must be identified */	
+	/* Must be identified */
 	if (!fully_known)
 	{
 		if (!object_known_p(o_ptr)) return;
@@ -608,6 +681,22 @@ void object_resists(const object_type *o_ptr, byte *resists)
 void object_resists_known(const object_type *o_ptr, byte *resists)
 {
 	object_resists_aux(OBJECT_AUX_KNOWN, o_ptr, resists);
+}
+
+/*
+ * Obtain the stat bonuses for an item
+ */
+void object_stat_bonuses(const object_type *o_ptr, s16b *mods)
+{
+	object_stat_bonuses_aux(OBJECT_AUX_FULL, o_ptr, mods);
+}
+
+/*
+ * Obtain the stat bonuses for an item which are known to the player
+ */
+void object_stat_bonuses_known(const object_type *o_ptr, s16b *mods)
+{
+	object_stat_bonuses_aux(OBJECT_AUX_KNOWN, o_ptr, mods);
 }
 
 /*
@@ -1824,6 +1913,17 @@ void obj_info_resists(byte *resists, bool shorten, char *buffer)
 	return;
 }
 
+/*
+ * A 'qsort()' hook.
+ */
+int qsort_hook(const void *arg1, const void *arg2)
+{
+	int *int1 = (int *) arg1;
+	int *int2 = (int *) arg2;
+
+	return (*int1 - *int2);
+}
+
 /* Used for the 'item_info_desc'/'item_info_brief' functions */
 #define IDENTIFY_STATUS_NONE	0
 #define IDENTIFY_STATUS_KNOWN	1
@@ -2011,13 +2111,15 @@ static void item_info_brief(const object_type *o_ptr, int mode)
 
 	if (f1 & (TR1_BLOWS))
 	{
-		text_out(format("+%i blow%s per round\n", o_ptr->pval, o_ptr->pval > 1 ? "s" : ""));
+		text_out(format("+%i blow%s per round\n", o_ptr->pval, o_ptr->pval > 1 ? "s" :
+ ""));
 		abilities = TRUE;
 	}
 
 	if (f1 & (TR1_SHOTS))
 	{
-		text_out(format("+%i shot%s per round\n", o_ptr->pval, o_ptr->pval > 1 ? "s" : ""));
+		text_out(format("+%i shot%s per round\n", o_ptr->pval, o_ptr->pval > 1 ? "s" :
+ ""));
 		abilities = TRUE;
 	}
 
@@ -2131,9 +2233,11 @@ static void item_info_brief(const object_type *o_ptr, int mode)
 	if (f3 & (TR3_FEATHER)) text_out("\nIt induces feather falling.  ");
 	if (f3 & (TR3_REGEN)) text_out("\nIt speeds your regenerative powers.  ");
 	if (f3 & (TR3_TELEPATHY)) text_out("\nIt gives telepathic powers.  ");
-	if (f3 & (TR3_SEE_INVIS)) text_out("\nIt allows you to see invisible monsters.  ");
+	if (f3 & (TR3_SEE_INVIS)) text_out("\nIt allows you to see invisible monsters. 
+ ");
 	if (f3 & (TR3_FREE_ACT)) text_out("\nIt provides immunity to paralysis.  ");
-	if (f3 & (TR3_HOLD_LIFE)) text_out("\nIt provides resistance to life draining.  ");
+	if (f3 & (TR3_HOLD_LIFE)) text_out("\nIt provides resistance to life draining. 
+ ");
 	if (f3 & (TR3_IMPACT)) text_out("\nIt induces earthquakes.  ");
 	if (f3 & (TR3_TELEPORT)) text_out("\nIt induces random teleportation.  ");
 	if (f3 & (TR3_AGGRAVATE)) text_out("\nIt aggravates nearby creatures.  ");
@@ -2237,14 +2341,16 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
     /* Temp */
     char temp[256];
-    
-	/* The item's flags && resists */
+
+	/* The item's flags, bonuses && resists */
 	u32b f1, f2, f3;
 	byte resists[RES_MAX];
+	s16b stat_bonuses[A_MAX];
 
-	/* Extract the correct flags && resists */
+	/* Extract the correct flags, bonuses && resists */
 	object_flags_aux(mode, o_ptr, &f1, &f2, &f3);
 	object_resists_aux(mode, o_ptr, resists);
+	object_stat_bonuses_aux(mode, o_ptr, stat_bonuses);
 
 	/* Prepare the object base kind */
 	k_ptr = &k_info[o_ptr->k_idx];
@@ -2302,58 +2408,69 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	/* Count the stats affected */
 	vn = 0;
 
-	for (i = 0; i < A_MAX; i++)
-	{
-		if (o_ptr->stat_mods[i]) vp[vn++] = stat_names_full[i];
-	}
+	for (i = 0; i < A_MAX; i++) if (stat_bonuses[i]) vn++;
 
 	/* Describe */
 	if (vn)
 	{
-		int n;
+		int current_stat = 0;
+		int current_stat_value = stat_bonuses[0];
+		char *current_stat_name = stat_names_full[0];
+		int n = 0, l = 0, iter = 0;
+
+		/* Sort the stats */
+		qsort((void *) stat_bonuses, A_MAX, sizeof(s16b), qsort_hook);
 
 		/* Intro */
 		text_out("It ");
 
-		/* What does it do? */
-		if (o_ptr->pval > 0)
+		while (current_stat < A_MAX)
 		{
-			text_out_c(TERM_L_GREEN, "increases");
-		}
-		else if (o_ptr->pval < 0)
-		{
-			text_out_c(TERM_RED, "decreases");
-		}
-		else if (o_ptr->pval == 0)
-		{
-			text_out("does not affect");
-		}
+			/* Temp */
+			int r;
 
-		/* Do something simpler */
-		if (vn == 5)
-		{
-			text_out_c(TERM_L_GREEN, "all your stats");
+			/* Make it more english */
+			if (l > 0 && current_stat_value) text_out(", and ");
+
+			/* Value */
+			if (current_stat_value > 0) text_out_c(TERM_GREEN, "increases");
+			else if (current_stat_value < 0) text_out_c(TERM_RED, "decreases");
+			else { current_stat++; continue; }
+
+			text_out(" your ");
+
+			/* Count stuff */
+			n = current_stat; r = iter = 0;
+			while (stat_bonuses[n] == stat_bonuses[n + 1]) { r++; n++; }
+
+			/* Do the stats */
+			do
+			{
+				/* Stat name */
+				text_out(current_stat_name);
+
+				/* Connectives */
+				if (r == (iter + 1)) text_out(" and ");
+				else if (r == iter) text_out(" ");
+				else text_out(", ");
+
+				/* Increase the counter */
+				iter++;
+
+				/* Set the correct values */
+				current_stat++;
+				current_stat_value = stat_bonuses[current_stat];
+				current_stat_name = stat_names_full[current_stat];
+			}
+			while (stat_bonuses[current_stat] == stat_bonuses[current_stat + 1]);
+
+			/* Write out the bonus */
+			text_out("by ");
+			text_out(format("%i", ABS(stat_bonuses[current_stat])));
 		}
-
-		/* Print stats */
-		else for (n = 0; n < vn; n++)
-		{
-			/* Connectives */
-			if (n == 0) text_out(" your ");
-			else if (n < (vn - 1)) text_out(", ");
-			else text_out(" and ");
-
-			/* Dump the stat */
-			text_out(vp[n]);
-		}
-
-		/* What's the bonus? */
-		text_out(" by ");
-		text_out_c(TERM_L_GREEN, format("%i", ABS(o_ptr->pval)));
 
 		/* Finish */
 		text_out(".  ");
-
 		abilities = TRUE;
 	}
 
@@ -2445,19 +2562,22 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 	if (f1 & (TR1_INFRA))
 	{
-		text_out(format("It increases your range of infravision by %i'.  ", o_ptr->pval * 10));
+		text_out(format("It increases your range of infravision by %i'.  ",
+ o_ptr->pval * 10));
 		abilities = TRUE;
 	}
 
 	if (f1 & (TR1_BLOWS))
 	{
-		text_out(format("It deals %i extra blow%s per round. ", o_ptr->pval, o_ptr->pval > 1 ? "s" : ""));
+		text_out(format("It deals %i extra blow%s per round. ", o_ptr->pval,
+ o_ptr->pval > 1 ? "s" : ""));
 		abilities = TRUE;
 	}
 
 	if (f1 & (TR1_SHOTS))
 	{
-		text_out(format("It fires %i extra shot%s per round. ", o_ptr->pval, o_ptr->pval > 1 ? "s" : ""));
+		text_out(format("It fires %i extra shot%s per round. ", o_ptr->pval,
+ o_ptr->pval > 1 ? "s" : ""));
 		abilities = TRUE;
 	}
 
@@ -2576,9 +2696,11 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	if (f3 & (TR3_FEATHER)) text_out("It induces feather falling.  ");
 	if (f3 & (TR3_REGEN)) text_out("It speeds your regenerative powers.  ");
 	if (f3 & (TR3_TELEPATHY)) text_out("It gives telepathic powers.  ");
-	if (f3 & (TR3_SEE_INVIS)) text_out("It allows you to see invisible monsters.  ");
+	if (f3 & (TR3_SEE_INVIS)) text_out("It allows you to see invisible monsters. 
+ ");
 	if (f3 & (TR3_FREE_ACT)) text_out("It provides immunity to paralysis.  ");
-	if (f3 & (TR3_HOLD_LIFE)) text_out("It provides resistance to life draining.  ");
+	if (f3 & (TR3_HOLD_LIFE)) text_out("It provides resistance to life draining. 
+ ");
 	if (f3 & (TR3_IMPACT)) text_out("It induces earthquakes.  ");
 	if (f3 & (TR3_TELEPORT)) text_out("It induces random teleportation.  ");
 	if (f3 & (TR3_AGGRAVATE)) text_out("It aggravates nearby creatures.  ");
@@ -2679,7 +2801,7 @@ void item_show_knowledge(const object_type *o_ptr)
 	text_out_hook = text_out_to_screen;
 
 	/* Output the description */
-	item_info_brief(o_ptr, OBJECT_AUX_KNOWN);
+	item_info_desc(o_ptr, OBJECT_AUX_KNOWN);
 
 	/* Wait for a keypress */
 	(void)inkey();

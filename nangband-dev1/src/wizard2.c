@@ -381,6 +381,7 @@ static const tval_desc tvals[] =
 	{ TV_BOLT,              "Bolts"                },
 	{ TV_SHOT,              "Shots"                },
 	{ TV_SHIELD,            "Shield"               },
+	{ TV_BELT,              "Belt"                 },
 	{ TV_CROWN,             "Crown"                },
 	{ TV_HELM,              "Helm"                 },
 	{ TV_GLOVES,            "Gloves"               },

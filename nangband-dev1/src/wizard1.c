@@ -88,6 +88,7 @@ static const grouper group_item[] =
 	{ TV_DRAG_ARMOR,	  NULL },
 
 	{ TV_CLOAK,		"Armour (Misc)" },
+	{ TV_BELT,      NULL },
 	{ TV_SHIELD,	  NULL },
 	{ TV_HELM,		  NULL },
 	{ TV_CROWN,		  NULL },
@@ -203,6 +204,7 @@ static void kind_info(char *buf, char *dam, char *wgt, int *lev, s32b *val, int 
 		}
 
 		/* Armour */
+		case TV_BELT:
 		case TV_BOOTS:
 		case TV_GLOVES:
 		case TV_CLOAK:
@@ -391,6 +393,7 @@ static const grouper group_artifact[] =
 	{ TV_HARD_ARMOR,	  NULL },
 	{ TV_DRAG_ARMOR,	  NULL },
 
+	{ TV_BELT,              "Belts/Girdles"},
 	{ TV_CLOAK,		"Cloaks" },
 	{ TV_SHIELD,	"Shields" },
 	{ TV_HELM,		"Helms/Crowns" },

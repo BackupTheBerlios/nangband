@@ -889,6 +889,7 @@ static s32b object_value_real(const object_type *o_ptr)
 		case TV_HAFTED:
 		case TV_POLEARM:
 		case TV_SWORD:
+		case TV_BELT:
 		case TV_BOOTS:
 		case TV_GLOVES:
 		case TV_HELM:
@@ -966,6 +967,7 @@ static s32b object_value_real(const object_type *o_ptr)
 		}
 
 		/* Armor */
+		case TV_BELT:
 		case TV_BOOTS:
 		case TV_GLOVES:
 		case TV_CLOAK:
@@ -1171,6 +1173,7 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 		case TV_HAFTED:
 		case TV_POLEARM:
 		case TV_SWORD:
+		case TV_BELT:
 		case TV_BOOTS:
 		case TV_GLOVES:
 		case TV_HELM:
@@ -2680,6 +2683,7 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		case TV_CLOAK:
 		case TV_GLOVES:
 		case TV_BOOTS:
+		case TV_BELT:
 		{
 			if ((power > 1) || (power < -1))
 			{
@@ -2820,6 +2824,7 @@ static bool kind_is_good(int k_idx)
 		case TV_SHIELD:
 		case TV_CLOAK:
 		case TV_BOOTS:
+		case TV_BELT:
 		case TV_GLOVES:
 		case TV_HELM:
 		case TV_CROWN:

@@ -970,6 +970,7 @@ static s32b artifact_power(int a_idx)
 
 			break;
 		}
+		case TV_BELT:
 		case TV_BOOTS:
 		case TV_GLOVES:
 		case TV_HELM:
@@ -1344,6 +1345,7 @@ static void choose_item(int a_idx)
 			a_ptr->to_d += (s16b)(rand_int((a_ptr->dd * a_ptr->ds) / 2 + 1));
 			break;
 		case TV_BOOTS:
+		case TV_BELT:
 		case TV_GLOVES:
 		case TV_HELM:
 		case TV_CROWN:
@@ -1546,6 +1548,23 @@ static void add_ability(artifact_type *a_ptr)
 						do_pval(a_ptr);
 					}
 
+				break;
+			}
+                        case TV_BELT:
+			{
+			    if (r < 25) a_ptr->flags3 |= TR3_SLOW_DIGEST;
+				else if (r < 50)
+				{
+					a_ptr->flags1 |= TR1_CON;
+					do_pval(a_ptr);
+				}
+				else if (r < 75) a_ptr->to_a += (s16b)(3 + rand_int(3));
+				else
+				{
+					a_ptr->to_h += (s16b)(2 + rand_int(3));
+					a_ptr->to_d += (s16b)(2 + rand_int(3));
+					a_ptr->flags3 |= TR3_SHOW_MODS;
+				}
 				break;
 			}
 			case TV_BOOTS:
@@ -2015,8 +2034,8 @@ static void scramble_artifact(int a_idx)
 static bool artifacts_acceptable(void)
 {
 	int swords = 5, polearms = 5, blunts = 5, bows = 3;
-	int bodies = 5, shields = 3, cloaks = 3, hats = 4;
-	int gloves = 4, boots = 4;
+	int bodies = 5, shields = 3, cloaks = 3, hats = 3;
+	int gloves = 3, boots = 3, belts = 3;
 	int i;
 
 	for (i = ART_MIN_NORMAL; i < z_info->a_max; i++)
@@ -2031,6 +2050,8 @@ static bool artifacts_acceptable(void)
 				blunts--; break;
 			case TV_BOW:
 				bows--; break;
+			case TV_BELT:
+                                belts--; break;
 			case TV_SOFT_ARMOR:
 			case TV_HARD_ARMOR:
 				bodies--; break;

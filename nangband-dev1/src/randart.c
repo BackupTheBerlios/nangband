@@ -1940,7 +1940,6 @@ static byte activation_table[60] = {
 bool make_randart_stupid(object_type *o_ptr)
 {
 	int i;
-	int x_idx = 0;
 
 	o_ptr->name3 = TRUE;
 

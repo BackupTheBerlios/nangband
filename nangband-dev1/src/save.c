@@ -282,7 +282,6 @@ static void savefile_write_block(vptr block, int fd)
 	if (savefile_block) fd_write(fd, (cptr) savefile_block, savefile_blockused);
 
 	/* Free the block's memory */
-	*(int *)savefile_block = 0;
 	savefile_blockpos = NULL;
 	if (savefile_block) KILL(savefile_block);
 

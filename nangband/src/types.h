@@ -115,6 +115,9 @@ struct maxima
 
 	u16b o_max;		/* Max size for "o_list[]" */
 	u16b m_max;		/* Max size for "mon_list[]" */
+
+	u16b mon_metaver;
+	u16b obj_metaver;
 };
 
 
@@ -339,6 +342,8 @@ struct monster_race
 	u32b flags4;			/* Flags 4 (inate/breath) */
 	u32b flags5;			/* Flags 5 (normal spells) */
 	u32b flags6;			/* Flags 6 (special spells) */
+
+	int mingsize, maxgsize;
 
 	monster_blow blow[MONSTER_BLOW_MAX]; /* Up to four blows per round */
 

@@ -1999,6 +1999,23 @@ errr parse_r_info(char *buf, header *head)
 		r_ptr->sleep = slp;
 	}
 
+	/* Process 'R' for "Group Size" (one line only) */
+	else if (buf[0] == 'R')
+	{
+		int min, max;
+
+		/* There better be a current r_ptr */
+		if (!r_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
+
+		/* Scan for the values */
+		if (4 != sscanf(buf+2, "%d:%d", &min, &max))
+			return (PARSE_ERROR_GENERIC);
+
+		/* Save the values */
+		r_ptr->mingsize = min;
+		r_ptr->maxgsize = max;
+	}
+
 	/* Process 'W' for "More Info" (one line only) */
 	else if (buf[0] == 'W')
 	{
@@ -2009,8 +2026,8 @@ errr parse_r_info(char *buf, header *head)
 		if (!r_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
 
 		/* Scan for the values */
-		if (4 != sscanf(buf+2, "%d:%d:%d:%ld",
-			            &lev, &rar, &pad, &exp)) return (PARSE_ERROR_GENERIC);
+		if (4 != sscanf(buf+2, "%d:%d:%d:%ld", &lev, &rar, &pad, &exp))
+			return (PARSE_ERROR_GENERIC);
 
 		/* Save the values */
 		r_ptr->level = lev;

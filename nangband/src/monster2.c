@@ -1531,6 +1531,8 @@ static bool place_monster_group(int y, int x, int r_idx, bool slp)
 
 	int old, n, i;
 	int total, extra = 0;
+	int groupmin = (r_ptr->mingsize) ? r_ptr->mingsize : GROUP_MIN,
+       groupmax = (r_ptr->maxgsize) ? r_ptr->maxgsize : GROUP_MAX;
 
 	int hack_n;
 
@@ -1562,12 +1564,12 @@ static bool place_monster_group(int y, int x, int r_idx, bool slp)
 	total += extra;
 
 	/* Minimum size (with exception) */
-	n = randint(GROUP_MAX);
-	if (n < GROUP_MIN) total = n;
-	else if (total < GROUP_MIN) total = GROUP_MIN;
+	n = randint(groupmax);
+	if (n < groupmin) total = n;
+	else if (total < groupmin) total = groupmin;
 
 	/* Maximum size */
-	if (total > GROUP_MAX) total = GROUP_MAX;
+	if (total > groupmax) total = groupmax;
 
 
 	/* Save the rating */

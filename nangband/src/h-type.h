@@ -46,6 +46,7 @@ typedef int errr;
 /* Note that unsigned values can cause math problems */
 /* An unsigned byte of memory */
 typedef unsigned char byte;
+typedef signed char sbyte;
 
 /* Note that a bool is smaller than a full "int" */
 /* Simple True/False type */

@@ -90,6 +90,32 @@ void user_name(char *buf, size_t len, int id)
 
 
 /*
+ * Print a given message at the bottom of the screen, centre-aligned.
+ */
+void prompt_note(char *prompt)
+{
+	int x, y;
+
+	/* Get the terminal size */
+	Term_get_size(&x, &y);
+
+	/* Decide the start position */
+	x = (x / 2) - (strlen(prompt) / 2);
+	y--;
+
+	/* Print */
+	Term_erase(0, y, 255);
+	Term_putstr(x, y, -1, TERM_WHITE, prompt);
+
+	/* Fresh the screen */
+	Term_fresh();
+
+	/* Return control */
+	return;
+}
+
+
+/*
  * The concept of the "file" routines below (and elsewhere) is that all
  * file handling should be done using as few routines as possible, since
  * every machine is slightly different, but these routines always have the

@@ -634,6 +634,7 @@ extern void store_maint(int which);
 extern void store_init(int which);
 
 /* util.c */
+extern void prompt_note(char *prompt);
 extern errr path_parse(char *buf, size_t max, cptr file);
 extern errr path_build(char *buf, size_t max, cptr path, cptr file);
 extern FILE *my_fopen(cptr file, cptr mode);

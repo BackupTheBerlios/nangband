@@ -3,6 +3,12 @@ Nangband Changelog
 
 First release: "Thru These Architecht's Eyes", Nangband 0.1.0
 
+22/12/02
+--------
+- Changed version number to 0.1.0.  --takk
+- Updated the savefile code so it uses the same version as in Nangband-dev1.
+  --takk
+
 21/12/02
 --------
 - 11:24 GMT: imported the Vanilla 3.0.2 sources.  Work may now begin.  --takk

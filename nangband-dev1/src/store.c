@@ -1313,7 +1313,7 @@ static void display_entry(int item, int row)
 
 	char o_name[80];
 	char out_val[160];
-	int maxwid = (size_y - 15);
+	int maxwid = (size_x - 15);
 	bool show_id = TRUE,
 	     display_cost = TRUE;
 
@@ -1352,8 +1352,8 @@ static void display_entry(int item, int row)
 	{
 		/* Only show the weight of a single object */
 		int wgt = o_ptr->weight;
-		sprintf(out_val, "%3d.%d lb", wgt / 10, wgt % 10);
-		put_str(out_val, row, (size_x - 12));
+		sprintf(out_val, "%3d.%d", wgt / 10, wgt % 10);
+		put_str(out_val, row, (size_x - 20));
 	}
 
 	if (display_cost)
@@ -1366,7 +1366,7 @@ static void display_entry(int item, int row)
 
 			/* Actually draw the price (not fixed) */
 			sprintf(out_val, "%9ld F", (long)x);
-			put_str(out_val, row, 68);
+			put_str(out_val, row, (size_x - 10));
 		}
 
 		/* Display a "taxed" cost */
@@ -1380,7 +1380,7 @@ static void display_entry(int item, int row)
 
 			/* Actually draw the price (with tax) */
 			sprintf(out_val, "%9ld  ", (long)x);
-			put_str(out_val, row, 68);
+			put_str(out_val, row, (size_x - 10));
 		}
 
 		/* Display a "haggle" cost */
@@ -1391,7 +1391,7 @@ static void display_entry(int item, int row)
 
 			/* Actually draw the price (not fixed) */
 			sprintf(out_val, "%9ld  ", (long)x);
-			put_str(out_val, row, 68);
+			put_str(out_val, row, (size_x - 10));
 		}
 	}
 
@@ -1440,10 +1440,10 @@ static void store_prt_gold(void)
 {
 	char out_val[64];
 
-	prt("Gold Remaining: ", size_y - 3, 53);
+	prt("Gold Remaining: ", size_y - 4, 53);
 
 	sprintf(out_val, "%9ld", (long)p_ptr->au);
-	prt(out_val, size_y - 3, 68);
+	prt(out_val, size_y - 4, 68);
 }
 
 
@@ -1453,7 +1453,6 @@ static void store_prt_gold(void)
 static void display_store(void)
 {
 	char buf[80];
-
 
 	/* Clear screen */
 	Term_clear();
@@ -1470,7 +1469,7 @@ static void display_store(void)
 		/* If showing weights, show label */
 		if (show_weights)
 		{
-			put_str("Weight", 5, 70);
+			put_str("Weight", 5, (size_x - 21));
 		}
 	}
 
@@ -1495,11 +1494,11 @@ static void display_store(void)
 		/* If showing weights, show label */
 		if (show_weights)
 		{
-			put_str("Weight", 5, 60);
+			put_str("Weight", 5, (size_x - 21));
 		}
 
 		/* Label the asking price (in stores) */
-		put_str("Price", 5, 72);
+		put_str("Price", 5, (size_x - 6));
 	}
 
 	/* Display the current gold */
@@ -2903,6 +2902,8 @@ static void store_process_command(void)
 		{
 			if (st_ptr->stock_num <= (size_y - 11))
 			{
+				if (top_item != 0) top_item = 0;
+
 				/* Nothing to see */
 				msg_print("Entire inventory is shown.");
 
@@ -3258,18 +3259,8 @@ void do_cmd_store(void)
 	/* Start at the beginning */
 	top_item = 0;
 
-	/* XXX XXX XXX Hack XXX XXX XXX */
-
-	/* Grab the terminal sizes */
-	Term_get_size(&size_x, &size_y);
-
-	/* Draw the store */
-	display_store();
-
 	/* Reset the terminal sizes */
 	size_x = size_y = 0;
-
-	/* *** *** *** End Hack *** *** *** */
 
 	/* Do not leave */
 	leave_store = FALSE;
@@ -3285,11 +3276,8 @@ void do_cmd_store(void)
 		/* Grab the terminal sizes */
 		Term_get_size(&size_x, &size_y);
 
-		if (size_x != old_x && size_y != old_y)
+		if ((size_x != old_x) || (size_y != old_y) || (tmp_chr != p_ptr->stat_use[A_CHR]))
 		{
-			/* Redraw */
-			do_cmd_redraw();
-
 			/* Display the store */
 			display_store();
 		}
@@ -3415,13 +3403,6 @@ void do_cmd_store(void)
 					display_inventory();
 				}
 			}
-		}
-
-		/* Hack -- Handle charisma changes */
-		if (tmp_chr != p_ptr->stat_use[A_CHR])
-		{
-			/* Redisplay wares */
-			display_inventory();
 		}
 
 		/* Hack -- get kicked out of the store */

@@ -1,51 +1,26 @@
-###################################################################
-#
-#  Makefile.bcc - Angband makefile for Borland C++ 5.5 (Win32)
-#
-###################################################################
+# Makefile.bcc - Nangband makefile for Borland C++ 5.5 (Win32)
 
-
-###################################################################
-#
-#       Borland specific directives ---
-#
+# Borland specific directives:
 .AUTODEPEND
 
-###################################################################
-#
 # Set tool and version names:
+CC         = d:\borland\bcc55\bin\bcc32
+LINKER     = d:\borland\bcc55\bin\ilink32
+RC         = d:\borland\bcc55\bin\brc32
 
-CC         = bcc32
-LINKER     = ilink32
-RC         = brc32
+# Name of the executable:
+EXE_FILE = nangband.exe
 
-###################################################################
-#
-# Name of the *.exe-file
-
-EXE_FILE = angband.exe
-
-
-###################################################################
-#
 # Debug mode (un-comment for debugging)
-
 # DBGOPT= -v -N -x -xp
 
-
-###################################################################
-#
 # Set any compiler options
-
-CCOPTS = -Hc -tW -lGn -e$(EXE_FILE) -w- \
-	-D_WIN32_WINNT=0x0400 -DWINVER=0x0400
+CCOPTS = -Hc -tW -lGn -e$(EXE_FILE) -w- -D_WIN32_WINNT=0x0400 -DWINVER=0x0400
 
 # Compile flags:
 CCFLAGS= $(CCOPTS) $(DBGOPT)
 
-
-######################## Targets ##################################
-
+# Targets:
 LUAOBJS = \
   lua\lapi.obj lua\ldebug.obj lua\lmem.obj lua\lstrlib.obj lua\lvm.obj \
   lua\tolua_lb.obj lua\lauxlib.obj lua\ldo.obj lua\lobject.obj \
@@ -74,7 +49,7 @@ OBJ = \
   script.obj \
   l-monst.obj l-object.obj l-player.obj l-random.obj l-random.obj \
   l-ui.obj l-misc.obj l-spell.obj \
-  use-obj.obj \
+  resist.obj l-dynamic.obj xmlbulp.obj help.obj interface.obj \
   $(LUAOBJS)
 
 
@@ -94,7 +69,7 @@ install: $(EXE_FILE)
 	copy $(EXE_FILE) ..
 
 
-########################### Explicit Rules ########################
+# Explicit Rules
 $(EXE_FILE): $(OBJ) angband.res
 	$(LINKER) -aa -x $(OBJ) c0w32.obj, $(EXE_FILE),, cw32.lib import32.lib,, angband.res
 
@@ -125,7 +100,7 @@ l-misc.c: lua\tolua.exe l-misc.pkg
 l-spell.c: lua\tolua.exe l-spell.pkg
 	lua\tolua.exe -n spell -o l-spell.c l-spell.pkg
 
-########################### Implicit Rules ########################
+# Implicit Rules
 .c.obj:
 	$(CC) $(CCFLAGS) -c {$? }
 

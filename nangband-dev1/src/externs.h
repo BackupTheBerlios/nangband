@@ -414,6 +414,10 @@ extern void init_file_paths(char *path);
 extern void init_angband(void);
 extern void cleanup_angband(void);
 
+/* interface.c */
+extern void Window_Make(int origin_x, int origin_y, int end_x, int end_y);
+extern bool Window_Prompt(int window_width, char *question);
+
 /* load.c */
 extern bool load_player(void);
 
@@ -702,6 +706,7 @@ extern uint damroll(uint num, uint sides);
 extern uint maxroll(uint num, uint sides);
 extern bool is_a_vowel(int ch);
 extern int color_char_to_attr(char c);
+extern void putstr_multi(int x_pos, int y_pos, int width, int attr, char *txt);
 
 #ifdef SUPPORT_GAMMA
 extern void build_gamma_table(int gamma);

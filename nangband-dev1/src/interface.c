@@ -36,7 +36,7 @@ void clear_box(int start_x, int start_y, int end_x, int end_y)
     }
 
     return;
-}4
+}
 
 /* For the vertical menu funtion */
 #define SCROLL_ALLOWANCE   3
@@ -198,7 +198,7 @@ bool Window_Prompt(int window_width, char *question)
 
     Window_Make(x1, y1, x2, y2);
 
-    Term_putstr_multiline(x1 + 2, y1 + 1, window_width - 1, TERM_L_BLUE, question);
+    putstr_multi(x1 + 2, y1 + 1, window_width - 1, TERM_L_BLUE, question);
 
     Term_putstr(a1 - 2, b1, -1, TERM_WHITE, ">"); 
 

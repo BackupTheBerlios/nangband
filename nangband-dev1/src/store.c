@@ -295,32 +295,17 @@ static void purchase_analyze(s32b price, s32b value, s32b guess)
 }
 
 
-
-
-
 /*
- * We store the current "store number" here so everyone can access it
+ * Various global variables:
+ * - display_position is the item at the top of the list.
+ * - store_num is the current store
+ * - st_ptr is a pointer to a store type. (XXX XXX)
+ * - ot_ptr is the current store owner. (XXX XXX)
  */
+static int display_position = 0;
 static int store_num = 7;
-
-/*
- * We store the current "store page" here so everyone can access it
- */
-static int store_top = 0;
-
-
-/*
- * We store the current "store pointer" here so everyone can access it
- */
 static store_type *st_ptr = NULL;
-
-/*
- * We store the current "owner type" here so everyone can access it
- */
 static owner_type *ot_ptr = NULL;
-
-
-
 
 
 
@@ -407,10 +392,12 @@ static s32b price_item(const object_type *o_ptr, int greed, bool flip)
 static int mass_roll(int num, int max)
 {
 	int i, t = 0;
+
 	for (i = 0; i < num; i++)
 	{
 		t += ((max > 1) ? rand_int(max) : 1);
 	}
+
 	return (t);
 }
 
@@ -532,13 +519,15 @@ static void mass_produce(object_type *o_ptr)
 
 /*
  * Convert a store item index into a one character label
- *
- * We use labels "a"-"l" for page 1, and labels "m"-"x" for page 2.
  */
 static s16b store_to_label(int i)
 {
-	/* Assume legal */
-	return (I2A(i));
+	/* If 'i' is under 27, we still have alphabet letters left. */
+	if (i < 27) return (I2A(i));
+
+	/* Otherwise, make it a capital. */
+	return (toupper(I2A(i - 26)));
+
 }
 
 
@@ -552,7 +541,7 @@ static s16b label_to_store(int c)
 	int i;
 
 	/* Convert */
-	i = (islower(c) ? A2I(c) : -1);
+	i = (islower(c) ? A2I(c) : A2I(c) + 26);
 
 	/* Verify the index */
 	if ((i < 0) || (i >= st_ptr->stock_num)) return (-1);
@@ -641,7 +630,7 @@ static bool store_check_num(const object_type *o_ptr)
 	object_type *j_ptr;
 
 	/* Free space is always usable */
-	if (st_ptr->stock_num < st_ptr->stock_size) return TRUE;
+	if (st_ptr->stock_num < st_ptr->stock_size) return (TRUE);
 
 	/* The "home" acts like the player */
 	if (store_num == STORE_HOME)
@@ -1207,7 +1196,7 @@ static void store_create(void)
 		/* Apply some "low-level" magic (no artifacts) */
 		apply_magic(i_ptr, level, FALSE, FALSE, FALSE);
 
-		/* Hack -- Charge lite's */
+		/* Hack -- Charge lights */
 		if (i_ptr->tval == TV_LITE)
 		{
 			if (i_ptr->sval == SV_LITE_TORCH) i_ptr->pval = FUEL_TORCH / 2;
@@ -1231,7 +1220,7 @@ static void store_create(void)
 			if (object_value(i_ptr) < 10) continue;
 
 			/* No "worthless" items */
-			/* if (object_value(i_ptr) <= 0) continue; */
+			if (object_value(i_ptr) <= 0) continue;
 		}
 
 		/* Prune normal stores */
@@ -1314,91 +1303,59 @@ static void updatebargain(s32b price, s32b minprice)
 /*
  * Redisplay a single store entry
  */
-static void display_entry(int item)
+static void display_entry(int item, int row)
 {
-	int y;
 	object_type *o_ptr;
 	s32b x;
+	byte attr;
 
 	char o_name[80];
 	char out_val[160];
-	int maxwid;
-
-
-	/* Must be on current "page" to get displayed */
-	if (!((item >= store_top) && (item < store_top + 12))) return;
-
+	int maxwid = -2;
+	bool show_id = TRUE,
+	     display_cost = TRUE;
 
 	/* Get the object */
 	o_ptr = &st_ptr->stock[item];
 
-	/* Get the row */
-	y = (item % 12) + 6;
-
 	/* Label it, clear the line --(-- */
 	sprintf(out_val, "%c) ", store_to_label(item));
-	prt(out_val, y, 0);
+	prt(out_val, row, 0);
 
 	/* Describe an object in the home */
 	if (store_num == STORE_HOME)
 	{
-		byte attr;
-
+		show_id = FALSE;
+		display_cost = FALSE;
 		maxwid = 75;
-
-		/* Leave room for weights, if necessary -DRS- */
-		if (show_weights) maxwid -= 10;
-
-		/* Describe the object */
-		object_desc(o_name, o_ptr, TRUE, 3);
-		o_name[maxwid] = '\0';
-
-		/* Get inventory color */
-		attr = tval_to_attr[o_ptr->tval & 0x7F];
-
-		/* Display the object */
-		c_put_str(attr, o_name, y, 3);
-
-		/* Show weights */
-		if (show_weights)
-		{
-			/* Only show the weight of a single object */
-			int wgt = o_ptr->weight;
-			sprintf(out_val, "%3d.%d lb", wgt / 10, wgt % 10);
-			put_str(out_val, y, 68);
-		}
 	}
 
-	/* Describe an object (fully) in a store */
-	else
+	/* Leave room for weights, if necessary -DRS- */
+	if (show_weights) maxwid -= 10;
+
+	/* Describe the object */
+	if (!show_id) object_desc(o_name, o_ptr, TRUE, 3);
+	else object_desc_store(o_name, o_ptr, TRUE, 3);
+
+	o_name[maxwid] = '\0';
+
+	/* Get inventory color */
+	attr = tval_to_attr[o_ptr->tval & 0x7F];
+
+	/* Display the object */
+	c_put_str(attr, o_name, row, 3);
+
+	/* Show weights */
+	if (show_weights)
 	{
-		byte attr;
+		/* Only show the weight of a single object */
+		int wgt = o_ptr->weight;
+		sprintf(out_val, "%3d.%d lb", wgt / 10, wgt % 10);
+		put_str(out_val, row, 68);
+	}
 
-		/* Must leave room for the "price" */
-		maxwid = 65;
-
-		/* Leave room for weights, if necessary -DRS- */
-		if (show_weights) maxwid -= 7;
-
-		/* Describe the object (fully) */
-		object_desc_store(o_name, o_ptr, TRUE, 3);
-		o_name[maxwid] = '\0';
-
-		/* Get inventory color */
-		attr = tval_to_attr[o_ptr->tval & 0x7F];
-
-		/* Display the object */
-		c_put_str(attr, o_name, y, 3);
-
-		/* Show weights */
-		if (show_weights)
-		{
-			/* Only show the weight of a single object */
-			int wgt = o_ptr->weight;
-			sprintf(out_val, "%3d.%d", wgt / 10, wgt % 10);
-			put_str(out_val, y, 61);
-		}
-
+	if (display_cost)
+	{
 		/* Display a "fixed" cost */
 		if (o_ptr->ident & (IDENT_FIXED))
 		{
@@ -1407,7 +1364,7 @@ static void display_entry(int item)
 
 			/* Actually draw the price (not fixed) */
 			sprintf(out_val, "%9ld F", (long)x);
-			put_str(out_val, y, 68);
+			put_str(out_val, row, 68);
 		}
 
 		/* Display a "taxed" cost */
@@ -1421,7 +1378,7 @@ static void display_entry(int item)
 
 			/* Actually draw the price (with tax) */
 			sprintf(out_val, "%9ld  ", (long)x);
-			put_str(out_val, y, 68);
+			put_str(out_val, row, 68);
 		}
 
 		/* Display a "haggle" cost */
@@ -1432,9 +1389,11 @@ static void display_entry(int item)
 
 			/* Actually draw the price (not fixed) */
 			sprintf(out_val, "%9ld  ", (long)x);
-			put_str(out_val, y, 68);
+			put_str(out_val, row, 68);
 		}
 	}
+
+	return;
 }
 
 
@@ -1451,10 +1410,10 @@ static void display_inventory(void)
 	for (k = 0; k < 12; k++)
 	{
 		/* Stop when we run out of items */
-		if (store_top + k >= st_ptr->stock_num) break;
+		if (display_entry + k >= st_ptr->stock_num) break;
 
 		/* Display that line */
-		display_entry(store_top + k);
+		display_entry(display_entry + k, display_entry + 3);
 	}
 
 	/* Erase the extra lines and the "more" prompt */
@@ -1464,13 +1423,14 @@ static void display_inventory(void)
 	put_str("        ", 5, 20);
 
 	/* Visual reminder of "more items" */
-	if (st_ptr->stock_num > 12)
+	if (display_entry + k < st_ptr->stock_num)
 	{
-		/* Show "more" reminder (after the last object ) */
+		/* Show "more" reminder (after the last object) */
 		prt("-more-", k + 6, 3);
 
 		/* Indicate the "current page" */
-		put_str(format("(Page %d)", store_top/12 + 1), 5, 20);
+		/* [note - add visual reminders] */
+/*		put_str(format("(Page %d)", display_position/12 + 1), 5, 20); */
 	}
 }
 
@@ -2493,7 +2453,7 @@ static void store_purchase(void)
 					}
 
 					/* Start over */
-					store_top = 0;
+					display_position = 0;
 
 					/* Redraw everything */
 					display_inventory();
@@ -2505,7 +2465,7 @@ static void store_purchase(void)
 					/* Only one screen left */
 					if (st_ptr->stock_num <= 12)
 					{
-						store_top = 0;
+						display_position = 0;
 					}
 
 					/* Redraw everything */
@@ -2515,8 +2475,8 @@ static void store_purchase(void)
 				/* The object is still here */
 				else
 				{
-					/* Redraw the object */
-					display_entry(item);
+					/* Redraw everything */
+					display_inventory();
 				}
 			}
 
@@ -2569,7 +2529,7 @@ static void store_purchase(void)
 			/* Only one screen left */
 			if (st_ptr->stock_num <= 12)
 			{
-				store_top = 0;
+				display_position = 0;
 			}
 
 			/* Redraw everything */
@@ -2579,8 +2539,8 @@ static void store_purchase(void)
 		/* The object is still here */
 		else
 		{
-			/* Redraw the object */
-			display_entry(item);
+			/* Redraw the everything */
+			display_inventory();
 		}
 	}
 
@@ -2919,19 +2879,19 @@ static void store_process_command(void)
 				msg_print("Entire inventory is shown.");
 			}
 
-			else if (store_top == 0)
+			else if (display_position == 0)
 			{
 				/* Page 2 */
-				store_top = 12;
+				display_position = 12;
 
 				/* Redisplay wares */
 				display_inventory();
 			}
 
-			else if (store_top == 12)
+			else if (display_position == 12)
 			{
 				/* Page 3 */
-				store_top = 24;
+				display_position = 24;
 
 				/* Redisplay wares */
 				display_inventory();
@@ -2940,7 +2900,7 @@ static void store_process_command(void)
 			else
 			{
 				/* Page 1 */
-				store_top = 0;
+				display_position = 0;
 
 				/* Redisplay wares */
 				display_inventory();
@@ -3286,7 +3246,7 @@ void do_cmd_store(void)
 
 
 	/* Start at the beginning */
-	store_top = 0;
+	display_position = 0;
 
 	/* Display the store */
 	display_store();

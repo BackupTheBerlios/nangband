@@ -4028,3 +4028,100 @@ void build_gamma_table(int gamma)
 }
 
 #endif /* SUPPORT_GAMMA */
+
+/* ------------------------------------------------------- ajps, 20/10/01 ---
+ * Displays a string over a number of lines, given a starting point and
+ * a width.  Breaks at newline characters or white space at the end of a line.
+ * ----------------------------------------------------------------------- */
+void putstr_multi(int x_pos, int y_pos, int width, int attr, char *txt)
+{
+    char *start_ptr;
+    char *ptr;
+    char *temp_ptr;
+    int  y = y_pos;
+    char temp_ch;
+    int  n;
+    
+    /* 
+     * If we pass 0 as the width, it prints up to the edge of screen,
+     * -1 leaves a gap of 1 character at the right of the terminal,
+     * -2 leaves a gap of 2, and so on.
+     */
+    if ( width <= 0 ) width += Term->wid - x_pos + 1;
+    /*
+     * If all of that fiddling leaves us with an unusable width, we
+     * just print to the edge of the terminal.
+     */
+    if ( width <=0 ) width = Term->wid - x_pos;
+    
+	for (n = 0; txt[n]; n++)
+	{
+	    /*
+	     * For the control char 1, we skip the next character, as
+	     * it could be a zero, and mean premature termination of
+	     * the string.
+	     */
+        if ( txt[n] == '\1' ) n++;
+	}
+    
+    start_ptr = txt;
+    while ( TRUE )
+    { 
+        if ( n <= width )
+        {        
+            Term_putstr(x_pos,y,-1,attr,start_ptr);
+            return;
+        }
+        else
+        {
+            /* First deal with a newline */
+            if ( ( strchr(start_ptr,'\n') < ( start_ptr + width ) ) && ( strchr(start_ptr,'\n') != NULL ) )
+            {
+                ptr = strchr(start_ptr,'\n');
+                ptr[0]=0;
+                Term_putstr(x_pos,y,-1,attr,start_ptr);
+                y++;
+                ptr[0]='\n';
+                n -= ( ptr - start_ptr ) + 1;
+                start_ptr = ptr + 1;
+                continue;
+            }
+            
+            /* Then look for white space */
+            ptr = start_ptr;
+            temp_ptr = strchr(start_ptr,' ');
+            while ( ( temp_ptr < ( start_ptr + width ) ) && ( temp_ptr != NULL ) )
+            {
+                ptr = temp_ptr;
+                temp_ptr = strchr(ptr+1,' ');
+            }
+            temp_ptr = strchr(ptr,'\t');
+            while ( ( temp_ptr < ( start_ptr + width ) ) && ( temp_ptr != NULL ) )
+            {
+                ptr = temp_ptr;
+                temp_ptr = strchr(ptr+1,'\t');
+            }
+            
+            if ( ptr == start_ptr )
+            {
+                temp_ch = start_ptr[width];
+                start_ptr[width]=0;
+                Term_putstr(x_pos,y,-1,attr,start_ptr);
+                y++;
+                start_ptr[width] = temp_ch;
+                start_ptr += width;
+                n -= width;
+            }
+            else
+            {
+                temp_ch = ptr[0];
+                ptr[0]=0;
+                Term_putstr(x_pos,y,-1,attr,start_ptr);
+                y++;
+                ptr[0] = temp_ch;
+                n -= ( ptr - start_ptr ) + 1;
+                start_ptr = ptr + 1;
+            }
+        }
+    } 
+ }

@@ -5,6 +5,11 @@ I'm bored of adding "(takkaria)" to the end of every changelog entry.
 It's not like anyone else even changes the code here.  So, from now on, 
 I'm not going to bother.
 
+02-08-02
+-------- (takkaria)
+- Rewrote loads.  Made it much more flexible. Removed the hardcoded
+  references to Nangband.  Almost ready to commit as MWMS at sourceforge.
+
 19-07-02
 -------- (takkaria)
 - Added a nice directory lister in place of the default page in content/.

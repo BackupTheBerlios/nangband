@@ -1,10 +1,13 @@
 <?php
 ///////////////////////////////////////
 //                                   //
-//  files.php - filenames and stuff  //
+//  sitedata.php - site information  //
 //      (c) andrew sidwell, 2002     //
 //                                   //
 ///////////////////////////////////////
+
+// Site name
+$sitename = 'nangband';
 
 // Filename-accessed array of "full names"
 $titles['main'] = 'main page';
@@ -20,16 +23,13 @@ $pages[2] = 'devinfo';
 $pages[3] = 'download';
 $pages[4] = 'links';
 
-// Number of pages
-$no_pages = 5;
-
 // List of styles
 $styles[0] = 'sidebar';
 $styles[1] = 'clean';
 $styles[2] = 'plain';
 
-// Number of styles
-$no_styles = 3;
+// Default style
+$default_style = 'clean';
 
 // Redirect to the "real" source lister if we're not included
 if (!$included[1]) header('Location: /?source=files');

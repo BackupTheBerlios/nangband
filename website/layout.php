@@ -6,21 +6,36 @@
 //                               //
 ///////////////////////////////////
 
-// Sidebar link ends and beginnings
-$sidebar_links_start = '<tr><td bgcolor="#dddddd" align="center">';
-$sidebar_links_end   = '</td></tr>';
+// "Make" a "link" (and "do" not "print" it)
+function make_link($data)
+{
+	$link = '<a href="?page=';
+	$link .= ($data['image'] ? $data['image'] : $data['page']);
+	if ($data['image']) $link .= '&amp;image=true';
+	if ($data['style']) $link .= '&amp;newstyle=' .$data['style'];
+	$link .= '">' .$data['text']. '</a>'; 
+
+	return ($link);
+}
 
 // Output all the links using flexible formatting.
-function do_links($has_pipes = true, $start = 0, $end = 0)
+function do_links($has_pipes = true, $uc = false, $start = 0, $end = 0)
 {
-	global $titles, $pages, $no_pages, $page;
+	global $titles, $pages, $page;
 
-	// List all the pages
-	for ($i = 0; $i < $no_pages; $i++)
+	$x = count($pages);
+	for ($i = 0; $i < $x; ++$i)
 	{
 		if ($start) echo $start;
-		if ($page == $pages[$i]) echo $titles[$pages[$i]];
-		else echo '<a href="?page=' .$pages[$i]. '">'.$titles[$pages[$i]].'</a>';
+
+		if ($uc == false) $echo_text = $titles[$pages[$i]];
+		else $echo_text = ucwords($titles[$pages[$i]]);
+
+		if ($page != $pages[$i])
+			echo make_link(array('page' => $pages[$i], 'text' => $echo_text));
+		else
+			echo $echo_text;
+
 		if ($has_pipes && ($i < ($no_pages - 1))) echo ' | ';
 		if ($end) echo $end;
 	}
@@ -28,29 +43,26 @@ function do_links($has_pipes = true, $start = 0, $end = 0)
 	return;
 }
 
-function do_styles($has_pipes = true, $ucfirst = 0)
+function do_styles($has_pipes = true, $uc = false, $start = 0, $end = 0)
 {
-	global $styles, $no_styles, $showimage, $page;
+	global $styles, $image, $page, $style;
 
-	for ($i = 0; $i < $no_styles; $i++)
+	$x = count($styles);
+	for ($i = 0; $i < $x; ++$i)
 	{
-		if ($style == $styles[$i])
-		{
-			if ($ucfirst == false) echo $styles[$i];
-			else echo ucfirst($styles[$i]);
-		}
-		else
-		{
-			echo '<a href="?page='.$page.'&amp;';
-			if ($showimage) echo 'showimage=true&amp;';
-			echo 'newstyle='.$styles[$i].'">';
-			if ($ucfirst == false) echo $styles[$i];
-			else echo ucfirst($styles[$i]);
-			echo '</a>';			
-		}
+		if ($start) echo $start;
 
-		// Add the "pipes"
+		if ($uc == false) $echo_text = $styles[$i];
+		else $echo_text = ucwords($styles[$i]);
+
+		if ($style != $styles[$i])
+			echo make_link(array('page' => $page, 'image' => $image, 
+				'style' => $styles[$i], 'text' => $echo_text));
+		else
+			echo $echo_text;
+
 		if ($has_pipes && ($i < ($no_styles - 1))) echo ' | ';
+		if ($end) echo $end;
 	}
 
 	return;
@@ -58,14 +70,15 @@ function do_styles($has_pipes = true, $ucfirst = 0)
 
 function page_header($title, $type)
 {
-	global $style, $sidebar_links_start, $sidebar_links_end;
+	global $style, $site_description, $site_name;
 
+	// Echo the page header
 	echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
 	echo '<html>';
 	echo '<head>';
-	echo '<title>nangband - ' . $title . '</title>';
+	echo '<title>'.$site_name.' - ' . $title . '</title>';
 	echo '<link rel="stylesheet" rev="content" type="text/css" href="styles/'.$style.'.css">';
-	echo '<meta name="description" content="A site about Nangband, an Angband variant.">';
+	echo '<meta name="description" content="'.$site_description.'">';
 	echo '</head>';
 
 	// Include the style header (if it exists)

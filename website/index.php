@@ -9,12 +9,13 @@
 // Micro-hack to give nice source listings
 $included[1] = true;
 
-// Include the general layout functions
+// Include the general layout functions and file listings
+include('sitedata.php');
 include('layout.php');
 
 // Ensure we always have a page, and style
 if (!$page) $page = 'main';
-if (!$cstyle) $style = 'clean';
+if (!$cstyle) $style = $default_style;
          else $style = $cstyle;
 
 // Check on the setting styles
@@ -33,40 +34,36 @@ if (($newstyle == 'sidebar') ||
 if ($dir = @opendir('extras/'))
 {
 	while (($file = readdir($dir)) != false)
-	{
-		if (!is_dir('extras/'.$file)) include('extras/'.$file);
-	}
+		if (!is_dir('extras/'.$file))
+			include('extras/'.$file);
 }
-
-// Include the file lists
-include('files.php');
 
 // Check for a filename's validity
 if ($titles[$page]) $title = $titles[$page];
 
 // Extract some information
 $dpage = $page;
-if ($showimage) { $incdir = 'images/'; $dpage .= '.desc'; $title = 'image'; }
+
+if ($image)
+{
+	$incdir = 'images/';
+	$dpage .= '.desc';
+	$title = 'image';
+	$image = true;
+}
 else $incdir = 'content/';
 
 // Check for existance
 $okay = (file_exists($incdir.$dpage) && !is_dir($incdir.$dpage)); 
 if (!$okay) $title = 'page not found';
-if ($source) $title = 'source';
+if (isset($source)) $title = 'source';
 
 // Output the header
 page_header($title, $page, $style);
 
 // Include the data
-if ($source)
+if (isset($source))
 {
-	echo '<p>The various variables used on the nangband site are:</p>';
-	echo '<ul>';
-	echo '<li><b>$page</b> - this specifies the page to be included from content/.</li>';
-	echo '<li><b>$cstyle</b> - this is the style, as set by a cookie.</li>';
-	echo '<li><b>$pages</b> - this is a number-keyed array, which contains a list of the content pages\' filenames.</li>';
-	echo '<li><b>$titles</b> - this is an array keyed on the names of the content pages, which provides the &quot;full names&quot; of each page.</li>';
-	echo '</ul>';
 	echo '<p>The source files used in the nangband site are <a href="?source=layout">layout.php</a>,';
 	echo ' <a href="?source=files">files.php</a>, and <a href="?source=true">index.php</a>.  Click ';
 	echo 'on one of the files listed above to see it\'s source code.</p>';

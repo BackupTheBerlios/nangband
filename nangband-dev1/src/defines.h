@@ -55,7 +55,7 @@
  */
 #define SAVEFILE_MAJOR	2
 #define SAVEFILE_MINOR	9
-#define SAVEFILE_PATCH	8
+#define SAVEFILE_PATCH	9
 #define SAVEFILE_EXTRA	0
 
 /*
@@ -237,11 +237,20 @@
 #define RES_FIRE		2
 #define RES_COLD		3
 #define RES_POIS		4
+#define RES_FEAR		5
+#define RES_LITE		6
+#define RES_DARK		7
+#define RES_CONF		8
+#define RES_SOUND		9
+#define RES_SHARDS		10
+#define RES_NEXUS		11
+#define RES_NETHER		12
+#define RES_CHAOS		13
 
 /*
  * Maximum resists
  */
-#define RES_MAX			5
+#define RES_MAX			14
 
 /*
  * Store constants

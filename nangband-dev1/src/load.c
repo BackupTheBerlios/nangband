@@ -923,11 +923,19 @@ static errr rd_extra(void)
 	/* [note to self - what's the point of savefile compat between devel versions?]*/
 	if (older_than(2, 9, 8))
 	{
-		rd_s16b((s16b *)(&p_ptr->resist_timed[RES_FIRE]));
+		rd_s16b((s16b *)&p_ptr->resist_timed[RES_FIRE]);
 		rd_s16b((s16b *)&p_ptr->resist_timed[RES_COLD]);
 		rd_s16b((s16b *)&p_ptr->resist_timed[RES_ACID]);
 		rd_s16b((s16b *)&p_ptr->resist_timed[RES_ELEC]);
 		rd_s16b((s16b *)&p_ptr->resist_timed[RES_POIS]);
+	}
+	else if (older_than(2, 9, 9))
+	{
+		rd_byte(&p_ptr->resist_timed[RES_FIRE]);
+		rd_byte(&p_ptr->resist_timed[RES_COLD]);
+		rd_byte(&p_ptr->resist_timed[RES_ACID]);
+		rd_byte(&p_ptr->resist_timed[RES_ELEC]);
+		rd_byte(&p_ptr->resist_timed[RES_POIS]);
 	}
 	else
 	{

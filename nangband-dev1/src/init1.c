@@ -417,10 +417,10 @@ static cptr k_info_flags2[] =
 	"XXX4",
 	"XXX5",
 	"XXX6",
-	"RES_ELEC",
-	"RES_FIRE",
-	"RES_COLD",
-	"RES_POIS",
+	"XXX7",
+	"XXX8",
+	"XXX9",
+	"XXX10",
 	"RES_FEAR",
 	"RES_LITE",
 	"RES_DARK",
@@ -1201,6 +1201,69 @@ static errr grab_one_resist(byte *resists, cptr what)
 	{
 		s = what + 8;
 		resists[RES_POIS] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_FEAR"))
+	{
+		s = what + 8;
+		resists[RES_FEAR] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_LITE"))
+	{
+		s = what + 8;
+		resists[RES_LITE] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_DARK"))
+	{
+		s = what + 8;
+		resists[RES_DARK] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_CONF"))
+	{
+		s = what + 8;
+		resists[RES_CONF] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_SOUND"))
+	{
+		s = what + 9;
+		resists[RES_POIS] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_SHARDS"))
+	{
+		s = what + 10;
+		resists[RES_POIS] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_NEXUS"))
+	{
+		s = what + 9;
+		resists[RES_NEXUS] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_NETHER"))
+	{
+		s = what + 10;
+		resists[RES_POIS] = atoi(s);
+		return (0);
+	}
+
+	if (prefix(what, "RES_CHAOS"))
+	{
+		s = what + 9;
+		resists[RES_CHAOS] = atoi(s);
 		return (0);
 	}
 

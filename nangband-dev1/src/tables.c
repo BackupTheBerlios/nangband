@@ -1340,7 +1340,10 @@ cptr res_names[RES_MAX] =
 	"electricity",
 	"fire",
 	"cold",
-	"poison"
+	"poison",
+	"fear",
+	"light",
+	"dark"
 };
 
 /*

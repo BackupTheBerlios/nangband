@@ -455,6 +455,9 @@ s16b get_mon_num(int level)
                 /* Hack -- Only astral monsters in the astral realm */
                 if (!(r_ptr->flags3 & (RF3_ASTRAL)) && (adult_astral)) continue;
 
+		/* Hack -- Certain monsters are only allowed while in astral mode */
+		if ((r_ptr->flags3 & (RF3_O_ASTRAL)) && (!adult_astral)) continue;
+
 		/* No town monsters in dungeon, unless otherwise specified */
 		if ((level > 0) && (table[i].level <= 0) &&
 		    !(r_ptr->flags3 & (RF3_ALLOW_DUNGEON))) continue;

@@ -497,7 +497,7 @@ static bool borg_think(void)
 #ifdef BORG_TK
              path_build(savefile, 1024, BORG_DIR_DATA, svSavefile2);
 #else /* BORG_TK */
-             path_build(savefile, 1024, ANGBAND_DIR_USER, svSavefile2);
+             path_build(savefile, 1024, ANGBAND_DIR_PREF, svSavefile2);
 #endif /* BORG_TK */
 
             justSaved = TRUE;
@@ -3878,7 +3878,7 @@ void borg_log_death(void)
 #ifdef BORG_TK
     path_build(buf, 1024, BORG_DIR_DATA, "borg-log.txt");
 #else /* BORG_TK */
-   path_build(buf, 1024, ANGBAND_DIR_USER, "borg-log.txt");
+   path_build(buf, 1024, ANGBAND_DIR_PREF, "borg-log.txt");
 #endif /* BORG_TK */
 
    /* Hack -- drop permissions */
@@ -3927,7 +3927,7 @@ void borg_log_death_data(void)
 #ifdef BORG_TK
     path_build(buf, 1024, BORG_DIR_DATA, "borg.dat");
 #else /* BORG_TK */
-   path_build(buf, 1024, ANGBAND_DIR_USER, "borg.dat");
+   path_build(buf, 1024, ANGBAND_DIR_PREF, "borg.dat");
 #endif /* BORG_TK */
 
    /* Hack -- drop permissions */
@@ -5080,7 +5080,7 @@ void init_borg_txt_file(void)
 #ifdef BORG_TK
     path_build(buf, 1024, BORG_DIR_ROOT, "borg.prf");
 #else /* BORG_TK */
-    path_build(buf, 1024, ANGBAND_DIR_USER, "borg.txt");
+    path_build(buf, 1024, ANGBAND_DIR_PREF, "borg.txt");
 #endif /* BORG_TK */
 
     /* Open the file */
@@ -5674,7 +5674,7 @@ void borg_write_map(bool ask)
 #ifdef BORG_TK
     path_build(buf2, 1024, BORG_DIR_DATA, buf);
 #else /* BORG_TK */
-    path_build(buf2, 1024, ANGBAND_DIR_USER, buf);
+    path_build(buf2, 1024, ANGBAND_DIR_PREF, buf);
 #endif /* BORG_TK */
 
     /* XXX XXX XXX Get the name and open the map file */

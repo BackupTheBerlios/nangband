@@ -979,6 +979,19 @@ s32b artifact_power(object_type *o_ptr)
 	if (x_ptr->flags2 & TR2_SUST_CON) p += 2;
 	if (x_ptr->flags2 & TR2_SUST_CHR) p += 1;
 
+	/* Do the resists */
+	for (i = 0; i < RES_MAX; i++)
+	{
+		int amount = (x_ptr->resists[i] / 15);
+
+		/* Reward high powers */
+		if (x_ptr->resists[i] >= 80) amount += 10;
+		if (x_ptr->resists[i] >= 90) amount += 10;
+
+		/* Increase the power */
+		p += amount;
+	}
+
 	/* Decide on power levels for the resists */
 	if (x_ptr->resists[RES_ACID] >= 100) p += 20;
 	else if (x_ptr->resists[RES_ACID] >= 50) p += 10;

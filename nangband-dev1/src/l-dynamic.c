@@ -19,30 +19,44 @@
  */
 int tolua_dynamic_open(lua_State* tolua_S)
 {
-#if 0
-	magic_spell_type *s_ptr = NULL;
-	int n;
-#endif
+	int i;
 
+	/* Open the lua directories */
 	tolua_open(tolua_S);
 
-#if 0
 	/* Export the spell names */
-	for (n = 0; n < z_info->magic_spell_max; n++)
+	for (i = 0; i < z_info->c_max; i++)
 	{
-		char buffer[46];
+		/* Buffer */
+		char buffer[20];
+		char class_name[14];
+		int r;
 
-		s_ptr = &magic_spell_info[n];
+		/* Grab the class */
+		cp_ptr = &c_info[i];
 
-		sprintf(buffer, "SPELL_%s", s_ptr->constant);
-		tolua_constant(tolua_S, NULL, buffer, n);
+		/* Set the class name */
+		strcpy(class_name, (c_name + cp_ptr->name));
+
+		/* Make it uppercase */
+		for (r = 0; r < strlen(class_name); r++)
+		{
+			class_name[r] = toupper(class_name[r]);
+		}
+
+		/* Prepare the buffer */
+		sprintf(buffer, "CLASS_%s", class_name);
+
+		/* Make it a constant - state, null, name, value */
+		tolua_constant(tolua_S, NULL, buffer, i);
 	}
-#endif
 
+	/* We are done. */
 	return (1);
 }
 
 void tolua_dynamic_close(lua_State* tolua_S)
 {
+	/* Nothing to do. */
 	return;
 }

@@ -309,7 +309,6 @@ void reset_visuals(bool unused)
 {
 	int i;
 
-
 	/* Unused parameter */
 	(void)unused;
 
@@ -427,6 +426,13 @@ static void object_stat_bonuses_aux(int mode, const object_type *o_ptr, s16b *mo
 		mods[n] += k_ptr->stat_mods[n];
 	}
 
+	/* Get the resists from the object itself */
+	for (n = 0; n < A_MAX; n++)
+	{
+		/* Copy it across */
+		mods[n] += o_ptr->stat_mods[n];
+	}
+
 	/* Show all bonuses if fully known */
 	if (fully_known)
 	{
@@ -521,6 +527,17 @@ static void object_resists_aux(int mode, const object_type *o_ptr, byte *resists
 			for (n = 0; n < RES_MAX; n++)
 			{
 				resists[n] += e_ptr->resists[n];
+			}
+		}
+
+		/* Randart */
+		if (o_ptr->name3)
+		{
+			randart_type *x_ptr = &x_info[o_ptr->name3];
+
+			for (n = 0; n < RES_MAX; n++)
+			{
+				resists[n] += x_ptr->resists[n];
 			}
 		}
 	}
@@ -1793,18 +1810,10 @@ void object_desc_store(char *buf, const object_type *o_ptr, int pref, int mode)
 	/* Restore "aware" flag */
 	k_info[i_ptr->k_idx].aware = hack_aware;
 }
-
-/* A structure to hold bonuses and their names */
-typedef struct
-{
-	char *name;
-	int bonus;
-} bonus_data;
-
 /*
- * A 'qsort()' hook.
+ * A qsort() hook for sorting bonus data.
  */
-int qsort_hook(const void *arg1, const void *arg2)
+int sort_bonus_data(const void *arg1, const void *arg2)
 {
 	bonus_data *comp1 = (bonus_data *) arg1;
 	bonus_data *comp2 = (bonus_data *) arg2;
@@ -1851,7 +1860,7 @@ void obj_info_resists(byte *resists, bool shorten, char *buffer)
 		}
 
 		/* Sort the stats */
-		qsort((void *) stat, RES_MAX, sizeof(bonus_data), qsort_hook);
+		qsort((void *) stat, RES_MAX, sizeof(bonus_data), sort_bonus_data);
 
 		/* So we can start on 1, and avoid (n - 1) < 0 problems with array access */
 		if (stat[0].bonus < 0) minuses ++;
@@ -2070,7 +2079,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 		}
 
 		/* Sort the stats */
-		qsort((void *) stat, A_MAX, sizeof(bonus_data), qsort_hook);
+		qsort((void *) stat, A_MAX, sizeof(bonus_data), sort_bonus_data);
 
 		/* So we can start on 1, and avoid (n - 1) < 0 problems with array access */
 		if (stat[0].bonus < 0) minuses ++;

@@ -276,17 +276,8 @@ int bulp_getpos(BULP *bulp_ptr, u32b *pos)
 		/* ftell() gives us the position from the start of file */
 		*pos = ftell(bulp_ptr->_ptr);
 
-		/* if we've had a failure to find a position */
-		if ( *pos == -1 )
-		{
-			/* return a failure */
-			return(-1);
-		}
-		else
-		{
-			/* Success */
-			return(0);
-		}
+		/* Success */
+		return(0);
 	}
 
 	/* Failure, we've done nothing */
@@ -774,7 +765,7 @@ int xmlbulp_find_characters(BULP *bptr, size_t reasonable, int no_chars, ...)
 		 * If we are checking for reasonableness of size at all 
 		 * and are past that point, return zero 
 		 */
-		if (reasonable != -1 && size > reasonable)
+		if (size > reasonable)
 		{
 			/* Reset the size */
 			size=0;

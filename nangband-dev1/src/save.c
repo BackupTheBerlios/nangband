@@ -89,7 +89,6 @@
 #define BLOCK_TYPE_OBJLORE       7
 #define BLOCK_TYPE_QUESTS        8
 #define BLOCK_TYPE_ARTIFACTS     9
-#define BLOCK_TYPE_RANDARTS     10
 #define BLOCK_TYPE_STORES       11
 #define BLOCK_TYPE_DUNGEON      12
 #define BLOCK_TYPE_INVENTORY    13
@@ -105,13 +104,12 @@
 #define BLOCK_VERSION_OBJLORE    1
 #define BLOCK_VERSION_QUESTS     1
 #define BLOCK_VERSION_ARTIFACTS  1
-#define BLOCK_VERSION_RANDARTS   1
 #define BLOCK_VERSION_STORES     1
 #define BLOCK_VERSION_DUNGEON    1
 #define BLOCK_VERSION_INVENTORY  1
 
 /* "Helper" functions - versions */
-#define HELPER_VERSION_OBJECT    1
+#define HELPER_VERSION_OBJECT    2
 #define HELPER_VERSION_MONSTER   1
 #define HELPER_VERSION_STORE     1
 
@@ -351,7 +349,7 @@ static char *savefile_do_string(char *str, bool type)
 /* Here we define space-saving macros */
 #define savefile_do_s16b(v, t)     (s16b) savefile_do_u16b((u16b *) v, t);
 #define savefile_do_s32b(v, t)     (s32b) savefile_do_u32b((u32b *) v, t);
-
+#define savefile_do_sbyte(v, t)    (sbyte) savefile_do_byte((byte *) v, t);
 
 /*
  * Functions to deal with creating, writing, and freeing "blocks".
@@ -446,6 +444,15 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	savefile_do_byte(&o_ptr->sval, type);
 	savefile_do_s16b(&o_ptr->pval, type);
 
+	/* stat bonuses (XXX) */
+	if (version > 1)
+	{
+		for (temp_kind = 0; temp_kind < A_MAX; temp_kind++)
+		{
+			savefile_do_sbyte(&o_ptr->stat_mods[temp_kind], type);
+		}
+	}
+
 	/* Look it up */
 	temp_kind = lookup_kind(o_ptr->tval, o_ptr->sval);
 	o_ptr->k_idx = temp_kind;
@@ -503,6 +510,7 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	/* Load ranadrt info (if appropriate) */
 	if (o_ptr->name3)
 	{
+		int i;
 		randart_type *x_ptr = &x_info[o_ptr->name3];
 
 		/* Do the name */
@@ -513,6 +521,12 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 		savefile_do_u32b(&x_ptr->flags1, type);
 		savefile_do_u32b(&x_ptr->flags2, type);
 		savefile_do_u32b(&x_ptr->flags3, type);
+
+		if (version > 1)
+		{
+			for (i = 0; i < RES_MAX; i++)
+				savefile_do_sbyte(&x_ptr->resists[i], type);
+		}
 
 		savefile_do_byte(&x_ptr->level, type);
 
@@ -1087,7 +1101,7 @@ static errr savefile_do_block_player(bool type, int ver)
 
 	/* Timed resistances */
 	for (i = 0; i < RES_MAX; i++)
-		savefile_do_byte(&p_ptr->resist_timed[i], type);
+		savefile_do_sbyte(&p_ptr->resist_timed[i], type);
 
 	/* Old player status flags */
 	if (ver == 1)

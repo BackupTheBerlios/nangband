@@ -84,6 +84,8 @@ typedef struct hist_type hist_type;
 typedef struct player_other player_other;
 typedef struct player_type player_type;
 typedef struct start_item start_item;
+typedef struct flavor_type flavor_type;
+typedef struct bonus_data bonus_data;
 
 
 
@@ -232,7 +234,7 @@ struct artifact_type
 
 	u32b flags3;                      /* Artifact Flags, set 3 */
 
-	byte resists[STRUCT_RES_MAX - 1]; /* Item resists */
+	sbyte resists[RES_MAX];           /* Item resists */
 	byte activation;                  /* Activation to use */
 
 	byte level;                       /* Artifact level */
@@ -1134,9 +1136,10 @@ struct high_score
 	char how[32];		/* Method of death (string) */
 };
 
-
-typedef struct flavor_type flavor_type;
-
+/*
+ * A structure to hold information about an object "flavour",
+ * used to "colour" objects.
+ */
 struct flavor_type
 {
 	u32b text;      /* Text (offset) */
@@ -1149,5 +1152,17 @@ struct flavor_type
 
 	byte x_attr;    /* Desired flavor attribute */
 	char x_char;    /* Desired flavor character */
+};
+
+/*
+ * Hold data for bonuses in (name, bonus) pairs.
+ *
+ * Note that name is a pointer to prevent silly code.
+ */
+
+struct bonus_data
+{
+	char *name;	/* Entry name */
+	s16b bonus;	/* Entry's bonus */
 };
 

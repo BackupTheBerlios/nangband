@@ -1198,7 +1198,7 @@ static errr grab_one_statbonus(cptr what, s16b *stat_bonuses, s16b pval)
 /*
  * Grab one resist for a object_kind. XXX XXX
  */
-static errr grab_one_resist(byte *resists, cptr what)
+static errr grab_one_resist(sbyte *resists, cptr what)
 {
 	cptr s;
 

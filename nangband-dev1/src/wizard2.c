@@ -17,6 +17,45 @@
 
 
 /*
+ * Misplaced code
+ */
+static void do_cmd_wiz_timed_res(void)
+{
+	int n = 0;
+
+	for (n = 0; n < RES_MAX; n++)
+	{
+		printf("%i", p_ptr->resist_timed[n]);
+		printf("  ");
+		printf(res_names[n]);
+		printf("\n");
+	}
+
+	printf("\n");
+
+	for (n = 0; n < RES_MAX; n++)
+	{
+		printf("%i", p_ptr->resist_cur[n]);
+		printf("  ");
+		printf(res_names[n]);
+		printf("\n");
+	}
+
+	printf("\n");
+
+	for (n = 0; n < RES_MAX; n++)
+	{
+		printf("%i", p_ptr->resist_dis[n]);
+		printf("  ");
+		printf(res_names[n]);
+		printf("\n");
+	}
+
+
+	return;
+}
+
+/*
  * Hack -- quick debugging hook
  */
 static void do_cmd_wiz_hack_ben(void)
@@ -1715,6 +1754,13 @@ void do_cmd_debug(void)
 		case '_':
 		{
 			do_cmd_wiz_hack_ben();
+			break;
+		}
+
+		/* Hacky */
+		case '^':
+		{
+			do_cmd_wiz_timed_res();
 			break;
 		}
 

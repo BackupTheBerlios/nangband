@@ -3288,13 +3288,11 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ)
 		/* Standard damage -- also poisons player */
 		case GF_POIS:
 		{
-			int resist_percent = 0;
+			int resist_percent;
 
-			/* Total Immunity */
-			if ((p_ptr->resist_cur[RES_POIS] > 90)) break;
-
-			/* Grab the % value */
+			/* Apply the resistance */
 			resist_percent = resist_player_current(RES_POIS);
+			dam = resist_apply(resist_percent, dam);
 
 			/* Print a message */
 			if (fuzzy) msg_print("You are hit by poison!");

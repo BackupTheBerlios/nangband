@@ -1462,6 +1462,15 @@ function describe_item_activation_hook(object)
 		return activations[object.sval]
 	end
 
+	-- Orbs
+	if object.tval == TV_ORB then
+		local activations = {
+			[SV_ORB_FIRE1] = "fire bolt",
+			[SV_ORB_FIRE2] = "nothing"}
+
+		return activations[object.sval]
+	end
+
 	-- No activation
 	return ""
 end

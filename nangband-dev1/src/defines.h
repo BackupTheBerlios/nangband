@@ -390,15 +390,16 @@
 #define INVEN_LITE      29
 #define INVEN_BODY      30
 #define INVEN_OUTER     31
-#define INVEN_ARM       32
-#define INVEN_HEAD      33
-#define INVEN_HANDS     34
-#define INVEN_FEET      35
+#define INVEN_WAIST     32
+#define INVEN_ARM       33
+#define INVEN_HEAD      34
+#define INVEN_HANDS     35
+#define INVEN_FEET      36
 
 /*
  * Total number of inventory slots (hard-coded).
  */
-#define INVEN_TOTAL	36
+#define INVEN_TOTAL	37
 
 
 /*
@@ -890,6 +891,7 @@
 #define TV_HAFTED       21	/* Priest Weapons */
 #define TV_POLEARM      22	/* Axes and Pikes */
 #define TV_SWORD        23	/* Edged Weapons */
+#define TV_BELT         29      /* Belts and Girdles */
 #define TV_BOOTS        30	/* Boots */
 #define TV_GLOVES       31	/* Gloves */
 #define TV_HELM         32	/* Helms */
@@ -991,6 +993,13 @@
 #define SV_TWO_HANDED_SWORD		25	/* 3d6 */
 #define SV_EXECUTIONERS_SWORD	28	/* 4d5 */
 #define SV_BLADE_OF_CHAOS		30	/* 6d5 */
+
+/* The "sval" codes for TV_BELT */
+#define SV_ROPE_BELT				0	/* 1 */
+#define SV_LEATHER_BELT				10	/* 3 */
+#define SV_GOLD_PLATED_BELT			20	/* 5 */
+#define SV_LEATHER_GIRDLE			25	/* 6 */
+#define SV_STEEL_REINFORCED_GIRDLE  26	/* 8 */
 
 /* The "sval" codes for TV_SHIELD */
 #define SV_SMALL_LEATHER_SHIELD		2

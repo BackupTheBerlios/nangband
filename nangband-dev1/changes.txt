@@ -13,6 +13,17 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
   Hopefully 1.0.0 will compile Angband completely cleanly. (takkaria)
 - Made the running code take notice of terrain flags.  This should
   prevent some problems. (takkaria)
+- Removed the silly compiler warnings from the borg sources. (takkaria)
+- Added '-x' as a command-line option; it printf()s savefile loading
+  messages for assisting debugging. (takkaria)
+- Setting reload_dungeon to TRUE in save.c will prompt the user about
+  regenerating the dungeon that they're on at the end of the loading
+  process. (takkaria)
+- Added "meta-versions" to the object and monster parsing functions.
+  If the monster meta-version isn't equal to the one found in the
+  savefile, it sets reload_dungeon. (see above)
+  Also, object.txt and monster.txt now have the "M" field for specifying
+  this. (takkaria)
 
 2002-07-28
 ----------

@@ -246,19 +246,17 @@ static errr rd_item(object_type *o_ptr)
 	byte old_dd;
 	byte old_ds;
 
+	int nidx;
+
 	u32b f1, f2, f3;
 
 	object_kind *k_ptr;
 
 	char buf[128];
 
-
 	/* Kind */
 	rd_s16b(&o_ptr->k_idx);
 
-	/* Paranoia */
-	if ((o_ptr->k_idx < 0) || (o_ptr->k_idx >= z_info->k_max))
-		return (-1);
 
 	/* Location */
 	rd_byte(&o_ptr->iy);
@@ -268,9 +266,15 @@ static errr rd_item(object_type *o_ptr)
 	rd_byte(&o_ptr->tval);
 	rd_byte(&o_ptr->sval);
 
+	/* Look it up */
+	o_ptr->k_idx = lookup_kind(o_ptr->tval, o_ptr->sval);
+
+	/* Paranoia */
+	if ((o_ptr->k_idx < 0) || (o_ptr->k_idx >= z_info->k_max))
+		return (-1);
+
 	/* Special pval */
 	rd_s16b(&o_ptr->pval);
-
 
 	rd_byte(&o_ptr->discount);
 

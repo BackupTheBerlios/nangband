@@ -7,6 +7,9 @@ Nangband Website changelog
   nicer; it'll get cleaned up even more when I have the time.
   (takkaria)
 - Forgot to add the main page to CVS! (takkaria)
+- Got the entire site valid to HTML 4.01 standards; this includes
+  *both* stylesheets and all content.  I have too much free time!
+  (takkaria)
 
 30-06-02
 --------

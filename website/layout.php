@@ -89,17 +89,18 @@ function page_header($title, $type)
 	<tr><td>
 		<table width="100%" align="center" cellspacing="0" cellpadding="4" border="0">
 		<tr><td bgcolor="#eeeeee" align="center">
-			<font face="Verdana" color="#555555" size="+2">
-			<b>nangband - <?php echo $title; ?></b></font>
+			<font color="#555555" size="+2"><b>nangband - <?php echo $title; ?></b></font>
 
 			<br>
-			<font face="Verdana" size="-1" color="#555555">Change style: <?php do_styles($type); ?></font>
+
+			<font size="-1" color="#555555">Change style: <?php do_styles($type); ?></font>
+
 			<br>
 
-			<font face="Veranna" color="#555555"><?php do_links(0, 0, 1); ?></font>
+			<font color="#555555"><?php do_links(0, 0, 1); ?></font>
 
 		</td></tr>
-		<tr><td bgcolor="#dddddd"><font face="Veranna" color="#333333">
+		<tr><td bgcolor="#dddddd">
 <?php
 	}
 	else if ($style == 'sidebar')
@@ -117,7 +118,7 @@ function page_header($title, $type)
 				<tr><td bgcolor="#eeeeee" align="center">
 					<font size="+2">nangband - <? echo $title; ?></font>
 					<br>
-					<font face="Verdana" size="-1" color="#555555">Change style: <?php do_styles($type); ?></font>
+					<font size="-1" color="#555555">Change style: <?php do_styles($type); ?></font>
 				</td></tr>
 				<tr>
 					<td bgcolor="#dddddd">
@@ -133,16 +134,18 @@ function page_footer()
 
 	if ($style == 'clean')
 	{
-		echo '</font></td></tr>';
+		echo '</td></tr>';
  
 		echo '<tr><td bgcolor="#eeeeee" align="center">';
-		echo '<font face="Verdana" color="#555555">';
+		echo '<font color="#555555">';
 		do_links(0, 0, 1);
+		echo '</font>';
 		echo '<br>';
-		echo '<font size="-1"><div align="center">Material &copy; Nangband Developers. Contact ';
+		echo '<div align="center"><font size="-1" color="#555555">';
+		echo 'Material &copy; Nangband Developers. Contact ';
 		echo '<a href="mailto:nevermiah@hotmail.com">nevermiah@hotmail.com</a>';
 
-		echo '</font></td></tr>';
+		echo '</font></div></td></tr>';
 		echo '</table></td></tr></table>';
 	}
 	else if ($style == 'sidebar')
@@ -158,7 +161,7 @@ function page_footer()
 <table align="center" border="0">
 	<tr>
 		<td>
-			<font face="Verdana" color="#555555" size="-1">&copy; Nangband Developers.<br>
+			<font color="#555555" size="-1">&copy; Nangband Developers.<br>
 Contact <a href="mailto:nevermiah@hotmail.com">nevermiah@hotmail.com</a></font>
 		</td>
 	</tr>

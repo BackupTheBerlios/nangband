@@ -876,13 +876,14 @@ bool detect_traps(void)
 
 	bool detect = FALSE;
 
-
-	/* Scan the current panel */
-	for (y = p_ptr->wy; y < p_ptr->wy+SCREEN_HGT; y++)
+	/* Scan a set radius */
+	for (y = p_ptr->py - 20; y < p_ptr->py + 20; y++)
 	{
-		for (x = p_ptr->wx; x < p_ptr->wx+SCREEN_WID; x++)
+		for (x = p_ptr->px - 20; x < p_ptr->px + 20; x++)
 		{
 			if (!in_bounds_fully(y, x)) continue;
+
+			if (distance(p_ptr->py, p_ptr->px, y, x) > 25) continue;
 
 			/* Detect invisible traps */
 			if (cave_feat[y][x] == FEAT_INVIS)
@@ -928,13 +929,14 @@ bool detect_doors(void)
 
 	bool detect = FALSE;
 
-
-	/* Scan the panel */
-	for (y = p_ptr->wy; y < p_ptr->wy+SCREEN_HGT; y++)
+	/* Scan a set radius */
+	for (y = p_ptr->py - 20; y < p_ptr->py + 20; y++)
 	{
-		for (x = p_ptr->wx; x < p_ptr->wx+SCREEN_WID; x++)
+		for (x = p_ptr->px - 20; x < p_ptr->px + 20; x++)
 		{
 			if (!in_bounds_fully(y, x)) continue;
+
+			if (distance(p_ptr->py, p_ptr->px, y, x) > 25) continue;
 
 			/* Detect secret doors */
 			if (cave_feat[y][x] == FEAT_SECRET)
@@ -981,13 +983,14 @@ bool detect_stairs(void)
 
 	bool detect = FALSE;
 
-
-	/* Scan the panel */
-	for (y = p_ptr->wy; y < p_ptr->wy+SCREEN_HGT; y++)
+	/* Scan a set radius */
+	for (y = p_ptr->py - 20; y < p_ptr->py + 20; y++)
 	{
-		for (x = p_ptr->wx; x < p_ptr->wx+SCREEN_WID; x++)
+		for (x = p_ptr->px - 20; x < p_ptr->px + 20; x++)
 		{
 			if (!in_bounds_fully(y, x)) continue;
+
+			if (distance(p_ptr->py, p_ptr->px, y, x) > 25) continue;
 
 			/* Detect stairs */
 			if ((cave_feat[y][x] == FEAT_LESS) ||
@@ -1464,15 +1467,15 @@ void stair_creation(void)
 	int py = p_ptr->py;
 	int px = p_ptr->px;
 
-	/* XXX XXX XXX */
+	/* Hack */
 	if (!cave_valid_bold(py, px))
 	{
 		msg_print("The object resists the spell.");
 		return;
 	}
 
-	/* XXX XXX XXX */
 	delete_object(py, px);
+	/* End Hack */
 
 	/* Create a staircase */
 	if (!p_ptr->depth)
@@ -1547,19 +1550,17 @@ static bool item_tester_hook_armour(const object_type *o_ptr)
 
 static bool item_tester_unknown(const object_type *o_ptr)
 {
-	if (object_known_p(o_ptr))
-		return FALSE;
-	else
-		return TRUE;
+	if (object_known_p(o_ptr)) return (FALSE);
+
+	return (TRUE);
 }
 
 
 static bool item_tester_unknown_star(const object_type *o_ptr)
 {
-	if (o_ptr->ident & IDENT_MENTAL)
-		return FALSE;
-	else
-		return TRUE;
+	if (o_ptr->ident & (IDENT_MENTAL)) return (FALSE);
+
+	return (TRUE);
 }
 
 

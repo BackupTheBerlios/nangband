@@ -1353,7 +1353,7 @@ static int project_m_y;
  *
  * Perhaps we should affect doors and/or walls.
  */
-static bool project_f(int who, int r, int y, int x, int dam, int typ)
+static bool project_f(int who, int r, int y, int x, int dam, int typ, bool fading_damage)
 {
 	bool obvious = FALSE;
 
@@ -1362,10 +1362,8 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ)
 	(void)r;
 	(void)dam;
 
-#if 0 /* unused */
 	/* Reduce damage by distance */
-	dam = (dam + r) / (r + 1);
-#endif /* 0 */
+	if (fading_damage) dam = (dam + r) / (r + 1);
 
 	/* Analyze the type */
 	switch (typ)
@@ -1699,7 +1697,7 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ)
  *
  * We return "TRUE" if the effect of the projection is "obvious".
  */
-static bool project_o(int who, int r, int y, int x, int dam, int typ)
+static bool project_o(int who, int r, int y, int x, int dam, int typ, bool fading_damage)
 {
 	s16b this_o_idx, next_o_idx = 0;
 
@@ -1715,11 +1713,9 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
 	(void)r;
 	(void)dam;
 
-#if 0 /* unused */
+	
 	/* Reduce damage by distance */
-	dam = (dam + r) / (r + 1);
-#endif /* 0 */
-
+	if (fading_damage) dam = (dam + r) / (r + 1);
 
 	/* Scan all objects in the grid */
 	for (this_o_idx = cave_o_idx[y][x]; this_o_idx; this_o_idx = next_o_idx)
@@ -1998,7 +1994,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
  *
  * We attempt to return "TRUE" if the player saw anything "useful" happen.
  */
-static bool project_m(int who, int r, int y, int x, int dam, int typ)
+static bool project_m(int who, int r, int y, int x, int dam, int typ, bool fading_damage)
 {
 	int tmp;
 
@@ -2067,7 +2063,7 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ)
 
 
 	/* Reduce damage by distance */
-	dam = (dam + r) / (r + 1);
+	if (fading_damage) dam = (dam + r) / (r + 1);
 
 
 	/* Get the monster name (BEFORE polymorphing) */
@@ -3208,7 +3204,7 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ)
  * Actually, for historical reasons, we just assume that the effects were
  * obvious.  XXX XXX XXX
  */
-static bool project_p(int who, int r, int y, int x, int dam, int typ)
+static bool project_p(int who, int r, int y, int x, int dam, int typ, bool fading_damage)
 {
 	int k = 0;
 
@@ -3245,7 +3241,7 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ)
 	if (dam > 1600) dam = 1600;
 
 	/* Reduce damage by distance */
-	dam = (dam + r) / (r + 1);
+	if (fading_damage) dam = (dam + r) / (r + 1);
 
 
 	/* If the player is blind, be more descriptive */
@@ -4175,7 +4171,10 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg)
 			x = gx[i];
 
 			/* Affect the feature in that grid */
-			if (project_f(who, dist, y, x, dam, typ)) notice = TRUE;
+			if (project_f(who, dist, y, x, dam, typ, TRUE))
+			{
+				notice = TRUE;
+			}
 		}
 	}
 
@@ -4201,7 +4200,10 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg)
 			x = gx[i];
 
 			/* Affect the object in the grid */
-			if (project_o(who, dist, y, x, dam, typ)) notice = TRUE;
+			if (project_o(who, dist, y, x, dam, typ, TRUE))
+			{
+				notice = TRUE;
+			}
 		}
 	}
 
@@ -4228,7 +4230,10 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg)
 			x = gx[i];
 
 			/* Affect the monster in the grid */
-			if (project_m(who, dist, y, x, dam, typ)) notice = TRUE;
+			if (project_m(who, dist, y, x, dam, typ, TRUE))
+			{
+				notice = TRUE;
+			}
 		}
 
 		/* Player affected one monster (without "jumping") */
@@ -4270,7 +4275,10 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg)
 			x = gx[i];
 
 			/* Affect the player */
-			if (project_p(who, dist, y, x, dam, typ)) notice = TRUE;
+			if (project_p(who, dist, y, x, dam, typ, TRUE))
+			{
+				notice = TRUE;
+			}
 		}
 	}
 
@@ -4278,6 +4286,3 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg)
 	/* Return "something was noticed" */
 	return (notice);
 }
-
-
-

@@ -1,13 +1,10 @@
-/* File: birth.c */
-
 /*
- * Copyright (c) 1997 Ben Harrison, James E. Wilson, Robert A. Koeneke
+ * File: birth.c
  *
- * This software may be copied and distributed for educational, research,
- * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * Abstract: File that deals with character creation for Angband.
+ *
+ * Licence: GNU GPL version 2, or any later version.
  */
-
 #include "angband.h"
 
 

@@ -3,7 +3,7 @@
  *
  * Abstract: Lowest-level stuff for the Borg.
  *
- * Authors: Ben Harrison, A.P. White, Andrew Sidwell (takkaria).
+ * Authors: Ben Harrison, APWhite (apw), Andrew Sidwell (takkaria).
  *
  * Licence: Traditional Angband licence, see angband.h.
  */
@@ -11,7 +11,6 @@
 
 #include "angband.h"
 #include "borg1.h"
-
 
 /*
  * This file contains various low level variables and routines.
@@ -301,9 +300,7 @@ bool borg_confirm_target = FALSE; /* emergency spell use */
  */
 
 bool borg_rand_quick;       /* Save system setting */
-
 u32b borg_rand_value;       /* Save system setting */
-
 u32b borg_rand_local;       /* Save personal setting */
 
 
@@ -390,6 +387,7 @@ bool borg_on_dnstairs;      /* used when leaving a level */
 
 bool borg_needs_searching;  /* borg will search with each step */
 bool borg_full_damage;  /* make danger = full possible damage. */
+
 /* defence flags */
 bool borg_prot_from_evil;
 bool borg_speed;

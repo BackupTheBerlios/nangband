@@ -9,3 +9,4 @@ resources/
 Makefile
 Makefile.in
 ChangeLog
+autom4te.cache/*

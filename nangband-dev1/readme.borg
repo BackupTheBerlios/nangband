@@ -5,11 +5,17 @@ Instructions on using the borg
 
 First, make sure the borg is compiled in to your version of Nangband.
 
-If it isn't, and you can compile, then modify your makefile to include the borg [files borg1-9.c]. You will have to compile with ALLOW_BORG defined [usually by adding -DALLOW_BORG to CFLAGS].
+If it isn't, and you can compile, then modify your makefile to include the borg
+[files borg1-9.c]. You will have to compile with ALLOW_BORG defined [usually by
+adding -DALLOW_BORG to CFLAGS].
 
-After you have a version with the borg, start the game up.  Make a character or use an old character.  Press Control-Z, read the messages and make sure you follow the instructions.  The borg will now run.
+After you have a version with the borg, start the game up.  Make a character or
+use an old character.  Press Control-Z, read the messages and make sure you
+follow the instructions.  The borg will now run.
 
-The borg may get stuck in certain situations.  He may have a Clock Overflow. He may loop buying and selling the same stuff over and over.  Believe me when I say that these have been addressed.  His loops are greatly reduced.
+The borg may get stuck in certain situations.  He may have a Clock Overflow.
+He may loop buying and selling the same stuff over and over.  Believe me when
+I say that these have been addressed.  His loops are greatly reduced.
 
 Continuous Play Mode: (option)
 Upon the death of a borg, he will automatically reroll a random character,

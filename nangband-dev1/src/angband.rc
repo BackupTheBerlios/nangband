@@ -1,5 +1,10 @@
-/* File: angband.rc */
-
+/*
+ * File: angband.rc
+ *
+ * Abstract: Windows' resources file for Angband.
+ *
+ * Licence: GNU GPL version 2, or any later version.
+ */
 ANGBAND MENU
 {
 	POPUP "&File"

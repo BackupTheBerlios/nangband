@@ -1,19 +1,16 @@
-
-/* File: borg1.h */
-/* Purpose: Header file for "borg1.c" -BEN- */
+/*
+ * File: borg1.h
+ *
+ * Abstract: Header file for borg1.c.
+ *
+ * Licence: GNU GPL version 2, or any later version.
+ */
+#ifdef ALLOW_BORG
 
 #ifndef INCLUDED_BORG1_H
 #define INCLUDED_BORG1_H
 
-#include "angband.h"
-
-
-
-#ifdef ALLOW_BORG
-
-
 /* Mega-Hack - indices of the player classes */
-
 #define CLASS_WARRIOR            0
 #define CLASS_MAGE               1
 #define CLASS_PRIEST             2

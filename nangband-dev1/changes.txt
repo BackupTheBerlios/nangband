@@ -1,6 +1,13 @@
 Nangband ChangeLog
 ==================
 
+2002-03-05
+----------
+- Rewrote small chunks of the store code for better displaying. (takkaria)
+- Added bigscreen support for the stores. (takkaria)
+- Tidied code in store.c. (takkaria)
+- Made the '2' and '8' keys move up and down one item when in the stores. (takkaria)
+
 CVS ENTERS PLAYABLE STATE: 2002-03-12
 =====================================
 

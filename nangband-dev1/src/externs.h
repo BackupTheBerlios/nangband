@@ -276,11 +276,11 @@ extern bool test_hit_fire(int chance, int ac, int vis);
 extern bool test_hit_norm(int chance, int ac, int vis);
 extern sint critical_shot(int weight, int plus, int dam);
 extern sint critical_norm(int weight, int plus, int dam);
-extern sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr);
+extern sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr);
 extern void search(void);
 extern void py_pickup(int pickup);
 extern void hit_trap(int y, int x);
-extern void py_attack(int y, int x);
+extern int  py_attack(int y, int x);
 extern void move_player(int dir, int jumping);
 extern void run_step(int dir);
 

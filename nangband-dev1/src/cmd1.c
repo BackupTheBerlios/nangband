@@ -162,7 +162,7 @@ sint critical_norm(int weight, int plus, int dam)
  * Note that most brands and slays are x3, except Slay Animal (x2),
  * Slay Evil (x2), and Kill dragon (x5).
  */
-sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
+sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 {
 	int mult = 10, bmult = 10;
 
@@ -1157,7 +1157,7 @@ void hit_trap(int y, int x)
  *
  * If no "weapon" is available, then "punch" the monster one time.
  */
-void py_attack(int y, int x)
+int py_attack(int y, int x)
 {
 	int num = 0, k, bonus, chance;
 
@@ -1210,8 +1210,7 @@ void py_attack(int y, int x)
 		msg_format("You are too afraid to attack %s!", m_name);
 
 		/* Done */
-/*		return (p_ptr->num_blow);*/
-		return;
+		return (p_ptr->num_blow);
 	}
 
 
@@ -1401,6 +1400,9 @@ void py_attack(int y, int x)
 
 	/* Mega-Hack -- apply earthquake brand */
 	if (do_quake) earthquake(p_ptr->py, p_ptr->px, 10);
+
+	/* Return number of blows taken */
+	return (num);
 }
 
 
@@ -1431,8 +1433,13 @@ void move_player(int dir, int jumping)
 	/* Hack -- attack monsters */
 	if (cave_m_idx[y][x] > 0)
 	{
+		int attacks;
+
 		/* Attack */
-		py_attack(y, x);
+		attacks = py_attack(y, x);
+
+		/* Split blows */
+		p_ptr->energy_use = 100 * attacks / p_ptr->num_blow;
 	}
 
 #ifdef ALLOW_EASY_ALTER

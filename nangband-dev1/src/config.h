@@ -158,13 +158,6 @@
 /* #define VERIFY_SAVEFILE */
 
 
-
-/*
- * OPTION: Hack -- Compile in support for "Borg mode"
- */
-#define ALLOW_BORG
-
-
 /*
  * OPTION: Hack -- Compile in support for "Debug Commands"
  */

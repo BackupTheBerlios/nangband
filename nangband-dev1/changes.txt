@@ -1,14 +1,19 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-07-28
+----------
+- generate_cave() didn't clear the cave_info2 array, causing various weird
+  effects. (pelpel)
+
 2002-07-27
 ----------
 - Added the monster light code, mixing the Z and Tome one (which is based
   on the former), with necessary modifications to make it work with the GRID
   macros. Please note that "if (view_monster_light)" is commented out in
   xtra1.c because it isn't defined yet. I still don't figure out why light
-  updates are slightly out of sync... May be setting PU_UPDATE_LIGHT
-  whenever PU_MONSTERS is set can help, or maybe not... (pelpel)
+  updates are slightly out of sync...  Requesting PU_UPDATE_LIGHT
+  whenever PU_MONSTERS is set might help, or maybe not... (pelpel)
 
 2002-07-23
 ----------

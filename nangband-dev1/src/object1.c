@@ -194,6 +194,7 @@ void flavor_init(void)
 	flavor_assign_random(TV_FOOD);
 	flavor_assign_random(TV_POTION);
 	flavor_assign_random(TV_SCROLL);
+	/* flavor_assign_random(TV_ORB); */
 
 	/* Scrolls (random titles, always white) */
 	for (i = 0; i < MAX_TITLES; i++)
@@ -823,6 +824,18 @@ void object_desc(char *buf, const object_type *o_ptr, int pref, int mode)
 			modstr = flavor_text + flavor_info[k_ptr->flavor].text;
 			if (aware) append_name = TRUE;
 			basenm = (flavor ? "& # Amulet~" : "& Amulet~");
+
+			break;
+		}
+
+		/* Orbs */
+		case TV_ORB:
+		{
+			/* Color the object */
+			/* modstr = flavor_text +
+flavor_info[k_ptr->flavor].text; */
+			if (aware) append_name = TRUE;
+			basenm = (flavor ? "& # Orb~" : "& Orb~");
 
 			break;
 		}

@@ -1,6 +1,11 @@
 Nangband ChangeLog
 ==================
 
+2002-02-29
+----------
+- Fixed the bug with the new resist system timed resists. Many thanks
+  to Fufie on #angband (OPN) for the help! (takkaria)
+
 2002-02-24
 ----------
 - Improved the object recall code to use the new resist code. (takkaria)

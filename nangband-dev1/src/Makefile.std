@@ -1,3 +1,4 @@
+#!/usr/bin/make
 # File: Makefile.std
 # Pupose: A simple makefile designed for *nix systems
 #

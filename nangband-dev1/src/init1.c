@@ -412,7 +412,8 @@ static cptr k_info_flags2[] =
 	"LITE4",
 	"NEEDS_FUEL",
 	"XXX1",
-	"XXX2",
+	"NO_DISENCHANT",
+	"NO_BLIND",
 	"XXX3",
 	"XXX4",
 	"XXX5",
@@ -421,10 +422,9 @@ static cptr k_info_flags2[] =
 	"XXX8",
 	"XXX9",
 	"XXX10",
-	"RES_FEAR",
-	"RES_LITE",
-	"RES_DARK",
-	"RES_BLIND",
+	"XXX11",
+	"XXX12",
+	"XXX13",
 	"RES_CONFU",
 	"RES_SOUND",
 	"RES_SHARD",
@@ -2315,6 +2315,10 @@ static errr grab_one_racial_flag(player_race *pr_ptr, cptr what)
 		return (0);
 
 	if (grab_one_flag(&pr_ptr->flags3, k_info_flags3, what) == 0)
+		return (0);
+
+	/* Grab the resists stuff */
+	if (grab_one_resist(pr_ptr->resists, what) == 0)
 		return (0);
 
 	/* Oops */

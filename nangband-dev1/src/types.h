@@ -702,6 +702,8 @@ struct player_race
 
 	s16b hist;			/* Starting history index */
 
+	byte resists[RES_MAX];	/* Racial resists */
+
 	u32b flags1;		/* Racial Flags, set 1 */
 	u32b flags2;		/* Racial Flags, set 2 */
 	u32b flags3;		/* Racial Flags, set 3 */

@@ -1341,11 +1341,23 @@ function activate_object(object)
 			fire_ball(GF_COLD, dir, 75, 2)
 			alter_timed_res(RES_COLD, randint(20) + 20)
 			object.timeout = rand_int(50) + 50
-		elseif object.sval == SV_RING_LIGHTNING then
-			msg_print("You feel resistant to electricity.")
-			fire_ball(GF_ELEC, dir, 85, 2)
-			alter_timed_res(RES_ELEC, randint(20) + 20)
+-- 		elseif object.sval == SV_RING_LIGHTNING then
+-- 			msg_print("You feel resistant to electricity.")
+-- 			fire_ball(GF_ELEC, dir, 85, 2)
+-- 			alter_timed_res(RES_ELEC, randint(20) + 20)
+-- 			object.timeout = rand_int(50) + 50
+		elseif object.sval == SV_RING_TELEPORTATION then
+			msg_format("Your %s twists space around you...", o_name)
+			teleport_player(100)
 			object.timeout = rand_int(50) + 50
+		elseif object.sval == SV_RING_MASTERY then
+			msg_format("Your %s glows brilliant white.", o_name)
+			dispel_monsters(100)
+			object.timeout = rand_int(1000) + 1000
+		elseif object.sval == SV_RING_METEORS then
+			msg_format("Your %s releases a swarm of meteors.", o_name)
+			fire_meteor(GF_METEOR, dir, 30, 2, 2, 1 + randint(7))
+			object.timeout = rand_int(15) + 15
 		end
 
 		-- Window stuff

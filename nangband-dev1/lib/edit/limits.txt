@@ -51,7 +51,7 @@ M:L:303
 M:3:1
 
 # Maximum number of spells
-M:S:9
+M:S:18
 
 # Maximum number of objects on the level
 M:O:512

@@ -17,44 +17,82 @@
 # Required version stamp.
 V:2.9.6
 
-### Define the spells
-## Book One
+# Book One - Magic for Beginners
+
 # Magic Missile
 N:0:Magic Missile
-I:1:1:MAGIC_MISSILE
+I:1:0:MAGIC_MISSILE
 D:A magic missile.
 
 # Detect Monsters
 N:1:Detect Monsters
-I:1:2:DETECT_MONSTERS
+I:1:1:DETECT_MONSTERS
 D:This spell detects monsters.
 
 # Phase Door
 N:2:Phase Door
-I:1:3:PHASE_DOOR
+I:1:2:PHASE_DOOR
 D:This spell teleports you a short distance.
 
 # Light Area
 N:3:Light Area
-I:1:4:LIGHT_AREA
+I:1:3:LIGHT_AREA
 D:This spell lights your surroundings.
 
 # Treasure Detection
 N:4:Treasure Detection
-I:1:5:TREASURE_DETECTION
+I:1:4:TREASURE_DETECTION
 
 # Cure Light Wounds
 N:5:Cure Light Wounds
-I:1:6:CURE_LIGHT_WOUNDS
+I:1:5:CURE_LIGHT_WOUNDS
 
 # Object Detection
 N:6:Object Detection
-I:1:7:OBJECT_DETECTION
+I:1:6:OBJECT_DETECTION
 
 # Find Traps/Doors
 N:7:Find Traps/Doors
-I:1:8:FIND_TRAPS_DOORS
+I:1:7:FIND_TRAPS_DOORS
 
 # Stinking Cloud
 N:8:Stinking Cloud
-I:1:9:STINKING_CLOUD
+I:1:8:STINKING_CLOUD
+
+# Book Two - Conjurings and Tricks
+
+# Confuse Monster
+N:9:Confuse Monster
+I:1:9:CONFUSE_MONSTER
+
+# Lightning Bolt
+N:10:Lightning Bolt
+I:1:10:LIGHTNING_BOLT
+
+# Trap/Door Destruction
+N:11:Trap/Door Destruction
+I:1:11:TRAP_DOOR_DESTRUCTION
+
+# Sleep I
+N:12:Sleep I
+I:1:12:SLEEP_I
+
+# Cure Poison
+N:13:Cure Poison
+I:1:13:CURE_POISON
+
+# Teleport Self
+N:14:Teleport Self
+I:1:13:TELEPORT_SELF
+
+# Spear of Light
+N:15:Spear of Light
+I:1:15:SPEAR_OF_LIGHT
+
+# Frost Bolt
+N:16:Frost Bolt
+I:1:16:FROST_BOLT
+
+# Stone to Mud
+N:17:Stone to Mud
+I:1:17:TURN_STONE_TO_MUD

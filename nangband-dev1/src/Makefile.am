@@ -33,7 +33,6 @@ nangband_SOURCES = \
   z-virt.h main.h \
   script.c script.h \
   l-monst.c l-object.c l-player.c l-random.c l-ui.c l-misc.c l-spell.c \
-  use-obj.c \
   borg1.c borg2.c borg3.c borg4.c borg5.c borg6.c borg7.c borg8.c \
   borg9.c
 

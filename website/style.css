@@ -17,7 +17,7 @@ input.box
 	background: #ffffee;
 	padding-bottom: 1px;
 	padding-top: 1px;
-	border : thin solid #CCCC66;
+	border: 2px solid #99CCCC;
 }
 
 input.button
@@ -29,6 +29,11 @@ input.button
 	background: #ffffee;
 	text-decoration: none;
 	color: #000000;
+}
+
+em
+{
+	background-color : #CCFFFF;
 }
 
 h1
@@ -46,7 +51,7 @@ a
 
 a:hover
 {
-	font-style : italic;
+	text-decoration: underline;
 }
 
 hr

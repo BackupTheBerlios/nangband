@@ -2490,11 +2490,11 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 						text_out("but also increases");
 						n = 0;
 					}
-					if (n == pluses - 1) text_out("and ");
+					if (n == pluses - 1) text_out("and");
 				}
 				else
 				{
-					if (n == minuses - 1) text_out("and ");
+					if (n == minuses - 1) text_out("and");
 				}
 			}
 		}

@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ahml>
+<title>Angband coding style</title>
+<body>
+<h1>Angband coding style</h1>
+<h3 align="center">written by Robert Ruehlmann, Ben Harrison, and Gwidon S. Naskrent</h3>
+
+<p>There are lots of things that are commonly considered good style for Angband
+code.  The Vanilla Angband source code is the general guideline.</p>
+
+<p>Here are some of the "rules":</p>
+<list compact="yes">
+<item>Don't use floating point calculations.</item>
+<item>Don't break savefile compatibility (if not absolutely necessary).</item>
+<item>No C++ code. That also means no '//' comments.</item>
+<item>Put system dependent code between #ifdef xyz ... #endif /* xyz */ .</item>
+<item>No "magic numbers".  Use #defines.
+	The #defines should be in defines.h rather than the source file,
+	unless they're very local (such as dungeon generation parameters).</item>
+</list>
+
+<p>And some code-style guidelines:</p>
+<list>
+<item>Comments, comments, comments. Multi-line comments should look like:<br />
+<pre>/*
+ * A multi-line
+ * comment.
+ */
+</pre>
+instead of:<br />
+<pre>/* A multi-line
+ * comment */
+</pre></item>
+<item>Indentation with tabs.  But generally avoid getting lines over 80 characters.</item>
+<item>Put curly braces ('{', '}') on an extra line with the same indentation
+level as the previous line.  Example:<br />
+<pre>if (value == 0)
+{
+    do_something();
+}
+</pre></item>
+<item>Put empty lines between code-blocks. Example:<br />
+<pre>/* Do something */
+do_something();
+
+/* Do something else */
+do_something_else();
+</pre></item>
+<item>Spaces around the mathematical, comparison, and assignment operators ('+',
+	'-', '*', '/', '=', '!=', '==', '&gt;', ...).</item>
+<item>Spaces between C-identifiers like 'if', 'while', 'for', and 'return' and
+	the opening brackets ('if (foo)', 'while (bar)', ...).</item>
+<item>No spaces between function names and brackets and between brackets and
+	function arguments (function(1, 2) instead of function ( 1, 2 )).</item>
+<item>If the precedence of operations is ambiguous then put brackets around
+	them.  Also try to insert parentheses whenever necessary for
+	readability, eg. around (foo &amp; RF3_SOME_DEFINE). There is
+	usually no ambiguity and no macro resolution, but this is an aesthetic
+	detail.</item>
+<item>If a function takes no arguments then it should be declared with a void
+	argument list. Example: int foo(void) instead of int foo().</item>
+<item>Function declaration and definition should look the same.</item>
+<item>Don't assume that functions declared without a return type return int.
+	Specify the type explicitly. Example: int foo(void) instead of foo(void).</item>
+</list>
+<p><link action="back">Back</link></p>
+</body>
+</ahml>
+

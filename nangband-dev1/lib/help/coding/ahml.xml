@@ -1,0 +1,31 @@
+<?xml version="1.0" standalone="yes" ?>
+<ahml>
+<TITLE>The AHML help format</TITLE>
+<BODY>
+<HEAD align="centre">AHML help format</HEAD>
+<p align="centre"><style colour="">written by Antony Sidwell</style></p>
+
+<p>The style tag currently only allows you to specify the colour of the enclosed text, using the colour (or color) attribute.  The colours allowed are as follows:</p>
+<list compact="yes">
+<item><style colour="dark">dark</style></item>
+<item><style colour="white">white</style></item>
+<item><style colour="slate">slate</style></item>
+<item><style colour="orange">orange</style></item>
+<item><style colour="red">red</style></item>
+<item><style colour="green">green</style></item>
+<item><style colour="blue">blue</style></item>
+<item><style colour="umber">umber</style></item>
+<item><style colour="violet">violet</style></item>
+<item><style colour="yellow">yellow</style></item>
+<item><style colour="lightdark">lightdark</style></item>
+<item><style colour="lightwhite">lightwhite</style></item>
+<item><style colour="lightred">lightred</style></item>
+<item><style colour="lightgreen">lightgreen</style></item>
+<item><style colour="lightblue">lightblue</style></item>
+<item><style colour="lightumber">lightumber</style></item>
+</list>
+
+<p><link action="back">Back</link></p>  
+</BODY>
+</ahml>
+

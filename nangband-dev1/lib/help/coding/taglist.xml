@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ahml>
+<title>The AHML help format</title>
+<body>
+<list compact="yes">
+<item>ahml</item>
+<item>body</item>
+<item>title</item>
+<item>p</item>
+<item>h1</item>
+<item>h2</item>
+<item>h3</item>
+<item>colour / color</item>
+<item>table</item>
+<item>row</item>
+<item>cell</item>
+<item>list</item>
+<item>item</item>
+<item>link</item>
+<item>pre</item>
+<item>em</item>
+<item>strong</item>
+<item>underline</item>
+<item>br</item>
+<item>hr</item>
+<item>err</item>
+</list>
+
+<p><link action="back">Back</link></p>  
+</body>
+</ahml>
+

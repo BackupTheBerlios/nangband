@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="yes" ?>
+<ahml>
+<title>The Angband Copyright Notice (or Licence)</title>
+<body>
+<h1>The Angband Licence</h1>
+
+<p>Unless stated otherwise, all code is copyright (c) whoever wrote it, from 1984 onwards, and should not be copied or re-used without reference to the following licence:</p>
+
+<p lmargin="6" rmargin="6"><strong>This software may be copied and distributed for educational, research, and not for profit purposes provided that this copyright and statement are included in all such copies.  Other copyrights may also apply.</strong></p>
+
+<p>All changes made by Ben Harrison and Robert Ruehlmann, and many other current coders, are also available under the GNU GENERAL PUBLIC LICENCE.  Note that this doesn't influence the current distribution, since parts of the source are still only available under the old Moria/Angband licence.  Until all parts of Angband are distributed under the GPL the only valid licence remains the original Moria/Angband licence.</p>
+
+<p>Thank you.</p>
+
+<p><link action="back">Back</link></p>
+
+</body>
+</ahml>
+
+

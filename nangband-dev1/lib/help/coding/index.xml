@@ -1,0 +1,25 @@
+<?xml version="1.0" standalone="yes" ?>
+<ahml>
+<title>Angband Online Help System: Coding for Angband</title>
+<body>
+  <h1 align="left">Introduction to coding for Angband</h1>
+  <p>This is a collection of useful documents for people wishing to start coding for Angband, either by diving into the source proper, or by coding new XML-style help files.</p>
+  
+<h2>General Angband coding</h2>
+<p>
+<link file="coding/coding_style.xml">Angband Coding Style</link><br />
+</p>
+<h2>Coding (or compiling) the help system</h2>
+<p>
+<link file="coding/compileoptions.xml">Compile-time options</link><br />
+</p>
+<h2>Writing XML help files</h2>   
+<p>
+<link file="coding/ahml.xml">The ahml</link><br />
+<link file="coding/taglist.xml">Tags we use</link><br />
+</p>
+<p>
+<link file="index.xml">Back to Main Menu</link>
+  </p>
+</body>
+</ahml>

@@ -1,0 +1,8 @@
+<?xml version="1.0" standalone="yes" ?>
+<ahml>
+<title>Angband Online Help System: File not found</title>
+<body>
+  <p>Sorry, but the help system was unable to find (or possibly open) the file '<err />'.</p>
+  <p><link action="back">Back</link></p>
+</body>
+</ahml>

@@ -1,0 +1,31 @@
+<?xml version="1.0" standalone="yes" ?>
+<xmlband type="help">
+<TITLE>The xmlband help format</TITLE>
+<BODY>
+<HEAD align="centre">XMLBand help format</HEAD>
+<p align="centre"><style colour="">written by Antony Sidwell</style></p>
+
+<p>The style tag currently only allows you to specify the colour of the enclosed text, using the colour (or color) attribute.  The colours allowed are as follows:</p>
+<ul compact="yes">
+<li><style colour="dark">dark</style></li>
+<li><style colour="white">white</style></li>
+<li><style colour="slate">slate</style></li>
+<li><style colour="orange">orange</style></li>
+<li><style colour="red">red</style></li>
+<li><style colour="green">green</style></li>
+<li><style colour="blue">blue</style></li>
+<li><style colour="umber">umber</style></li>
+<li><style colour="violet">violet</style></li>
+<li><style colour="yellow">yellow</style></li>
+<li><style colour="lightdark">lightdark</style></li>
+<li><style colour="lightwhite">lightwhite</style></li>
+<li><style colour="lightred">lightred</style></li>
+<li><style colour="lightgreen">lightgreen</style></li>
+<li><style colour="lightblue">lightblue</style></li>
+<li><style colour="lightumber">lightumber</style></li>
+</ul>
+
+<p><link action="back">Back</link></p>  
+</BODY>
+</xmlband>
+

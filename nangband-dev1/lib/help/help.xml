@@ -1,0 +1,24 @@
+<?xml version="1.0" standalone="yes" ?>
+<ahml>
+<title>Angband Online Help System: Introduction</title>
+<body>                      
+  <h1>Using the help system</h1>
+  <p>The help system uses a hypertext system (like web pages) to navigate through the different files and topics.</p>
+  <p>Links are normally displayed <colour name="lightwhite">like this</colour>, in a light grey colour (or gray color, depending), unless they are currently selected, in which case they look <colour name="lightgreen">like this</colour> (green).</p> 
+  <p>When you reach the top or bottom of a page, it will stop scrolling.  When the last link on a page is selected and you try to move on a link, it will "loop" up to the first, and vice-versa.</p>    
+  <h2>Keys</h2>
+  <p>The normal keys you will need to know are:</p>
+  <list compact="yes">
+  <item>Escape (ESC) allows you to leave help at any time.</item>
+  <item>Question mark (?) will return you to the previous help file.</item>
+  <item>Dot (.) moves you down a line.</item>
+  <item>Greater than (&gt;) moves you down a page.</item>  
+  <item>Semi-colon (;) moves you up a line.</item>
+  <item>Colon (:) moves you up a page.</item>
+  <item>Return activates the currently selected link.</item>
+  <item>Comma (,) selects the next link.</item>
+  <item>l selects the previous link.</item>
+  </list>
+  <p><link action="back">Back to main menu</link></p>  
+</body>
+</ahml>

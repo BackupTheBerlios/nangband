@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<ahml>
+<title>Angband Online Help System: An Example Table</title>
+<body>                      
+  <h1>An example table</h1>
+  <table cols="2" rules="cols" width="98%" align="centre">
+  <row>
+  <cell width="50%"> 
+    <table cols="2" rules="rows" width="85%" align="centre">
+    <row>
+    <cell width="60%"><link file="One">Text number one</link></cell>
+    <cell>And so is this..</cell>
+    </row>
+    <row>
+    <cell>
+    <list type='1'>
+    <item>This is a list inside the secondary table</item>
+    <item>It has a number of <link file="Two">separate</link>, related points to make</item>
+    <item>Which it makes in this form</item>
+    </list>
+    </cell>
+    <cell>Of which<hr />this the the corresponding second cell.</cell>
+    </row>   
+    <row>
+    <cell>And this is a third row of text</cell>
+    <cell>Of which this thex the second cell which goes wi that.</cell>
+    </row>
+    <row>
+    <cell>And this is a <link file="Three">fourth</link> row of text</cell>
+    <cell>Of which this the the corresponding second cell.</cell>
+    </row>
+    </table>
+  </cell>
+  <cell>Hello!, <link file="Four">this is</link> a table cell.  Its <link file="Five">has</link> more text in now so that we can see where the two cells meet.  And this is the corresponding larger cell on the <link file="Six">same</link> horizontal level as the other.</cell>
+  </row>
+  </table>
+  <p><link file="index.xml">Back to main menu</link></p>
+</body>
+</ahml>

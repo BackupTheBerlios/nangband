@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<ahml>
+<title>Angband Online Help System: An Example List</title>
+<body>                      
+  <h1>An example list</h1>
+  <list type="i">
+  <item>This is the first point on the list.</item>
+  <item>This is point 2.</item>
+  <item>Point three is rather complicated, and requires a sub-list:
+    <list compact="yes">
+    <item>ABCDEF</item>                                  
+    <item>GHIJKL</item>
+    <item>MNOPQR</item>
+    <item>STUVWX</item>
+    </list>
+  </item> 
+  <item>This is point 4.</item>
+  </list>
+  <p><link file="index.xml">Back to main menu</link></p>
+</body>
+</ahml>

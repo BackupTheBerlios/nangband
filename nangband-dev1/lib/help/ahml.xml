@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="ahmlt.xsl"?>
+<ahml>
+<title>The Angband XML Help System</title>
+<body>
+<h1>The AHML file format</h1>
+<p>AHML is very similar to HTML 3.2 or thereabouts.  It allows you to specify  various formatting commands for your text, and link files to other points in the file, or other files completely.  The basic formatting commands are for paragraphs and titles, but there are also lists and tables, all described by the <link file="#tags">tags listed below</link>.  I will assume you are familiar with the basics of HTML, such as tags being enclosed in angle brackets (<![CDATA[< and >]]>).  As AHML is an XML document format, a few extra rules need to be remembered - specifically that every tag opened must also be closed, even if it is an empty tag, and that tags must be nested correctly.  These will both be explained in <link file="#nesting">more detail later</link>.</p>
+<p>The best way to create a basic AHML file is to start with some plain text that you have typed, and then go and mark it up with tags to mark out where the paragraphs are, what are headings, and how important those headings are, etc.  The exceptions are where you use <link file="#tables">tables</link>, which are very difficult to mark up in such a way, and need to be planned beforehand.</p>
+<p>Once you have your markup in place, look at an existing AHML file to get the <link file="#outline">headings </link>right (at least for the first few you write).  XML is intolerant of any mistakes, however small, in tags and descriptions, so it is worth taking care to get them right.  If you can get hold of one, an XML well-formedness checker is a good way of finding tags you've not closed by accident, or similar mistakes.  If you have access to Internet Explorer 5.5 or later, or Netscape 6, you should be able to view your files in those providing you have a copy of the ahmlt.xsl stylesheet.  This will also show up any problems before you get them into Angband.</p>
+<p>Alternatively, you can work with Angband from the start, and check if your pages load into the help system without problems.  This will certainly show up most problems, but you may not get as much useful feedback on exactly what is wrong with the file.</p>
+<link id="outline" />
+<h2>The outline of an AHML file</h2>
+<p>This is the basic outline of an AHML file, not counting any of the content:</p>
+<p><pre><![CDATA[<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="ahmlt.xsl"?>
+<ahml>
+<title></title>
+<body>
+
+</body>
+</ahml>]]>
+</pre></p>
+<p>Note that the tags are all in lower case - this is important (another side-effect of using XML).  The &lt;?xml?&gt; tag at the top is vital, as it tells any application that sees it what to expect from the rest of the file.  The next line specifies the stylesheet to use to display it.  This allows web browsers to show it as if it were HTML, and conversion programs (like xslt) to produce the correct output.</p>
+<p>The ahml tag has to enclose everything to do with the file proper, rather than generic XML bits.  The title tag is used to provide a file title for the Help display (or the HTML page) and the body tag encloses everything else - the main contents of the file.</p>
+<link id="tags" />
+<h2>AHML Tags</h2>
+<p>There are a fairly limited number of tags in AHML - most of them mirror an HTML tag you may already be familiar with.</p>
+<p><strong>&lt;ahml&gt;  &lt;/ahml&gt;</strong><br /></p>
+<p><strong>&lt;title&gt;  &lt;/title&gt;</strong><br /></p>
+<p><strong>&lt;body&gt;  &lt;/body&gt;</strong><br /></p>    
+<p><strong>&lt;p&gt;  &lt;/p&gt;</strong><br /></p>
+<p><strong>&lt;h1&gt;  &lt;/h1&gt;</strong>,<strong>&lt;h2&gt;  &lt;/h2&gt;</strong>, <strong>&lt;h3&gt;  &lt;/h3&gt;</strong><br />
+</p>
+</body>
+</ahml>

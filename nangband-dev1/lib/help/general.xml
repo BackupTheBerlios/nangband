@@ -1,0 +1,34 @@
+<?xml version="1.0" standalone="yes" ?>
+<ahml>
+<title>Angband Online Help System: General Information</title>
+<body>
+<h1>General Information</h1>
+<p>
+Angband is basically a complex single player dungeon simulation.  A player
+creates a character, choosing from a variety of sexes, races and classes,
+and then "runs" that character over a period of days, weeks, even months.
+</p><p>                         <link id="fred3" />
+The player will begin his adventure on the town level where he may acquire
+supplies, weapons, armor, and magical devices by bartering with various shop
+owners.  Then the player can descend into the Pits of Angband, where he will
+explore the many levels of the dungeon, gaining experience by killing fierce
+creatures, collecting powerful objects and valuable treasure, and returning
+to town occasionally to barter for new supplies.  Eventually, as the player
+grows more experienced, he may attempt to win the game by defeating Morgoth,
+the Lord of Darkness, who resides far below the surface.
+</p><p>
+Note that Angband is a very complex game, and it may be difficult to grasp everything at first, especially if you have never played a "roguelike" game
+before.  You should probably browse through all of the "online help files", especially the <link file="demo.xml">"quick demonstration"</link>, before beginning any serious adventuring...
+</p>                                  <link id="fred" />
+<p>You can email compliments, complaints, suggestions, bug reports, and patches
+to me ("rr9@angband.org"), and you can post interesting experiences and basic questions to the newsgroup ("rec.games.roguelike.angband").</p>
+
+<p>You may freely distribute the game, and its source, though you are bound
+not only by the existing <link file="copyright.xml">copyright notice</link> from 1984, but also whatever restrictions may be present on various other pieces of the code, including the fact that any source written by me is technically automatically placed under copyright and may thus not be used for commercial purposes.  Remember to read the <link file="version.xml">"Current Version"</link> help file for some more copyright information.</p>
+
+<p>The basic help files supplied with this game are more or less up to date, but when in doubt, you should ask the newsgroup for confirmation.</p>
+
+<p>Remember to tell all your friends about how much you like Angband...</p>
+<p><link file="index.xml">Back to main menu</link></p>
+</body>
+</ahml>

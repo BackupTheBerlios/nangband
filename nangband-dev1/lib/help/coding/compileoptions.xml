@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="yes" ?>
+<ahml>
+<title>The Angband Copyright Notice (or Licence)</title>
+<body>
+<h1>Compile-time options</h1>
+<h2>Keys</h2>
+<p>All of the keys are fully definable at compile-time.  They are named things like CHAR_LINK_UP in the header file.</p>
+<h2>#define LINK_DEFAULTS</h2>
+<p>This enables use of the default="true" attribute in link tags, otherwise such tags are ignored</p>
+<h2>#define LINKS_ON_PAGE</h2>
+<p>This enables the mode where you can only select and move to links that are displayed on the screen.  Otherwise, links may be highlighted anywhere in the file, and return will activate them whether you can see them or not. eg. if the only link was at the bottom of the page, with this option on you caould only activate it when you reached the bottom of the page, without it, you could activate it at any time.</p>
+<h2>#define LINKS_EXTRA</h2>
+<p>This enables the extra help from the title attribute in link tags.  The title is displayed at the bottom of the screen, along with a useful bit of help text, eg. Press return to read 'title of link' </p><p>The help text is defined as a normal format string in the <br /><colour name="green">static char help_format[];</colour><br />at the top of the source file.</p>
+<h2>#define HELP_TIMING</h2>
+<p>If defined, this will make a timing in clock() ticks appear at the top right of the help screen, saying how long it took to load and parse the file.  Only of actual use for debugging, code improvements, etc.  but left in for fun.</p>
+<h2>#define BULP_TYPE "m" or "f"</h2>
+<p>This determines whether or not the files are read into memory all at once, and parsed from there ("m") or parsed directly from file ("f").  In fact, this can be different for different files if you need it to be, but I don't see why you would.  Generally, "m" is marginally quicker than "f", but I doubt you'd notice on Linux or Windows compiles.</p>
+<p><link file="coding/index.xml">Back To Coding</link></p>
+</body>
+</ahml>

@@ -1,0 +1,9 @@
+<?xml version="1.0" standalone="yes" ?>
+<ahml>
+<title>Angband Online Help System: File not parsed correctly</title>
+<body>
+  <p>Sorry, but the help system was unable to parse that file.  The most likely reason is that it is badly formed, ie. a tag was opened but not closed or similar.  The error message below may help you understand and/or track down the problem</p>    
+  <p>Parse error: <err /></p>
+  <p><link action="back">Back</link></p>
+</body>
+</ahml>

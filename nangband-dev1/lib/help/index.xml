@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<ahml>
+<title>Angband Online Help System: Main Menu</title>
+<body>
+  <h1>Welcome to the Angband online help system</h1>
+  <p>Please choose one of the following online help sections:</p>
+  <table cols='2'>
+  <row>
+  <cell>
+  <list type='1' compact="yes">
+  <item><link title="How to use help" key='1' file="help.xml">Help on using Help</link></item>
+  <item><link default="yes" key='2' file="general.xml">General Information</link></item>
+  <item><link key='3' file="version.xml">Version Information</link></item>
+  <item><link key='4' file="demo.xml">A Quick Demonstration</link><br /></item>
+  <item><link key='5' file="coding/index.xml">Coding for Angband</link></item>
+  <item><link key='6' file="list.xml">Lists</link></item>
+  <item><link key='7' file="table.xml">Tables</link><br /></item>  
+  <item><link key='8' file="ahml.xml#outline">AHML</link><br /></item>
+  <item><link key='9' action="exit">Leave Online Help</link></item>
+  </list>   
+  </cell>
+  <cell>
+<pre>_____                     _____  
+|   |\                   /|   |
+|   | \                 / |   |
+|   |  \_______________/  |   |
+|   |          |          |   |
+|   |          |          |   |
+|   |          |          |   |
+|   |          |          |   |
+|   |          |          |   |
+|   |          |          |   |
+|___|__________|__________|___|
+
+          Rubbish Art.
+Was going to be <colour name="lightred">"The Gates of Help"</colour>
+         ASCII art, eh?</pre>                      
+  </cell>
+  </row>
+  </table>
+</body>
+</ahml>

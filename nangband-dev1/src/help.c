@@ -2418,22 +2418,37 @@ char *make_list_point(char *buffer, list_blk *list_data)
 /* ------------------------------------------------------------ ajps ---
  * Adds a horizontal rule to the text
  * --------------------------------------------------------------------- */
-void add_hrule(char **display, char *tag)
+void add_hrule(char **display, char *tag, int width)
 {
 	char *ptr;
 
-	/* Newline */
-	(*display)[0] = '\n';
+	/* We'll put the data into this first */
+	block_style header;
+
+	/* percent */
+	header.width = width;
+
+	/* default setting */
+	header.align = ALIGN_LEFT;
+
+	/* left margin */
+	header.lmargin = 0;
+
+	/* right margin */
+	header.rmargin = 0;
+
+	/* Write the header to the display block */
+	write_textblock_header(display, &header);
 
 	/* Actual redraw codes, defaults */
-	(*display)[1] = REDRAW_CODE_HRULE;
-	(*display)[2] = ALIGN_CENTRE;
+	(*display)[0] = REDRAW_CODE_HRULE;
+	(*display)[1] = ALIGN_CENTRE;
 
 	/* Extracts a vidth if there is one - zero otherwise */
-	(*display)[3] = get_percentage_width(tag);
+	(*display)[2] = get_percentage_width(tag);
 
 	/* Set to the deafult if there was nothing specified. */
-	if ((*display)[3] == 0) (*display)[3] = 100;
+	if ((*display)[2] == 0) (*display)[2] = 100;
 
 	/* Check if an alignment was specified. */
 	ptr = xmlbulp_check_attr(tag, "align");
@@ -2441,14 +2456,10 @@ void add_hrule(char **display, char *tag)
 	if (ptr != NULL)
 	{
 		/* Extract the alignment code from the text */
-		(*display)[2] = set_alignment(ptr);
+		(*display)[1] = set_alignment(ptr);
 	}
 
-	(*display) += 4;
-
-	/* Another newline */
-	(*display)[0] = '\n';
-	(*display)++;
+	(*display) += 3;
 }
 
 /* ------------------------------------------------------------ ajps ---
@@ -3736,7 +3747,8 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						if (bulp_stricmp(buffer, "hr") == 0)
 						{
 							/* Add horizontal rule */
-							add_hrule(display, buffer);
+							add_hrule(display, buffer, 100);
+
 							break;
 						}
 
@@ -3787,7 +3799,12 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						if (bulp_stricmp(buffer, "hr") == 0)
 						{
 							/* Add horizontal rule */
-							add_hrule(display, buffer);
+							add_hrule(display, buffer, 100);
+
+							/* Mark end of block */
+							(*display)[0] = REDRAW_CODE_BLOCKEND;
+							(*display)++;
+
 							break;
 						}
 
@@ -3870,6 +3887,15 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 								/* Stop reading things in leterally */
 								prefab = FALSE;
 							}
+							break;
+						}
+
+						if (bulp_stricmp(buffer, "hr") == 0)
+						{
+							/* Mark end of block */
+							(*display)[0] = REDRAW_CODE_BLOCKEND;
+							(*display)++;
+
 							break;
 						}
 
@@ -5280,6 +5306,9 @@ bool load_helpfile(char *filename, helpfile_blk *help_file, int width, history_b
 	{
 		/* The information collecting failed - free memory */
 		free_file_memory(help_file);
+
+		/* Build a path to the notparsed error file */                 
+		path_build(filename, 1024, ANGBAND_DIR_HELP, "err/notparsed.xml");
 
 		/* And return an error */
 		return (FALSE);

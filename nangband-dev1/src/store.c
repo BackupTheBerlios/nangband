@@ -1409,11 +1409,13 @@ static void display_inventory(void)
 	/* Display the next 12 items */
 	for (k = 0; k < 12; k++)
 	{
+		char hac[5656];
+
 		/* Stop when we run out of items */
 		if (display_position + k >= st_ptr->stock_num) break;
 
 		/* Display that line */
-		display_entry(display_position + k, (display_position % 12) + 6 + k);
+		display_entry(display_position + k, 6 + k - display_position);
 	}
 
 	/* Erase the extra lines and the "more" prompt */

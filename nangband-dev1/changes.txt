@@ -1,6 +1,11 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-06-16
+----------
+- Fixed a compiler warning and added various files to ".cvsignore"s.
+  (takkaria)
+
 2002-06-12
 ----------
 - Merged the experimental branch into the trunk. (takkaria)

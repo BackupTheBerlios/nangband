@@ -1,10 +1,15 @@
-/* File: borg2.c */
-/* Purpose: Low level dungeon mapping skills -BEN- */
-#include "angband.h"
-
-
+/*
+ * File: borg2.c
+ *
+ * Abstract: Low level dungeon mapping skills for the Borg.
+ *
+ * Authors: Ben Harrison, APWhite.
+ *
+ * Licences: GNU GPL version 2 or any later version.
+ */
 #ifdef ALLOW_BORG
 
+#include "angband.h"
 #include "borg1.h"
 #include "borg2.h"
 
@@ -1199,9 +1204,7 @@ void borg_init_2(void)
 
 #else
 
-#ifdef MACINTOSH
 static int HACK = 0;
-#endif
 
 #endif
 

@@ -4986,7 +4986,7 @@ char *help_path_build(char *buffer, const char *file, const char *lastfile, hist
 	{
 		char *ptr = NULL;
 		char *temp_path = NULL;
-		char *file_start = NULL;
+		const char *file_start = NULL;
 
 		/* We take a copy so we can chop it around */
 		temp_path = (char *) string_make(lastfile);

@@ -129,11 +129,6 @@ static cptr strtable__content[MAX_SIZE_STRTABLE];
 static byte strtable__refcount[MAX_SIZE_STRTABLE];
 
 /*
- * The next available index in strtable__content.
- */
-static u32b strtable__next = 1;
-
-/*
  * The number of items in the table.
  */
 static u32b strtable__num = 0;
@@ -141,25 +136,21 @@ static u32b strtable__num = 0;
 
 /*
  * Find the first free index in strtable__content[].
- *
- * Return the old strtable__next.
+ * Return a refrence to it, 0 if one can't be found.
  */
 static u32b strtable_locate_first_free(void)
 {
-	int old_next = strtable__next;
 	int i;
 
 	for (i = 1; i < MAX_SIZE_STRTABLE; i++)
 	{
 		if (!strtable__refcount[i])
 		{
-			strtable__next = i;
-			return (old_next);
+			return (i);
 		}
 	}
 
-	strtable__next = 0;
-	return (old_next);
+	return (0);
 }
 
 /*
@@ -186,6 +177,7 @@ cptr strtable_content(u32b index)
 u32b strtable_add(cptr text)
 {
 	int i;
+	int free = 0;
 
 	/* First try and find an entry which is the same as "text" */
 	for (i = 1; i < strtable__num; i++)
@@ -203,22 +195,25 @@ u32b strtable_add(cptr text)
 	}
 
 	/* Find the first free string */
-	(void)strtable_locate_first_free();
+	free = strtable_locate_first_free();
+
+	/* Check that we found a free space */
+	if (free == 0) return (0);
 
 	/* Ensure the next available space really is available */
-	if (strtable__refcount[strtable__next]) return (0);
+	if (strtable__refcount[free]) return (0);
 
 	/* We are referencing this */
-	strtable__refcount[strtable__next]++;
+	strtable__refcount[free]++;
 
 	/* Create a stable memory location */
-	strtable__content[strtable__next] = string_make(text);
+	strtable__content[free] = string_make(text);
 
 	/* One more */
 	strtable__num++;
 
-	/* Find the next available space after this */
-	return (strtable__next);
+	/* Return the index to this string */
+	return (free);
 }
 
 /*

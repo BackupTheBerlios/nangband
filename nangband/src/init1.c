@@ -1717,18 +1717,19 @@ errr parse_e_info(char *buf, header *head)
 	/* Process 'W' for "More Info" (one line only) */
 	else if (buf[0] == 'W')
 	{
-		int level, rarity, pad2;
+		int level, rarity, pad2, rating;
 		long cost;
 
 		/* There better be a current e_ptr */
 		if (!e_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
 
 		/* Scan for the values */
-		if (4 != sscanf(buf+2, "%d:%d:%d:%ld",
-			            &level, &rarity, &pad2, &cost)) return (PARSE_ERROR_GENERIC);
+		if (5 != sscanf(buf+2, "%d:%d:%d:%ld:%d",
+			            &level, &rarity, &pad2, &cost, &rating)) return (PARSE_ERROR_GENERIC);
 
 		/* Save the values */
 		e_ptr->level = level;
+		e_ptr->rating = rating;
 		e_ptr->rarity = rarity;
 		/* e_ptr->weight = wgt; */
 		e_ptr->cost = cost;
@@ -1737,17 +1738,16 @@ errr parse_e_info(char *buf, header *head)
 	/* Process 'X' for "Xtra" (one line only) */
 	else if (buf[0] == 'X')
 	{
-		int rating, xtra;
+		int xtra;
 
 		/* There better be a current e_ptr */
 		if (!e_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
 
 		/* Scan for the values */
-		if (2 != sscanf(buf+2, "%d:%d", &rating, &xtra))
+		if (1 != sscanf(buf+2, "%d", &xtra))
 			return (PARSE_ERROR_GENERIC);
 
 		/* Save the values */
-		e_ptr->rating = rating;
 		e_ptr->xtra = xtra;
 	}
 

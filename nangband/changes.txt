@@ -3,6 +3,12 @@ Nangband Changelog
 
 First release: "Thru These Architecht's Eyes", Nangband 0.1.0
 
+04/01/03
+--------
+- Rearrange the fields in ego_item.txt so that the 'X' line has only one value.
+  This will make future changes to ego-items easier.  --takk
+- Add ego_flags1 to the ego-item type.  This will be used later. --takk
+
 22/12/02
 --------
 - Changed version number to 0.1.0.  --takk
@@ -20,12 +26,12 @@ First release: "Thru These Architecht's Eyes", Nangband 0.1.0
 - Don't allow the user to enter a higher number of items to buy in a store than
   they can actually buy.  --parody
 - Fix a minor interface problem brought about by the removal of haggling.  The
-  game now aborts when buying if the player doesn't have enough money to buy
-  an item and they try to.  --takk
+  game now aborts when buying if the player doesn't have enough money to buy an
+  item and they try to.  --takk
 - If the player can't afford an item, its price is greyed out in the price
   column.  --takk
-- Fix the Borland makefile so the lua object files are put in the right 
-  place.  --takk
-- Made the birthscreens a lot slicker - they now use text_out_to_screen 
-  instead of hardwrapping.  Various things have also been rearranged to 
-  the entire process feels a lot cleaner.  --takk
+- Fix the Borland makefile so the lua object files are put in the right place.
+  --takk
+- Made the birthscreens a lot slicker - they now use text_out_to_screen instead
+  of hardwrapping.  Various things have also been rearranged to the entire
+  process feels a lot cleaner (more swish).  --takk

@@ -1743,6 +1743,15 @@
 
 
 /*
+ * Ego-item flags (for random bonuses and such).
+ */
+
+#define EF1_RAND_SUSTAIN    (1<<0) /* Random sustain */
+#define EF1_RAND_RESIST     (1<<1) /* Random resist */
+#define EF1_RAND_POWER      (1<<2) /* Random power */
+
+
+/*
  * As of 2.7.8, the "object flags" are valid for all objects, and as
  * of 2.7.9, these flags are not actually stored with the object, but
  * rather in the object_kind, ego_item, and artifact structures.

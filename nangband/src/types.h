@@ -260,6 +260,8 @@ struct ego_item_type
 	u32b flags2;		/* Ego-Item Flags, set 2 */
 	u32b flags3;		/* Ego-Item Flags, set 3 */
 
+	u32b ego_flags;	/* Ego-item-specific flags */
+
 	byte level;			/* Minimum level */
 	byte rarity;		/* Object rarity */
 	byte rating;		/* Level rating boost */
@@ -367,8 +369,6 @@ struct monster_race
  * Note that these fields are related to the "monster recall" and can
  * be scrapped if space becomes an issue, resulting in less "complete"
  * monster recall (no knowledge of spells, etc). XXX XXX XXX
- *
- * ToDo: The "r_" prefix is no longer needed and should be removed.
  */
 struct monster_lore
 {

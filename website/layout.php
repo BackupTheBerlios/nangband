@@ -12,13 +12,11 @@ function page_header($title, $type)
 	echo '<html>';
 	echo '<head>';
 	echo '<title>Nangband - ' . $title . '</title>';
-	echo '<link rel="stylesheet" rev="content" type="text/css" href="style.css">
+	echo '<link rel="stylesheet" rev="content" type="text/css" href="style.css">';
 	echo '<meta name="description" content="A site about Nangband, an Angband variant.">';
 	echo '</head>';
 	echo '<body bgcolor="#000000" text="#ffffff" link="#d090ff" alink="#00ffff" vlink="#77ff44">';
-<!--
-	echo '<h1 align="center">' . $title . '</h1>';
--->
+	/* echo '<h1 align="center">' . $title . '</h1>'; */
 	echo '<img src="images/nangband.gif">';
 	echo '<div align="center">';
 

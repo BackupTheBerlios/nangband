@@ -1,7 +1,8 @@
-#!/usr/bin/make -f Makefile.std
 # File: Makefile.std
-# Pupose: A simple makefile designed for *nix systems
 #
+# Abstract: A simple makefile designed for *nix systems.
+#
+# Detail:
 # You may have to make modifications for your own, personal system.
 # This makefile currently supports the GTK, X11, (n)curses, termcap, VT100, Slang,
 # amd Linux VCS/SVGA visual modules.
@@ -10,9 +11,6 @@
 # must be all be compiled in a special way.
 #
 # main-ros.c and main-ami.c need to use their own, special, makefiles.
-#
-# Typing 'make gtk' at the command line will compile using the Makefile.gtk
-# makefile. Similarly, typing 'make cygwin' will compile using Makefile.cyg.
 #
 # If you are able to construct "main-xxx.c" and/or "Makefile.xxx"
 # files for a currently unsupported system, please send them to
@@ -127,7 +125,6 @@ gtk: nangband
 ##
 #CFLAGS = -Wall -O1 -pipe -g -D"USE_XAW" -D"USE_GCU"
 #LIBS = -lXaw -lXmu -lXt -lX11 -lcurses -ltermcap
-
 
 ##
 ## Variation -- Use "main-cap.c" instead of "main-gcu.c"

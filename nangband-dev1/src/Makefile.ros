@@ -107,9 +107,8 @@ object2.o:
 monster2.o:
 	$(CC) -Ospace $(CCFLAGS) -c -o monster2.o monster2.c
 
-# Defining MULT_RET for everything is a bit silly
-# It should onlt be defined for the Lua files.
+# A basic rule for making object files out of C files.
 .c.o:
-	$(CC) -DMULT_RET=255 -Otime $(CCFLAGS) -c -o $@ $<
+	$(CC) -Otime $(CCFLAGS) -c -o $@ $<
 
 # Dynamic dependencies:

@@ -12,17 +12,11 @@ include('general/layout.php');
 $creators = 'Andrew Sidwell';
 page_header('Main Page', 'index');
 ?>
-<p>Nangband is an Angband variant still in alpha stage, and only available 
-via CVS.  It features a full rewrite of the savefile code, a new resists 
-system similar to EyAngband, seperate stat bonuses, object recall and 
-three new races from Antiband.</p>
+<p>Nangband is an Angband variant still in alpha stage, and only available via CVS.  It features a full rewrite of the savefile code, a new resists system similar to EyAngband, seperate stat bonuses, object recall and three new races from Antiband.</p>
 
-<p><em>Berlios.de</em> hosts the project, including CVS, bug reporting 
-facilities, website hosting, file releases and mailing lists.  Many thanks 
-to them for hosting it.</p>
+<p><em>Berlios.de</em> hosts the project, including CVS, bug reporting facilities, website hosting, file releases and mailing lists.  Many thanks to them for hosting it.</p>
 
-<p>There are two mailing lists for Nangband; click on one to be taken to 
-it's subscription/unsubscription page.
+<p>There are two mailing lists for Nangband; click on one to be taken to it's subscription/unsubscription page.
 <ul>
 <li><a href="https://lists.berlios.de/mailman/listinfo/nangband-discussion">nangband-discussion</a>: General discussion about Nangband.</li>
 <li><a href="https://lists.berlios.de/mailman/listinfo/nangband-developer">nangband-developer</a>: Nangband developer's list.</li>

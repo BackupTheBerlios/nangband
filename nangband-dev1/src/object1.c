@@ -1630,13 +1630,15 @@ void object_desc_store(char *buf, const object_type *o_ptr, int pref, int mode)
 static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 {
 	bool known = FALSE;
+	bool needs_fuel = FALSE;
+
+	int vn;
+	cptr vp[64];
 
 	u32b f1, f2, f3;
 
-
 	/* Extract the "known" and "random" flags */
 	object_flags_aux(mode, o_ptr, &f1, &f2, &f3);
-
 
 	/* Mega-Hack -- describe activation */
 	if (f3 & TR3_ACTIVATE)
@@ -1647,57 +1649,77 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		known = TRUE;
 	}
 
-	/* Hack -- describe lite's */
-	if ((o_ptr->tval == TV_LITE) && (mode != OBJECT_FLAGS_RANDOM))
+	/* Describe light sources */
+	if (f2 & (TR2_NEEDS_FUEL)) needs_fuel = TRUE;
+
+	/* Collect the radius value */
+	vn = 0;
+	if (f2 & (TR2_LITE1)) vp[vn++] = "radius 1";
+	if (f2 & (TR2_LITE2)) vp[vn++] = "radius 2";
+	if (f2 & (TR2_LITE3)) vp[vn++] = "radius 3";
+	if (f2 & (TR2_LITE4)) vp[vn++] = "radius 4";
+
+	/* Describe */
+	if (vn)
 	{
-		if (artifact_p(o_ptr))
+		text_out("It provides ");
+		text_out(vp[0]);
+		text_out(" light ");
+		if (needs_fuel) text_out("when it is fueled.");
+		else text_out("permanently.\n");	
+	}
+
+	/* Describe stat bonuses */
+
+	/* Count the stats affected */
+	vn = 0;
+	if (f1 & (TR1_STR)) vp[vn++] = "strength";
+	if (f1 & (TR1_INT)) vp[vn++] = "intellegence";
+	if (f1 & (TR1_WIS)) vp[vn++] = "wisdom";
+	if (f1 & (TR1_DEX)) vp[vn++] = "dexterity";
+	if (f1 & (TR1_CON)) vp[vn++] = "constitution";
+	if (f1 & (TR1_CHR)) vp[vn++] = "charisma";
+
+	/* Describe */
+	if (vn)
+	{
+		int n;
+
+		/* Intro */
+		text_out("It ");
+
+		/* What does it do? */
+		if (o_ptr->pval > 0)
 		{
-			text_out("It provides light (radius 3) forever.\n");
+			text_out("increases");
 		}
-		else if (o_ptr->sval == SV_LITE_LANTERN)
+		else if (o_ptr->pval < 0)
 		{
-			text_out("It provides light (radius 2) when fueled.\n");
+			text_out("decreases");
 		}
-		else
+		else if (o_ptr->pval == 0)
 		{
-			text_out("It provides light (radius 1) when fueled.\n");
+			text_out("does not affect");
 		}
 
-		known = TRUE;
-	}
+		/* Print stats */
+		for (n = 0; n < vn; n++)
+		{
+			/* Connectives */
+			if (n == 0) text_out(" your ");
+			else if (n < (vn - 1)) text_out(", ");
+			else text_out(" and ");
 
+			/* Dump the stat */
+			text_out(vp[n]);
+		}
 
-	/* And then describe it fully */
+		/* What's the bonus? */
+		text_out(" by ");
+		text_out(format("%i", ABS(o_ptr->pval)));
 
-	if (f1 & (TR1_STR))
-	{
-		text_out("It affects your strength.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_INT))
-	{
-		text_out("It affects your intelligence.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_WIS))
-	{
-		text_out("It affects your wisdom.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_DEX))
-	{
-		text_out("It affects your dexterity.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_CON))
-	{
-		text_out("It affects your constitution.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_CHR))
-	{
-		text_out("It affects your charisma.\n");
-		known = TRUE;
+		/* Finish */
+		text_out(".  \n");
 	}
 
 	if (f1 & (TR1_STEALTH))
@@ -1852,25 +1874,6 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		text_out("It sustains your charisma.\n");
 		known = TRUE;
 	}
-
-	if (f2 & (TR2_LITE1))
-	{
-		text_out("It increases your light radius by 1.");
-		known = TRUE;
-	}
-
-        if (f2 & (TR2_LITE2))
-        {
-                text_out("It increases your light radius by 2.");
-                known = TRUE;
-        }
-
-        if (f2 & (TR2_LITE3))
-        {
-                text_out("It increases your light radius by 3.");
-                known = TRUE;
-        }
-
 
 	if (f2 & (TR2_IM_ACID))
 	{

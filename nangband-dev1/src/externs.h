@@ -178,6 +178,7 @@ extern char *k_text;
 extern artifact_type *a_info;
 extern char *a_name;
 extern char *a_text;
+extern randart_type *x_info;
 extern ego_item_type *e_info;
 extern char *e_name;
 extern char *e_text;

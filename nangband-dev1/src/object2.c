@@ -2751,12 +2751,6 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 					break;
 				}
 
-				case OBJECT_XTRA_TYPE_RESIST:
-				{
-					o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_RESIST);
-					break;
-				}
-
 				case OBJECT_XTRA_TYPE_POWER:
 				{
 					o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_POWER);

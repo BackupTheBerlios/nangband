@@ -555,8 +555,8 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 	if (ego_item_p(o_ptr)) fully_known = TRUE;
 #endif /* SPOIL_ARTIFACTS */
 
-  if (mode == OBJECT_AUX_FULL) fully_known = TRUE;
-  if (o_ptr->ident & (IDENT_MENTAL)) fully_known = TRUE;
+	if (mode == OBJECT_AUX_FULL) fully_known = TRUE;
+	if (o_ptr->ident & (IDENT_MENTAL)) fully_known = TRUE;
 
 	/* Must be identified */
 	if (!fully_known)
@@ -591,6 +591,16 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			(*f2) |= e_ptr->flags2;
 			(*f3) |= e_ptr->flags3;
 		}
+
+		/* Randarts */
+		if (o_ptr->name3)
+		{
+			randart_type *x_ptr = &x_info[o_ptr->name3];
+
+			(*f1) |= x_ptr->flags1;
+			(*f2) |= x_ptr->flags2;
+			(*f3) |= x_ptr->flags3;
+		}
 	}
 	else
 	{
@@ -613,6 +623,16 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			(*f1) = (e_ptr->flags1 & (TR1_PVAL_MASK));
 			(*f3) = (e_ptr->flags3 & (TR3_IGNORE_MASK));
 		}
+
+		/* Randarts */
+		if (o_ptr->name3)
+		{
+			randart_type *x_ptr = &x_info[o_ptr->name3];
+
+			/* Obvious flags (pval) */
+			(*f1) = (x_ptr->flags1 & (TR1_PVAL_MASK));
+			(*f3) = (x_ptr->flags3 & (TR3_IGNORE_MASK));
+		}
 	}
 
 	/* Extra powers */
@@ -623,14 +643,6 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			/* OBJECT_XTRA_WHAT_SUSTAIN == 1 */
 			if (!fully_known) return;
 			(*f2) |= (OBJECT_XTRA_BASE_SUSTAIN << o_ptr->xtra2);
-			break;
-		}
-
-		case OBJECT_XTRA_TYPE_RESIST:
-		{
-			/* OBJECT_XTRA_WHAT_RESIST == 2 */
-			/* [note to self - broken ego-item code, restore soon]  */
-/*			(*f2) |= (OBJECT_XTRA_BASE_RESIST << o_ptr->xtra2);   */
 			break;
 		}
 

@@ -182,7 +182,7 @@ static void describe_monster_spells(int r_idx, const monster_lore *l_ptr)
 	/* Collect innate attacks */
 	vn = 0;
 	if (l_ptr->flags4 & RF4_SHRIEK)  vp[vn++] = "shriek for help";
-	if (l_ptr->flags4 & RF4_XXX2)    vp[vn++] = "do something";
+	if (l_ptr->flags4 & RF4_SCREAM)  vp[vn++] = "scream for help";
 	if (l_ptr->flags4 & RF4_XXX3)    vp[vn++] = "do something";
 	if (l_ptr->flags4 & RF4_XXX4)    vp[vn++] = "do something";
 	if (l_ptr->flags4 & RF4_ARROW_1) vp[vn++] = "fire an arrow";

@@ -2038,21 +2038,18 @@
  * Hack -- special "xtra" object flag info (type)
  */
 #define OBJECT_XTRA_TYPE_SUSTAIN	1
-#define OBJECT_XTRA_TYPE_RESIST		2
 #define OBJECT_XTRA_TYPE_POWER		3
 
 /*
  * Hack -- special "xtra" object flag info (what flag set)
  */
 #define OBJECT_XTRA_WHAT_SUSTAIN	2
-#define OBJECT_XTRA_WHAT_RESIST		2
 #define OBJECT_XTRA_WHAT_POWER		3
 
 /*
  * Hack -- special "xtra" object flag info (base flag value)
  */
 #define OBJECT_XTRA_BASE_SUSTAIN	TR2_SUST_STR
-#define OBJECT_XTRA_BASE_RESIST		TR2_RES_POIS
 #define OBJECT_XTRA_BASE_POWER		TR3_SLOW_DIGEST
 
 /*
@@ -2225,7 +2222,7 @@
  * New monster race bit flags
  */
 #define RF4_SHRIEK          0x00000001 /* Shriek for help */
-#define RF4_XXX2            0x00000002 /* (?) */
+#define RF4_SCREAM          0x00000002 /* Scream for help */
 #define RF4_XXX3            0x00000004 /* (?) */
 #define RF4_XXX4            0x00000008 /* (?) */
 #define RF4_ARROW_1         0x00000010 /* Fire an arrow (light) */

@@ -150,8 +150,16 @@ F:STR | CON | INFRA | HIDE_TYPE |
 
 # 14 (unused)
 
-# 15 (unused)
+###needs to be moved###
+# belt of starvation
 
+N:15:of Starvation
+X:0:0
+W:0:3:0:0
+C:0:0:0:0
+T:29:0:26
+F:LIGHT_CURSE | HUNGER
+### end ###
 
 ### Shields ###
 

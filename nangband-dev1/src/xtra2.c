@@ -1731,7 +1731,6 @@ void monster_death(int m_idx)
 	object_type *i_ptr;
 	object_type object_type_body;
 
-
 	/* Get the location */
 	y = m_ptr->fy;
 	x = m_ptr->fx;

@@ -318,7 +318,6 @@ static void prt_hp(void)
 
 	c_put_str(color, tmp, ROW_CURHP, COL_CURHP + 7);
 
-
 	/* Hack - only change the colour if in character mode */
 	if (r_ptr->x_char != '@') return;
 	
@@ -1719,6 +1718,9 @@ static void calc_torch(void)
 		/* Update the visuals */
 		p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
 	}
+
+	/* We are done */
+	return;
 }
 
 
@@ -1783,8 +1785,10 @@ static void calc_bonuses(void)
 
 	object_type *o_ptr;
 
+	/* Flags, resists and stat bonuses temp */
 	u32b f1, f2, f3;
-
+	byte res_mods[RES_MAX];
+	s16b stat_mods[A_MAX];
 
 	/*** Memorize ***/
 
@@ -1811,7 +1815,6 @@ static void calc_bonuses(void)
 	old_heavy_wield = p_ptr->heavy_wield;
 	old_icky_wield = p_ptr->icky_wield;
 
-
 	/*** Reset ***/
 
 	/* Reset player speed */
@@ -1829,7 +1832,10 @@ static void calc_bonuses(void)
 	extra_might = 0;
 
 	/* Clear the stat modifiers */
-	for (i = 0; i < A_MAX; i++) p_ptr->stat_add[i] = 0;
+	for (i = 0; i < A_MAX; i++)
+	{
+		p_ptr->stat_add[i] = 0;
+	}
 
 	/* Clear the resistance stuff */
 	for (i = 0; i < RES_MAX; i++)
@@ -1912,7 +1918,8 @@ static void calc_bonuses(void)
 	player_flags(&f1, &f2, &f3);
 
 	/* deal with silly flags --takkaria */
-	if ((cp_ptr->flags & (CF_BRAVERY_30)) && (p_ptr->lev > 29)) p_ptr->resist_cur[RES_FEAR] += 30;
+	if ((cp_ptr->flags & (CF_BRAVERY_30)) && (p_ptr->lev > 29))
+		p_ptr->resist_cur[RES_FEAR] += 30;
 
 	/* Good flags */
 	if (f3 & (TR3_SLOW_DIGEST)) p_ptr->slow_digest = TRUE;
@@ -1968,11 +1975,11 @@ static void calc_bonuses(void)
 		/* Extract the item flags */
 		object_flags(o_ptr, &f1, &f2, &f3);
 
-		/* Affect stats */
-		for (n = 0; n < A_MAX; n++)
-		{
-			if (o_ptr->stat_mods[n]) p_ptr->stat_add[n] += o_ptr->stat_mods[n];
-		}
+		/* Extract the resists */
+		object_resists(o_ptr, res_mods);
+		
+		/* Extract the item bonuses */
+		object_stat_bonuses(o_ptr, stat_mods);
 
 		/* Affect stealth */
 		if (f1 & (TR1_STEALTH)) p_ptr->skill_stl += o_ptr->pval;
@@ -2035,11 +2042,23 @@ static void calc_bonuses(void)
 		/* Resistances */
 		for (n = 0; n < RES_MAX; n++)
 		{
-			/* Adjust the stats */
-			p_ptr->resist_cur[n] += k_ptr->resists[n];
+			byte cur_mod = res_mods[n];
+			
+			/* Add the bonus */
+			p_ptr->resist_cur[n] += (cur_mod ? cur_mod : 0);
 
+			/* Display the bonus */
 			if (object_known_p(o_ptr))
-				p_ptr->resist_dis[n] += k_ptr->resists[n];
+				p_ptr->resist_dis[n] += (cur_mod ? cur_mod : cur_mod);
+		}
+
+		/* Affect stats */
+		for (n = 0; n < A_MAX; n++)
+		{
+			s16b cur_mod = stat_mods[n];
+
+			/* Add the bonus */
+			p_ptr->stat_add[n] += (cur_mod ? cur_mod : 0);
 		}
 
 		/* Modify the base armor class */

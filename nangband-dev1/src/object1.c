@@ -1,4 +1,4 @@
-	/* File: object1.c */
+/* File: object1.c */
 
 /*
  * Copyright (c) 1997 Ben Harrison, James E. Wilson, Robert A. Koeneke
@@ -2417,7 +2417,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	/* Describe */
 	if (vn)
 	{
-		bonus_data stat[A_MAX];
+		bonus_data stat[A_MAX]; 	
 		int current_stat = 0;
 		int n = 0, l = 0, iter = 0;
 
@@ -2462,11 +2462,6 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 				text_out(stat[current_stat].name);
 
 				/* Connectives */
-#if 0
-				if (r == iter) text_out(" and ");
-				else if (r < iter - 1) text_out(" ");
-				else if (iter ) text_out(", ");
-#endif
 				if (iter < (r - 2)) text_out(", ");
 				else if (iter < (r - 1)) text_out(" and ");
 				else text_out(" ");
@@ -2475,9 +2470,10 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 				iter++;
 
 				/* Set the correct values */
-				if (++current_stat > (A_MAX-1)) { current_stat--; break; }
+				if (current_stat+1 < (A_MAX)) current_stat++;
+				else break;
 			}
-			while (stat[current_stat-1].bonus == stat[current_stat].bonus);
+			while (stat[current_stat].bonus == stat[current_stat+1].bonus);
 
 			/* Write out the bonus */
 			text_out("by ");

@@ -1197,7 +1197,10 @@ function activate_object(object)
 			msg_print(format("Your %s glows brilliant white...", o_name))
 			success, dir = get_aim_dir()
 			if not sucess then return FALSE, FALSE end
-			fire_ball(GF_MISSILE, dir, 400, 3);
+			fire_ball(GF_MISSILE, dir, 400, 3)
+                elseif artifact.activation == ACT_SAT_HUNGER then
+                        msg_print(format("Your %s blazes with a satisfying light", o_name))
+                        set_food(PY_FOOD_MAX - 1);
 		end
 
 		-- Set the recharge time

@@ -1521,7 +1521,7 @@ static void calc_mana(void)
 		/* Normal gloves hurt mage-type spells */
 		if (o_ptr->k_idx &&
 		    !(f3 & (TR3_FREE_ACT)) &&
-		    !((f1 & (TR1_DEX)) && (o_ptr->pval > 0)))
+		    !((o_ptr->stat_mods[A_DEX]) && (o_ptr->pval > 0)))
 		{
 			/* Encumbered */
 			p_ptr->cumber_glove = TRUE;
@@ -1615,6 +1615,9 @@ static void calc_mana(void)
 			msg_print("You feel able to move more freely.");
 		}
 	}
+
+    /* We are done. */
+    return;
 }
 
 

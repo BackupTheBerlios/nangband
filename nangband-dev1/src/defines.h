@@ -1918,14 +1918,14 @@
  * flags, and three cursed flags).
  */
 
-#define TR1_STR             0x00000001L /* STR += "pval" */
-#define TR1_INT             0x00000002L /* INT += "pval" */
-#define TR1_WIS             0x00000004L /* WIS += "pval" */
-#define TR1_DEX             0x00000008L /* DEX += "pval" */
-#define TR1_CON             0x00000010L /* CON += "pval" */
-#define TR1_CHR             0x00000020L /* CHR += "pval" */
-#define TR1_XXX1            0x00000040L /* (reserved) */
-#define TR1_XXX2            0x00000080L /* (reserved) */
+#define TR1_XXX1            0x00000001L /* xxx STR */
+#define TR1_XXX2            0x00000002L /* xxx INT */
+#define TR1_XXX3            0x00000004L /* xxx WIS */
+#define TR1_XXX4            0x00000008L /* xxx DEX */
+#define TR1_XXX5            0x00000010L /* xxx CON */
+#define TR1_XXX6            0x00000020L /* xxx CHR */
+#define TR1_XXX7            0x00000040L /* (reserved)  */
+#define TR1_XXX8            0x00000080L /* (reserved) */
 #define TR1_STEALTH         0x00000100L /* Stealth += "pval" */
 #define TR1_SEARCH          0x00000200L /* Search += "pval" */
 #define TR1_INFRA           0x00000400L /* Infra += "pval" */
@@ -1945,11 +1945,11 @@
 #define TR1_KILL_DRAGON     0x01000000L /* Great bane of dragons */
 #define TR1_KILL_DEMON      0x02000000L /* Great bane of demons */
 #define TR1_KILL_UNDEAD     0x04000000L /* Great bane of undead */
-#define TR1_XXX3            0x08000000L /* (reserved) */
-#define TR1_XXX4            0x10000000L /* (reserved) */
-#define TR1_XXX5            0x20000000L /* (reserved) */
-#define TR1_XXX6            0x40000000L /* (reserved) */
-#define TR1_XXX7            0x80000000L /* (reserved) */
+#define TR1_XXX9            0x08000000L /* (reserved) */
+#define TR1_XX10            0x10000000L /* (reserved) */
+#define TR1_XX11            0x20000000L /* (reserved) */
+#define TR1_XX12            0x40000000L /* (reserved) */
+#define TR1_XX13            0x80000000L /* (reserved) */
 
 #define TR2_SUST_STR        0x00000001L /* Sustain STR */
 #define TR2_SUST_INT        0x00000002L /* Sustain INT */
@@ -2023,9 +2023,7 @@
  * Note that all "pval" dependant flags must be in "flags1".
  */
 #define TR1_PVAL_MASK \
-	(TR1_STR | TR1_INT | TR1_WIS | TR1_DEX | \
-	 TR1_CON | TR1_CHR | TR1_XXX1 | TR1_XXX2 | \
-	 TR1_STEALTH | TR1_SEARCH | TR1_INFRA | TR1_TUNNEL | \
+	(TR1_STEALTH | TR1_SEARCH | TR1_INFRA | TR1_TUNNEL | \
 	 TR1_SPEED | TR1_BLOWS | TR1_SHOTS | TR1_MIGHT)
 
 /*

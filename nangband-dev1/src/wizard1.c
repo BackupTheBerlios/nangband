@@ -407,12 +407,20 @@ struct flag_desc
 
 static const flag_desc stat_flags_desc[] =
 {
+    /*
 	{ TR1_STR,        "STR" },
 	{ TR1_INT,        "INT" },
 	{ TR1_WIS,        "WIS" },
 	{ TR1_DEX,        "DEX" },
 	{ TR1_CON,        "CON" },
 	{ TR1_CHR,        "CHR" }
+    */
+    { TR1_XXX1, "Non-existant"},
+        { TR1_XXX1, "Non-existant"},
+            { TR1_XXX1, "Non-existant"},
+                { TR1_XXX1, "Non-existant"},
+                    { TR1_XXX1, "Non-existant"},
+                        { TR1_XXX1, "Non-existant"}
 };
 
 /*
@@ -641,9 +649,6 @@ static void analyze_general(const object_type *o_ptr, char *desc_x_ptr)
  */
 static void analyze_pval(const object_type *o_ptr, pval_info_type *pval_x_ptr)
 {
-	const u32b all_stats = (TR1_STR | TR1_INT | TR1_WIS |
-	                        TR1_DEX | TR1_CON | TR1_CHR);
-
 	u32b f1, f2, f3;
 
 	cptr *affects_list;
@@ -664,6 +669,7 @@ static void analyze_pval(const object_type *o_ptr, pval_info_type *pval_x_ptr)
 	/* Create the "+N" string */
 	sprintf(pval_x_ptr->pval_desc, "%s%d", POSITIZE(o_ptr->pval), o_ptr->pval);
 
+    #if 0
 	/* First, check to see if the pval affects all stats */
 	if ((f1 & all_stats) == all_stats)
 	{
@@ -677,6 +683,7 @@ static void analyze_pval(const object_type *o_ptr, pval_info_type *pval_x_ptr)
 		                                affects_list,
 		                                N_ELEMENTS(stat_flags_desc));
 	}
+    #endif
 
 	/* And now the "rest" */
 	affects_list = spoiler_flag_aux(f1, pval_flags1_desc,

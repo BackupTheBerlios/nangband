@@ -1036,7 +1036,6 @@ static s32b artifact_power(int a_idx)
 
 		if (a_ptr->flags1 & TR1_STEALTH) p += a_ptr->pval;
 	}
-	if (a_ptr->flags1 & TR1_CHR) p += a_ptr->pval;
 	if (a_ptr->flags1 & TR1_INFRA) p += (a_ptr->pval + sign(a_ptr->pval)) / 2;
 	if (a_ptr->flags1 & TR1_SPEED) p += (a_ptr->pval * 3) / 2;
 
@@ -1481,8 +1480,7 @@ static void add_ability(artifact_type *a_ptr)
 			{
 				if (r < 4)
 				{
-					a_ptr->flags1 |= TR1_WIS;
-					do_pval(a_ptr);
+                    do_statbonus(a_ptr, A_WIS);
 					if (rand_int(2) == 0) a_ptr->flags2 |= TR2_SUST_WIS;
 					if ((a_ptr->tval == TV_SWORD) ||
 					    (a_ptr->tval == TV_POLEARM))
@@ -1575,8 +1573,7 @@ static void add_ability(artifact_type *a_ptr)
 			    if (r < 25) a_ptr->flags3 |= TR3_SLOW_DIGEST;
 				else if (r < 50)
 				{
-					a_ptr->flags1 |= TR1_CON;
-					do_pval(a_ptr);
+                    do_statbonus(a_ptr, A_CON);
 				}
 				else if (r < 75) a_ptr->to_a += (s16b)(3 + rand_int(3));
 				else
@@ -1622,11 +1619,7 @@ static void add_ability(artifact_type *a_ptr)
 			case TV_GLOVES:
 			{
 				if (r < 25) a_ptr->flags3 |= TR3_FREE_ACT;
-				else if (r < 50)
-				{
-					a_ptr->flags1 |= TR1_DEX;
-					do_pval(a_ptr);
-				}
+				else if (r < 50) do_statbonus(a_ptr, A_DEX);
 				else if (r < 75) a_ptr->to_a += (s16b)(3 + rand_int(3));
 				else
 				{
@@ -1642,16 +1635,8 @@ static void add_ability(artifact_type *a_ptr)
 				if (r < 20) a_ptr->flags2 |= TR2_NO_BLIND;
 				else if (r < 45) a_ptr->flags3 |= TR3_TELEPATHY;
 				else if (r < 65) a_ptr->flags3 |= TR3_SEE_INVIS;
-				else if (r < 75)
-				{
-					a_ptr->flags1 |= TR1_WIS;
-					do_pval(a_ptr);
-				}
-				else if (r < 85)
-				{
-					a_ptr->flags1 |= TR1_INT;
-					do_pval(a_ptr);
-				}
+				else if (r < 75) do_statbonus(a_ptr, A_WIS);
+				else if (r < 85) do_statbonus(a_ptr, A_INT);
 				else a_ptr->to_a += (s16b)(3 + rand_int(3));
 				break;
 			}
@@ -1685,8 +1670,7 @@ static void add_ability(artifact_type *a_ptr)
 				else if (r < 16) a_ptr->flags3 |= TR3_HOLD_LIFE;
 				else if (r < 22)
 				{
-					a_ptr->flags1 |= TR1_CON;
-					do_pval(a_ptr);
+                    do_statbonus(a_ptr, A_CON);
 					if (rand_int(2) == 0)
 						a_ptr->flags2 |= TR2_SUST_CON;
 				}
@@ -1770,27 +1754,15 @@ static void add_ability(artifact_type *a_ptr)
 				break;
 			case 13:
 				a_ptr->flags2 |= TR2_SUST_DEX;
-				if (rand_int(2) == 0)
-				{
-					a_ptr->flags1 |= TR1_DEX;
-					do_pval(a_ptr);
-				}
+				if (rand_int(2) == 0) do_statbonus(a_ptr, A_DEX);
 				break;
 			case 14:
 				a_ptr->flags2 |= TR2_SUST_CON;
-				if (rand_int(2) == 0)
-				{
-					a_ptr->flags1 |= TR1_CON;
-					do_pval(a_ptr);
-				}
+				if (rand_int(2) == 0) do_statbonus(a_ptr, A_CON);
 				break;
 			case 15:
 				a_ptr->flags2 |= TR2_SUST_CHR;
-				if (rand_int(2) == 0)
-				{
-					a_ptr->flags1 |= TR1_CHR;
-					do_pval(a_ptr);
-				}
+				if (rand_int(2) == 0) do_statbonus(a_ptr, A_CHR);
 				break;
 
 			case 16:

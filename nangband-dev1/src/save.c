@@ -1046,7 +1046,7 @@ static errr savefile_do_block_player(bool type, int ver)
 		/* Reset */
 		p_ptr->pclass = 0;
 	}
-
+    
 	/* Hit dice and experience factor */
 	savefile_do_byte(&p_ptr->hitdie, type);
 	savefile_do_byte(&p_ptr->expfact, type);

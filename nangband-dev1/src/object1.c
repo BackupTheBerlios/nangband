@@ -1813,7 +1813,7 @@ void obj_info_resists(byte *resists, bool shorten, char *buffer)
 		text[vn++] = "fire";
 		percentages[pc++] = resists[RES_FIRE];
 	}
-	
+
 	if (resists[RES_COLD])
 	{
 		text[vn++] = "cold";
@@ -1884,9 +1884,9 @@ void obj_info_resists(byte *resists, bool shorten, char *buffer)
 	if (vn)
 	{
 		int n;
-        
+
 		/* Intro */
-        if (!shorten) strcat(buffer, "It grants you");
+        if (!shorten) strcat(buffer, "It grants you ");
 
 		/* List the resists */
 		for (n = 0; n < vn; n++)
@@ -1897,7 +1897,7 @@ void obj_info_resists(byte *resists, bool shorten, char *buffer)
             /* Add description (if any) */
             if (shorten) strcat(buffer, " ");
 			else strcat(buffer, "% resistance to ");
-            
+
             /* Add the resist */
 			strcat(buffer, text[n]);
 
@@ -1913,15 +1913,22 @@ void obj_info_resists(byte *resists, bool shorten, char *buffer)
 	return;
 }
 
+/* A structure to hold bonuses and their names */
+typedef struct
+{
+	char *name;
+	int bonus;
+} bonus_data;
+
 /*
  * A 'qsort()' hook.
  */
 int qsort_hook(const void *arg1, const void *arg2)
 {
-	int *int1 = (int *) arg1;
-	int *int2 = (int *) arg2;
+	bonus_data *comp1 = (bonus_data *) arg1;
+	bonus_data *comp2 = (bonus_data *) arg2;
 
-	return (*int1 - *int2);
+	return (comp1->bonus - comp2->bonus);
 }
 
 /* Used for the 'item_info_desc'/'item_info_brief' functions */
@@ -1946,7 +1953,7 @@ static void item_info_brief(const object_type *o_ptr, int mode)
 
     /* Temp */
     char temp[256];
-    
+
 	/* Eric. */
 	int i = 0;
 
@@ -2407,66 +2414,79 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 	/* Count the stats affected */
 	vn = 0;
-
 	for (i = 0; i < A_MAX; i++) if (stat_bonuses[i]) vn++;
 
 	/* Describe */
 	if (vn)
 	{
+		bonus_data stat[A_MAX];
 		int current_stat = 0;
-		int current_stat_value = stat_bonuses[0];
-		char *current_stat_name = stat_names_full[0];
 		int n = 0, l = 0, iter = 0;
 
+		/* Make the structure */
+		for (n = 0; n < A_MAX; n++)
+		{
+			stat[n].name = stat_names_full[n];
+			stat[n].bonus = stat_bonuses[n];
+		}
+
 		/* Sort the stats */
-/*		qsort((void *) stat_bonuses, A_MAX, sizeof(s16b), qsort_hook); */
+		qsort((void *) stat, A_MAX, sizeof(bonus_data), qsort_hook);
 
 		/* Intro */
 		text_out("It ");
 
+		/* Loop */
 		while (current_stat < A_MAX)
 		{
 			/* Temp */
 			int r;
 
 			/* Make it more english */
-			if (l > 0 && current_stat_value) text_out(", and ");
+			if (l > 0 && stat[current_stat].bonus) text_out(", and ");
 
 			/* Value */
-			if (current_stat_value > 0) text_out_c(TERM_GREEN, "increases");
-			else if (current_stat_value < 0) text_out_c(TERM_RED, "decreases");
+			if (stat[current_stat].bonus > 0) text_out_c(TERM_L_GREEN, "increases");
+			else if (stat[current_stat].bonus < 0) text_out_c(TERM_ORANGE, "decreases");
 			else { current_stat++; continue; }
 
+			/* Connective */
 			text_out(" your ");
 
 			/* Count stuff */
-			n = current_stat; r = iter = 0;
-			while (stat_bonuses[n] == stat_bonuses[n + 1]) { r++; n++; }
+			vn = current_stat; r = iter = 0;
+			while (stat[vn].bonus == stat[vn+1].bonus) { r++; vn++; }
 
 			/* Do the stats */
 			do
 			{
 				/* Stat name */
-				text_out(current_stat_name);
+				text_out(stat[current_stat].name);
 
 				/* Connectives */
-				if (r == (iter + 1)) text_out(" and ");
-				else if (r == iter) text_out(" ");
-				else text_out(", ");
+#if 0
+				if (r == iter) text_out(" and ");
+				else if (r < iter - 1) text_out(" ");
+				else if (iter ) text_out(", ");
+#endif
+				if (iter < (r - 2)) text_out(", ");
+				else if (iter < (r - 1)) text_out(" and ");
+				else text_out(" ");
 
 				/* Increase the counter */
 				iter++;
 
 				/* Set the correct values */
-				current_stat++;
-				current_stat_value = stat_bonuses[current_stat];
-				current_stat_name = stat_names_full[current_stat];
+				if (++current_stat > (A_MAX-1)) { current_stat--; break; }
 			}
-			while (stat_bonuses[current_stat] == stat_bonuses[current_stat + 1]);
+			while (stat[current_stat-1].bonus == stat[current_stat].bonus);
 
 			/* Write out the bonus */
 			text_out("by ");
-			text_out(format("%i", ABS(stat_bonuses[current_stat])));
+			text_out(format("%i", ABS(stat[current_stat-1].bonus)));
+
+			/* XXX */
+			l++;
 		}
 
 		/* Finish */
@@ -2685,7 +2705,8 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	}
 
 	/* Describe the resists/immunities */
-	obj_info_resists(resists, FALSE, &temp);
+	temp[0] = '\0';
+	obj_info_resists(resists, FALSE, temp);
     text_out(temp);
 
 	/* Describe other (weird) things */

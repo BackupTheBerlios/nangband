@@ -2109,7 +2109,7 @@ static errr read_savefile(int fd)
 		temp = savefile_head[pos++];
 		i = temp;
 		temp = savefile_head[pos++];
-		i |= ((u32b) i << 8);
+		i |= ((u32b) temp << 8);
 		savefile_head_type = i;
 
 #ifdef DEBUGGING
@@ -2120,7 +2120,7 @@ static errr read_savefile(int fd)
 		temp = savefile_head[pos++];
 		i = temp;
 		temp = savefile_head[pos++];
-		i |= ((u32b) i << 8);
+		i |= ((u32b) temp << 8);
 		version = i;
 
 #ifdef DEBUGGING
@@ -2131,26 +2131,25 @@ static errr read_savefile(int fd)
 		temp = savefile_head[pos++];
 		i = temp;
 		temp = savefile_head[pos++];
-		i |= ((u32b) i << 8);
+		i |= ((u32b) temp << 8);
 		temp = savefile_head[pos++];
-		i |= ((u32b) i << 16);
+		i |= ((u32b) temp << 16);
 		temp = savefile_head[pos++];
-		i |= ((u32b) i << 24);
+		i |= ((u32b) temp << 24);
 		savefile_blocksize = i;
 
 #ifdef DEBUGGING
 		printf("savefile_blocksize = %i\n", (int) savefile_blocksize);
 #endif
 
-		/* XXX */
-		temp = savefile_head[pos++];
-		temp = savefile_head[pos++];
-
 		/* Free memory for the header */
 		KILL(savefile_head);
 
 		/* Allocate memory for the block */
 		savefile_block = C_RNEW(savefile_blocksize, byte);
+
+		/* Reset the used amount */
+		savefile_blockused = 0;
 
 		/* Read the data */
 		fd_read(fd, (char *) savefile_block, savefile_blocksize);

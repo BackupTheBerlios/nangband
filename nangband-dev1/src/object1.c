@@ -385,49 +385,92 @@ void reset_visuals(bool unused)
 
 
 /*
- * Modes of object_flags_aux()
+ * Modes of object_*_aux()
  */
-#define OBJECT_FLAGS_FULL   1 /* Full info */
-#define OBJECT_FLAGS_KNOWN  2 /* Only flags known to the player */
-#define OBJECT_FLAGS_RANDOM 3 /* Only known random flags */
+#define OBJECT_AUX_FULL   1 /* Full info */
+#define OBJECT_AUX_KNOWN  2 /* Only what's known to the player */
 
+/*
+ * Obtain the resists for an item
+ */
+static void object_resists_aux(int mode, const object_type *o_ptr, byte *resists)
+{
+	object_kind *k_ptr;
+	int n;
+	
+	/* Clear */
+	for (n = 0; n < RES_MAX; n++)
+	{
+		resists[n] = 0;
+	}
+	
+	if (mode != OBJECT_AUX_FULL)
+	{
+		/* Must be identified */
+		if (!object_known_p(o_ptr)) return;
+	}
+
+	k_ptr = &k_info[o_ptr->k_idx];
+
+	/* Get the resists from the base object */
+	for (n = 0; n < RES_MAX; n++)
+	{
+		/* Copy it across */
+		resists[n] += k_ptr->resists[n];
+	}
+		
+	return;
+}
 
 /*
  * Obtain the "flags" for an item
  */
 static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b *f2, u32b *f3)
 {
-	object_kind *k_ptr;
+	object_kind *k_ptr = NULL;
+  bool fully_known = FALSE;
+	
+	/* Clear */
+	(*f1) = (*f2) = (*f3) = 0L;
+	
+	/* Make k_ptr useful */
+	k_ptr = &k_info[o_ptr->k_idx];
+	
+#ifdef SPOIL_ARTIFACTS
+	/* Full knowledge for some artifacts */
+	if (artifact_p(o_ptr)) fully_known = TRUE;
+#endif /* SPOIL_ARTIFACTS */
 
-	if (mode != OBJECT_FLAGS_FULL)
+#ifdef SPOIL_EGO_ITEMS
+	/* Full knowledge for some ego-items */
+	if (ego_item_p(o_ptr)) fully_known = TRUE;
+#endif /* SPOIL_ARTIFACTS */
+
+  if (mode == OBJECT_AUX_FULL) fully_known = TRUE;
+  if (o_ptr->ident & (IDENT_MENTAL)) fully_known = TRUE;
+
+	/* Must be identified */	
+	if (!fully_known)
 	{
-		/* Clear */
-		(*f1) = (*f2) = (*f3) = 0L;
-
-		/* Must be identified */
 		if (!object_known_p(o_ptr)) return;
 	}
 
-	if (mode != OBJECT_FLAGS_RANDOM)
+	/* Base flags */
+	(*f1) = k_ptr->flags1;
+	(*f2) = k_ptr->flags2;
+	(*f3) = k_ptr->flags3;
+	
+	/* Show all flags if fully known */
+	if (fully_known)
 	{
-		k_ptr = &k_info[o_ptr->k_idx];
-
-		/* Base object */
-		(*f1) = k_ptr->flags1;
-		(*f2) = k_ptr->flags2;
-		(*f3) = k_ptr->flags3;
-
-		if (mode == OBJECT_FLAGS_FULL)
+		/* Artifact */
+		if (o_ptr->name1)
 		{
-			/* Artifact */
-			if (o_ptr->name1)
-			{
-				artifact_type *a_ptr = &a_info[o_ptr->name1];
+			artifact_type *a_ptr = &a_info[o_ptr->name1];
 
-				(*f1) = a_ptr->flags1;
-				(*f2) = a_ptr->flags2;
-				(*f3) = a_ptr->flags3;
-			}
+			(*f1) = a_ptr->flags1;
+			(*f2) = a_ptr->flags2;
+			(*f3) = a_ptr->flags3;
 		}
 
 		/* Ego-item */
@@ -439,57 +482,28 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			(*f2) |= e_ptr->flags2;
 			(*f3) |= e_ptr->flags3;
 		}
-
-		if (mode == OBJECT_FLAGS_KNOWN)
-		{
-			/* Obvious artifact flags */
-			if (o_ptr->name1)
-			{
-				artifact_type *a_ptr = &a_info[o_ptr->name1];
-
-				/* Obvious flags (pval) */
-				(*f1) = (a_ptr->flags1 & (TR1_PVAL_MASK));
-
-				(*f3) = (a_ptr->flags3 & (TR3_IGNORE_MASK));
-			}
-		}
 	}
-
-	if (mode != OBJECT_FLAGS_FULL)
+	else
 	{
-		bool spoil = FALSE;
-
-#ifdef SPOIL_ARTIFACTS
-		/* Full knowledge for some artifacts */
-		if (artifact_p(o_ptr)) spoil = TRUE;
-#endif /* SPOIL_ARTIFACTS */
-
-#ifdef SPOIL_EGO_ITEMS
-		/* Full knowledge for some ego-items */
-		if (ego_item_p(o_ptr)) spoil = TRUE;
-#endif /* SPOIL_ARTIFACTS */
-
-		/* Need full knowledge or spoilers */
-		if (!spoil && !(o_ptr->ident & IDENT_MENTAL)) return;
-
-		/* Artifact */
+		/* Obvious artifact flags */
 		if (o_ptr->name1)
 		{
 			artifact_type *a_ptr = &a_info[o_ptr->name1];
 
-			(*f1) = a_ptr->flags1;
-			(*f2) = a_ptr->flags2;
-			(*f3) = a_ptr->flags3;
-
-			if (mode == OBJECT_FLAGS_RANDOM)
-			{
-				/* Hack - remove 'ignore' flags */
-				(*f3) &= ~(TR3_IGNORE_MASK);
-			}
+			/* Obvious flags (pval) */
+			(*f1) = (a_ptr->flags1 & (TR1_PVAL_MASK));
+			(*f3) = (a_ptr->flags3 & (TR3_IGNORE_MASK));
 		}
+		
+		/* Obvious ego-item flags */
+		if (o_ptr->name2)
+		{
+			ego_item_type *e_ptr = &e_info[o_ptr->name2];
 
-		/* Full knowledge for *identified* objects */
-		if (!(o_ptr->ident & IDENT_MENTAL)) return;
+			/* Obvious flags (pval) */
+			(*f1) = (e_ptr->flags1 & (TR1_PVAL_MASK));
+			(*f3) = (e_ptr->flags3 & (TR3_IGNORE_MASK));
+		}
 	}
 
 	/* Extra powers */
@@ -497,7 +511,8 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 	{
 		case OBJECT_XTRA_TYPE_SUSTAIN:
 		{
-			/* OBJECT_XTRA_WHAT_SUSTAIN == 2 */
+			/* OBJECT_XTRA_WHAT_SUSTAIN == 1 */
+			if (!fully_known) return;
 			(*f2) |= (OBJECT_XTRA_BASE_SUSTAIN << o_ptr->xtra2);
 			break;
 		}
@@ -505,18 +520,21 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 		case OBJECT_XTRA_TYPE_RESIST:
 		{
 			/* OBJECT_XTRA_WHAT_RESIST == 2 */
-/*			(*f2) |= (OBJECT_XTRA_BASE_RESIST <<
-o_ptr->xtra2); */
+			/* [note to self - broken ego-item code, restore soon]  */
+/*			(*f2) |= (OBJECT_XTRA_BASE_RESIST << o_ptr->xtra2);   */
 			break;
 		}
 
 		case OBJECT_XTRA_TYPE_POWER:
 		{
 			/* OBJECT_XTRA_WHAT_POWER == 3 */
+			if (!fully_known) return;
 			(*f3) |= (OBJECT_XTRA_BASE_POWER << o_ptr->xtra2);
 			break;
 		}
 	}
+	
+	return;
 }
 
 
@@ -527,7 +545,7 @@ o_ptr->xtra2); */
  */
 void object_flags(const object_type *o_ptr, u32b *f1, u32b *f2, u32b *f3)
 {
-	object_flags_aux(OBJECT_FLAGS_FULL, o_ptr, f1, f2, f3);
+	object_flags_aux(OBJECT_AUX_FULL, o_ptr, f1, f2, f3);
 }
 
 
@@ -537,7 +555,7 @@ void object_flags(const object_type *o_ptr, u32b *f1, u32b *f2, u32b *f3)
  */
 void object_flags_known(const object_type *o_ptr, u32b *f1, u32b *f2, u32b *f3)
 {
-	object_flags_aux(OBJECT_FLAGS_KNOWN, o_ptr, f1, f2, f3);
+	object_flags_aux(OBJECT_AUX_KNOWN, o_ptr, f1, f2, f3);
 }
 
 
@@ -1704,6 +1722,16 @@ void obj_info_resists(byte *resists)
 }
 
 /*
+ * Describe an item's random attributes for "character dumps"
+ */
+void identify_backend(const object_type *o_ptr)
+{
+	identify_fully_aux2(o_ptr, OBJECT_AUX_KNOWN);
+	
+	return;
+}
+
+/*
  * Output a description of the item flags.
  */
 static bool identify_fully_aux2(const object_type *o_ptr, int mode)
@@ -1723,7 +1751,7 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 
 	u32b f1, f2, f3;
 
-	/* Extract the "known" and "random" flags */
+	/* Extract the correct type of flag */
 	object_flags_aux(mode, o_ptr, &f1, &f2, &f3);
 
 	/* Prepare the object base kind */
@@ -2229,16 +2257,6 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	return (known);
 }
 
-
-/*
- * Describe an item's random attributes for "character dumps"
- */
-void identify_random_gen(const object_type *o_ptr)
-{
-	identify_fully_aux2(o_ptr, OBJECT_FLAGS_RANDOM);
-}
-
-
 /*
  * Describe an item
  */
@@ -2263,7 +2281,7 @@ bool identify_fully_aux(const object_type *o_ptr)
 	}
 
 	/* Output the flag descriptions */
-	if (identify_fully_aux2(o_ptr, OBJECT_FLAGS_KNOWN))
+	if (identify_fully_aux2(o_ptr, OBJECT_AUX_KNOWN))
 		known = TRUE;
 
 	/* Prompt the user */

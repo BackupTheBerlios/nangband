@@ -2187,7 +2187,7 @@ errr file_character(cptr name, bool full)
 			        index_to_label(i), o_name);
 
 			/* Describe random object attributes */
-			identify_random_gen(&inventory[i]);
+			identify_backend(&inventory[i]);
 		}
 		fprintf(fff, "\n\n");
 	}
@@ -2203,7 +2203,7 @@ errr file_character(cptr name, bool full)
 		        index_to_label(i), o_name);
 
 		/* Describe random object attributes */
-		identify_random_gen(&inventory[i]);
+		identify_backend(&inventory[i]);
 	}
 	fprintf(fff, "\n\n");
 
@@ -2221,7 +2221,7 @@ errr file_character(cptr name, bool full)
 			fprintf(fff, "%c) %s\n", I2A(i), o_name);
 
 			/* Describe random object attributes */
-			identify_random_gen(&st_ptr->stock[i]);
+			identify_backend(&st_ptr->stock[i]);
 		}
 
 		/* Add an empty line */

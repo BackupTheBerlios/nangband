@@ -41,30 +41,22 @@
 /*
  * Name of the version/variant
  */
-#define VERSION_NAME "Angband"
+#define VERSION_NAME "Nangband"
 
 
 /*
  * Current version string
  */
-#define VERSION_STRING	"3.0.2"
+#define VERSION_STRING	"0.1.0 CVS"
 
 
 /*
  * Current version numbers
  */
-#define VERSION_MAJOR	3
-#define VERSION_MINOR	0
-#define VERSION_PATCH	2
+#define VERSION_MAJOR	0
+#define VERSION_MINOR	1
+#define VERSION_PATCH	0
 #define VERSION_EXTRA	0
-
-
-/*
- * Oldest version number that can still be imported
- */
-#define OLD_VERSION_MAJOR	2
-#define OLD_VERSION_MINOR	9
-#define OLD_VERSION_PATCH	0
 
 
 /*

@@ -2953,7 +2953,7 @@ typedef struct lighting_info lighting_info;
 
 struct lighting_info
 {
-	byte prio;
+	byte prio;	/* Priority -- not used */
 	byte rad;	/* Radius 1 -- 3 */
 	byte fy, fx; /* m_ptr->fy and m_ptr->fx */
 };
@@ -3050,7 +3050,7 @@ void update_monster_light(void)
 	int fast_temp_n;
 	u16b *fast_temp_g = temp_g;
 
-	int p;
+	int prio;
 	int mqueue_n[3];
 
 	byte *fast_cave_info = &cave_info[0][0];
@@ -3144,7 +3144,7 @@ void update_monster_light(void)
 		monster_race *r_ptr = &r_info[m_ptr->r_idx];
 		lighting_info *l_ptr;
 
-		int rad, prio;
+		int rad;
 
 		/* Skip dead monsters */
 		if (!m_ptr->r_idx) continue;
@@ -3165,7 +3165,7 @@ void update_monster_light(void)
 		l_ptr = &mqueue[prio][mqueue_n[prio]++];
 
 		/* Enqueue the monster */
-		l_ptr->prio = prio;
+		/* l_ptr->prio = prio; */
 		l_ptr->rad = rad;
 		l_ptr->fy = m_ptr->fy;
 		l_ptr->fx = m_ptr->fx;
@@ -3176,12 +3176,12 @@ void update_monster_light(void)
 	fast_temp_n = 0;
 
 	/* Process queued monsters */
-	for (p = PRIO_EMANATE_LIGHT; p >= PRIO_CARRY_LIGHT; p--)
+	for (prio = PRIO_EMANATE_LIGHT; prio >= PRIO_CARRY_LIGHT; prio--)
 	{
-		for (i = 0; i < mqueue_n[p]; i++)
+		for (i = 0; i < mqueue_n[prio]; i++)
 		{
 			lighting_info *l_ptr;
-			int rad, prio;
+			int rad;
 			int fy, fx;
 
 			/* XXX XXX */
@@ -3190,9 +3190,9 @@ void update_monster_light(void)
 			int queue_n, q;
 
 			/* Retrieve monster light information */
-			l_ptr = &mqueue[p][i];
+			l_ptr = &mqueue[prio][i];
 
-			prio = l_ptr->prio;
+			/* prio = l_ptr->prio; */
 			rad = l_ptr->rad;
 			fy = l_ptr->fy;
 			fx = l_ptr->fx;

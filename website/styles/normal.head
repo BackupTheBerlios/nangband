@@ -5,7 +5,7 @@
 		<tr><td class="border" bgcolor="#dddddd" align="center">
 			<font size="+2"><b>nangband - <?=$title?></b></font>
 		</td></tr><tr><td bgcolor="#ffffff" align="center">
-			<?php do_links(true); ?><br>
+			<?php do_links(); ?><br>
 			<font size="-1">change style: <?php do_styles(true);?></font>
 		</td></tr>
 		<tr><td bgcolor="#eeeeee" class="border">

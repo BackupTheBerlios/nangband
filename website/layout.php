@@ -36,7 +36,7 @@ function do_links($has_pipes = true, $uc = false, $start = 0, $end = 0)
 		else
 			echo $echo_text;
 
-		if ($has_pipes && ($i < ($no_pages - 1))) echo ' | ';
+		if ($has_pipes && ($i < ($x - 1))) echo ' | ';
 		if ($end) echo $end;
 	}
 
@@ -61,7 +61,7 @@ function do_styles($has_pipes = true, $uc = false, $start = 0, $end = 0)
 		else
 			echo $echo_text;
 
-		if ($has_pipes && ($i < ($no_styles - 1))) echo ' | ';
+		if ($has_pipes && ($i < ($x - 1))) echo ' | ';
 		if ($end) echo $end;
 	}
 

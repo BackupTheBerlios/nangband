@@ -156,6 +156,36 @@ static const struct luaL_reg intMathLib[] =
     {"shiftr", intShiftr },
 };
 
+#ifdef ALLOW_BORG
+/*
+ * Callback for the borg
+ */
+bool borg_get_spellindex(int spell_tval)
+{
+	int result, status;
+
+	lua_getglobal(L, "borg_get_spellindex_hook");
+	tolua_pushusertype(L, (void*)spell_tval, tolua_tag(L, "int"));
+
+	/* Call the function with 1 argument and 1 result */
+	status = lua_call(L, 1, 1);
+
+	if (status == 0)
+	{
+		result = tolua_getnumber(L, -1, -1);
+
+		/* Remove the results */
+		lua_pop(L, 1);
+	}
+	else
+	{
+		result = -1;
+	}
+
+	return (result);
+}
+
+#endif
 
 /*
  * Callback for using an object

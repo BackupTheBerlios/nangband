@@ -78,7 +78,6 @@ static char *mold_syllable3[] =
  * "object manipulation", and "F" for "terrain feature manipulation",
  * plus "!" for entries that can soon be handled.
  */
-
 static byte borg_magic_method[2][9][9] =
 {
     /*** Spells ***/
@@ -4386,10 +4385,10 @@ static void prepare_book_info(int book)
         as->status = BORG_MAGIC_HIGH;
 
         /* Access the correct "method" */
-/*        as->method = borg_magic_method[cp_ptr->spell_type][book][what];*/
+        as->method = borg_magic_method[cp_ptr->spell_book][book][what];
 
         /* Access the correct "rating" */
-/*        as->rating = borg_magic_rating[cp_ptr->spell_type][book][what];*/
+        as->rating = borg_magic_rating[cp_ptr->spell_type][book][what];
 
         /* Extract the level and power */
         as->level = s_ptr->slevel;

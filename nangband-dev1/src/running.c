@@ -8,70 +8,26 @@
  * Licence: The GNU GPL, version 2 or any later version.
  */
 #include "angband.h"
-#include <stdarg.h>
 
 static byte run_dir;
 
 static const sbyte x_mod[10] = {0, -1, +0, +1, -1, +0, +1, -1, +0, +1};
 static const sbyte y_mod[10] = {0, +1, +1, +1, +0, +0, +0, -1, -1, -1};
 
-static const byte cycle_index[8] = {0, 1, 2, 4, 5, 6, 7, 3};
+static const byte cycle_index[8] = {1, 2, 3, 6, 9, 8, 7, 4};
 static const byte iter_to_dir[8] = {1, 2, 3, 4, 6, 7, 8, 9};
 
 static const byte xy_to_abs[3][3] =
 {{5, 6, 7},
- {3, 8, 4},
+ {3, 9, 4},
  {0, 1, 2}};
 
-/* Flexible debugging system */
-void (*debug_out_hook)(const char *) = NULL;
-int debug_level = 0;
+static const byte xy_to_humanreadable[3][3] =
+{{7, 8, 9},
+ {4, 5, 6},
+ {1, 2, 3}};
 
-void debug_out_to_stderr(const char *out)
-{
-	/* Output to stderr */
-	fprintf(stderr, out);
-
-	/* Return */
-	return;
-}
-
-#define debug_resetlevel() debug_level = 0
-#define debug_downlevel()  ++debug_level
-#define debug_uplevel() --debug_level
-
-void debug_out(const char *format, ...)
-{
-	va_list vp;
-	char buffer[1024] = "";
-	char *p = buffer;
-
-	/* If the hook hasn't been set, don't output */
-	if (!debug_out_hook) return;
-
-	/* Prepare the buffer */
-	if (debug_level)
-	{
-		int i;
-		for (i = 0; i < debug_level; i++) strcat(buffer, "  ");
-		strcat(buffer, "- ");
-		i = strlen(buffer);
-		p += i;
-	}
-
-	/* Now, just make the string */
-	va_start(vp, format);
-	vsprintf(p, format, vp);
-	va_end(vp);
-
-	strcat(buffer, "\n");
-
-	/* Output to the debug hook */
-	debug_out_hook(buffer);
-
-	/* We are done */
-	return;
-}
+static bool okay[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 /*
  * Running helper function: is_walkable(x, y).
@@ -94,14 +50,61 @@ static bool is_walkable(int x, int y)
 	return (TRUE);
 }
 
+int count_dpaths(void)
+{
+	int i = 0, d = 0, p = 0, x = 0, y = 0;
+	bool in_path = FALSE;
+	bool old_in_path, new_in_path = FALSE;
+
+	/* Cycle through the okay grids */
+	for (; i < 8; i++, d = xy_to_abs[y_mod[cycle_index[i]] + 1][x_mod[cycle_index[i]] + 1])
+	{
+		old_in_path = new_in_path;
+		new_in_path = FALSE;
+
+		debug_out("iteration %d; direction is %d, human-readable direction is %d",
+			i, d, xy_to_humanreadable[y_mod[cycle_index[i]] + 1][x_mod[cycle_index[i]] + 1]);
+		debug_down;
+		debug_out("in_path = %d", in_path);
+		debug_out("okay[d] = %d", okay[d]);
+		debug_out("y (grid-count) = %d", y);
+		debug_out("x (largest number of grids together found) = %d", x);
+
+		/* If the current grid is okay, then we are in a path */
+		if (okay[d]) new_in_path = TRUE;
+
+		/* If a change has been made ... */
+		if (new_in_path != old_in_path)
+		{
+			/* Increase the count if we have a distinct path */
+			p++;
+
+			/* Reset the grid counter ('y') */
+			y = 0;
+		}
+		else if (new_in_path)
+		{
+			/* Increase the grid count if we're in a path */
+			y++;
+
+			/* Debug */
+			debug_out("increasing 'y' (grid count) to %d", y);
+		}
+
+		debug_up;
+	}
+
+	return (p);
+}
+
 /*
  * Main function: continue running.
  */
 static bool run_continue(void)
 {
-	bool okay[8];
-	bool in_path = FALSE;
 	int i, d, p, x, y;
+
+	debug_out("run_continue(void) called.");
 
 	/*** Step One - Build Flow Information and Map ***/
 
@@ -124,40 +127,16 @@ static bool run_continue(void)
 	}
 
  	/* If we have no known paths, then we can't go anywhere */
-	if (!p) return (FALSE);
+	if (!p)
+	{
+		debug_out("*** Step One - no walkable paths found.  Returning 0.");
+		return (FALSE);
+	}
 
 	/*** Stage Two - Count "Distinct Paths" ***/
 
-	/* Cycle through the okay grids */
-	for (i = 0, d = 0, p = 0, x = 0; i < 8; i++, d = cycle_index[i])
-	{
-		/* If we're not in a path, but we're on an okay grid ... */
-		if (!in_path && okay[d])
-		{
-			/* We are now in a path */
-			in_path = TRUE;
-		}
-
-		/* Otherwise, if we're in a path and we're on a bad grid ... */
-		else if (in_path && !okay[d])
-		{
-			/* We are no longer in a path */
-			in_path = FALSE;
-
-			/* Increase the count if we have a distinct path */
-			if (y < 3)
-			{
-				x = y;
-				p++;
-			}
-
-			/* Reset the 'y' ("grid-count") counter */
-			y = 0;
-		}
-
-		/* If we're in a path, increase the "grid-count" */
-		if (in_path) y++;
-	}
+	/* Branch to a seperate function */
+	p = count_dpaths();
 
 	/* Stop here if we have more than one path, or less than one */
 	if (p != 1) return (FALSE);
@@ -183,7 +162,7 @@ static bool run_continue(void)
 
 			/* Stage 3 - Simple Optimization */
 			if (okay[xy1]) okay[xy1] = FALSE;
-			if (okay[xy2]) okay[xy2] = FALSE;
+			else if (okay[xy2]) okay[xy2] = FALSE;
 		}
 	}
 
@@ -191,7 +170,7 @@ static bool run_continue(void)
 	for (i = 0, d = 1; i < 8; i++, d = iter_to_dir[i])
 	{
 		/* As soon as we hit the first okay grid, break */
-		if (okay[d]) break;
+		if (okay[i]) break;
 	}
 
 	/* Set run_dir */
@@ -209,21 +188,13 @@ static bool run_start(int dir)
 	/* Set the direction (for reference) */
 	run_dir = dir;
 
-	debug_out("run_start(%d) called.", dir);
-
 	/* Move if the grid is walkable */
 	if (is_walkable((p_ptr->px + x_mod[dir]), (p_ptr->py + y_mod[dir])))
 	{
-		debug_downlevel();
-		debug_out("returning TRUE, dir (%d) is walkable.", dir);
-		debug_uplevel();
 		return (TRUE);
 	}
 
 	/* Otherwise, don't. */
-	debug_downlevel();
-	debug_out("returning FALSE, dir (%d) is not walkable.", dir);
-	debug_uplevel();
 	return (FALSE);
 }
 
@@ -246,47 +217,36 @@ void run_step(int dir)
 		/* Set the counter */
 		p_ptr->running = (p_ptr->command_arg ? p_ptr->command_arg : 100);
 
-		debug_downlevel();
-		debug_out("starting run:");
+		debug_down; debug_out("starting run:");
 
-		debug_downlevel();
+		debug_down;
 		debug_out("p_ptr->running set to %d", p_ptr->running);
 		debug_out("p_ptr->command_arg is %d", p_ptr->command_arg);
 		debug_out("calling run_start(%d).", dir);
 
 		/* Run */
-		debug_downlevel();
 		act = run_start(dir);
-		debug_uplevel();
 
-		debug_out("run_start(%d) returned %d.", dir, act);
-		debug_uplevel();
-		debug_uplevel();
+		debug_out("run_start(%d) returned %d.", dir, act); debug_up; debug_up;
 	}
 	else
 	{
 		/* Run */
-		debug_downlevel();
-		debug_out("continuing run:");
-		debug_downlevel();
+		debug_down; debug_out("continuing run:"); debug_down;
 
-		debug_downlevel();
-		act = run_continue();
-		debug_uplevel();
+		debug_down; act = run_continue(); debug_up;
 
-		debug_out("run_continue() returned %d.", act);
-		debug_uplevel();
-		debug_uplevel();
+		debug_out("run_continue() returned %d.", act); debug_up; debug_up;
 	}
 
 	/* If we should act, then do so */
 	if (act)
 	{
-		debug_downlevel();
+		debug_down;
 
 		/* Decrease running counter */
 		debug_out("acting:");
-		debug_downlevel();
+		debug_down;
 
 		p_ptr->running--;
 		debug_out("decreased p_ptr->running (%d)", p_ptr->running);
@@ -299,21 +259,16 @@ void run_step(int dir)
 		move_player(run_dir, FALSE);
 		debug_out("moved player in direction run_dir (%d)", run_dir);
 
-		debug_uplevel();
-		debug_uplevel();
+		debug_up;
+		debug_up;
 	}
 	else
 	{
-		debug_downlevel();
-
-		debug_out("not acting:");
-		debug_downlevel();
+		debug_down; debug_out("not acting:"); debug_down;
 		
 		p_ptr->running = 0;
-		debug_out("reset p_ptr->running (%d)", p_ptr->running);
 
-		debug_uplevel();
-		debug_uplevel();
+		debug_out("reset p_ptr->running (%d)", p_ptr->running); debug_up; debug_up;
 	}
 
 	debug_out("\n");

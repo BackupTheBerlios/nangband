@@ -12,7 +12,6 @@
 /*
  * This file provides an optimized random number generator.
  *
- *
  * This code provides both a "quick" random number generator (4 bytes of
  * state), and a "decent" random number generator (256 bytes of state),
  * both available in two flavors, first, the simple "mod" flavor, which
@@ -27,7 +26,6 @@
  * automatically used instead of the "complex" RNG, and when you are
  * done, you de-activate it via "Rand_quick = FALSE" or choose a new
  * seed via "Rand_value = seed".
- *
  *
  * This (optimized) random number generator is based loosely on the old
  * "random.c" file from Berkeley but with some major optimizations and
@@ -230,6 +228,7 @@ static s16b Rand_normal_table[RANDNOR_NUM] =
 	32763,   32763,   32763,   32764,   32764,	32764,	 32764,	  32765,
 	32765,   32765,   32765,   32766,   32766,	32766,	 32766,	  32767,
 };
+
 
 
 

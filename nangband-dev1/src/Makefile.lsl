@@ -1,5 +1,5 @@
 # File: Makefile.lsl
-
+#
 # Purpose: Makefile for Linux + SVGA library
 
 SRCS = \
@@ -36,7 +36,7 @@ OBJS = \
   store.o birth.o load.o \
   wizard1.o wizard2.o \
   generate.o dungeon.o init1.o init2.o randart.o \
-  main-lsl.o main.o \
+  main-lsl.o main.o debug.o \
   script.o use-obj.o \
   l-monst.o l-object.o l-player.o l-random.o l-ui.o \
   l-misc.o l-spell.o \

@@ -1,6 +1,25 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+from 2002-08-04 to 2002-08-07
+-----------------------------
+- Some clever debugging code added; this was originally in running.c (as it
+  was being used for debugging the running code), but it now is in it's own
+  file.  Most makefiles have been updated (some have been made more readable,
+  as a side-job).  It uses a hook output system, similar to text_out().
+  (takkaria)
+- Removed Makefile.bsd; those who use Berkely make can grab the gmake sources
+  themselves and compile it!  At a future time, I may reintroduce this file.
+  (takkaria)
+- Fixed up the running code (to some extent).  It should be fairly useable now,
+  even though there are slight problems (for some reason, running to the right
+  seems to fail constantly).  It's fast reaching the useability of the old
+  code; soon, it should take notice of the various running options the player
+  can set.  Also, the running code is scattered with debug_out()s.  If you
+  want to remove the output of these, change the
+  "debug_out_hook = debug_out_to_stderr;" line to "debug_out_hook = NULL".
+  (takkaria)
+
 2002-08-04
 ----------
 - Forgot to call note_spot in the monster light update code (in one place),

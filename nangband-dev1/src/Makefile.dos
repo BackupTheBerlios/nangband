@@ -1,15 +1,9 @@
 # File: Makefile.dos
-
 #
-# Makefile support for "main-dos.c" and "main-ibm.c"
-#
-# See "main-dos.c" and "main-ibm.c" for more information.
-#
+# Makefile for main-dos.c and main-ibm.c.  See these files for more information.
 
 
-#
-# Basic definitions
-#
+### Object files ###
 
 LUAOBJS = \
   lua\lapi.o lua\ldebug.o lua\lmem.o lua\lstrlib.o lua\lvm.o \
@@ -23,80 +17,41 @@ TOLUAOBJS = \
   lua\tolua.o lua\tolualua.o lua\liolib.o \
   $(LUAOBJS)
 
-# Objects
 OBJS = \
-  main.o \
-  main-dos.o \
-  main-ibm.o \
-  birth.o \
-  cave.o \
-  cmd1.o \
-  cmd2.o \
-  cmd3.o \
-  cmd4.o \
-  cmd5.o \
-  cmd6.o \
-  dungeon.o \
-  files.o \
-  generate.o \
-  init1.o \
-  init2.o \
-  load.o \
-  melee1.o \
-  melee2.o \
-  monster1.o \
-  monster2.o \
-  object1.o \
-  object2.o \
-  randart.o \
-  save.o \
-  spells1.o \
-  spells2.o \
-  store.o \
-  tables.o \
-  util.o \
-  variable.o \
-  wizard1.o \
-  wizard2.o \
-  xtra1.o \
-  xtra2.o \
-  z-term.o \
-  z-rand.o \
-  z-form.o \
-  z-virt.o \
-  z-util.o \
-  script.o \
-  l-monst.o l-object.o l-player.o l-random.o l-ui.o l-misc.o l-spell.o \
+  main.o main-dos.o main-ibm.o \
+  birth.o cave.o dungeon.o \
+  cmd1.o cmd2.o cmd3.o cmd4.o cmd5.o cmd6.o \
+  files.o randart.o generate.o running.o \
+  init1.o init2.o \
+  melee1.o melee2.o monster1.o monster2.o \
+  object1.o object2.o \
+  save.o spells1.o spells2.o store.o \
+  tables.o util.o variable.o \
+  wizard1.o wizard2.o debug.o \
+  xtra1.o xtra2.o \
+  z-term.o z-rand.o z-form.o z-virt.o z-util.o \
+  l-monst.o l-object.o l-player.o l-random.o l-ui.o l-misc.o l-spell.o script.o \
   use-obj.o \
   $(LUAOBJS)
+
+
+### Options ###
 
 # Compiler
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -O2 -fno-strength-reduce -s -DUSE_DOS -DUSE_IBM \
--DUSE_BACKGROUND
+CFLAGS = -Wall -O2 -fno-strength-reduce -s -DUSE_DOS -DUSE_IBM -DUSE_BACKGROUND
 
 # Libraries
 LIBS = -lpc -lalleg
 
 
-#
-# Targets
-#
-
-default: angband.exe
+### Targets ###
 
 install: angband.exe
 	copy angband.exe ..
-
-all: angband.exe
-	@echo All done.  Use 'make install' to install.
-
-
-#
-# Link executables
-#
+	@echo Compiled and "installed".  Ready to play!
 
 angband.exe: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
@@ -104,18 +59,24 @@ angband.exe: $(OBJS)
 lua\tolua: $(TOLUAOBJS)
 	$(CC) -o lua\tolua $(TOLUAOBJS) $(INCDIRS) $(LIBDIRS) $(LUALIBS)
 
+clean:
+	del *.o
+	del lua\*.o
 
-#
-# Compile source files
-#
+cleanall: clean
+	del *.exe
+	del lua\*.exe
+
+
+### .SUFFIX rules ###
+
+.SUFFIXES: .c .o
 
 .c.o:
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 
-#
-# Build wrappers
-#
+### Lua wrapper files ###
 
 l-monst.c: lua\tolua l-monst.pkg
 	lua\tolua -n monster -o l-monst.c l-monst.pkg
@@ -137,16 +98,3 @@ l-misc.c: lua\tolua l-misc.pkg
 
 l-spell.c: lua\tolua l-spell.pkg
 	lua\tolua -n spell -o l-spell.c l-spell.pkg
-
-#
-# Clean up
-#
-
-clean:
-	del *.o
-	del lua\*.o
-
-cleanall: clean
-	del *.exe
-	del lua\*.exe
-

@@ -33,7 +33,7 @@ OBJS = \
 	resist.o dungeon.o files.o generate.o init1.o init2.o \
 	main-win.o melee1.o melee2.o monster1.o monster2.o \
 	object1.o object2.o randart.o readdib.o running.o \
-	save.o spells1.o spells2.o \
+	save.o spells1.o spells2.o debug.o \
 	store.o tables.o util.o variable.o \
 	wizard1.o wizard2.o xtra1.o xtra2.o \
 	z-form.o z-rand.o z-term.o z-util.o z-virt.o \

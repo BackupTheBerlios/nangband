@@ -3101,6 +3101,17 @@ extern int PlayerUID;
 #endif
 
 
+/*** Debugging code function-like macros ***/
+#define debug_up debug_level--
+#define debug_down debug_level++
+#define debug_reset debug_level = 0
+#define debug_stop debug_out_hook = NULL
+
+#define debug_uplevel() debug_up
+#define debug_downlevel() debug_down
+#define debug_resetlevel() debug_reset
+
+
 
 /*** Color constants ***/
 

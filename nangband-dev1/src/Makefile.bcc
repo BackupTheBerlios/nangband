@@ -1,4 +1,6 @@
-# Makefile.bcc - Nangband makefile for Borland C++ 5.5 (Win32)
+# File: Makefile.bcc
+#
+# Makefile for the Borland 5.5 C/C++ compilers for Windows.
 
 # Borland specific directives:
 .AUTODEPEND
@@ -35,7 +37,7 @@ TOLUAOBJS = \
   $(LUAOBJS)
 
 OBJ = \
-  main-win.obj readdib.obj \
+  main-win.obj readdib.obj debug.obj \
   birth.obj cave.obj cmd1.obj cmd2.obj \
   cmd3.obj cmd4.obj cmd5.obj cmd6.obj \
   dungeon.obj files.obj generate.obj init1.obj \
@@ -46,7 +48,7 @@ OBJ = \
   variable.obj wizard1.obj wizard2.obj xtra1.obj \
   xtra2.obj z-form.obj z-rand.obj z-term.obj \
   z-util.obj z-virt.obj \
-  script.obj \
+  script.obj debug.obj \
   l-monst.obj l-object.obj l-player.obj l-random.obj l-random.obj \
   l-ui.obj l-misc.obj l-spell.obj \
   resist.obj l-dynamic.obj xmlbulp.obj help.obj interface.obj \

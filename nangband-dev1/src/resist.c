@@ -48,7 +48,7 @@ byte resist_player_current(byte res_idx)
 	/* Do some complex math to work out timed resist */
 	if ((p_ptr->resist_timed[res_idx] * 100) <= (75 * p_ptr->resist_tim_max[res_idx]))
 	{
-		x += 50 - ((-30 * p_ptr->resist_timed[res_idx]) / 75);
+		x += 50 + ((30 * p_ptr->resist_timed[res_idx]) / 75);
 	}
 	else
 	{
@@ -60,8 +60,7 @@ byte resist_player_current(byte res_idx)
 }
 
 /*
- * Roll a 100-sided die and check th result agaainst
- * a resist.
+ * Roll a 100-sided die and check the result agaainst a resist.
  */
 bool resist_check(byte res_idx)
 {
@@ -73,28 +72,25 @@ bool resist_check(byte res_idx)
 	/* Grab the value */
 	x = resist_player_current(res_idx);
 
-	/* Roll the die */
-	if (rand_int(100) > x) return (FALSE);
-
-	/* The check was successful */
-	return (TRUE);
+	/* Return the correct value */
+	return (rand_int(100) > resist_player_current(res_idx));
 }
 
 /*
- * Apply a resistance.
- *
- * Mostly Eytan's code from EyAngband.
+ * Return (100 - res_percent)% of 'dam'.  If 'dam' is below 1, or 'res_percent'
+ * is 0, 'dam' is returned.  If res_percent is over/above 100, then we return 0;
+ * we ensure that resistances can't lower damage down to 0.
  */
-int resist_apply(int amount, int dam)
+int resist_apply(sbyte res_percent, int dam)
 {
 	/* No effect */
-	if ((1 > dam) || !amount) return (dam);
+	if ((dam < 1) || !res_percent) return (dam);
 
 	/* Complete immunity */
-	if (amount >= 100) return (0);
+	if (res_percent >= 100) return (0);
 
 	/* Apply the resistance */
-	dam = (dam * (100 - amount)) / 100;
+	dam = (dam * (100 - res_percent)) / 100;
 
 	/* Resistances can't lower damage to 0 */
 	if (dam < 1) dam = 1;

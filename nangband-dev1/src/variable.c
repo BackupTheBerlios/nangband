@@ -720,3 +720,17 @@ int highscore_fd = -1;
  * Use transparent tiles
  */
 bool use_transparency = FALSE;
+
+
+/*** Debugging stuff ***/
+
+/*
+ * A debug_out hook; this is similar to the text_out() hook above.
+ */
+void (*debug_out_hook)(const char *) = NULL;
+
+/*
+ * The current "level" of debugging.
+ */
+int debug_level = 0;
+

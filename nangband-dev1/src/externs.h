@@ -1,22 +1,15 @@
-/* File: externs.h */
-
 /*
- * Copyright (c) 1997 Ben Harrison
+ * File: externs.h
  *
- * This software may be copied and distributed for educational, research,
- * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.
+ * Abstract: "extern" declarations of various variables and functions.
+ *           Note that some files have their own headers (script.c, z-*.c).
+ *
+ * For licencing conditions, please look in angband.h.
  */
 
 
 /*
- * Note that some files have their own header files
- * (z-virt.h, z-util.h, z-form.h, term.h, random.h)
- */
-
-
-/*
- * Automatically generated "variable" declarations
+ * Variable declarations.
  */
 
 /* tables.c */
@@ -229,10 +222,12 @@ extern int text_out_wrap;
 extern int text_out_indent;
 extern int highscore_fd;
 extern bool use_transparency;
+extern void (*debug_out_hook)(const char *);
+extern int debug_level;
 
 
 /*
- * Automatically generated "function declarations"
+ * Function declarations.
  */
 
 /* birth.c */
@@ -363,7 +358,7 @@ extern bool resist_check_valid(byte res_idx);
 extern byte resist_player_current(byte res_idx);
 extern bool resist_check(byte res_idx);
 extern bool resist_is_decent(byte res_idx);
-extern int resist_apply(int amount, int dam);
+extern int resist_apply(sbyte res_percent, int dam);
 
 /* dungeon.c */
 extern void play_game(bool new_game);
@@ -786,6 +781,9 @@ extern bool confuse_dir(int *dp);
 extern u32b open_help(char *file);
 extern u32b render_xml_file(char *file, bool clear, bool help_text, bool persist);
 
+/* debug.c */
+void debug_out_to_stderr(const char *out);
+void debug_out(const char *format, ...);
 
 /*
  * Hack -- conditional (or "bizarre") externs

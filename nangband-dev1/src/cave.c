@@ -3063,14 +3063,10 @@ void update_monster_light(void)
 		int rad;
 		int fy, fx;
 
-		/* XXX */
+		/* XXX XXX */
 		byte queue_y[40];
 		byte queue_x[40];
 		int queue_n, q;
-
-		/* XXX XXX */
-		#define enqueue_loc(Y, X) \
-			queue_y[queue_n] = Y; queue_x[queue_n] = X; queue_n++
 
 
 		/* Skip dead monsters */
@@ -3088,9 +3084,6 @@ void update_monster_light(void)
 		/* Access the location */
 		fy = m_ptr->fy;
 		fx = m_ptr->fx;
-
-		/* Clear queue */
-		queue_n = 0;
 
 		/*
 		 * Because the following sections might look intimidating...
@@ -3113,6 +3106,18 @@ void update_monster_light(void)
 		 *     |/|\|
 		 *     3 3 3
 		 */
+
+		/* Clear queue */
+		queue_n = 0;
+
+		/* XXX XXX */
+		#define enqueue_loc(Y, X) \
+			if (in_bounds(Y, X)) \
+			{ \
+				queue_y[queue_n] = Y; \
+				queue_x[queue_n] = X; \
+				queue_n++; \
+			}
 
 		/** Radius 0 **/
 
@@ -3294,7 +3299,7 @@ void update_monster_light(void)
 			x = queue_x[q];
 
 			/* Reject out-of-bound grids */
-			if (!in_bounds(y, x)) continue;
+			/* if (!in_bounds(y, x)) continue; */
 
 			/* Already illuminated */
 			if (cave_info2[y][x] & (CAVE2_MLIGHT)) continue;

@@ -483,33 +483,21 @@ void self_knowledge(void)
 	if (p_ptr->sustain_dex) info[i++] = "Your dexterity is sustained.";
 	if (p_ptr->sustain_chr) info[i++] = "Your charisma is sustained.";
 
-	if (stat_mods[A_STR]) info[i++] = "Your strength is affected by your
- equipment.";
-	if (stat_mods[A_INT]) info[i++] = "Your intelligence is affected by your
- equipment.";
+	if (stat_mods[A_STR]) info[i++] = "Your strength is affected by your equipment.";
+	if (stat_mods[A_INT]) info[i++] = "Your intelligence is affected by your equipment.";
 	if (stat_mods[A_WIS]) info[i++] = "Your wisdom is affected by your equipment.";
-	if (stat_mods[A_DEX]) info[i++] = "Your dexterity is affected by your
- equipment.";
-	if (stat_mods[A_CON]) info[i++] = "Your constitution is affected by your
- equipment.";
-	if (stat_mods[A_CHR]) info[i++] = "Your charisma is affected by your
- equipment.";
+	if (stat_mods[A_DEX]) info[i++] = "Your dexterity is affected by your equipment.";
+	if (stat_mods[A_CON]) info[i++] = "Your constitution is affected by your equipment.";
+	if (stat_mods[A_CHR]) info[i++] = "Your charisma is affected by your equipment.";
 	
-	if (f1 & (TR1_STEALTH)) info[i++] = "Your stealth is affected by your
- equipment.";
-	if (f1 & (TR1_SEARCH)) info[i++] = "Your searching ability is affected by your
- equipment.";
-	if (f1 & (TR1_INFRA)) info[i++] = "Your infravision is affected by your
- equipment.";
-	if (f1 & (TR1_TUNNEL)) info[i++] = "Your digging ability is affected by your
- equipment.";
+	if (f1 & (TR1_STEALTH)) info[i++] = "Your stealth is affected by your equipment.";
+	if (f1 & (TR1_SEARCH)) info[i++] = "Your searching ability is affected by your equipment.";
+	if (f1 & (TR1_INFRA)) info[i++] = "Your infravision is affected by your equipment.";
+	if (f1 & (TR1_TUNNEL)) info[i++] = "Your digging ability is affected by your equipment.";
 	if (f1 & (TR1_SPEED)) info[i++] = "Your speed is affected by your equipment.";
-	if (f1 & (TR1_BLOWS)) info[i++] = "Your attack speed is affected by your
- equipment.";
-	if (f1 & (TR1_SHOTS)) info[i++] = "Your shooting speed is affected by your
- equipment.";
-	if (f1 & (TR1_MIGHT)) info[i++] = "Your shooting might is affected by your
- equipment.";
+	if (f1 & (TR1_BLOWS)) info[i++] = "Your attack speed is affected by your equipment.";
+	if (f1 & (TR1_SHOTS)) info[i++] = "Your shooting speed is affected by your equipment.";
+	if (f1 & (TR1_MIGHT)) info[i++] = "Your shooting might is affected by your equipment.";
 
 	/* Get the current weapon */
 	o_ptr = &inventory[INVEN_WIELD];
@@ -525,34 +513,22 @@ void self_knowledge(void)
 		if (f2 & (TR2_BRAND_POIS)) info[i++] = "Your weapon poisons your foes.";
 
 		/* Special "slay" flags */
-		if (f1 & (TR1_SLAY_ANIMAL)) info[i++] = "Your weapon strikes at animals with
- extra force.";
-		if (f1 & (TR1_SLAY_EVIL)) info[i++] = "Your weapon strikes at evil with extra
- force.";
-		if (f1 & (TR1_SLAY_UNDEAD)) info[i++] = "Your weapon strikes at undead with
- holy wrath.";
-		if (f1 & (TR1_SLAY_DEMON)) info[i++] = "Your weapon strikes at demons with
- holy wrath.";
-		if (f1 & (TR1_SLAY_ORC)) info[i++] = "Your weapon is especially deadly against
- orcs.";
-		if (f1 & (TR1_SLAY_TROLL)) info[i++] = "Your weapon is especially deadly
- against trolls.";
-		if (f1 & (TR1_SLAY_GIANT)) info[i++] = "Your weapon is especially deadly
- against giants.";
-		if (f1 & (TR1_SLAY_DRAGON)) info[i++] = "Your weapon is especially deadly
- against dragons.";
+		if (f1 & (TR1_SLAY_ANIMAL)) info[i++] = "Your weapon strikes at animals with extra force.";
+		if (f1 & (TR1_SLAY_EVIL)) info[i++] = "Your weapon strikes at evil with extra force.";
+		if (f1 & (TR1_SLAY_UNDEAD)) info[i++] = "Your weapon strikes at undead with holy wrath.";
+		if (f1 & (TR1_SLAY_DEMON)) info[i++] = "Your weapon strikes at demons with holy wrath.";
+		if (f1 & (TR1_SLAY_ORC)) info[i++] = "Your weapon is especially deadly against orcs.";
+		if (f1 & (TR1_SLAY_TROLL)) info[i++] = "Your weapon is especially deadly against trolls.";
+		if (f1 & (TR1_SLAY_GIANT)) info[i++] = "Your weapon is especially deadly against giants.";
+		if (f1 & (TR1_SLAY_DRAGON)) info[i++] = "Your weapon is especially deadly against dragons.";
 
 		/* Special "kill" flags */
-		if (f1 & (TR1_KILL_DRAGON)) info[i++] = "Your weapon is a great bane of
- dragons.";
-		if (f1 & (TR1_KILL_DEMON)) info[i++] = "Your weapon is a great bane of
- demons.";
-		if (f1 & (TR1_KILL_UNDEAD)) info[i++] = "Your weapon is a great bane of
- undead.";
+		if (f1 & (TR1_KILL_DRAGON)) info[i++] = "Your weapon is a great bane of dragons.";
+		if (f1 & (TR1_KILL_DEMON)) info[i++] = "Your weapon is a great bane of demons.";
+		if (f1 & (TR1_KILL_UNDEAD)) info[i++] = "Your weapon is a great bane of undead.";
 
 		/* Indicate Blessing */
-		if (f3 & (TR3_BLESSED)) info[i++] = "Your weapon has been blessed by the
- gods.";
+		if (f3 & (TR3_BLESSED)) info[i++] = "Your weapon has been blessed by the gods.";
 
 		/* Hack */
 		if (f3 & (TR3_IMPACT)) info[i++] = "Your weapon can induce earthquakes.";

@@ -8,6 +8,7 @@
 
 # N: serial number : terrain name
 # G: symbol : color
+# X: symbol
 # M: feature to mimic
 # F: flag | flag | flag
 
@@ -16,6 +17,9 @@
 
 # 'G' is for graphics - symbol and color; these represent the terrain feature
 # on-screen.
+
+# 'X' contains the symbol that represents this terrain feature in town
+# definition files.
 
 # 'M' is the index of a feature to mimic.
 
@@ -48,85 +52,100 @@ F:BORING
 
 N:1:open floor
 G:.:w
+X:.
 F:BORING
 
 # 0x02 --> invisible trap (drawn as open floor)
 
 N:2:invisible trap
 G:.:w
+X:^
 M:1
 
 # 0x03 --> glyph of warding
 
 N:3:glyph of warding
 G:;:y
+X:;
 
 # 0x04 --> open door
 
 N:4:open door
 G:':U
+X:'
 
 # 0x05 --> broken door
 
 N:5:broken door
 G:':u
+X:`
 
 # 0x06 --> up stairs (perm)
 
 N:6:up staircase
 G:<:w
+X:<
 
 # 0x07 --> down stairs (perm)
 
 N:7:down staircase
 G:>:w
+X:>
 
 # 0x08 --> shop -- general store (perm)
 
 N:8:General Store
 G:1:U
+X:1
 F:STORE
 
 # 0x09 --> shop -- armoury (perm)
 
 N:9:Armoury
 G:2:s
+X:2
 F:STORE
 
 # 0x0A --> shop -- weapon shop (perm)
 
 N:10:Weapon Smiths
 G:3:w
+X:3
 F:STORE
 
 # 0x0B --> shop -- temple (perm)
 
 N:11:Temple
 G:4:g
+X:4
 F:STORE
 
 # 0x0C --> shop -- alchemist (perm)
 
 N:12:Alchemy Shop
 G:5:b
+X:5
 F:STORE
 
 # 0x0D --> shop -- magic shop (perm)
 
 N:13:Magic Shop
 G:6:r
+X:6
 F:STORE
 
 # 0x0E --> shop -- black market (perm)
 
 N:14:Black Market
 G:7:D
+X:7
 F:STORE
 
 # 0x0F --> shop -- home (perm)
 
 N:15:Home
 G:8:y
+X:8
 F:STORE
 
 # 0x10 --> visible trap -- trap door

@@ -35,11 +35,13 @@ extern void (*core_aux)(cptr);
 
 /**** Available Functions ****/
 
+/* Compare */
+extern int my_stricmp(const char *s1, const char *s2);
+
 /* Test equality, prefix, suffix */
 extern bool streq(cptr s, cptr t);
 extern bool prefix(cptr s, cptr t);
 extern bool suffix(cptr s, cptr t);
-
 
 /* Print an error message */
 extern void plog(cptr str);

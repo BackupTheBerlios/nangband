@@ -74,32 +74,6 @@ static char link_help[80] = "[Press the key for the link you require]";
 /* Quick and dirty prototype */
 char *help_path_build(char *buffer, int buff_size, const char *file, const char *lastfile, history_blk *stack);
 
-/* -------------------------------------------------------- takkaria ---
- * Converts a string to a terminal colour byte.
- * --------------------------------------------------------------------- */
-static byte text_to_colour(char *string)
-{
-	if (bulp_stricmp(string, "dark") == 0) return (TERM_DARK);
-	if (bulp_stricmp(string, "white") == 0) return (TERM_WHITE);
-	if (bulp_stricmp(string, "slate") == 0) return (TERM_SLATE);
-	if (bulp_stricmp(string, "orange") == 0) return (TERM_ORANGE);
-	if (bulp_stricmp(string, "red") == 0) return (TERM_RED);
-	if (bulp_stricmp(string, "green") == 0) return (TERM_GREEN);
-	if (bulp_stricmp(string, "blue") == 0) return (TERM_BLUE);
-	if (bulp_stricmp(string, "umber") == 0) return (TERM_UMBER);
-	if (bulp_stricmp(string, "violet") == 0) return (TERM_VIOLET);
-	if (bulp_stricmp(string, "yellow") == 0) return (TERM_YELLOW);
-	if (bulp_stricmp(string, "lightdark") == 0) return (TERM_L_DARK);
-	if (bulp_stricmp(string, "lightwhite") == 0) return (TERM_L_WHITE);
-	if (bulp_stricmp(string, "lightred") == 0) return (TERM_L_RED);
-	if (bulp_stricmp(string, "lightgreen") == 0) return (TERM_L_GREEN);
-	if (bulp_stricmp(string, "lightblue") == 0) return (TERM_L_BLUE);
-	if (bulp_stricmp(string, "lightumber") == 0) return (TERM_L_UMBER);
-
-	/* Oops */
-	return (TERM_WHITE);
-}
-
 /* ------------------------------------------------------------ ajps ---
  * Draws a horizontal rule, well a line of dashes really.
  * --------------------------------------------------------------------- */
@@ -307,7 +281,7 @@ static int link_point_block(char *links, char *id)
 			n++;
 
 			/* if the id requested matches the one stored */
-			if (bulp_stricmp(id, LINK_TEXT(ptr)) == 0)
+			if (my_stricmp(id, LINK_TEXT(ptr)) == 0)
 			{
 				/* Return the block number */
 				return (ptr->data.block);
@@ -1064,25 +1038,25 @@ void add_linkptra(char **display, char **links, int *link_no, int *block_no, cha
 		char *extra_info = NULL;
 
 		/* If action="back", set the type */
-		if (bulp_stricmp(ptr, "back") == 0)
+		if (my_stricmp(ptr, "back") == 0)
 		{
 			link_type = LINK_TYPE_BACK;
 		}
 
 		/* If action="exit", set the type */
-		if (bulp_stricmp(ptr, "exit") == 0)
+		if (my_stricmp(ptr, "exit") == 0)
 		{
 			link_type = LINK_TYPE_EXIT;
 		}
 
 		/* If action="forward", set the type */
-		if (bulp_stricmp(ptr, "forward") == 0)
+		if (my_stricmp(ptr, "forward") == 0)
 		{
 			link_type = LINK_TYPE_FORWARD;
 		}
 
 		/* If action="return" */
-		if (bulp_stricmp(ptr, "return") == 0)
+		if (my_stricmp(ptr, "return") == 0)
 		{
 			/* Set the type properly */
 			link_type = LINK_TYPE_RETURN;
@@ -2132,7 +2106,7 @@ void add_colour(char **display, char *buffer)
 	{
 		/* Add the information to the redraw block */
 		(*display)[0] = REDRAW_CODE_COLOUR;
-		(*display)[1] = text_to_colour(ptr);
+		(*display)[1] = color_text_to_attr(ptr);
 
 		/* Move the write position on by two */
 		*display += 2;
@@ -2144,18 +2118,18 @@ void add_colour(char **display, char *buffer)
  * --------------------------------------------------------------------- */
 char set_alignment(char *alignment)
 {
-	if (bulp_stricmp(alignment, "left") == 0)
+	if (my_stricmp(alignment, "left") == 0)
 	{
 		return (ALIGN_LEFT);
 	}
 
-	if (bulp_stricmp(alignment, "centre") == 0 ||
-		bulp_stricmp(alignment, "center") == 0)
+	if (my_stricmp(alignment, "centre") == 0 ||
+		my_stricmp(alignment, "center") == 0)
 	{
 		return (ALIGN_CENTRE);
 	}
 
-	if (bulp_stricmp(alignment, "right") == 0)
+	if (my_stricmp(alignment, "right") == 0)
 	{
 		return (ALIGN_RIGHT);
 	}
@@ -2730,7 +2704,7 @@ bool preparse_list(BULP *bptr, list_blk *list_info, char *err_message)
 					case TAG_OPEN:
 					{
 						/* List opened */
-						if (bulp_stricmp(buffer, "list") == 0)
+						if (my_stricmp(buffer, "list") == 0)
 						{
 							list_no++;
 						}
@@ -2739,7 +2713,7 @@ bool preparse_list(BULP *bptr, list_blk *list_info, char *err_message)
 						 * if an item has been opened in "this" list -
 						 * the one we are preparsing information for.
 						 */
-						if (bulp_stricmp(buffer, "item") == 0 && list_no == 0)
+						if (my_stricmp(buffer, "item") == 0 && list_no == 0)
 						{
 							char temp[20];
 
@@ -2763,7 +2737,7 @@ bool preparse_list(BULP *bptr, list_blk *list_info, char *err_message)
 
 					case TAG_CLOSE:
 					{
-						if (bulp_stricmp(buffer, "list") == 0)
+						if (my_stricmp(buffer, "list") == 0)
 						{
 							/* If we aren't in "this" list */
 							if (list_no > 0)
@@ -2845,14 +2819,14 @@ bool preparse_table(BULP *bptr, int *table_info, char *err_message)
 					case TAG_OPEN:
 					{
 						/* Keep track of the table level we are at */
-						if (bulp_stricmp(buffer, "table") == 0)
+						if (my_stricmp(buffer, "table") == 0)
 						{
 							table_no++;
 						}
 
 						/* If we are in "this" table and a row is opened */
 						if (table_no == 0 && !in_row &&
-							bulp_stricmp(buffer, "row") == 0)
+							my_stricmp(buffer, "row") == 0)
 						{
 							/* Mark that we are in a row */
 							in_row = TRUE;
@@ -2865,7 +2839,7 @@ bool preparse_table(BULP *bptr, int *table_info, char *err_message)
 						if (table_no == 0 &&
 							 in_row &&
 							 !in_cell &&
-							  bulp_stricmp(buffer, "cell") == 0)
+							  my_stricmp(buffer, "cell") == 0)
 						{
 							/* Mark that we are in a cell */
 							in_cell=TRUE;
@@ -2896,7 +2870,7 @@ bool preparse_table(BULP *bptr, int *table_info, char *err_message)
 					{
 						/* If a row is closed and it is permitted */
 						if (table_no == 0 && in_row &&
-							bulp_stricmp(buffer, "row")==0)
+							my_stricmp(buffer, "row")==0)
 						{
 							/* note that we are not in a row any more */
 							in_row = FALSE;
@@ -2904,13 +2878,13 @@ bool preparse_table(BULP *bptr, int *table_info, char *err_message)
 
 						/* If a cell is closed and it is permitted */
 						if (table_no == 0 && in_row &&
-							bulp_stricmp(buffer, "cell") == 0)
+							my_stricmp(buffer, "cell") == 0)
 						{
 							in_cell=FALSE;
 						}
 
 						/* If a table is closed */
-						if (bulp_stricmp(buffer, "table") == 0)
+						if (my_stricmp(buffer, "table") == 0)
 						{
 							/* If it isn't "our" table */
 							if (table_no > 0)
@@ -3015,8 +2989,8 @@ bool parse_list(BULP *bptr, char **display, char **links, int *link_no, int *blo
 
 	if (ptr != NULL)
 	{
-		if (bulp_stricmp(ptr, "yes") == 0 ||
-			 bulp_stricmp(ptr, "true") == 0)
+		if (my_stricmp(ptr, "yes") == 0 ||
+			 my_stricmp(ptr, "true") == 0)
 		{
 			(*display)[4]=LIST_COMPACT;
 		}
@@ -3164,10 +3138,10 @@ bool parse_table(BULP *bptr, char **display, char **links, int *link_no, int *bl
 
 	if (ptr != NULL)
 	{
-		if (bulp_stricmp(ptr, "all") == 0) (*display)[4] = FLAG_TABLE_ALLRULES;
-		if (bulp_stricmp(ptr, "rows") == 0) (*display)[4] = FLAG_TABLE_HRULES;
-		if (bulp_stricmp(ptr, "cols") == 0) (*display)[4] = FLAG_TABLE_VRULES;
-		if (bulp_stricmp(ptr, "none") == 0) (*display)[4] = FLAG_TABLE_NORULES;
+		if (my_stricmp(ptr, "all") == 0) (*display)[4] = FLAG_TABLE_ALLRULES;
+		if (my_stricmp(ptr, "rows") == 0) (*display)[4] = FLAG_TABLE_HRULES;
+		if (my_stricmp(ptr, "cols") == 0) (*display)[4] = FLAG_TABLE_VRULES;
+		if (my_stricmp(ptr, "none") == 0) (*display)[4] = FLAG_TABLE_NORULES;
 	}
 
 
@@ -3525,7 +3499,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						level++;
 
 						/* If we have a table tag */
-						if (bulp_stricmp(buffer, "table") == 0)
+						if (my_stricmp(buffer, "table") == 0)
 						{
 							/* Parse the table */
 							if (parse_table(bptr,
@@ -3547,7 +3521,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						}
 
 						/* if we have a list tag */
-						if (bulp_stricmp(buffer, "list") == 0)
+						if (my_stricmp(buffer, "list") == 0)
 						{
 							/* Parse the list */
 							if (parse_list(bptr,
@@ -3569,7 +3543,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						}
 
 						/* Ony deal with the item if we aren't in one */
-						if (bulp_stricmp(buffer, "item") == 0 && !list_item)
+						if (my_stricmp(buffer, "item") == 0 && !list_item)
 						{
 							if (list_info != NULL)
 							{
@@ -3594,7 +3568,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						}
 
 						/* Row tag */
-						if (bulp_stricmp(buffer, "row") == 0)
+						if (my_stricmp(buffer, "row") == 0)
 						{
 							/* If we are allowed to open a row */
 							if (table_info != NULL && row == FALSE)
@@ -3617,7 +3591,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "cell") == 0)
+						if (my_stricmp(buffer, "cell") == 0)
 						{
 							/* If we are allowed to open a cell */
 							if (table_info != NULL && row == TRUE)
@@ -3653,7 +3627,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "link") == 0)
+						if (my_stricmp(buffer, "link") == 0)
 						{
 							/* Add data about the link into the redraw block */
 							add_linkptra(display,
@@ -3664,7 +3638,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "p") == 0)
+						if (my_stricmp(buffer, "p") == 0)
 						{
 							if (in_p)
 							{
@@ -3684,7 +3658,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "pre") == 0)
+						if (my_stricmp(buffer, "pre") == 0)
 						{
 							if (prefab)
 							{
@@ -3699,7 +3673,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "em") == 0)
+						if (my_stricmp(buffer, "em") == 0)
 						{
 							/* Add an emph redraw code */
 							(*display)[0] = REDRAW_CODE_EMPH;
@@ -3707,7 +3681,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "strong") == 0)
+						if (my_stricmp(buffer, "strong") == 0)
 						{
 							/* Add a strong redraw code */
 							(*display)[0] = REDRAW_CODE_STRONG;
@@ -3715,17 +3689,17 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "colour") == 0 ||
-							bulp_stricmp(buffer, "color") == 0)
+						if (my_stricmp(buffer, "colour") == 0 ||
+							my_stricmp(buffer, "color") == 0)
 						{
 							/* Add a colour change code. */
 							add_colour(display, buffer);
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "h1") == 0 ||
-							 bulp_stricmp(buffer, "h2") == 0 ||
-							  bulp_stricmp(buffer, "h3") == 0)
+						if (my_stricmp(buffer, "h1") == 0 ||
+							 my_stricmp(buffer, "h2") == 0 ||
+							  my_stricmp(buffer, "h3") == 0)
 						{
 							/* Add the various header codes to the redraw */
 							add_head_data_open(display, buffer);
@@ -3736,7 +3710,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "br") == 0)
+						if (my_stricmp(buffer, "br") == 0)
 						{
 							/* Just insert a newline character */
 							(*display)[0]='\n';
@@ -3744,7 +3718,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "hr") == 0)
+						if (my_stricmp(buffer, "hr") == 0)
 						{
 							/* Add horizontal rule */
 							add_hrule(display, buffer, 100);
@@ -3764,7 +3738,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						}
 
 						/* We can fill in an error message in place of this tag */
-						if (bulp_stricmp(buffer, "err") == 0)
+						if (my_stricmp(buffer, "err") == 0)
 						{
 							strcpy((*display), err_message);
 							(*display) += strlen(err_message);
@@ -3773,7 +3747,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						}
 
 						/* A self-contained link */
-						if (bulp_stricmp(buffer, "link") == 0)
+						if (my_stricmp(buffer, "link") == 0)
 						{
 							add_linkptra(display,
 											links,
@@ -3788,7 +3762,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						}
 
 						/* line break */
-						if (bulp_stricmp(buffer, "br") == 0)
+						if (my_stricmp(buffer, "br") == 0)
 						{
 							(*display)[0]='\n';
 							(*display)++;
@@ -3796,7 +3770,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "hr") == 0)
+						if (my_stricmp(buffer, "hr") == 0)
 						{
 							/* Add horizontal rule */
 							add_hrule(display, buffer, 100);
@@ -3816,7 +3790,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						/* Always drop back a level when a tag closes */
 						level--;
 
-						if (bulp_stricmp(buffer, "item") == 0 && list_item)
+						if (my_stricmp(buffer, "item") == 0 && list_item)
 						{
 							/* No longer in an item */
 							list_item = FALSE;
@@ -3831,7 +3805,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "row") == 0)
+						if (my_stricmp(buffer, "row") == 0)
 						{
 							if (table_info != NULL && row == TRUE)
 							{
@@ -3851,7 +3825,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "cell") == 0)
+						if (my_stricmp(buffer, "cell") == 0)
 						{
 							if (table_info != NULL && row == TRUE)
 							{
@@ -3875,7 +3849,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "pre") == 0)
+						if (my_stricmp(buffer, "pre") == 0)
 						{
 							if (!prefab)
 							{
@@ -3890,7 +3864,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "hr") == 0)
+						if (my_stricmp(buffer, "hr") == 0)
 						{
 							/* Mark end of block */
 							(*display)[0] = REDRAW_CODE_BLOCKEND;
@@ -3899,7 +3873,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "p") == 0)
+						if (my_stricmp(buffer, "p") == 0)
 						{
 							/* Mark end of block */
 							(*display)[0] = REDRAW_CODE_BLOCKEND;
@@ -3914,7 +3888,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "link") == 0)
+						if (my_stricmp(buffer, "link") == 0)
 						{
 							/* These two bytes mark the end of a link */
 							(*display)[0] = REDRAW_CODE_LINKREF;
@@ -3925,9 +3899,9 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "h1") == 0 ||
-							bulp_stricmp(buffer, "h2") == 0 ||
-							bulp_stricmp(buffer, "h3") == 0)
+						if (my_stricmp(buffer, "h1") == 0 ||
+							my_stricmp(buffer, "h2") == 0 ||
+							my_stricmp(buffer, "h3") == 0)
 						{
 							/* Close the header block */
 							add_head_data_close(display, buffer);
@@ -3938,7 +3912,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "em") == 0)
+						if (my_stricmp(buffer, "em") == 0)
 						{
 							/* Toggle emphasis off */
 							(*display)[0] = REDRAW_CODE_EMPH;
@@ -3947,7 +3921,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "strong") == 0)
+						if (my_stricmp(buffer, "strong") == 0)
 						{
 							/* Toggle strong off */
 							(*display)[0] = REDRAW_CODE_STRONG;
@@ -3956,8 +3930,8 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "colour") == 0 ||
-							bulp_stricmp(buffer, "color") == 0)
+						if (my_stricmp(buffer, "colour") == 0 ||
+							my_stricmp(buffer, "color") == 0)
 						{
 							/* Set colour back to white */
 							(*display)[0] = REDRAW_CODE_COLOUR;
@@ -3974,7 +3948,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						 * which case we are still done, but have
 						 * failed.
 						 */
-						if (bulp_stricmp(buffer, "body") == 0)
+						if (my_stricmp(buffer, "body") == 0)
 						{
 							if (table_info == NULL && list_info == NULL)
 							{
@@ -4001,7 +3975,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						 * to parse a table, then we return TRUE.
 						 * Otherwise, we return FALSE, because of the error.
 						 */
-						if (bulp_stricmp(buffer, "table") == 0)
+						if (my_stricmp(buffer, "table") == 0)
 						{
 							if (table_info != NULL)
 							{
@@ -4025,7 +3999,7 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 						 * to parse a list, then we return TRUE.
 						 * Otherwise, we return FALSE, because of the error.
 						 */
-						if (bulp_stricmp(buffer, "list") == 0)
+						if (my_stricmp(buffer, "list") == 0)
 						{
 							if (list_info != NULL)
 							{
@@ -4160,7 +4134,7 @@ bool preparse_body(BULP *bptr, char **links_block, int *no_blocks, char *err_mes
 						/* Note that we are now inside another tag */
 						level++;
 
-						if (bulp_stricmp(buffer, "link") == 0)
+						if (my_stricmp(buffer, "link") == 0)
 						{
 							/*
 							 * Add the size of a standard link block,
@@ -4178,7 +4152,7 @@ bool preparse_body(BULP *bptr, char **links_block, int *no_blocks, char *err_mes
 						/* If we are outside tags, note this is a "big block" */
 						if (level == 0) (*no_blocks)++;
 
-						if (bulp_stricmp(buffer, "link") == 0)
+						if (my_stricmp(buffer, "link") == 0)
 						{
 							/* A link on the base level isn't a block */
 							if (level == 0) (*no_blocks)--;
@@ -4203,7 +4177,7 @@ bool preparse_body(BULP *bptr, char **links_block, int *no_blocks, char *err_mes
 						level--;
 
 						/* The body tag has been closed */
-						if (bulp_stricmp(buffer, "body") == 0)
+						if (my_stricmp(buffer, "body") == 0)
 						{
 							/* If more tags were opened than were closed */
 							if (badly_formed > 0)
@@ -4391,7 +4365,7 @@ int parse_title(BULP *bptr, char *display_block, char *err_message)
 				case TAG_CLOSE:
 				{
 					/* We're done, carry on with other things */
-					if (bulp_stricmp(buffer, "title") == 0) return (TRUE);
+					if (my_stricmp(buffer, "title") == 0) return (TRUE);
 
 					break;
 				}
@@ -4559,7 +4533,7 @@ bool parse_helpfile(BULP *help_file, char **display_blk, char **links_blk, int *
 				{
 					case TAG_OPEN:
 					{
-						if (bulp_stricmp(buffer, "ahml") == 0)
+						if (my_stricmp(buffer, "ahml") == 0)
 						{
 							/* If it has already been opened */
 							if (ahml)
@@ -4573,7 +4547,7 @@ bool parse_helpfile(BULP *help_file, char **display_blk, char **links_blk, int *
 						}
 
 						/* The title tag */
-						if (bulp_stricmp(buffer, "title") == 0 && ahml)
+						if (my_stricmp(buffer, "title") == 0 && ahml)
 						{
 							int result = -1;
 
@@ -4589,7 +4563,7 @@ bool parse_helpfile(BULP *help_file, char **display_blk, char **links_blk, int *
 						}
 
 						/* The body tag */
-						if (bulp_stricmp(buffer, "body") == 0 && ahml)
+						if (my_stricmp(buffer, "body") == 0 && ahml)
 						{
 							/*
 							 * Preparse the body to get the size
@@ -4636,7 +4610,7 @@ bool parse_helpfile(BULP *help_file, char **display_blk, char **links_blk, int *
 					case TAG_CLOSE:
 					{
 						/* We're done with this file */
-						if (bulp_stricmp(buffer, "ahml") == 0) return (TRUE);
+						if (my_stricmp(buffer, "ahml") == 0) return (TRUE);
 						break;
 					}
 				}
@@ -5565,7 +5539,7 @@ bool show_helpfile(char *filename, int filename_length, char *mark, helpfile_blk
 	from_line=0;
 
 	/* Find mark point (if wanted) */
-	if (bulp_stricmp(mark, "") != 0)
+	if (my_stricmp(mark, "") != 0)
 	{
 		/* Find the block number of the mark specified */
 		start_block = link_point_block(links, mark);

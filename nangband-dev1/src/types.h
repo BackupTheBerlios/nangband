@@ -88,6 +88,7 @@ typedef struct hist_type hist_type;
 typedef struct player_other player_other;
 typedef struct player_type player_type;
 typedef struct start_item start_item;
+typedef struct high_score high_score;
 typedef struct flavor_type flavor_type;
 typedef struct bonus_data bonus_data;
 
@@ -129,24 +130,28 @@ struct maxima
  */
 struct feature_type
 {
-	u32b name;			/* Name (offset) */
-	u32b text;			/* Text (offset) */
+	u32b name;         /* Name (offset) */
 
-	byte mimic;			/* Feature to mimic */
+	u32b text;         /* Text (offset) */
 
-	byte extra;			/* Extra byte (unused) */
+	/*
+	 * Chracter which is used to represent this feature in the
+	 * town definition files.
+	 */
+	char t_char;
+	byte mimic;        /* Feature to mimic */
 
-	s16b unused;		/* Extra bytes (unused) */
+	byte d_attr;       /* Default feature attribute */
+	char d_char;       /* Default feature character */
 
+	byte x_attr;       /* Desired feature attribute */
+	char x_char;       /* Desired feature character */
 
-	byte d_attr;		/* Default feature attribute */
-	char d_char;		/* Default feature character */
+	/* Unused */
+	byte unused;
+	byte something;
 
-
-	byte x_attr;		/* Desired feature attribute */
-	char x_char;		/* Desired feature character */
-
-	u32b f1;	/* Flags */
+	u32b f1;           /* Flags, set one */
 };
 
 
@@ -928,10 +933,10 @@ struct player_type
 	s16b tim_invis;		/* Timed -- See Invisible */
 	s16b tim_infra;		/* Timed -- Infra Vision */
 
-	sbyte resist_timed[RES_MAX];	/* Timed resistances */
-	sbyte resist_tim_max[RES_MAX];	/* Original time of resistance */
-	sbyte resist_cur[RES_MAX];	/* Current % resistances */
-	sbyte resist_dis[RES_MAX];	/* Displayed resistances */
+	sbyte resist_timed[RES_MAX];         /* Timed resistances */
+	sbyte resist_tim_max[RES_MAX];       /* Original time of resistance */
+	sbyte resist_cur[RES_MAX];           /* Current % resistances */
+	sbyte resist_dis[RES_MAX];           /* Displayed resistances */
 
 	s16b word_recall;	/* Word of recall counter */
 
@@ -1112,9 +1117,6 @@ struct player_type
  *
  * Note that "string comparisons" are thus valid on "pts".
  */
-
-typedef struct high_score high_score;
-
 struct high_score
 {
 	char what[8];		/* Version info (string) */
@@ -1162,14 +1164,12 @@ struct flavor_type
 };
 
 /*
- * Hold data for bonuses in (name, bonus) pairs.
- *
- * Note that name is a pointer to prevent silly code.
+ * Hold data about a bonus; name and value.
+ * Note that "name" is a pointer because it saves space.
  */
-
 struct bonus_data
 {
-	char *name;	/* Entry name */
-	s16b bonus;	/* Entry's bonus */
+	char *name;      /* Entry name */
+	s16b bonus;      /* Entry's bonus */
 };
 

@@ -20,6 +20,40 @@
 cptr argv0 = NULL;
 
 
+/*
+ * Does a case insensitive comparison between two strings.
+ */
+int my_stricmp(const char *s1, const char *s2)
+{
+	char ch1 = 0;
+	char ch2 = 0;
+
+	/* Just loop */
+	while (TRUE)
+	{
+		/* We've reached the end of both strings simultaneously */
+		if ((*s1 == 0) && (*s2 == 0))
+		{
+			/* We're still here, so s1 and s2 are equal */
+			return (0);
+		}
+
+		ch1 = toupper(*s1);
+		ch2 = toupper(*s2);
+
+		/* If the characters don't match */
+		if (ch1 != ch2)
+		{
+			/* return the difference between them */
+			return ((int) (ch1 - ch2));
+		}
+
+		/* Step on through both strings */
+		s1++;
+		s2++;
+	}
+}
+
 
 /*
  * Determine if string "a" is equal to string "b"

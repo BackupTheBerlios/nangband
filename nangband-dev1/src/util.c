@@ -3739,19 +3739,14 @@ uint maxroll(uint num, uint sides)
  */
 bool is_a_vowel(int ch)
 {
-	switch (ch)
+	switch (tolower((unsigned char) ch))
 	{
 		case 'a':
 		case 'e':
 		case 'i':
 		case 'o':
 		case 'u':
-		case 'A':
-		case 'E':
-		case 'I':
-		case 'O':
-		case 'U':
-		return (TRUE);
+			return (TRUE);
 	}
 
 	return (FALSE);
@@ -3817,7 +3812,31 @@ byte color_char_to_attr(char c)
 	return (TERM_WHITE);
 }
 
+/* -------------------------------------------------------- takkaria ---
+ * Converts a string to a terminal colour byte.
+ * --------------------------------------------------------------------- */
+byte color_text_to_attr(char *string)
+{
+	if (my_stricmp(string, "dark") == 0) return (TERM_DARK);
+	if (my_stricmp(string, "white") == 0) return (TERM_WHITE);
+	if (my_stricmp(string, "slate") == 0) return (TERM_SLATE);
+	if (my_stricmp(string, "orange") == 0) return (TERM_ORANGE);
+	if (my_stricmp(string, "red") == 0) return (TERM_RED);
+	if (my_stricmp(string, "green") == 0) return (TERM_GREEN);
+	if (my_stricmp(string, "blue") == 0) return (TERM_BLUE);
+	if (my_stricmp(string, "umber") == 0) return (TERM_UMBER);
+	if (my_stricmp(string, "violet") == 0) return (TERM_VIOLET);
+	if (my_stricmp(string, "yellow") == 0) return (TERM_YELLOW);
+	if (my_stricmp(string, "lightdark") == 0) return (TERM_L_DARK);
+	if (my_stricmp(string, "lightwhite") == 0) return (TERM_L_WHITE);
+	if (my_stricmp(string, "lightred") == 0) return (TERM_L_RED);
+	if (my_stricmp(string, "lightgreen") == 0) return (TERM_L_GREEN);
+	if (my_stricmp(string, "lightblue") == 0) return (TERM_L_BLUE);
+	if (my_stricmp(string, "lightumber") == 0) return (TERM_L_UMBER);
 
+	/* Oops */
+	return (TERM_WHITE);
+}
 
 #if 0
 

@@ -5238,6 +5238,8 @@ bool load_helpfile(char *filename, helpfile_blk *help_file, int width, history_b
 
 		/* Build a path to the notparsed error file */                 
 		path_build(filename, 1024, ANGBAND_DIR_HELP, "err/notparsed.xml");
+
+		return(FALSE);
 	}
 
 	/* Close file */

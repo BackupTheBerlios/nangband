@@ -1774,6 +1774,13 @@ void obj_info_resists(byte *resists)
 		percentages[pc++] = resists[RES_CONF];
 	}
 
+	if (resists[RES_SOUND])
+	{
+		text[vn++] = "sound";
+		colours[cn++] = TERM_ORANGE;
+		percentages[pc++] = resists[RES_SOUND];
+	}
+
 	/* Describe */
 	if (vn)
 	{
@@ -2127,12 +2134,6 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	if (f2 & (TR2_NO_BLIND))
 	{
 		text_out("It grants you immunity to blindness.  ");
-		known = TRUE;
-	}
-
-	if (f2 & (TR2_RES_SOUND))
-	{
-		text_out("It provides resistance to sound.  ");
 		known = TRUE;
 	}
 

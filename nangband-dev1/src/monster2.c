@@ -2374,7 +2374,9 @@ void update_smart_learn(int m_idx, int what)
 
 		case DRS_RES_SOUND:
 		{
-			if (p_ptr->resist_sound) m_ptr->smart |= (SM_RES_SOUND);
+			if (p_ptr->resist_cur[RES_SOUND] || p_ptr->resist_timed[RES_SOUND])
+				m_ptr->smart |= (SM_RES_SOUND);
+
 			break;
 		}
 

@@ -503,13 +503,13 @@ static const flag_desc resist_flags_desc[] =
 	{ TR2_RES_LITE,   "Light" },
 	{ TR2_RES_DARK,   "Dark" },
 	{ TR2_RES_CONFU,  "Blindness" },
-	{ TR2_RES_CONFU,  "Confusion" }, */
+	{ TR2_RES_CONFU,  "Confusion" },
 	{ TR2_RES_SOUND,  "Sound" },
 	{ TR2_RES_SHARD,  "Shards" },
 	{ TR2_RES_NEXUS,  "Nexus" },
 	{ TR2_RES_NETHR,  "Nether" },
 	{ TR2_RES_CHAOS,  "Chaos" },
-	{ TR2_RES_DISEN,  "Disenchantment" },
+	{ TR2_RES_DISEN,  "Disenchantment" },*/
 };
 
 /*

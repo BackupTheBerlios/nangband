@@ -1956,19 +1956,19 @@
 #define TR2_XXX1            0x00000800L /* (reserved) */
 #define TR2_NO_DISENCHANT   0x00001000L /* Item cannot be disenchanted */
 #define TR2_NO_BLIND        0x00002000L /* Item grants immunity to blindness */
-#define TR2_XXX4            0x00004000L /* (reserved) */
-#define TR2_XXX5            0x00008000L /* (reserved) */
-#define TR2_XXX6            0x00010000L /* (reserved) */
-#define TR2_XXX7            0x00020000L /* (reserved) */
-#define TR2_XXX8            0x00040000L /* (reserved) */
-#define TR2_XXX9            0x00080000L /* (reserved) */
-#define TR2_XXX10           0x00100000L /* (reserved) */
-#define TR2_XXX11           0x00200000L /* (reserved) */
-#define TR2_XXX12           0x00400000L /* (reserved) */
-#define TR2_XXX13           0x00800000L /* (reserved) */
-#define TR2_XXX14           0x01000000L /* (reserved) */
-#define TR2_XXX15           0x02000000L /* (reserved) */
-#define TR2_RES_SOUND       0x04000000L /* Resist sound */
+#define TR2_XXX2            0x00004000L /* (reserved) */
+#define TR2_XXX3            0x00008000L /* (reserved) */
+#define TR2_XXX4            0x00010000L /* (reserved) */
+#define TR2_XXX5            0x00020000L /* (reserved) */
+#define TR2_XXX6            0x00040000L /* (reserved) */
+#define TR2_XXX7            0x00080000L /* (reserved) */
+#define TR2_XXX8            0x00100000L /* (reserved) */
+#define TR2_XXX9            0x00200000L /* (reserved) */
+#define TR2_XXX10           0x00400000L /* (reserved) */
+#define TR2_XXX11           0x00800000L /* (reserved) */
+#define TR2_XXX12           0x01000000L /* (reserved) */
+#define TR2_XXX13           0x02000000L /* (reserved) */
+#define TR2_XXX14           0x04000000L /* (reserved) */
 #define TR2_RES_SHARD       0x08000000L /* Resist shards */
 #define TR2_RES_NEXUS       0x10000000L /* Resist nexus */
 #define TR2_RES_NETHR       0x20000000L /* Resist nether */

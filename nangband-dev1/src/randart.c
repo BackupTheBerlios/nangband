@@ -1057,8 +1057,8 @@ static s32b artifact_power(int a_idx)
 	if (a_ptr->flags3 & TR3_FREE_ACT) p += 8;
 	if (a_ptr->flags3 & TR3_HOLD_LIFE) p += 10;
 	if (a_ptr->flags2 & TR2_NO_BLIND) p += 10;
-/*	if (a_ptr->flags2 & TR2_RES_CONFU) p += 8; */
-	if (a_ptr->flags2 & TR2_RES_SOUND) p += 10;
+/*	if (a_ptr->flags2 & TR2_RES_CONFU) p += 8; 
+	if (a_ptr->flags2 & TR2_RES_SOUND) p += 10; */
 	if (a_ptr->flags2 & TR2_RES_SHARD) p += 8;
 	if (a_ptr->flags2 & TR2_RES_NETHR) p += 12;
 	if (a_ptr->flags2 & TR2_RES_NEXUS) p += 10;
@@ -1814,7 +1814,7 @@ static void add_ability(artifact_type *a_ptr)
 			case 28: a_ptr->resists[RES_DARK] += 20; break;
 			case 29: a_ptr->flags2 |= TR2_NO_BLIND; break;
 			case 30: a_ptr->resists[RES_CONF] += 20; break;
-			case 31: a_ptr->flags2 |= TR2_RES_SOUND; break;
+			case 31: a_ptr->resists[RES_SOUND] += 20; break;
 			case 32: a_ptr->flags2 |= TR2_RES_SHARD; break;
 			case 33:
 				if (rand_int(2) == 0)

@@ -1910,7 +1910,6 @@ static void calc_bonuses(void)
 
 	/* Resistance flags */
 	if (f2 & (TR2_NO_BLIND)) p_ptr->resist_blind = TRUE;
-	if (f2 & (TR2_RES_SOUND)) p_ptr->resist_sound = TRUE;
 	if (f2 & (TR2_RES_SHARD)) p_ptr->resist_shard = TRUE;
 	if (f2 & (TR2_RES_NEXUS)) p_ptr->resist_nexus = TRUE;
 	if (f2 & (TR2_RES_NETHR)) p_ptr->resist_nethr = TRUE;
@@ -2000,7 +1999,6 @@ static void calc_bonuses(void)
 
 		/* Resistance flags */
 		if (f2 & (TR2_NO_BLIND)) p_ptr->resist_blind = TRUE;
-		if (f2 & (TR2_RES_SOUND)) p_ptr->resist_sound = TRUE;
 		if (f2 & (TR2_RES_SHARD)) p_ptr->resist_shard = TRUE;
 		if (f2 & (TR2_RES_NEXUS)) p_ptr->resist_nexus = TRUE;
 		if (f2 & (TR2_RES_NETHR)) p_ptr->resist_nethr = TRUE;

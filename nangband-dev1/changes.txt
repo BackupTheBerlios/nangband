@@ -1,6 +1,10 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-05-02
+----------
+- Fixed bug with monster blows, as suggested by pelpel. (parody)
+
 2002-04-30
 ----------
 - Fixed up lots of the save code, thanks pelpel. (takkaria)

@@ -955,14 +955,14 @@ end
 function get_activation(object)
 	local activation, time, randtime
 
-	if object.name1 > 0
+	if object.name1 > 0 then
 		local artifact = a_info[object.name1 + 1]
 
 		-- Grab the data
 		activation = artifact.activation
 		time = artifact.time
 		randtime = artifact.randtime
-	elseif object.name3 > 0
+	elseif object.name3 > 0 then
 		local randart = x_info[object.name3 + 1]
 
 		-- Grab the data

@@ -45,8 +45,7 @@ ANGOBJS = \
 	main-cap.o main-gcu.o main-x11.o main-xaw.o main-win.o main.o \
 	main-gtk.o main-lsl.o main-sla.o main-vcs.o main-xpj.o maid-x11.o \
 	script.o l-monst.o l-object.o l-player.o l-random.o l-ui.o l-misc.o l-spell.o l-dynamic.o \
-	$(LUAOBJS) \
-	$(BORGOBJS)
+	$(LUAOBJS)
 
 ##
 ## Following are some "system" definitions
@@ -72,19 +71,8 @@ ANGOBJS = \
 
 # This is your compiler - gcc is normal, with a default level of warnings.
 CC = gcc
-OPTIMISATION = -O2 -pipe
+OPTIMISATION = -O2 -fno-strength-reduce
 WARNINGS = -Wall
-
-## OPTION: The system which Nangband is being run on has mkstemp().
-##         This is default; if you get errors including "mkstemp()",
-##         comment out the following line.
-#
-HAVE_MKSTEMP = -DHAVE_MKSTEMP
-
-## OPTION: Allow the borg.
-##         Uncomment the following line to enable it.
-#
-# ALLOW_BORG = -DALLOW_BORG
 
 ## OPTION: Use gcc 3.1 with extraneous warning options
 ##         Uncomment the following lines to enable it.
@@ -94,6 +82,37 @@ HAVE_MKSTEMP = -DHAVE_MKSTEMP
 # 	-Wwrite-strings -Wpointer-arith -Wbad-function-cast -Wsign-compare \
 # 	-Waggregate-return -Wstrict-prototypes -Wredundant-decls \
 # 	-Wdisabled-optimization -Wall
+
+## OPTION: Compile for Dec ALPHA OSF/1 v2.0.  Uncomment the following line
+##         to enable this.
+#
+# CC = cc
+# CFLAGS += -std -g3 -Olimit 4000
+# LIBS += -lrpcsvc
+
+## OPTION: Use TCC (Tiny CC).  Uncomment the following lines to enable this.
+##         Note that TCC has only been tested with USE_GCU.
+#
+# CC = tcc
+# OPTIMISATION = 
+# WARNINGS =
+
+## OPTION: Enable debugging in the compiler.  Comment out the following
+##         line if you do not want debugging information in the
+##         executable.
+#
+DEBUGGING = -g
+
+## OPTION: The system which Nangband is being run on has mkstemp().
+##         This is default; if you get errors including "mkstemp()",
+##         comment out the following line.
+#
+EXTRAS += -DHAVE_MKSTEMP
+
+## OPTION: Allow the borg.
+##         Uncomment the following line to enable it.
+#
+# ALLOW_BORG = true
 
 #
 # Default target; this is one of "x11-gcu", "only-x11", "only-gcu",
@@ -110,9 +129,9 @@ default: x11-gcu
 # "new curses" library instead of the "old curses" library, and
 # you may have to add "-I/usr/include/ncurses" to the "CFLAGS".
 #
-x11-gcu: CFLAGS = -I/usr/X11R6/include -I/usr/include/ncurses \
+x11-gcu: CFLAGS += -I/usr/X11R6/include -I/usr/include/ncurses \
          -DUSE_X11 -DUSE_GCU -DUSE_NCURSES
-x11-gcu: LIBS = -L/usr/X11R6/lib -lX11 -lncurses
+x11-gcu: LIBS += -L/usr/X11R6/lib -lX11 -lncurses
 x11-gcu: nangband
 
 #
@@ -120,8 +139,8 @@ x11-gcu: nangband
 #
 # To compile, use the "only-x11" target.
 #
-only-x11: CFLAGS = -g -D"USE_X11"
-only-x11: LIBS = -L/usr/X11R6/lib -lX11
+only-x11: CFLAGS += -DUSE_X11
+only-x11: LIBS += -L/usr/X11R6/lib -lX11
 only-x11: nangband
 
 #
@@ -133,8 +152,8 @@ only-x11: nangband
 # "new curses" library instead of the "old curses" library, and
 # you may have to add "-I/usr/include/ncurses" to the "CFLAGS".
 #
-only-gcu: CFLAGS = -g -D"USE_GCU"
-only-gcu: LIBS = -lncurses -ltermcap
+only-gcu: CFLAGS += -D"USE_GCU"
+only-gcu: LIBS += -lncurses -ltermcap
 only-gcu: nangband
 
 #
@@ -148,27 +167,27 @@ only-gcu: nangband
 #
 # `gtk-config *` takes care of the GTK/X11 includes.
 #
-gtk: CFLAGS = `gtk-config --cflags` -g -DUSE_GTK -DUSE_GCU -DUSE_X11
-gtk: LIBS = `gtk-config --libs` -lcurses -ltermcap
+gtk: CFLAGS += `gtk-config --cflags` -DUSE_GTK -DUSE_GCU -DUSE_X11
+gtk: LIBS += `gtk-config --libs` -lcurses -ltermcap
 gtk: nangband
 
 ##
 ## Variation -- Use "main-xaw.c" instead of "main-x11.c"
 ##
-#CFLAGS = -g -D"USE_XAW" -D"USE_GCU"
-#LIBS = -lXaw -lXmu -lXt -lX11 -lcurses -ltermcap
+#CFLAGS += -D"USE_XAW" -D"USE_GCU"
+#LIBS += -lXaw -lXmu -lXt -lX11 -lcurses -ltermcap
 
 ##
 ## Variation -- Use "main-cap.c" instead of "main-gcu.c"
 ##
-#CFLAGS = -g -D"USE_X11" -D"USE_CAP"
-#LIBS = -lX11 -ltermcap
+#CFLAGS += -D"USE_X11" -D"USE_CAP"
+#LIBS += -lX11 -ltermcap
 
 
 ##
 ## Variation -- Only work on simple vt100 terminals
 ##
-#CFLAGS = -g -D"USE_CAP" -D"USE_HARDCODE"
+#CFLAGS += -D"USE_CAP" -D"USE_HARDCODE"
 
 
 ##
@@ -176,8 +195,8 @@ gtk: nangband
 ##
 ## Allows the use of Angband in the console using curses.
 ##
-#CFLAGS = -fno-strength-reduce -D"USE_GCU"
-#LIBS = -lcurses
+#CFLAGS +=  -D"USE_GCU"
+#LIBS += -lcurses
 
 
 ##
@@ -185,63 +204,53 @@ gtk: nangband
 ##
 ## Allows the use of Angband in X11 using the Athena Widget set.
 ##
-#CFLAGS = -fno-strength-reduce -g -D"USE_XAW"
-#LIBS = -L/usr/X11R6/lib -lXaw -lXext -lSM -lICE -lXmu -lXt -lX11
+#CFLAGS +=  -D"USE_XAW"
+#LIBS += -L/usr/X11R6/lib -lXaw -lXext -lSM -lICE -lXmu -lXt -lX11
 
 
 ##
 ## Variation -- this might work better than the suggestion above
 ##
-#CFLAGS = -I/usr/include/ncurses \
-#         -fno-strength-reduce -fomit-frame-pointer \
+#CFLAGS += -I/usr/include/ncurses \
+#          -fomit-frame-pointer \
 #         -D"USE_X11" -D"USE_GCU" \
 #         -D"USE_TPOSIX" -D"USE_CURS_SET"
-#LIBS = -lX11 -lncurses
+#LIBS += -lX11 -lncurses
 #LDFLAGS = -s
 
 
 ##
 ## Variation -- compile for Solaris
 ##
-#CFLAGS = -g -D"USE_X11" -D"USE_GCU" -D"SOLARIS"
-#LIBS = -lX11 -lsocket -lcurses
+#CFLAGS += -D"USE_X11" -D"USE_GCU" -D"SOLARIS"
+#LIBS += -lX11 -lsocket -lcurses
 
 
 ##
 ## Variation -- compile for SGI Indigo runnig Irix
 ##
-#CFLAGS = -g -D"USE_X11" -D"USE_GCU" -D"SGI"
-#LIBS = -lX11 -lcurses -ltermcap -lsun
-
-
-##
-## Variation -- compile for Dec ALPHA OSF/1 v2.0
-##
-#CC     = cc
-##CFLAGS = -std -g3 -Olimit 4000 -D"USE_X11" -D"USE_GCU"
-#CFLAGS = -std -g -D"USE_X11" -D"USE_GCU"
-#LIBS   = -lX11 -lcurses -ltermcap -lrpcsvc
-
+#CFLAGS += -D"USE_X11" -D"USE_GCU" -D"SGI"
+#LIBS += -lX11 -lcurses -ltermcap -lsun
 
 ##
 ## Variation -- compile for Interactive Unix (ISC) systems
 ##
-#CFLAGS = -g -D"USE_X11" -D"USE_GCU" -D"ISC"
-#LIBS = -lX11 -lcurses -lnsl_s -linet -lcposix
+#CFLAGS += -D"USE_X11" -D"USE_GCU" -D"ISC"
+#LIBS += -lX11 -lcurses -lnsl_s -linet -lcposix
 
 
 ##
 ## Variation -- Support fat binaries under NEXTSTEP
 ##
-#CFLAGS = -g -D"USE_GCU" -arch m68k -arch i386
-#LIBS = -lcurses -ltermcap
+#CFLAGS += -D"USE_GCU" -arch m68k -arch i386
+#LIBS += -lcurses -ltermcap
 
 
 ##
 ## Variation -- Support Linux + SVGA library
 ##
-#CFLAGS = -fno-strength-reduce -D"USE_LSL"
-#LIBS = -lz -lvgagl -lvga
+#CFLAGS +=  -D"USE_LSL"
+#LIBS += -lz -lvgagl -lvga
 
 
 #
@@ -251,24 +260,44 @@ gtk: nangband
 #
 # Note that this module is not well-tested.
 #
-vcs: CFLAGS = -fno-strength-reduce -D"USE_VCS"
-vcs: LIBS =
+vcs: CFLAGS +=  -D"USE_VCS"
+vcs: LIBS +=
 
 #
 # This version supports S-Lang.
 #
 # To compile, use the "s-lang" target.
 #
-s-lang: CFLAGS = -fno-strength-reduce -D"USE_SLA" -I/usr/include/slang
-s-lang: LIBS = -lslang
+s-lang: CFLAGS +=  -D"USE_SLA" -I/usr/include/slang
+s-lang: LIBS += -lslang
 
 
 #
 # Dependency rules
 #
 
-nangband: CFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG) $(OPTIMISAION)
-nangband: $(ANGOBJS)
+ifdef HAVE_MKSTEMP
+nangband: CFLAGS += $(HAVE_MKSTEMP)
+nangband: LINKFLAGS += $(HAVE_MKSTEMP)
+endif
+
+ifdef WARNINGS
+nangband: CFLAGS += $(WARNINGS)
+nangband: LINKFLAGS += $(WARNINGS)
+endif
+
+ifdef ALLOW_BORG
+nangband: CFLAGS += $(ALLOW_BORG)
+nangband: LINKFLAGS += $(ALLOW_BORG)
+nangband: ANGOBJS += $(BORGOBJS)
+endif
+
+ifdef DEBUGGING
+nangband: CFLAGS += $(DEBUGGING)
+nangband: LINKFLAGS += $(DEBUGGING)
+endif
+
+nangband: lua/tolua $(ANGOBJS)
 	$(CC) $(CFLAGS) $(LIBS) $(LINKFLAGS) $(LDFLAGS) -o nangband $(ANGOBJS)
 
 lua/tolua: $(TOLUAOBJS)

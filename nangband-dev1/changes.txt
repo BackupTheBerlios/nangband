@@ -1,6 +1,11 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-06-26
+----------
+- Added "evil mode" to Nangband - tread lightly! :) (takkaria)
+- Fixed some index errors with the options tables. (takkaria)
+
 2002-06-16
 ----------
 - Fixed a compiler warning and added various files to ".cvsignore"s.

@@ -2648,7 +2648,7 @@
 #define OPT_birth_ironman           (OPT_BIRTH+4)
 #define OPT_birth_no_stores         (OPT_BIRTH+5)
 #define OPT_birth_no_artifacts      (OPT_BIRTH+6)
-#define OPT_birth_rand_artifacts    (OPT_BIRTH+7)
+#define OPT_birth_evil_mode         (OPT_BIRTH+7)
 #define OPT_birth_no_stacking       (OPT_BIRTH+8)
 /* xxx xxx */
 #define OPT_cheat_peek				(OPT_CHEAT+0)
@@ -2663,9 +2663,10 @@
 #define OPT_adult_maximize			(OPT_ADULT+2)
 #define OPT_adult_preserve			(OPT_ADULT+3)
 #define OPT_adult_ironman			(OPT_ADULT+4)
-#define OPT_adult_no_stores			(OPT_ADULT+5)
-#define OPT_adult_no_artifacts		(OPT_ADULT+6)
-#define OPT_adult_rand_artifacts	(OPT_ADULT+7)
+#define OPT_adult_no_stores		(OPT_ADULT+5)
+#define OPT_adult_no_artifacts	(OPT_ADULT+6)
+#define OPT_adult_evil_mode		(OPT_ADULT+7)
+#define OPT_adult_rand_artifacts	(OPT_ADULT+8)
 /* xxx xxx */
 #define OPT_score_peek				(OPT_SCORE+0)
 #define OPT_score_hear				(OPT_SCORE+1)
@@ -2767,8 +2768,8 @@
 #define birth_ironman			op_ptr->opt[OPT_birth_ironman]
 #define birth_no_stores			op_ptr->opt[OPT_birth_no_stores]
 #define birth_no_artifacts		op_ptr->opt[OPT_birth_no_artifacts]
-#define birth_rand_artifacts	op_ptr->opt[OPT_birth_rand_artifacts]
-#define birth_no_stacking       op_ptr->opt[OPT_birth_no_stacking]
+#define birth_evil_mode			op_ptr->opt[OPT_birth_evil_mode]
+#define birth_no_stacking		op_ptr->opt[OPT_birth_no_stacking]
 /* xxx xxx */
 #define cheat_peek				op_ptr->opt[OPT_cheat_peek]
 #define cheat_hear				op_ptr->opt[OPT_cheat_hear]
@@ -2784,7 +2785,8 @@
 #define adult_ironman			op_ptr->opt[OPT_adult_ironman]
 #define adult_no_stores			op_ptr->opt[OPT_adult_no_stores]
 #define adult_no_artifacts		op_ptr->opt[OPT_adult_no_artifacts]
-#define adult_rand_artifacts	op_ptr->opt[OPT_adult_rand_artifacts]
+#define adult_evil_mode			op_ptr->opt[OPT_adult_evil_mode]
+#define adult_no_stacking		op_ptr->opt[OPT_adult_no_stacking]
 /* xxx xxx */
 #define score_peek				op_ptr->opt[OPT_score_peek]
 #define score_hear				op_ptr->opt[OPT_score_hear]

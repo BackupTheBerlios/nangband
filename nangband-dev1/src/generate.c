@@ -2734,7 +2734,7 @@ static bool room_build(int by0, int bx0, int typ)
 
 
 	/* Restrict level */
-	if (p_ptr->depth < room[typ].level) return (FALSE);
+	if (p_ptr->depth < room[typ].level && !birth_evil_mode) return (FALSE);
 
 	/* Restrict "crowded" rooms */
 	if (dun->crowded && ((typ == 5) || (typ == 6))) return (FALSE);
@@ -2894,13 +2894,13 @@ static void cave_gen(void)
 		}
 
 		/* Attempt an "unusual" room */
-		if (rand_int(DUN_UNUSUAL) < p_ptr->depth)
+		if (rand_int(DUN_UNUSUAL) < p_ptr->depth || birth_evil_mode)
 		{
 			/* Roll for room type */
-			k = rand_int(100);
+			k = (birth_evil_mode ? rand_int(100) : rand_int(40));
 
 			/* Attempt a very unusual room */
-			if (rand_int(DUN_UNUSUAL) < p_ptr->depth)
+			if (rand_int(DUN_UNUSUAL) < p_ptr->depth || birth_evil_mode)
 			{
 				/* Type 8 -- Greater vault (10%) */
 				if ((k < 10) && room_build(by, bx, 8)) continue;

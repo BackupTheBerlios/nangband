@@ -758,7 +758,7 @@ function cast_spell(index)
 
 		alter_timed_res(RES_ACID, time)
 		alter_timed_res(RES_POIS, time)
-		alter_timed_res(RES_F`IRE, time)
+		alter_timed_res(RES_FIRE, time)
 		alter_timed_res(RES_COLD, time)
 		alter_timed_res(RES_ELEC, time)
 	elseif index == SPELL_HEROISM then

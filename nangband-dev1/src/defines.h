@@ -140,14 +140,10 @@
 
 
 /*
- * Total number of stores (see "store.c", etc)
+ * Total number of stores and indeces (see store.c, etc)
  */
 #define MAX_STORES	8
 
-
-/*
- * Store index definitions (see "store.c", etc)
- */
 #define STORE_GENERAL	0
 #define STORE_ARMOR		1
 #define STORE_WEAPON	2

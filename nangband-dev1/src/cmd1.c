@@ -1180,7 +1180,6 @@ void py_attack(int y, int x)
 	bool fear = FALSE;
 
 	bool do_quake = FALSE;
-	bool do_poly = FALSE;
 
 	bool sneak_attack = FALSE;
 

@@ -1917,8 +1917,8 @@ const bool option_norm[OPT_MAX] =
 	TRUE,		/* OPT_carry_query_flag */
 	FALSE,		/* OPT_use_old_target */
 	TRUE,		/* OPT_always_pickup */
-	FALSE,		/* OPT_always_repeat */
-	FALSE,		/* OPT_depth_in_feet */
+	TRUE,		/* OPT_always_repeat */
+	TRUE,		/* OPT_depth_in_feet */
 	FALSE,		/* OPT_stack_force_notes */
 	FALSE,		/* OPT_stack_force_costs */
 	TRUE,		/* OPT_show_labels */
@@ -1975,9 +1975,9 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* OPT_view_bright_lite */
 	FALSE,		/* OPT_view_granite_lite */
 	FALSE,		/* OPT_view_special_lite */
-	FALSE,		/* OPT_easy_open */
-	FALSE,		/* OPT_easy_alter */
-	FALSE,		/* OPT_easy_floor */
+	TRUE,		/* OPT_easy_open */
+	TRUE,		/* OPT_easy_alter */
+	TRUE,		/* OPT_easy_floor */
 	FALSE,		/* OPT_show_piles */
 	FALSE,		/* OPT_center_player */
 	FALSE,		/* OPT_run_avoid_center */

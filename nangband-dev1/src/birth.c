@@ -685,7 +685,7 @@ static bool player_birth_aux_1(void)
 #endif
 	char p2 = ')';
 
-	char buf[80];
+	char buf[160];
 
 
 	/*** Instructions ***/
@@ -694,14 +694,16 @@ static bool player_birth_aux_1(void)
 	Term_clear();
 
 	/* Display some helpful information */
-	Term_putstr(5, 10, -1, TERM_WHITE,
-	            "Please answer the following questions.  Most of the questions");
-	Term_putstr(5, 11, -1, TERM_WHITE,
-	            "display a set of standard answers, and many will also accept");
-	Term_putstr(5, 12, -1, TERM_WHITE,
-	            "some special responses, including 'Q' to quit, 'S' to restart,");
-	Term_putstr(5, 13, -1, TERM_WHITE,
-	            "and '?' for help.  Note that 'Q' and 'S' must be capitalized.");
+	Term_putstr(22, 2, -1, TERM_WHITE,
+	            "Please answer the following questions.  Most of the");
+	Term_putstr(22, 3, -1, TERM_WHITE,
+	            "questions display a set of standard answers, and many");
+	Term_putstr(22, 4, -1, TERM_WHITE,
+	            "will also accept some special responses, including 'Q'");
+	Term_putstr(22, 5, -1, TERM_WHITE,
+	            "to quit, 'S' to restart, and '?' for help.  Note that");
+	Term_putstr(22, 6, -1, TERM_WHITE,
+							"'Q' and 'S' must be capitalized.");
 
 
 	/*** Player sex ***/
@@ -870,30 +872,11 @@ static bool player_birth_aux_1(void)
 
 	/*** Birth options ***/
 
-	/* Extra info */
-	Term_putstr(5, 15, -1, TERM_WHITE,
-	            "You can change your options at any time, but the 'Birth' options");
-	Term_putstr(5, 16, -1, TERM_WHITE,
-	            "must be changed now to affect the birth of this character.");
-
 	/* Verify birth options */
-	while (1)
-	{
-		sprintf(buf, "Modify options (y/n)? ");
-		put_str(buf, 20, 2);
-		ch = inkey();
-		if (ch == 'Q') quit(NULL);
-		if (ch == 'S') return (FALSE);
-		if ((ch == '\r') || (ch == '\n')) break;
-		if (ch == 'y' || ch == 'n') break;
-		if (ch == '?') do_cmd_help();
-		else bell("Illegal answer!");
-	}
+	sprintf(buf, "You can change the options at any time, but there are some options that can only be changed now. These are the 'Birth' options. Modify options?");
 
-	/* Verify */
-	if (ch == 'y')
+	if (Window_Prompt(40, buf))
 	{
-		/* Interact with options */
 		do_cmd_options();
 	}
 

@@ -3014,7 +3014,7 @@ void text_out_to_file(byte attr, cptr str)
 			}
 
 			/* Output the line */
-			fprintf(text_out_file, "%s\n", roff_buf);
+			fprintf(text_out_file, "%s", roff_buf);
 
 			/* Reset the buffer */
 			roff_s = NULL;

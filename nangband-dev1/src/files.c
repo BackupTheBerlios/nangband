@@ -2214,6 +2214,8 @@ errr file_character(cptr name, bool full)
 			object_desc(o_name, &st_ptr->stock[i], TRUE, 3);
 			fprintf(fff, "%c) %s\n", I2A(i), o_name);
 
+			text_out("  ");
+
 			/* Describe random object attributes */
 			identify_backend(&st_ptr->stock[i]);
 		}

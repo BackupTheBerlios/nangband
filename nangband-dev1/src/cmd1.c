@@ -998,7 +998,7 @@ void hit_trap(int y, int x)
 					dam = dam * 2;
 					(void)set_cut(p_ptr->cut + randint(dam));
 
-					if (p_ptr->resist_pois || p_ptr->oppose_pois)
+					if (p_ptr->resist_cur[RES_ACID] > 20)
 					{
 						msg_print("The poison does not affect you!");
 					}
@@ -1139,7 +1139,7 @@ void hit_trap(int y, int x)
 		case FEAT_TRAP_HEAD + 0x0E:
 		{
 			msg_print("You are surrounded by a pungent green gas!");
-			if (!p_ptr->resist_pois && !p_ptr->oppose_pois)
+			if (p_ptr->resist_cur[RES_POIS] > 15)
 			{
 				(void)set_poisoned(p_ptr->poisoned + rand_int(20) + 10);
 			}

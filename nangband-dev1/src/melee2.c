@@ -104,24 +104,24 @@ static void remove_bad_spells(int m_idx, u32b *f4p, u32b *f5p, u32b *f6p)
 		if (!p_ptr->msp) smart |= (SM_IMM_MANA);
 
 		/* Know immunities */
-		if (p_ptr->immune_acid) smart |= (SM_IMM_ACID);
+/*		if (p_ptr->immune_acid) smart |= (SM_IMM_ACID);
 		if (p_ptr->immune_elec) smart |= (SM_IMM_ELEC);
 		if (p_ptr->immune_fire) smart |= (SM_IMM_FIRE);
-		if (p_ptr->immune_cold) smart |= (SM_IMM_COLD);
+		if (p_ptr->immune_cold) smart |= (SM_IMM_COLD); */
 
 		/* Know oppositions */
-		if (p_ptr->oppose_acid) smart |= (SM_OPP_ACID);
+/*		if (p_ptr->oppose_acid) smart |= (SM_OPP_ACID);
 		if (p_ptr->oppose_elec) smart |= (SM_OPP_ELEC);
 		if (p_ptr->oppose_fire) smart |= (SM_OPP_FIRE);
 		if (p_ptr->oppose_cold) smart |= (SM_OPP_COLD);
-		if (p_ptr->oppose_pois) smart |= (SM_OPP_POIS);
+		if (p_ptr->oppose_pois) smart |= (SM_OPP_POIS); */
 
 		/* Know resistances */
-		if (p_ptr->resist_acid) smart |= (SM_RES_ACID);
+/*		if (p_ptr->resist_acid) smart |= (SM_RES_ACID);
 		if (p_ptr->resist_elec) smart |= (SM_RES_ELEC);
 		if (p_ptr->resist_fire) smart |= (SM_RES_FIRE);
 		if (p_ptr->resist_cold) smart |= (SM_RES_COLD);
-		if (p_ptr->resist_pois) smart |= (SM_RES_POIS);
+		if (p_ptr->resist_pois) smart |= (SM_RES_POIS); */
 		if (p_ptr->resist_fear) smart |= (SM_RES_FEAR);
 		if (p_ptr->resist_lite) smart |= (SM_RES_LITE);
 		if (p_ptr->resist_dark) smart |= (SM_RES_DARK);

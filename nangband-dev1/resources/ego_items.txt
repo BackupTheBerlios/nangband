@@ -1,0 +1,74 @@
+Ego-item ideas
+--------------
+
+Currently, ego-items are almost broken in regard to resists.  There should be
+some level of randomness.  I (takka) suggessted that a new line be added to
+ego_item.txt, going something like:
+
+# R(esist) : resist name : min value : max value
+
+# Example of this in the file:
+
+N:..:Example
+R:fire:30:50
+S:2:0:0:0:2:0
+F:AGGRAVATE
+
+# End example
+
+This would be fairly easy to implement, requiring a little fiddling in the 
+ego-item code, and a new function, res_name_to_index(char *what).  The 
+basic way to get the right results is (in NSL):
+
+>--
+  - A lil' NSL program to roll the resists.
+  - Assumes some Angband functions and structures.
+ --<
+
+--> A variable (counting for the loop).
+define var (lv) to (integer:32u).
+
+--> Scan through the resists array.
+use (lv) to (cycle) from (0 - RES_MAX).
+
+start (lv):
+(
+	--> We assume that the names were transformed at the parsing stage.
+
+	--> Check the res maxes.
+	if ego_item!res_max!lv is not; next.
+
+	--> Check what to do.
+	if ego_item!res_min!lv is equal to ego_item!res_max!lv;
+	(
+		--> Set the resist (in C, "object->resists[lv]")
+		object!resists!lv = ego_item!res_max!lv.
+	)
+	else;
+	(
+		--> Temp variable.
+		define var (t1, t2) to (typeof(lv)).
+
+		--> Work out what to roll
+		t2 = (ego_item!res_max!lv - ego_item!res_min!lv).
+
+		--> Roll!
+		t2 = [randint](t2).
+
+		--> Correct it
+		object!resists!lv = (t2 += ego_item!res_min!lv).
+	)
+
+	--> Next resist.
+	next.
+)
+
+This just sets the value if it's a "set" value (eg. max = 20, min = 20).
+Otherwise, it takes away the min from the max, uses that to roll, and
+then adds back on the minimum value.
+
+I'm going to code, after committing this file to CVS.
+
+Thanks, and leave any comments at the end of the file.
+
+.takkaria.

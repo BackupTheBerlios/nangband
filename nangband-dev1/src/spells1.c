@@ -857,8 +857,8 @@ void acid_dam(int dam, cptr kb_str)
 	/* Grab a current % resist value */
 	resist_percent = resist_player_current(RES_ACID);
 
-	/* Resist the damage */
-	dam /= resist_percent;
+	/* Apply the resistance */
+	dam = resist_apply(resist_percent, dam);
 
 	/* If any armor gets hit, defend the player */
 	if (minus_ac()) dam = (dam + 1) / 2;
@@ -885,8 +885,8 @@ void elec_dam(int dam, cptr kb_str)
 	/* Grab a current % resist value */
 	resist_percent = resist_player_current(RES_ELEC);
 
-	/* Resist the damage */
-	dam /= resist_percent;
+	/* Apply the resistance */
+	dam = resist_apply(resist_percent, dam);
 
 	/* Take damage */
 	take_hit(dam, kb_str);
@@ -910,8 +910,8 @@ void fire_dam(int dam, cptr kb_str)
 	/* Grab a current % resist value */
 	resist_percent = resist_player_current(RES_FIRE);
 
-	/* Resist the damage */
-	dam /= resist_percent;
+	/* Apply the resistance */
+	dam = resist_apply(resist_percent, dam);
 
 	/* Take damage */
 	take_hit(dam, kb_str);
@@ -934,6 +934,9 @@ void cold_dam(int dam, cptr kb_str)
 
 	/* Grab a current % resist value */
 	resist_percent = resist_player_current(RES_COLD);
+
+	/* Apply the resistance */
+	dam = resist_apply(resist_percent, dam);
 
 	/* Take damage */
 	take_hit(dam, kb_str);

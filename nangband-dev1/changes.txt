@@ -3,13 +3,16 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
 
 2002-05-12
 ----------
+- Big screen support for GCU. As nangband -? says, it can be activated
+  by nangband -- -b. Curses implementations react differently to SIGWINCH
+  and I have no idea how to implement portable resizing... (pelpel)
 - Imported lua bit operator implementation from Vanilla 3.0.0 CVS,
   which compiles on lcc, doesn't offend some cpp's with empty arguments
   and is more readable. (pelpel)
 - Moved up the "Remaining gold:" display by one line, so that it doesn't
   interact strangely with the shop action prompt. (pelpel)
 - Imported a couple of my lua engine fixes cleaned up by rr9 --
-  this is only relevant for users of CodeWarrior (pelpel)
+  this is only relevant for users of CodeWarrior. (pelpel)
 - Removed size_y hack in store.c and rewrote the entire file to use the
   real display height throughout, partly for the sake of clarity and
   partly because it caused the empty line following the message

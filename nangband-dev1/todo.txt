@@ -1,21 +1,20 @@
-- Add support for gamma correction to the DOS version.
-- Move various information to external files (for example items that can
-  be bought in stores).
+Todo list for Nangband
+======================
+
+- Write a Qt port.
+- Externalize more stuff; things that have been suggested are equipment
+  slots, tvals and stores.
 - Add player ghosts.
-- Equipment slots should be configurable for every player race.
-- Gender selection should be done after selecting the player race (for
-  races with non-standard genders).
 - Allow stacking of rods, wands, and staves with different charges.
 - Add a random name generator for player names.
 - Add support for automatically numbering characters ("Rocky IV").
-- Finish the GTK+ port, maybe write a qt version.
 - Open the file handles for score and savefiles at startup and then drop
   all permissions.
-- Improve the scorefile format.
-- Add color support to the show_file() function.
-- Find a better way for saving options than appending to *.prf files.
+- Rewrite the scorefile format.
+- Add the new helpfile system.
+- Find a better way for saving options than appending to .prf files.
+  Maybe use .opt files?
 - Allow multiple pvals per object.
-- Add message compression "You tunnel into the granite wall. <5x>"
 - Split long lines in the message recall.
 - The ANSI-C standard reserves some prefixes for external names like "str".
   Make sure that Angband doesn't use them.
@@ -29,8 +28,6 @@
 - Unify line of sight and projection paths.
 - Make sure that signed integers aren't bit-shifted.
 - Use enumerations instead of #defines when possible.
-- Move spaces at the end of description lines in monster.txt to the
-  beginning of the next line.
 - Add optional support for the metric system.
 - Add a main-net.c modules that sends/receives term-updates via TCP/IP.
   This allows slim clients on machines where Angband isn't available.
@@ -42,7 +39,8 @@
 - Add reference counting for the "quarks" (inscriptions).
 - Add a compile-time option that prevents the player from saving pref-files,
   character dumps, and screenshots.
-- "Panic saves" shouldn't overwrite normal savefiles.
+- "Panic saves" shouldn't overwrite normal savefiles. (do this like the
+  RISC OS port).
 - Replace the maximize mode option with a "half-maximized" mode.
 - Properly integrate the transparency code into the game.
 - Add a command to display the 'time of day'.
@@ -55,4 +53,3 @@
 - Allow a restricted amount of functions to be used by the player
   for macros and add a better macro recorder.
 - Improve the savefile handling of the monster recall.
-- Assign graphical tiles to the new monsters and objects.

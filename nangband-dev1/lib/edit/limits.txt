@@ -18,7 +18,7 @@ V:2.9.7
 M:F:64
 
 # Maximum number of object kinds
-M:K:525
+M:K:539
 
 # Maximum number of artifacts
 M:A:138
@@ -33,13 +33,13 @@ M:R:618
 M:V:60
 
 # Maximum number of player races
-M:P:11
+M:P:13
 
 # Maximum number of player classes
 M:C:6
 
 # Maximum number of player history lines
-M:H:165
+M:H:200
 
 # Maximum number of owners per store
 M:B:4

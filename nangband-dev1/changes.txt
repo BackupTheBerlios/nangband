@@ -1,6 +1,13 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-05-26
+----------
+- New RISC OS resources files for lua; fixed using some quick hacks.
+  (ajps)
+- A new set of RISC OS resources, with many changes and now looking
+  much more like Angband source code. (takkaria)
+
 2002-05-24
 ----------
 - New randart code is in!  Savefile compatibility is lost, sadly.

@@ -1,183 +1,166 @@
 /*
  * File: main-ros.c
- * StrongED$Mode=C
+ *
+ * Abstract: Support for RISC OS versions of Angband, including support
+ * for multitasking and dynamic areas.
+ *
+ * Authors: Musus Umbra, Andrew Sidwell, Ben Harrison, and others.
+ *
+ * Licences: Angband licence.
  */
 
 #ifdef __riscos
-#define PORTVERSION	"1.26 (02 Sep 1999)"	/* for the info box */
+
+#include "angband.h"
 
 /*
- * Copyright (c) 1997/8/9 Musus Umbra, Ben Harrison, and others
+ * Purpose: Support for RISC OS Angband 2.9.x onwards (and variants)
  *
- * This software may be copied and distributed for educational, research,
- * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.
+ * NB: This code is still under continuous development - if you want to use
+ * it for your own compilation/variant, please contact me so that I can
+ * keep you up to date and give you support :)
  *
+ * Prerequisites to compiling:
+ *
+ * DeskLib 2.30 or later  (earlier versions may be OK though)
+ *
+ * An ANSI C compiler (tested with Acorn's C/C++ and GCC, but should be OK
+ *                     with any decent compiler)
+ *
+ * My binary distribution (for the templates and other bits)
+ *
+ * Note:
+ *   The following symbols are *required* and *must* be defined properly.
  */
 
 /*
- | Purpose: Support for RISC OS Angband (and variants)
- |
- | Author: Musus Umbra <musus@argonet.co.uk>
- |
- | NB: This code is still under continuous development - if you want to use
- | it for your own compilation/variant, please contact me so that I can
- | keep you up to date and give you support :)
- |
- | Prerequisites to compiling:
- |
- |     DeskLib 2.30 or later  (earlier versions may be OK though)
- |
- |     An ANSI C compiler     (tested with Acorn's C/C++ and GCC, but should
- |                            be OK with any decent compiler)
- |
- |     My binary distribution (for the templates and other bits)
- |
- |     A suitable "!!Variant.h" file for the variant being compiled;
- |     this should simply #define the appropriate symbols.
- |
- | NB: The following symbols are *required* and *must* be defined properly:
- | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- |
- | VARIANT		Name of this game eg. "Angband", "Zangband", etc.
- |				Note that this *must* match the entry in the !Variant Obey file
- |				and also that it must only contain characters that are valid as
- |				part of a RISC OS path variable, eg. "Yin-Yangband" is NOT okay.
- |
- | VERSION		Version num (and optionally the date) eg. "2.8.3" or "2.8.3 (06 Feb 1998)"
- | AUTHORS		For the info box eg. "Ben Harrison"
- | PORTERS		for the info box eg. "Musus Umbra"
- |
- | VFILETYPE	filetype of saved games eg. 0x118
- | 				As of rel 1.18 this may be overridden by supplying
- | 				a 3 digit hex number on the command line, eg.
- | 				"... -T118 ..."
- |
- | RESPATH		Resource path variable eg. "Angband$Path"
- |				This should be defined as VARIANT"$Path" unless you've
- |				altered my standard !Run file for some reason.
- |
- | RESDIR		Where templates are, eg. "Angband" ($Dir is assumed)
- |				Again, this should be defined as VARIANT unless !Run
- |				has been modified accordingly.
- |
- | ICONNAME		iconbar icon sprite name eg. "!angband"
- |
- | SOUNDPATH	Path to sound samples, eg. "AngbandSound:"
- |				Yet again, this should be defined as VARIANT unless !Run
- |				and/or !Angsound has been modified accordingly.
- |
- |
- | The following symbols may be required, depending on the variant itself:
- | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- |
- | PDEADCHK				should expand to an expression that is true if the
- |						player is dead (eg. (p_ptr->is_dead) for Angband
- |						or (!alive || dead) for Zang220).
- |						If this isn't defined then (p_ptr->is_dead) will be
- |						used.
+ * VARIANT & VERSION
+ *   These two get variant and version data from Angband itself; older
+ *   variants may not have these defined and will have to be altered.
+ */
+#define VARIANT		VERSION_NAME
+#define VERSION		VERSION_STRING
 
- |
- | The following symbols control the (optional) file-cache:
- | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/*
+ * PORTVERSION
+ *   This is the port version; it appears in the infobox.
+ */
+#define PORTVERSION	"1.27 (2002-05-25)"
 
- | NB: Variants that don't repeatedly read any files whilst running
- | (eg. vanilla, sang, etc) should NOT define USE_FILECACHE, etc. as
- | it causes a non-negligable amount of code to be compiled in.
- |
- | NB: The file-cache functions require that some code in files.c is modified
- | to use the cached_* functions.  This should be utterly trivial.
- |
- | NB: The returned handle from cached_fopen() is almost certainly *NOT*
- | a |FILE*| (although it may be if the cache cannot accomodate the file).
- |
- | Therefore, you *MUST* ensure that any file opened with cached_fopen()
- | is only ever accessed via cached_fgets() and cached_fclose().
- |
- | Failure to do so will result in, ahem, unpleasantness.  Extreme
- | unpleasantness.  "Him fall down, go boom."
- |
- | This /may/ change in the near future (ie. to apply caching in a
- | transparent manner), so do keep a backup of files.c (and any other files
- | you modify).  You always keep backups anyway, don't you?  Don't you?!
- |
- | USE_FILECACHE		if defined then some caching functions will
- |						be compiled for use by the various get_rnd_line(), etc.
- |						in files.c.
- |
- |						This could probably also be used for files in lib/edit/
- |						although whether that's worth doing is debatable.
- |						(ISTR that an ealry Kamband repeatedly read a file from
- |						lib/edit when rolling up certain character classes).
- |
- | SMART_FILECACHE		SMARRT_FILECACHE causes lines beginning with '#' (and
- |						blank lines) to be discarded when caching files.  This
- |						should help Zangband 2.2.5+ but could cause trouble
- |						for other variants.
- |						If defined, this symbol causes the smart file cache
- |						option to be on by default.
- |
- | ABBR_FILECACHE		ABBR_FILECACHE causes data read into file-cache to
- |						be compressed (using a simple set of abbreviations)
- |						by default. This can be overridden using a command
- |						line option.
- |
- |						If this symbol is not defined then no compression
- |						code will be compiled and the user option will be
- |						ignored/unavailable.
- |
- |						(Irony: it's only really useful on old (ie.slow)
- |						machines on which the compression will suck speedwise).
+/*
+ * RISCOS_VARIANT
+ *  This must match the entry in the !Variant Obey file, and it must only
+ *  contain characters that are valid as part of a RISC OS path variable.
+ *  [eg. "Yin-Yangband" is not okay, "EyAngband" is.]
+ */
+#define RISCOS_VARIANT	"Nangband"
 
+/*
+ * AUTHORS
+ *  For the info box. [eg. "Ben Harrison"]
+ */
+#define AUTHORS		"The Nangband DevTeam"
 
- |
- | The following symbols control the debugging options:
- | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- |
- | FE_DEBUG_INFO		If defined, some functions will be compiled to display
- |						some info. on the state of the front-end (accessible)
- |						from the '!' user menu.
- |
- |						NB: For actual releases you should NOT define this
- |						symbol since it causes a non-negligable amount of
- |						code/data to be sucked in.
+/*
+ * PORTERS
+ *  For the info box. [eg. "Musus Umbra"]
+ */
+#define PORTERS		"Andrew Sidwell"
+
+/*
+ * ICONNAME
+ *  Iconbar icon sprite name eg. "!angband".  Note that this must be a valid
+ *  sprite name; it may need modifying for long variant names.
+ */
+#define ICONNAME	"!"RISCOS_VARIANT
+
+/*
+ * PDEADCHK
+ *   This should expand to an expression that is true if the player is dead.
+ *   [eg. (p_ptr->is_dead) for Angband or (!alive || dead) for some Zangbands]
  */
 
+#define PDEADCHK	(p_ptr->is_dead)
+
+/*
+ * The following symbols control the (optional) file-cache:
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * NB: Variants that don't repeatedly read any files whilst running
+ * (eg. vanilla, sang, etc) should NOT define USE_FILECACHE, etc. as
+ * it causes a non-negligable amount of code to be compiled in.
+ *
+ * NB: The file-cache functions require that some code in files.c is modified
+ * to use the cached_* functions.  This should be utterly trivial.
+ *
+ * NB: The returned handle from cached_fopen() is almost certainly *NOT*
+ * a |FILE*| (although it may be if the cache cannot accomodate the file).
+ *
+ * Therefore, you *MUST* ensure that any file opened with cached_fopen()
+ * is only ever accessed via cached_fgets() and cached_fclose().
+ *
+ * Failure to do so will result in, ahem, unpleasantness.  Extreme
+ * unpleasantness.  "Him fall down, go boom."
+ *
+ * This /may/ change in the near future (ie. to apply caching in a
+ * transparent manner), so do keep a backup of files.c (and any other files
+ * you modify).  You always keep backups anyway, don't you?  Don't you?!
+ */
+
+/*
+ * USE_FILECACHE
+ *   if defined then some caching functions will be compiled for use by the
+ *   various get_rnd_line(), etc. in files.c.  This could be used in a
+ *   variety of places that read data repeatedly, but it's up to you to
+ *   implement it then.
+ */
+
+/* #define USE_FILECACHE */
+
+/*
+ * SMART_FILECACHE
+ *   This causes lines beginning with '#' (and blank lines) to be discarded
+ *   when caching files.  This should help Zangband 2.2.5+ but could cause
+ *   trouble for other variants.  If defined, then smart file caching will be
+ *   on by default.
+ */
+
+/* #define SMART_FILECACHE */
+
+/*
+ * ABBR_FILECACHE
+ *   ABBR_FILECACHE causes data read into file-cache to be compressed (using a
+ *   simple set of abbreviations) by default.  This can be overridden using a
+ *   command line option.  If this symbol is not defined then no compression
+ *   code will be compiled and the user option will be ignored/unavailable.
+ */
+
+/* #define ABBR_FILECACHE */
+
+/*
+ * Note:
+ *   The following symbols control debugging information.
+ */
+
+/*
+ * FE_DEBUG_INFO
+ *  If defined, some functions will be compiled to display some info. on the
+ *  state of the front-end (accessible) from the '!' user menu.
+ *
+ *  NB: For actual releases you should NOT define this symbol since it causes
+ *  a non-negligable amount of code/data to be sucked in.
+ */
+/* #define FE_DEBUG_INFO */
 
 /* Constants, etc. ---------------------------------------------------------*/
 
-#include "!!Variant.h"
-
-/* Make FE_DEBUG_INFO into something we can use in boolean expressions */
-#ifdef FE_DEBUG_INFO
-#  define ALLOW_DEBUG_INFO 1
-#else
-#  define ALLOW_DEBUG_INFO 0
+/* Deal with any weird file-caching symbols */
+#ifndef USE_FILECACHE
+# undef ABBR_FILECACHE
+# undef SMART_FILECACHE
 #endif
 
-/* Deal with any un-defined (or odd) file-caching symbols */
-#ifdef USE_FILECACHE
-#  define ALLOW_USE_FILECACHE 1
-#else
-#  define ALLOW_USE_FILECACHE 0
-#  undef ABBR_FILECACHE
-#  undef SMART_FILECACHE
-#endif
-
-#ifdef ABBR_FILECACHE
-#  define ALLOW_ABBR_FILECACHE 1
-#else
-#  define ALLOW_ABBR_FILECACHE 0
-#endif
-#ifdef SMART_FILECACHE
-#  define DEFAULT_SMART_FILECACHE 1
-#else
-#  define DEFAULT_SMART_FILECACHE 0
-#endif
-
+/* Maximum terminals */
 #define MAX_TERM_DATA 8
-
-/*--------------------------------------------------------------------------*/
 
 /* Menu entry numbers */
 #define IBAR_MENU_INFO			0
@@ -222,8 +205,6 @@
 /*--------------------------------------------------------------------------*/
 
 
-
-#include "angband.h"
 #undef rename
 #undef remove
 
@@ -410,7 +391,7 @@ typedef struct
 
 
 /*--------------------------------------------------------------------------*
- | File scope variables                                                     |
+ | File scope variables													 |
  *--------------------------------------------------------------------------*/
 static int ftype = 0xffd;		/* hack so saved games get the right type */
 static int filehandle[16];		/* we keep track of open files with this */
@@ -450,7 +431,7 @@ static int start_fullscreen = 0;	/* start up full screen (added in 1.18) */
 static int hack_flush = 0;			/* Should TERM_XTRA_FLUSH wait for all keys to be released? */
 static int flush_scrap = 1;			/* Should any scrapfiles (incl. filecache) be deleted at exit? */
 static int max_file_cache_size = 64<<10;
-static unsigned int vfiletype = VFILETYPE;
+static unsigned int vfiletype;
 static int allow_iclear_hack = 0;	/* Allow the hideously evil Iclear workaround thing */
 static int alarm_type = 0;				/* is there an alarm set? */
 static int alarm_h = 0, alarm_m = 0;	/* alarm time (midnight) */
@@ -527,27 +508,41 @@ static int *fullscreen_base = 0;		/* base address of screen */
 static int  fullscreen_height;			/* height of the fullscreen font */
 static int  fullscreen_topline;			/* raster offset of fullscreen */
 
-#define KEYPRESS_QUIT	0x1cc			/* f12 gets back to the desktop */
-#define TERM_TOPLINE_HR 32				/* vertical pixel offset in mode 27 */
-#define TERM_TOPLINE_LR 16				/* vertical pixel offset in mode 12 */
-#define TIME_LINE       26				/* Line to display the clock on */
+#define KEYPRESS_QUIT    0x1cc          /* F12 gets back to the desktop */
+#define TERM_TOPLINE_HR  32             /* vertical pixel offset in mode 27 */
+#define TERM_TOPLINE_LR  16             /* vertical pixel offset in mode 12 */
+#define TIME_LINE        26             /* Line to display the clock on */
 
 /* text to display at the bottom left of the fullscreen display */
 static char *fs_quit_key_text = "Press f12 to return to the desktop";
 static char *alarm_cancel_text = "(Press ^Escape to cancel the alarm)";
 
-#ifndef PDEADCHK
-#define PDEADCHK \
-	(p_ptr->is_dead)
+/* Debugging flags, etc. */
+static int log_g_malloc = 0;                      /* Log calls to ralloc, etc */
+static int show_sound_alloc = 0;                  /* Log sound mappings, etc */
+static int abbr_tmpfile = 1;                      /* Cache compressed files on disc? */
+
+/* Compress text in the file-cache? */
+#ifdef ABBR_FILECACHE
+static int abbr_filecache = TRUE;
+#else
+static int abbr_filecache = FALSE;
 #endif
 
-/* Debugging flags, etc. */
-static int log_g_malloc = 0;							/* Log calls to ralloc, etc */
-static int show_sound_alloc = 0;						/* Log sound mappings, etc */
-static int abbr_filecache = ALLOW_ABBR_FILECACHE;		/* compress text in the file-cache? */
-static int abbr_tmpfile = 1;							/* Cache compressed files on disc? */
-static int smart_filecache = DEFAULT_SMART_FILECACHE;	/* skip non-useful lines? */
-static int use_filecache = ALLOW_USE_FILECACHE;			/* Activate file caching? */
+/* Use "smart" filecaching? */
+#ifdef SMART_FILECACHE
+static int smart_filecache = TRUE;
+#else
+static int smart_filecache = FALSE;
+#endif
+
+/* Activate file caching? */
+#ifdef USE_FILECACHE
+static int use_filecache = TRUE;
+#else
+static int use_filecache = FALSE;
+#endif
+
 static int minimise_memory = 0;							/* Cripple some things to save memory */
 
 /* Forward declarations of some of the Full Screen Mode stuff */
@@ -901,7 +896,7 @@ static void final_acn( void )
 
 
 /*--------------------------------------------------------------------------*
- | Various UNIX-like support funtions                                       |
+ | Various UNIX-like support funtions									   |
  *--------------------------------------------------------------------------*/
 
 /*
@@ -942,8 +937,6 @@ static int truncate_names( void )
  | takes an extra argument: 'trunc' that controls whether truncation
  | is applied, and riscosify and unixify just call translate_name().
  */
-
-
 static char *translate_name( const char *path, int trunc )
 {
 	static char buf[260];
@@ -1008,6 +1001,7 @@ static char *translate_name( const char *path, int trunc )
 
 	return buf;
 }
+
 
 extern char *riscosify_name( const char *path )
 {
@@ -1149,7 +1143,7 @@ errr fd_close( int handle )
 
 
 /* Read some bytes from a file */
-errr fd_read( int handle, char *buf, size_t nbytes )
+errr fd_read(int handle, char *buf, size_t nbytes)
 {
 	int unread;
 
@@ -1161,7 +1155,7 @@ errr fd_read( int handle, char *buf, size_t nbytes )
 
 
 /* Write some bytes to a file */
-errr fd_write( int handle, const char *buf, size_t nbytes )
+errr fd_write(int handle, const char *buf, size_t nbytes)
 {
 	int unwritten;
 
@@ -1375,7 +1369,7 @@ static ZapFont *find_free_font( void )
  */
 static ZapFont *load_font( char *name, ZapFont *f )
 {
-	int handle,extent;
+	int handle, extent;
 	char path[260];
 	struct { char id[8]; int w,h,f,l,r1,r2; } header;
 	char *font_path;
@@ -1387,16 +1381,17 @@ static ZapFont *load_font( char *name, ZapFont *f )
 	 | the font from.
 	 */
 
-	/* The font paths start <VARIANT>$ */
-	t = path + sprintf(path,"%s$",VARIANT);
+	/* The font paths start <RISCOS_VARIANT>$ */
+	t = path + sprintf(path, "%s$", RISCOS_VARIANT);
 
 	/* Copy the path specifier and move 'name' past it */
-	for ( ; *name!='.' ; *t++=*name++ )
-		;
-	name++;			/* name now points to the font name-proper */
+	for (; *name!='.'; *t++ = *name++);
+
+	/* After this, the name now points to the font name proper */
+	name++;
 
 	/* Append the end of the path name */
-	strcpy(t,"$FontPath");
+	strcpy(t, "$FontPath");
 
 	/* Get the path setting */
 	font_path = getenv( path );
@@ -1965,7 +1960,7 @@ static void initialise_r_data( void )
 	{
 		lo[j] = 25*4 + (80*5+4)*j;		/* Offset of line */
 		ld = r_data+lo[j];
-		*ld++ = 0;						/* 0,2 ==      */
+		*ld++ = 0;						/* 0,2 ==	  */
 		*ld = 2;						/* end of line */
 	}
 	lo[j] = 0;							/* Terminate line index */
@@ -2302,8 +2297,8 @@ static BOOL Hnd_Caret( event_pollblock *pb, void *ref )
  | If 'font' is NULL then the system font is attached.
  | The bpp_n data is calculated if necessary
  | returns:
- |    1 => the font was attached OK
- |    0 => the system font was substituted
+ |	1 => the font was attached OK
+ |	0 => the system font was substituted
  */
 static int attach_font_to_term( term_data *t, char *font )
 {
@@ -2361,7 +2356,7 @@ static void make_font_menu( void )
 	font_menu = NULL;
 
 	/* Get the path (ie. dir) to look under */
-	t = getenv( VARIANT "$FontPaths" );
+	t = getenv(RISCOS_VARIANT "$FontPaths");
 
 	/* Hack: cope if the path isn't set */
 	if ( !t ) { t = ""; }
@@ -2423,16 +2418,16 @@ static void make_font_menu( void )
 	/*
 	 | Hack: add a dotted line after the system font entry if appropriate
 	 */
-	if ( paths>1 ) { mi[0].menuflags.data.dotted = 1; }
+	if (paths > 1) mi[0].menuflags.data.dotted = 1;
 
 	/*
-	 | Iterate over the paths building the appropriate submenus
+	 | Iterate over the paths, building the appropriate submenus
 	 */
 	for ( i=1; i<paths; i++ )
 	{
 		menu_ptr sub_menu = NULL;
 
-		sprintf(menu_buffer,"%s$%s$FontPath",VARIANT,path[i]);
+		sprintf(menu_buffer, "%s$%s$FontPath", RISCOS_VARIANT, path[i]);
 		t = getenv( menu_buffer );
 		/* Hack: cope if the path isn't defined */
 		if ( !t ) { t=""; }
@@ -2460,27 +2455,28 @@ static void make_font_menu( void )
 			/* Add the submenu to the main menu */
 		}
 	}
+
+	return;
 }
 
-
-
-/*
- | Create and set up the Info box
- */
-static void create_info_box( void )
+/* ----------------------------------------------- musus, xxxx-xx-xx ---
+ * Create and set up the infobox.
+ * --------------------------------------------------------------------- */
+static void create_info_box(void)
 {
-	info_box = Window_Create("info",template_TITLEMIN);
-	Icon_printf(info_box,0,"%s %s",VARIANT,VERSION);
-	Icon_SetText(info_box,2,AUTHORS);
-	Icon_SetText(info_box,3,PORTERS);
-	Icon_SetText(info_box,7,PORTVERSION);
-}
+	info_box = Window_Create("info", template_TITLEMIN);
+	Icon_printf(info_box, 0, "%s %s", VARIANT, VERSION);
+	Icon_SetText(info_box, 2, AUTHORS);
+	Icon_SetText(info_box, 3, PORTERS);
+	Icon_SetText(info_box, 7, PORTVERSION);
 
+	return;
+}
 
 /*
  | Create the various menus
  */
-static void init_menus( void )
+static void init_menus(void)
 {
 	char buffer1[256];
 	char buffer2[32];
@@ -2490,13 +2486,13 @@ static void init_menus( void )
 	make_font_menu();						/* Make the fonts menu */
 
 	Msgs_Lookup("menu.ibar:Info|>Save As|Full screen,Gamma correction,Sound,"
-	            "Windows|Save choices|Quit (& save)",buffer1,256);
-	ibar_menu = Menu_New( VARIANT, buffer1 );
-	if ( !ibar_menu ) { core("Can't create Iconbar menu!"); }
+				"Windows|Save choices|Quit (& save)", buffer1, 256);
+	ibar_menu = Menu_New(VARIANT, buffer1);
+	if (!ibar_menu) core("Can't create Iconbar menu!");
 
-	Msgs_Lookup("menu.term:Info|>Save As|Font,Windows",buffer1,256);
-	term_menu = Menu_New( VARIANT, buffer1 );
-	if ( !term_menu ) { core("Can't create Term menu!"); }
+	Msgs_Lookup("menu.term:Info|>Save As|Font,Windows", buffer1, 256);
+	term_menu = Menu_New(VARIANT, buffer1);
+	if (!term_menu) core("Can't create Term menu!");
 
 #ifndef OLD_TERM_MENU
 	o = buffer1;
@@ -2980,7 +2976,7 @@ static void term_data_link( term_data *td, int k )
 	t->text_hook  = Term_text_acn;
 	t->user_hook  = Term_user_acn;
 
-	t->data       = (vptr) td;
+	t->data	   = (vptr) td;
 
 	Term_activate(t);
 }
@@ -4180,9 +4176,9 @@ static int ensure_path( char *p )
 
 
 /*
- | Set up the Scrap, Choices and Alarm paths, trying for
- | Choices:blah...,etc.  by preference, but falling back on lib/xtra
- | if need be.
+ * Set up the Scrap, Choices and Alarm paths, trying for
+ * Choices:blah...,etc.  by preference, but falling back on lib/xtra
+ * if need be.
  */
 static void init_paths( void )
 {
@@ -4263,21 +4259,24 @@ static void init_paths( void )
 
 
 /*
- | Return the appropriate (full) pathname.
- |
- | For write ops, the read/write file is returned.
- |
- | For read ops, either the read/write file, the mirror file,
- | or the read only file will be returned as appropriate.
+ * Return the appropriate (full) pathname.
+ *
+ * For write ops, the read/write file is returned.
+ *
+ * For read ops, either the read/write file, the mirror file,
+ * or the read only file will be returned as appropriate.
  */
 static char *find_choices( int write )
 {
-	if ( write )
+	if (write)
 		return choices_file[CHFILE_WRITE];
-	if ( myFile_Size(choices_file[CHFILE_WRITE]) > 0 )
+
+	if (myFile_Size(choices_file[CHFILE_WRITE]) > 0)
 		return choices_file[CHFILE_WRITE];
-	if ( myFile_Size(choices_file[CHFILE_MIRROR]) > 0 )
+
+	if (myFile_Size(choices_file[CHFILE_MIRROR]) > 0)
 		return choices_file[CHFILE_MIRROR];
+
 	return choices_file[CHFILE_READ];
 }
 
@@ -4288,14 +4287,14 @@ static char *find_choices_mirror( void )
 
 static char *find_alarmfile( int write )
 {
-	if ( write )
+	if (write)
 		return alarm_file[CHFILE_WRITE];
-	if ( myFile_Size(alarm_file[CHFILE_WRITE]) > 0 )
+
+	if (myFile_Size(alarm_file[CHFILE_WRITE]) > 0)
 		return alarm_file[CHFILE_WRITE];
+
 	return alarm_file[CHFILE_READ];
 }
-
-
 
 
 
@@ -4304,35 +4303,46 @@ int main( int argc, char *argv[] )
 {
 	int  i,j;
 	int  start_full = 0;
-	char *arg_savefile=0;
+	char *arg_savefile = 0;
 	char *t;
-	int  da_font=1, da_game=1;
+	int  da_font = 1, da_game = 1;
 
-
-	atexit( final_acn );	/* "I never did care about the little things." */
+	atexit(final_acn);	/* "I never did care about the little things." */
 
 	Start_Hourglass;
 
 	/* Parse arguments */
-	for ( i=1; i<argc; i++ )
+	for (i = 1;i < argc; i++)
 	{
-		if ( argv[i][0] =='-' )
+		if (argv[i][0] =='-')
 		{
-			switch ( tolower(argv[i][1]) )
+			switch (tolower(argv[i][1]))
 			{
-				case 'm' :		/* -minimise_memory */
+				case 'm' :
+				{
+					/* Minimise Memory */
 					minimise_memory = 1;
+
+					/* Break */
 					break;
+				}
 				case 'c' :		/* -c[a][s][f][<n>] */
-					for ( j=2; argv[i][j] ; j++ )
+					for (j = 2; argv[i][j]; j++)
 					{
-						int on = isupper(argv[i][j]);
-						switch ( tolower(argv[i][j]) )
+						inton = isupper(argv[i][j]);
+
+						switch (tolower(argv[i][j]))
 						{
-							case 'a' : abbr_filecache = on && ALLOW_ABBR_FILECACHE; break;
-							case 's' : smart_filecache = on; break;
-							case 'f' : abbr_tmpfile = on && ALLOW_ABBR_FILECACHE; break;
+#ifdef ABBR_FILECACHE
+							case 'a': abbr_filecache = on; break;
+							case 'f': abbr_tmpfile = on; break;
+#endif
+#ifdef SMART_FILECACHE
+							case 's': smart_filecache = on; break;
+#endif
+
 							case 'p' : flush_scrap = !on; break;
+
 							default :
 								if ( isdigit(argv[i][j]) )
 								{
@@ -4407,9 +4417,9 @@ int main( int argc, char *argv[] )
 	core_aux = core_hook;
 
 	/* Expand the (Angband) resource path */
-	t = getenv( RESPATH );
-	if ( !t || !*t ) { Msgs_ReportFatal( 0,"%s is not defined",RESPATH ); }
-	strcpy(resource_path,t);
+	t = getenv(RISCOS_VARIANT "$Path");
+	if (!t || !*t) Msgs_ReportFatal(0, "A resources path could not be formed.");
+	strcpy(resource_path, t);
 
 	/* Decide where scrap, choices and alarm files live: */
 	init_paths();
@@ -4424,14 +4434,14 @@ int main( int argc, char *argv[] )
 
 	/* This crap appears here so that plog() will work properly before
 	   init_acn() is called... */
-	Resource_Initialise( RESDIR );
+	Resource_Initialise(RISCOS_VARIANT);
 	Msgs_LoadFile("Messages");
 
 	/* This is a hack to only call Event_Initialise3 under RO3 */
 	if ( os_version() < 300 )
-		Event_Initialise( VARIANT );
+		Event_Initialise( RISCOS_VARIANT );
 	else
-		Event_Initialise3( VARIANT, 300, message_list );
+		Event_Initialise3( RISCOS_VARIANT, 300, message_list );
 
 	EventMsg_Initialise();
 
@@ -4453,10 +4463,10 @@ int main( int argc, char *argv[] )
 		Template_LoadFile("Templates");
 
 	/* Load Sprites */
-	if ( sprites22() )
-		resource_sprites = Sprite_LoadFile( "<" RESDIR "$Dir>.Sprites22" );
+	if (sprites22())
+		resource_sprites = Sprite_LoadFile( "<" RISCOS_VARIANT "$Dir>.Sprites22" );
 	else
-		resource_sprites = Sprite_LoadFile( "<" RESDIR "$Dir>.Sprites" );
+		resource_sprites = Sprite_LoadFile( "<" RISCOS_VARIANT "$Dir>.Sprites" );
 
 	Screen_CacheModeInfo();
 
@@ -4538,7 +4548,7 @@ int main( int argc, char *argv[] )
 	init_angband();
 	initialised = 1;
 	game_in_progress = 1;
-	pause_line(Term->hgt - 1);
+	pause_line(23);
 	flush();
 	/* Stop_Hourglass; */
 	play_game(FALSE);
@@ -5811,7 +5821,7 @@ static void f_free( void *blk )
  |
  | The 'huge' is to be type-compatible with z-virt.c
  */
-static vptr g_malloc( huge size )
+static vptr g_malloc(huge size)
 {
 	void *c;
 	int s;
@@ -5848,7 +5858,7 @@ static vptr g_malloc( huge size )
  | The 'len' is to be compatible with z-virt.c (we don't need/use it)
  | Returns NULL.
  */
-static vptr g_free( vptr blk )
+static vptr g_free(vptr blk)
 {
 	os_error *e;
 	int s;
@@ -5977,7 +5987,7 @@ static void read_sound_config( void )
 
 
 	/* Open the config file */
-	sprintf(buffer,"%s%s",SOUNDPATH,"sound/cfg");
+	sprintf(buffer, "%sSound:%s", RISCOS_VARIANT, "sound/cfg");
 	f = fopen( buffer, "r" );
 
 	/* No cfg file => no sounds */
@@ -6148,17 +6158,20 @@ static void initialise_sound( void )
 
 
 
-static void play_sample( char *leafname )
+static void play_sample(char *leafname)
 {
 	char buffer[260];
 
-	strcpy(buffer,"%playit_stop");
-	if ( !SWI(1,0,SWI_OS_CLI,buffer) )
+	strcpy(buffer, "%playit_stop");
+
+	if (!SWI(1, 0, SWI_OS_CLI, buffer))
 	{
-		SWI( 1,0, SWI_PlayIt_Volume, sound_volume );
-		sprintf(buffer,"%%playit_play %s%s",SOUNDPATH,leafname);
-		SWI(1,0,SWI_OS_CLI,buffer);
+		SWI(1,0, SWI_PlayIt_Volume, sound_volume);
+		sprintf(buffer, "%%playit_play %sSound:%s", RISCOS_VARIANT, leafname);
+		SWI(1, 0, SWI_OS_CLI, buffer);
 	}
+
+	return;
 }
 
 
@@ -6314,32 +6327,31 @@ static errr Term_user_acn(int n)
 
 		do
 		{
-			display_line( 2, 8,tum_col(optn==0),"     Gamma correction : %.2lf",gamma );
-			display_line( 2, 9,tum_col(optn==1),"     Force monochrome : %s", tum_onoff(force_mono) );
-			display_line( 2,10,tum_col(optn==2),"        Sound effects : %s", tum_onoff(enable_sound) );
+			display_line( 2, 8,tum_col(optn==0),"	 Gamma correction : %.2lf",gamma );
+			display_line( 2, 9,tum_col(optn==1),"	 Force monochrome : %s", tum_onoff(force_mono) );
+			display_line( 2,10,tum_col(optn==2),"		Sound effects : %s", tum_onoff(enable_sound) );
 			display_line( 2,11,tum_col(optn==3),"  Sound effect volume : ");
 			display_line(26,11,sound_volume>127 ? TERM_RED : tum_col(optn==3), "%-3d", sound_volume);
 			display_line(30,11,tum_col(optn==3),"(127 = full volume)");
-			display_line( 2,12,tum_col(optn==4),"     Start fullscreen : %s", tum_onoff(start_fullscreen) );
+			display_line( 2,12,tum_col(optn==4),"	 Start fullscreen : %s", tum_onoff(start_fullscreen) );
 			display_line(30,12,tum_col(optn==4),"(also selects fullscreen/desktop now)");
-			display_line( 2,13,tum_col(optn==5),"        Use hourglass : %s", tum_onoff(use_glass) );
+			display_line( 2,13,tum_col(optn==5),"		Use hourglass : %s", tum_onoff(use_glass) );
 			display_line( 2,14,tum_col(optn==6),"'Hard' input flushing : %s", tum_onoff(hack_flush) );
 
-			display_line( 7,16,tum_col(optn==7),"      Alarm type : %-20s", alarm_types[alarm_type] );
-			display_line( 7,17,TERM_WHITE,      "            Time : ");
+			display_line( 7,16,tum_col(optn==7),"	  Alarm type : %-20s", alarm_types[alarm_type] );
+			display_line( 7,17,TERM_WHITE,	  "			Time : ");
 			display_line(26,17,tum_col(optn==8),"%02d",alarm_h);
 			display_line(28,17,TERM_WHITE,":");
 			display_line(29,17,tum_col(optn==9),"%02d",alarm_m);
-			display_line( 7,18,tum_col(optn==10),"         Message : %-51s",alarm_message);
-			display_line( 7,19,tum_col(optn==11),"            Beep : %s",tum_onoff(alarm_beep));
+			display_line( 7,18,tum_col(optn==10),"		 Message : %-51s",alarm_message);
+			display_line( 7,19,tum_col(optn==11),"			Beep : %s",tum_onoff(alarm_beep));
 
-			if ( ALLOW_DEBUG_INFO )
-			{
-				display_line(2,23,tum_col(optn==23),"Show debug info");
-				max_opt = 12;
-			}
+#ifdef FE_DEBUG_INFO
+			display_line(2,23,tum_col(optn==23),"Show debug info");
+			max_opt = 12;
+#endif
 
-			switch ( optn )
+			switch (optn)
 			{
 				case 12: Term_gotoxy( 2, 23 ); break;
 				case 11: Term_gotoxy( 26, 19 ); break;
@@ -6361,7 +6373,7 @@ static errr Term_user_acn(int n)
 					break;
 				case 's': case 'S' :
 					save_choices();
-					display_line( 2,23, TERM_YELLOW, "Options saved.       " );
+					display_line( 2,23, TERM_YELLOW, "Options saved.	   " );
 					Term_fresh();
 					Term_xtra( TERM_XTRA_DELAY, 750 );
 					Term_erase( 2, 23, 60 );
@@ -7437,7 +7449,7 @@ static void trigger_alarm_desktop( void )
 
 	aw = Window_Create( "alarm", template_TITLEMIN );
 	if ( !aw ) { core("failed to create Alarm window!"); }
-	sprintf(buffer,"Alarm from %s",VARIANT);
+	sprintf(buffer,"Alarm from %s", VARIANT);
 	Window_SetTitle(aw, buffer );
 	Event_Claim( event_CLICK, aw, 0, Hnd_AlarmClick, NULL );
 	Event_Claim( event_CLOSE, aw, event_ANY, Hnd_AlarmClick, NULL );
@@ -7602,19 +7614,31 @@ static void debug_printf( char *fmt, ... )
 
 static void debug_version_info( void )
 {
-	debug_tcol( TERM_YELLOW ); debug_printf("\n\nMisc. Info:\n"); debug_tcol( TERM_WHITE );
+	debug_tcol(TERM_YELLOW);
+
+	debug_printf("\n\nMisc. Info:\n"); debug_tcol( TERM_WHITE );
 	debug_printf("\tVariant name = \"%s\"\n", VARIANT );
 	debug_printf("\tFront-end version: %s\n", PORTVERSION );
 	debug_printf("\tFront-end compiled: %s %s\n", __TIME__, __DATE__ );
 	debug_printf("\tCompile time flags:\n");
-	if ( ALLOW_USE_FILECACHE ) { debug_printf("\t\tUSE_FILECACHE\n"); }
-	if ( ALLOW_ABBR_FILECACHE ) { debug_printf("\t\tABBR_FILECACHE\n"); }
-	if ( DEFAULT_SMART_FILECACHE ) { debug_printf("\t\tSMART_FILECACHE\n"); }
 
-	debug_tcol( TERM_YELLOW ); debug_printf("\nResource path:\n"); debug_tcol( TERM_WHITE );
-	debug_printf("\t\"%s\"\n",resource_path);
+#ifdef USE_FILECACHE
+	debug_printf("\t\tUSE_FILECACHE\n");
+#endif
 
-	debug_tcol( TERM_YELLOW ); debug_printf("\nTempfile path:\n"); debug_tcol( TERM_WHITE );
+#ifdef ABBR_FILECACHE
+	debug_printf("\t\tABBR_FILECACHE\n");
+#endif
+
+#ifdef SMART_FILECACHE
+	debug_printf("\t\tSMART_FILECACHE\n");
+#endif
+
+	debug_tcol(TERM_YELLOW); debug_printf("\nResource path:\n");
+	debug_tcol(TERM_WHITE); debug_printf("\t\"%s\"\n", resource_path);
+
+	debug_tcol(TERM_YELLOW); debug_printf("\nTempfile path:\n");
+	debug_tcol(TERM_WHITE);
 	debug_printf("\t\"%s\"\n",scrap_path);
 	debug_printf("\tScrapfiles are %s deleted at exit.\n", (flush_scrap ? "" : "NOT") );
 
@@ -7624,16 +7648,16 @@ static void debug_version_info( void )
 	debug_printf("\t Fallback (r): \"%s\"\n",choices_file[CHFILE_READ]);
 	debug_printf("\t Mirror (r/w): \"%s\"\n",choices_file[CHFILE_MIRROR]);
 	debug_tcol( TERM_L_BLUE ); debug_printf("\tActual files:\n");debug_tcol( TERM_WHITE );
-	debug_printf("\t        Write: \"%s\"\n",find_choices(TRUE));
-	debug_printf("\t         Read: \"%s\"\n",find_choices(FALSE));
+	debug_printf("\t		Write: \"%s\"\n",find_choices(TRUE));
+	debug_printf("\t		 Read: \"%s\"\n",find_choices(FALSE));
 
 	debug_tcol( TERM_YELLOW ); debug_printf("\nAlarm files:\n");
 	debug_tcol( TERM_L_BLUE ); debug_printf("\tDesired files:\n");debug_tcol( TERM_WHITE );
 	debug_printf("\tPrimary (r/w): \"%s\"\n",alarm_file[CHFILE_WRITE]);
 	debug_printf("\t Fallback (r): \"%s\"\n",alarm_file[CHFILE_READ]);
 	debug_tcol( TERM_L_BLUE ); debug_printf("\tActual files:\n");debug_tcol( TERM_WHITE );
-	debug_printf("\t        Write: \"%s\"\n",find_alarmfile(TRUE));
-	debug_printf("\t         Read: \"%s\"\n",find_alarmfile(FALSE));
+	debug_printf("\t		Write: \"%s\"\n",find_alarmfile(TRUE));
+	debug_printf("\t		 Read: \"%s\"\n",find_alarmfile(FALSE));
 
 	debug_tcol( TERM_YELLOW ); debug_printf("\nDynamic areas:\n"); debug_tcol( TERM_WHITE );
 	debug_printf("\tFontcache DA = %d\t",font_area);
@@ -7729,11 +7753,8 @@ static void show_debug_info( void )
 
 	Term_clear();
 }
+
 #endif			/* FE_DEBUG_INFO */
 
-
 #endif			/* __riscos */
-
-
-
 

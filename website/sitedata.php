@@ -9,7 +9,7 @@
 // Filename-accessed array of "full names"
 $titles['main'] = 'main page';
 $titles['changes'] = 'changes';
-$titles['devinfo'] = 'development information';
+$titles['devinfo'] = 'development';
 $titles['download'] = 'downloads';
 $titles['links'] = 'links';
 

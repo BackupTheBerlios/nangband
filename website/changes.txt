@@ -8,6 +8,8 @@ Nangband Website changelog
   course, text-browser compliant.  (takkaria)
 - Loadsa fiddling.  Removed some CSS warnings.  Did other neat
   stuff, I'm sure.  (takkaria)
+- Added the "plain" style.  Looks better in text-based browsers
+  than the others. (takkaria)
 
 07-07-02
 --------

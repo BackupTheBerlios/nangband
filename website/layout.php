@@ -54,6 +54,18 @@ function do_styles($type)
 		echo 'Clean';
 	}
 
+	echo ' | ';
+
+	if ($style != 'plain')
+	{
+		echo '<a href="?page='.$type.'&amp;newstyle=plain">Plain</a>';
+
+	}
+	else
+	{
+		echo 'Plain';
+	}
+
 	return;
 }
 
@@ -83,6 +95,15 @@ function page_header($title, $type)
 			<font size="-1">change style: <?php do_styles($type);?></font>
 		</td></tr>
 		<tr><td bgcolor="#eeeeee" class="border">
+<?php
+	}
+	else if ($style == 'plain')
+	{
+?>
+<body bgcolor="#ffffff" background="images/compass.gif">
+<h1>nangband: <?=$title?></h1>
+<div align="right"><?php do_links(0, 0, 1); ?></div>
+<hr align="right" width="50%">
 <?php
 	}
 	else if ($style == 'sidebar')
@@ -135,6 +156,15 @@ function page_footer()
 
 		echo '</div></td></tr>';
 		echo '</table></td></tr></table>';
+	}
+	else if ($style == 'plain')
+	{
+?>
+<hr align="right" width="50%">
+<div align="right">Change style: <?php do_styles($type); ?></div>
+</body>
+</html>
+<?php
 	}
 	else if ($style == 'sidebar')
 	{

@@ -19,7 +19,8 @@ if (!$cstyle) $style = 'clean';
 
 // Check on the setting styles
 if (($newstyle == 'sidebar') ||
-    ($newstyle == 'clean'))
+    ($newstyle == 'clean') ||
+    ($newstyle == 'plain'))
 {
 	// Set a cookie for a few years
 	setcookie("cstyle", $newstyle, time()+172800000);

@@ -2274,6 +2274,7 @@ s16b wield_slot(const object_type *o_ptr)
 			return (INVEN_NECK);
 		}
 
+		case TV_ORB:
 		case TV_LITE:
 		{
 			return (INVEN_LITE);

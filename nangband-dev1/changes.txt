@@ -5,7 +5,9 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ----------
 - Efficientised the o_ptr->note code.  It now reads/writes a byte for
   whether there is a "note" record.  If there is, it reads/writes it.
-  Combined the code for saving/loading here properly too.
+  Combined the code for saving/loading here properly too. (takkaria)
+- Fixed some silly, silly bugs, such as not reading in blocks. (!!!)
+  (ajps)
 
 Between 2002-04-21 and 2002-04-27
 ---------------------------------

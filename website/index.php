@@ -34,7 +34,7 @@ switch ($page)
 	case 'download': $title = 'download';
 	                 break;
 
-	case 'project': $redirect = 'http://developer.berlios.de/';
+	case 'project': $redirect = 'http://developer.berlios.de/project/?group_id=266';
 	                break;
 }
 

@@ -112,8 +112,6 @@ struct maxima
 	u16b b_max;		/* Max size per element of "b_info[]" */
 	u16b c_max;		/* Max size for "c_info[]" */
 	u16b flavor_max; /* Max size for "flavor_info[]" */
-	u16b magic_book_max;	/* Max size for "magic_book_info[]" */
-	u16b magic_spell_max;	/* Max size for "magic_spell_info[]" */
 
 	u16b o_max;		/* Max size for "o_list[]" */
 	u16b m_max;		/* Max size for "m_list[]" */
@@ -1129,28 +1127,3 @@ struct flavor_type
 	char x_char;    /* Desired flavor character */
 };
 
-
-typedef struct magic_book_type magic_book_type;
-
-struct magic_book_type
-{
-	u32b name;		/* Name (offset) */
-	u32b text;
-
-	byte tval;
-	byte sval;
-
-	int no_spells;
-};
-
-typedef struct magic_spell_type magic_spell_type;
-
-struct magic_spell_type
-{
-	u32b name;
-	u32b text;
-
-	byte book;
-	byte pos;
-	char constant[40];
-};

@@ -983,61 +983,6 @@ static errr init_flavor_info(void)
 	return (err);
 }
 
-/*
- * Initialize the "spell_info" array
- */
-static errr init_spell_info(void)
-{
-	errr err;
-
-	/* Init the header */
-	init_header(&spell_head, z_info->magic_spell_max, sizeof(magic_spell_type));
-
-#ifdef ALLOW_TEMPLATES
-
-	/* Save a pointer to the parsing function */
-	spell_head.parse_info_txt = parse_spell_info;
-
-#endif /* ALLOW_TEMPLATES */
-
-	err = init_info("spell", &spell_head);
-
-	/* Set the global variables */
-	magic_spell_info = spell_head.info_ptr;
-	magic_spell_name = spell_head.name_ptr;
-	magic_spell_text = spell_head.text_ptr;
-
-	return (err);
-}
-
-/*
- * Initialize the "book_info" array
- */
-static errr init_book_info(void)
-{
-	errr err;
-
-	/* Init the header */
-	init_header(&book_head, z_info->magic_book_max, sizeof(magic_book_info));
-
-#ifdef ALLOW_TEMPLATES
-
-	/* Save a pointer to the parsing function */
-	book_head.parse_info_txt = parse_book_info;
-
-#endif /* ALLOW_TEMPLATES */
-
-	err = init_info("book", &book_head);
-
-	/* Set the global variables */
-	magic_book_info = book_head.info_ptr;
-	magic_book_name = book_head.name_ptr;
-	magic_book_text = book_head.text_ptr;
-
-	return (err);
-}
-
-
 /*** Initialize others ***/
 
 
@@ -1883,14 +1828,6 @@ void init_angband(void)
 	prompt_note("[Initializing arrays... (flavors)]");
 	if (init_flavor_info()) quit("Cannot initialize flavors");
 
-	/* Initialize magic book info */
-	prompt_note("[Initializing arrays... (books)]");
-	if (init_book_info()) quit("Cannot initialize books");
-
-	/* Initialize magic spell info */
-	prompt_note("[Initializing arrays... (spells)]");
-	if (init_spell_info()) quit("Cannot initialize spells");
-	
 	/* Initialize some other arrays */
 	prompt_note("[Initializing arrays... (other)]");
 	if (init_other()) quit("Cannot initialize other stuff");

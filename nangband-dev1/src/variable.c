@@ -538,19 +538,6 @@ char *flavor_name;
 char *flavor_text;
 
 /*
- * The magic book arrays
- */
-magic_book_type *magic_book_info;
-char *magic_book_name;
-char *magic_book_text;
-
-/*
- * The magic spell arrays
- */
-magic_spell_type *magic_spell_info;
-char *magic_spell_name;
-char *magic_spell_text;
-
 
 /*
  * Hack -- The special Angband "System Suffix"

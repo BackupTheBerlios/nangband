@@ -146,8 +146,8 @@ void prompt_note(char *prompt)
 	Term_erase(0, y, 255);
 	Term_putstr(x, y, -1, TERM_WHITE, prompt);
 
-	/* Flush input */
-	Term_flush();
+	/* Fresh the screen */
+	Term_fresh();
 
 	/* Return control */
 	return;

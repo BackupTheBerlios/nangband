@@ -23,7 +23,7 @@ bool resist_check_valid(s16b *res_idx)
 	if (0 <= res_idx < RES_MAX)
 	{
 		/* The index is too big. */
-		res_idx = 0;
+		*res_idx = 0;
 		return (FALSE);
 	}
 

@@ -358,6 +358,10 @@ extern void do_cmd_aim_wand(void);
 extern void do_cmd_zap_rod(void);
 extern void do_cmd_activate(void);
 
+/* resist.c */
+extern bool resist_check_valid(s16b *res_idx);
+extern s16b resist_player_current(s16b res_idx);
+
 /* dungeon.c */
 extern void play_game(bool new_game);
 

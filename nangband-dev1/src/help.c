@@ -3928,7 +3928,8 @@ bool parse_body(BULP *bptr, char **display, char **links, int *link_no, int *blo
 							break;
 						}
 
-						if (bulp_stricmp(buffer, "colour") == 0)
+						if (bulp_stricmp(buffer, "colour") == 0 ||
+							bulp_stricmp(buffer, "color") == 0)
 						{
 							/* Set colour back to white */
 							(*display)[0] = REDRAW_CODE_COLOUR;

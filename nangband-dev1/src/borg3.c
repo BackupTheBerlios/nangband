@@ -955,22 +955,22 @@ bool borg_object_star_id_aux(borg_item *borg_item, object_type *real_item)
             /* Various Brands */
             if (prefix(buf, "It does extra damage from acid."))
             {
-                f1 &= TR1_BRAND_ACID;
+                f2 &= TR2_BRAND_ACID;
                 continue;
             }
             if (prefix(buf, "It does extra damage from electricity."))
             {
-                f1 &= TR1_BRAND_ELEC;
+                f2 &= TR2_BRAND_ELEC;
                 continue;
             }
             if (prefix(buf, "It does extra damage from fire."))
             {
-                f1 &= TR1_BRAND_FIRE;
+                f2 &= TR2_BRAND_FIRE;
                 continue;
             }
             if (prefix(buf, "It does extra damage from frost."))
             {
-                f1 &= TR1_BRAND_COLD;
+                f2 &= TR2_BRAND_COLD;
                 continue;
             }
             /* This is Grond. */
@@ -1058,116 +1058,7 @@ bool borg_object_star_id_aux(borg_item *borg_item, object_type *real_item)
                 f2 &= TR2_SUST_CHR;
                 continue;
             }
-            /* Various immunities */
-            if (prefix(buf, "It provides immunity to acid."))
-            {
-                f2 &= TR2_IM_ACID;
-                continue;
-            }
-            if (prefix(buf, "It provides immunity to electricity."))
-            {
-                f2 &= TR2_IM_ELEC;
-                continue;
-            }
-            if (prefix(buf, "It provides immunity to fire."))
-            {
-                f2 &= TR2_IM_FIRE;
-                continue;
-            }
-            if (prefix(buf, "It provides immunity to cold."))
-            {
-                f2 &= TR2_IM_COLD;
-                continue;
-            }
-            /* Free Action */
-            if (prefix(buf, "It provides immunity to paralysis."))
-            {
-                f3 &= TR3_FREE_ACT;
-                continue;
-            }
-            /* Hold Life */
-            if (prefix(buf, "It provides resistance to life draining."))
-            {
-                f3 &= TR3_HOLD_LIFE;
-                continue;
-            }
-            /* Resists */
-            if (prefix(buf, "It provides resistance to acid."))
-            {
-                f2 &= TR2_RES_ACID;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to electricity."))
-            {
-                f2 &= TR2_RES_ELEC;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to fire."))
-            {
-                f2 &= TR2_RES_FIRE;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to cold."))
-            {
-                f2 &= TR2_RES_COLD;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to poison."))
-            {
-                f2 &= TR2_RES_POIS;
-                continue;
-            }
 
-            if (prefix(buf, "It provides resistance to light."))
-            {
-                f2 &= TR2_RES_LITE;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to dark."))
-            {
-                f2 &= TR2_RES_DARK;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to blindness."))
-            {
-                f2 &= TR2_RES_BLIND;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to confusion."))
-            {
-                f2 &= TR2_RES_CONFU;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to sound."))
-            {
-                f2 &= TR2_RES_SOUND;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to shards."))
-            {
-                f2 &= TR2_RES_SHARD;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to nether."))
-            {
-                f2 &= TR2_RES_NETHR;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to nexus."))
-            {
-                f2 &= TR2_RES_NEXUS;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to chaos."))
-            {
-                f2 &= TR2_RES_CHAOS;
-                continue;
-            }
-            if (prefix(buf, "It provides resistance to disenchantment."))
-            {
-                f2 &= TR2_RES_DISEN;
-                continue;
-            }
             /* Feather Fall */
             if (prefix(buf, "It induces feather falling."))
             {
@@ -1393,66 +1284,6 @@ bool borg_object_star_id( void )
                     borg_keypresses("Spd");
                 }
                 /* slays and immunities */
-                if (item->flags2 & TR2_RES_POIS)
-                {
-                borg_keypresses("Poisn");
-                }
-                if (item->flags2 & TR2_IM_FIRE)
-                {
-                borg_keypresses("IFir");
-                }
-                if (item->flags2 & TR2_IM_COLD)
-                {
-                borg_keypresses("ICld");
-                }
-                if (item->flags2 & TR2_IM_ACID)
-                {
-                borg_keypresses("IAcd");
-                }
-                if (item->flags2 & TR2_IM_ELEC)
-                {
-                borg_keypresses("IElc");
-                }
-                if (item->flags2 & TR2_RES_LITE)
-                {
-                    borg_keypresses("Lite");
-                }
-                if (item->flags2 & TR2_RES_DARK)
-                {
-                    borg_keypresses("Dark");
-                }
-                if (item->flags2 & TR2_RES_BLIND)
-                {
-                    borg_keypresses("Blnd");
-                }
-                if (item->flags2 & TR2_RES_CONFU)
-                {
-                    borg_keypresses("Conf");
-                }
-                if (item->flags2 & TR2_RES_SOUND)
-                {
-                    borg_keypresses("Sound");
-                }
-                if (item->flags2 & TR2_RES_SHARD)
-                {
-                    borg_keypresses("Shrd");
-                }
-                if (item->flags2 & TR2_RES_NETHR)
-                {
-                    borg_keypresses("Nthr");
-                }
-                if (item->flags2 & TR2_RES_NEXUS)
-                {
-                    borg_keypresses("Nxs");
-                }
-                if (item->flags2 & TR2_RES_CHAOS)
-                {
-                    borg_keypresses("Chaos");
-                }
-                if (item->flags2 & TR2_RES_DISEN)
-                {
-                    borg_keypresses("Disn");
-                }
                 if (item->flags3 & TR3_ACTIVATE)
                 {
                     borg_keypresses("Actv");
@@ -1746,7 +1577,7 @@ void borg_item_analyze(borg_item *item, cptr desc)
 
     /* Wipe the item */
     WIPE(item, borg_item);
-
+	item = NULL;
 
     /* Save the item description */
     strcpy(item->desc, desc);

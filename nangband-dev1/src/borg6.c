@@ -1,6 +1,5 @@
 /* File: borg6.c */
 /* Purpose: Medium level stuff for the Borg -BEN- */
-#ifdef COMPILE_ERRORS
 #include "angband.h"
 
 #ifdef BORG_TK
@@ -13857,5 +13856,4 @@ void borg_init_6(void)
 static int HACK = 0;
 #endif
 
-#endif
 #endif

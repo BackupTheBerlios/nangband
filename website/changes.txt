@@ -7,5 +7,8 @@ Nangband Website changelog
 - Rewrote site to only have one PHP page which displays the appropriate
   content for each page.  Much cleaner than before.  Not tested!
   (takkaria)
-
-
+- Tested.  Forgot a minor detail, but that's been fixed now :) 
+  (takkaria)
+- Changed a minor detail - I didn't mention that the daily compiles were
+  Windows ports. (takkaria)
+- Added a script to upload the latest CVS to the webserver. (takkaria)

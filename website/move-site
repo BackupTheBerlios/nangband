@@ -1,0 +1,12 @@
+#!/bin/sh
+# A small shell script to be invoked in 'nang-web'.
+# It gives the webserver the website, which will go live.
+#
+# Invoke thus:
+#  'copy-site username'
+# Where "username" is your berlios.de account name.
+
+cd ../
+scp nang-web/* $1@shell.berlios.de:/home/groups/nangband/htdocs/
+
+# EOF

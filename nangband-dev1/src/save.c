@@ -7,7 +7,6 @@
  *         pelpel (pelpel).
  *
  * Licences: GNU GPL, version 2 or any later version.
- *    or the Traditional Angband Licence, see angband.h
  */
 #include "angband.h"
 
@@ -20,20 +19,17 @@
 /*
  * The new savefile format was first the idea of Ben Harrison.
  *
- * Most code has been rewritten, but several functions have been rearranged
- * and had the name changed; these are presumably Ben's/Robert's code, and
- * therefore is GPL'able anyway.  Any claims to the contrary should be
- * directed at to <nevermiah@hotmail.com>.
- *
  * The basic format of Nangband savefiles is simple.
  *
- * It is made of a header (6 bytes), then "blocks".
+ * It is made of a header (10 bytes), then "blocks".
  *
  * The file header has a four-byte "magic number", followed by two bytes
  * for savefile code version. When a savefile is loaded, a check can be
  * performed to see if the first four bytes are the "magic number", or
  * the version number of an old savefile. This can keep savefile
  * compatibility.
+ *
+ * The following text is stuff to contemplate at:
  *
  * Each "block" is a "type" (2 bytes), plus a "size" (2 bytes), plus "data",
  * plus a "check" (2 bytes), plus a "stamp" (2 bytes).  The format of the
@@ -51,7 +47,6 @@
  *   TYPE_STORES --> store information
  *   TYPE_RACES --> monster race data
  *   TYPE_KINDS --> object kind data
- *   TYPE_UNIQUES --> unique info
  *   TYPE_ARTIFACTS --> artifact info
  *   TYPE_QUESTS --> quest info
  *
@@ -61,20 +56,10 @@
  *   TYPE_OBJECTS --> dungeon objects
  *   TYPE_MONSTERS --> dungeon monsters
  *
- * Conversions:
- *   Break old "races" into normals/uniques
- *   Extract info about the "unique" monsters
- *
  * Question:
  *   Should there be a single "block" for info about all the stores, or one
  *   "block" for each store?  Or one "block", which contains "sub-blocks" of
  *   some kind?  Should we dump every "sub-block", or just the "useful" ones?
- *
- * Question:
- *   Should the normals/uniques be broken for 2.8.0, or should 2.8.0 simply
- *   be a "fixed point" into which older savefiles are converted, and then
- *   future versions could ignore older savefiles, and the "conversions"
- *   would be much simpler.
  */
 
 /* The possible types of block */
@@ -105,7 +90,7 @@
 #define BLOCK_VERSION_QUESTS     1
 #define BLOCK_VERSION_ARTIFACTS  1
 #define BLOCK_VERSION_STORES     1
-#define BLOCK_VERSION_DUNGEON    2
+#define BLOCK_VERSION_DUNGEON    3
 #define BLOCK_VERSION_INVENTORY  1
 
 /* "Helper" functions - versions */
@@ -115,6 +100,12 @@
 
 /* The smallest block we can have */
 #define BLOCK_INCREMENT         32
+
+/* Acorns go very slow with small block increments */
+#ifdef ACORN
+ #undef BLOCK_INCREMENT
+ #define BLOCK_INCREMENT 128
+#endif /* ACORN */
 
 /* The size of the header (in bytes) */
 #define BLOCK_HEAD_SIZE         10
@@ -1241,25 +1232,43 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 {
 	int i, y, x;
 
-	char record[80];
-
-	u16b xmax = 0, ymax = 0;
+	u16b xmax = 0,
+	     ymax = 0;
 	u16b py, px;
-
-	byte tmp8u;
-	u16b tmp16u = 0;
 
 	u16b limit;
 
-	u16b count = 0, prev_char = 0;
+	byte count = 0,
+	     prev_char = 0,
+	     cave = 0;
 
-	/* We don't use the version yet. */
-	(void)ver;
+	/* Check version */
+	if (ver < 3)
+	{
+		char ch;
 
-	/* Make a "sentinel" */
-	if (type == PUT) strcpy(record, "Player Dungeon");
-	savefile_do_string(record, type);
-	if (type == GET) if (!prefix(record, "Player Dungeon")) return (-1);
+		/* Ask the user a question */
+		note("This savefile's dungeon data is unrecoverable.", type);
+		note("Do you want to regenerate this dungeon? (y/n)", type);
+
+		/* Get input */
+		do
+		{
+			ch = inkey();
+			ch = tolower((unsigned char) ch);
+		} while ((ch != 'y') && (ch != 'n'));
+
+		if (ch == 'n')
+		{
+			note("Okay, attempting to load a broken savefile!", type);
+		}
+		else
+		{
+			note("Okay, dungeon level will be regenerated.", type);
+			character_dungeon = FALSE;
+			return (0);
+		}
+	}
 
 	/* If the player's dead, forget it */
 	if (p_ptr->is_dead) return (0);
@@ -1312,36 +1321,63 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 	/* Do RLE/RLD */
 	if (type == PUT)
 	{
-		/* Dump the cave */
+		/* Dump the cave_info[][] flags to the file */
 		for (y = 0; y < DUNGEON_HGT; y++)
 		{
 			for (x = 0; x < DUNGEON_WID; x++)
 			{
-				/* Extract the important cave_info flags */
-				tmp16u = (cave_info[y][x] & (IMPORTANT_FLAGS));
+				/* Extract the important flags into cave[1|2] */
+				cave = (cave_info[y][x] & (IMPORTANT_FLAGS));
 
-				/* If the run is broken, or too full, flush it */
-				if ((tmp16u != prev_char) || (count == (MAX_UCHAR * 2)))
+				/*
+				 * If the run is broken, or full, flush it; otherwise,
+				 * increase the count of this character.
+				 */
+				if ((cave != prev_char) ||
+				    (count == (MAX_UCHAR * 2)))
 				{
-					savefile_do_u16b(&count, type);
-					savefile_do_u16b(&prev_char, type);
-					prev_char = tmp16u;
+					savefile_do_byte(&count, type);
+					savefile_do_byte(&prev_char, type);
+					prev_char = cave;
 					count = 1;
 				}
-
-				/* Continue the run */
-				else
-				{
-					count++;
-				}
+				else count++;
 			}
 		}
 
 		/* Flush the data (if any) */
 		if (count)
 		{
-			savefile_do_u16b(&count, type);
-			savefile_do_u16b(&prev_char, type);
+			savefile_do_byte(&count, type);
+			savefile_do_byte(&prev_char, type);
+		}
+
+		/* Dump the cave_info[][] flags to the file */
+		for (y = 0; y < DUNGEON_HGT; y++)
+		{
+			for (x = 0; x < DUNGEON_WID; x++)
+			{
+				/*
+				 * If the run is broken, or full, flush it; otherwise,
+				 * increase the count of this character.
+				 */
+				if ((cave_info[y][x] != prev_char) ||
+				    (count == (MAX_UCHAR * 2)))
+				{
+					savefile_do_byte(&count, type);
+					savefile_do_byte(&prev_char, type);
+					prev_char = cave_info[y][x];
+					count = 1;
+				}
+				else count++;
+			}
+		}
+
+		/* Flush the data (if any) */
+		if (count)
+		{
+			savefile_do_byte(&count, type);
+			savefile_do_byte(&prev_char, type);
 		}
 	}
 	else
@@ -1349,23 +1385,40 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		/* Load the dungeon data */
 		for (x = y = 0; y < DUNGEON_HGT; )
 		{
-			/* Grab RLE info */
-			if (ver < 2)
-			{
-				savefile_do_byte((byte *) &count, type);
-				savefile_do_byte((byte *) &tmp16u, type);
-			}
-			else
-			{
-				savefile_do_u16b(&count, type);
-				savefile_do_u16b(&tmp16u, type);
-			}
+			/* Extract the count and char info */
+			savefile_do_byte(&count, type);
+			savefile_do_byte(&cave, type);
 
 			/* Apply the RLE info */
 			for (i = count; i > 0; i--)
 			{
 				/* Extract "info" */
-				cave_info[y][x] = tmp16u;
+				cave_info[y][x] = cave;
+
+				/* Advance/Wrap */
+				if (++x >= DUNGEON_WID)
+				{
+					/* Wrap */
+					x = 0;
+
+					/* Advance/Wrap */
+					if (++y >= DUNGEON_HGT) break;
+				}
+			}
+		}
+
+		/* Load the dungeon data */
+		for (x = y = 0; y < DUNGEON_HGT; )
+		{
+			/* Extract the count and char info */
+			savefile_do_byte(&count, type);
+			savefile_do_byte(&cave, type);
+
+			/* Apply the RLE info */
+			for (i = count; i > 0; i--)
+			{
+				/* Extract "info" */
+				cave_info2[y][x] = cave;
 
 				/* Advance/Wrap */
 				if (++x >= DUNGEON_WID)
@@ -1394,14 +1447,14 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 			for (x = 0; x < DUNGEON_WID; x++)
 			{
 				/* Extract a byte */
-				tmp8u = cave_feat[y][x];
+				cave = cave_feat[y][x];
 
 				/* If the run is broken, or too full, flush it */
-				if ((tmp8u != prev_char) || (count == MAX_UCHAR))
+				if ((cave != prev_char) || (count == MAX_UCHAR))
 				{
-					savefile_do_byte((byte *) &count, type);
-					savefile_do_byte((byte *) &prev_char, type);
-					prev_char = tmp8u;
+					savefile_do_byte(&count, type);
+					savefile_do_byte(&prev_char, type);
+					prev_char = cave;
 					count = 1;
 				}
 
@@ -1416,8 +1469,8 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		/* Flush the data (if any) */
 		if (count)
 		{
-			savefile_do_byte((byte *) &count, type);
-			savefile_do_byte((byte *) &prev_char, type);
+			savefile_do_byte(&count, type);
+			savefile_do_byte(&prev_char, type);
 		}
 	}
 	else
@@ -1426,14 +1479,14 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		for (x = y = 0; y < DUNGEON_HGT; )
 		{
 			/* Grab RLE info */
-			savefile_do_byte((byte *) &count, type);
-			savefile_do_byte(&tmp8u, type);
+			savefile_do_byte(&count, type);
+			savefile_do_byte(&cave, type);
 
 			/* Apply the RLE info */
 			for (i = count; i > 0; i--)
 			{
 				/* Extract "feat" */
-				cave_set_feat(y, x, tmp8u);
+				cave_set_feat(y, x, cave);
 
 				/* Advance/Wrap */
 				if (++x >= DUNGEON_WID)

@@ -50,6 +50,44 @@
 /*** Helper arrays for parsing ascii template files ***/
 
 /*
+ * Terrain flags.
+ */
+static cptr feature_flags_1[32] =
+{
+	"BORING",
+	"WALL",
+	"STORE",
+	"BLOCKING",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX",
+	"XXXX"
+};
+
+/*
  * Monster Blow Methods
  */
 static cptr r_info_blow_method[] =
@@ -713,6 +751,26 @@ static u32b add_name(header *head, cptr buf)
 	return (index);
 }
 
+/*
+ * Grab one flag from a textual string
+ */
+static errr grab_one_flag(u32b *flags, cptr names[], cptr what)
+{
+	int i;
+
+	/* Check flags */
+	for (i = 0; i < 32; i++)
+	{
+		if (streq(what, names[i]))
+		{
+			*flags |= (1L << i);
+			return (0);
+		}
+	}
+
+	return (-1);
+}
+
 
 /*
  * Initialize the "z_info" structure, by parsing an ascii "template" file
@@ -1028,7 +1086,21 @@ errr parse_v_info(char *buf, header *head)
 	return (0);
 }
 
+/*
+ * Grab one flag in a feature_type from a textual string
+ */
+static errr grab_one_terrain_flag(feature_type *f_ptr, cptr what)
+{
+	/* Grab flags1 */
+	if (grab_one_flag(&f_ptr->f1, feature_flags_1, what) == 0)
+		return (0);
 
+	/* Oops */
+	msg_format("Unknown terrain flag '%s'.", what);
+
+	/* Error */
+	return (PARSE_ERROR_GENERIC);
+}
 
 /*
  * Initialize the "f_info" array, by parsing an ascii "template" file
@@ -1037,7 +1109,7 @@ errr parse_f_info(char *buf, header *head)
 {
 	int i;
 
-	char *s;
+	char *s, *t;
 
 	/* Current entry */
 	static feature_type *f_ptr = NULL;
@@ -1120,6 +1192,33 @@ errr parse_f_info(char *buf, header *head)
 		f_ptr->d_attr = tmp;
 		f_ptr->d_char = buf[2];
 	}
+
+	/* Hack -- Process 'F' for flags */
+	else if (buf[0] == 'F')
+	{
+		/* There better be a current f_ptr */
+		if (!f_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
+
+		/* Parse every entry textually */
+		for (s = buf + 2; *s; )
+		{
+			/* Find the end of this entry */
+			for (t = s; *t && (*t != ' ') && (*t != '|'); ++t) /* loop */;
+
+			/* Nuke and skip any dividers */
+			if (*t)
+			{
+				*t++ = '\0';
+				while ((*t == ' ') || (*t == '|')) t++;
+			}
+
+			/* Parse this entry */
+			if (0 != grab_one_terrain_flag(f_ptr, s)) return (PARSE_ERROR_INVALID_FLAG);
+
+			/* Start the next entry */
+			s = t;
+		}
+	}
 	else
 	{
 		/* Oops */
@@ -1130,26 +1229,6 @@ errr parse_f_info(char *buf, header *head)
 	return (0);
 }
 
-
-/*
- * Grab one flag from a textual string
- */
-static errr grab_one_flag(u32b *flags, cptr names[], cptr what)
-{
-	int i;
-
-	/* Check flags */
-	for (i = 0; i < 32; i++)
-	{
-		if (streq(what, names[i]))
-		{
-			*flags |= (1L << i);
-			return (0);
-		}
-	}
-
-	return (-1);
-}
 
 /*
  * Do stat bonuses.
@@ -1324,17 +1403,17 @@ static errr grab_one_kind_flag(object_kind *k_ptr, cptr what)
 	if (grab_one_resist(k_ptr->resists, what) == 0)
 		return (0);
 
-       if (grab_one_statbonus(what, k_ptr->stat_mods, k_ptr->pval) == 0)
-        return (0);
+	/* Grab stat bonuses */
+	if (grab_one_statbonus(what, k_ptr->stat_mods, k_ptr->pval) == 0)
+		return (0);
         
-        /* Hello!  grab_one_statbonus is just above here. Go! Hello? Hello? hello? Go! Go I tell y*/
-
 	/* Oops */
 	msg_format("Unknown object flag '%s'.", what);
 
 	/* Error */
 	return (PARSE_ERROR_GENERIC);
 }
+
 
 
 

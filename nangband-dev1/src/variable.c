@@ -264,7 +264,8 @@ byte *temp_x;
  * This array is padded to a width of 256 to allow fast access to elements
  * in the array via "grid" values (see the GRID() macros).
  */
-u16b (*cave_info)[256];
+byte (*cave_info)[256];
+byte (*cave_info2)[256];
 
 /*
  * Array[DUNGEON_HGT][DUNGEON_WID] of cave grid feature codes

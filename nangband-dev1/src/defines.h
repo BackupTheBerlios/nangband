@@ -1815,16 +1815,19 @@
 
 /*
  * Special cave grid flags
+ *
+ * CAVE_* are for cave_info, CAVE2_* are for cave_info2.
  */
-#define CAVE_MARK            0x0001 	/* memorized feature */
-#define CAVE_GLOW            0x0002 	/* self-illuminating */
-#define CAVE_ICKY            0x0004 	/* part of a vault */
-#define CAVE_ROOM            0x0008 	/* part of a room */
-#define CAVE_SEEN            0x0010 	/* seen flag */
-#define CAVE_VIEW            0x0020 	/* view flag */
-#define CAVE_TEMP            0x0040 	/* temp flag */
-#define CAVE_WALL            0x0080 	/* wall flag */
-#define CAVE_TRAP_DETECT     0x0100	/* trap detection flag */
+#define CAVE_MARK            0x0001     /* memorized feature */
+#define CAVE_GLOW            0x0002     /* self-illuminating */
+#define CAVE_ICKY            0x0004     /* part of a vault */
+#define CAVE_ROOM            0x0008     /* part of a room */
+#define CAVE_SEEN            0x0010     /* seen flag */
+#define CAVE_VIEW            0x0020     /* view flag */
+#define CAVE_TEMP            0x0040     /* temp flag */
+#define CAVE_WALL            0x0080     /* wall flag */
+
+#define CAVE2_TDETECT        0x0001     /* trap detection flag */
 
 
 
@@ -1903,7 +1906,7 @@
 #define SM_RES_COLD		0x00080000
 #define SM_RES_POIS		0x00100000
 #define SM_RES_FEAR		0x00200000
-#define SM_RES_LIGHT		0x00400000
+#define SM_RES_LIGHT	0x00400000
 #define SM_RES_DARK		0x00800000
 #define SM_RES_BLIND	0x01000000
 #define SM_RES_CONFU	0x02000000
@@ -1913,6 +1916,39 @@
 #define SM_RES_NETHR	0x20000000
 #define SM_RES_CHAOS	0x40000000
 #define SM_RES_DISEN	0x80000000
+
+#define FF1_BORING               0x00000001L
+#define FF1_WALL                 0x00000002L
+#define FF1_STORE                0x00000004L
+#define FF1_BLOCKING             0x00000008L
+#define FF1_XXX5                 0x00000010L
+#define FF1_XXX6                 0x00000020L
+#define FF1_XXX7                 0x00000040L
+#define FF1_XXX8                 0x00000080L
+#define FF1_XXX9                 0x00000100L
+#define FF1_XXX10                0x00000200L
+#define FF1_XXX11                0x00000400L
+#define FF1_XXX12                0x00000800L
+#define FF1_XXX13                0x00001000L
+#define FF1_XXX14                0x00002000L
+#define FF1_XXX15                0x00004000L
+#define FF1_XXX16                0x00008000L
+#define FF1_XXX17                0x00010000L
+#define FF1_XXX18                0x00020000L
+#define FF1_XXX19                0x00040000L
+#define FF1_XXX20                0x00080000L
+#define FF1_XXX21                0x00100000L
+#define FF1_XXX22                0x00200000L
+#define FF1_XXX23                0x00400000L
+#define FF1_XXX24                0x00800000L
+#define FF1_XXX25                0x01000000L
+#define FF1_XXX26                0x02000000L
+#define FF1_XXX27                0x04000000L
+#define FF1_XXX28                0x08000000L
+#define FF1_XXX29                0x10000000L
+#define FF1_XXX30                0x20000000L
+#define FF1_XXX31                0x40000000L
+#define FF1_XXX32                0x80000000L
 
 
 /*

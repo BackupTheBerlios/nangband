@@ -1148,7 +1148,7 @@ void note_spot(int y, int x)
 	if (!(info & (CAVE_MARK)))
 	{
 		/* Memorize some "boring" grids */
-		if (cave_feat[y][x] <= FEAT_INVIS)
+		if (f_info[cave_feat[y][x]].f1 & (FF1_BORING))
 		{
 			/* Option -- memorize certain floors */
 			if (((info & (CAVE_GLOW)) && view_perma_grids) ||
@@ -2422,7 +2422,7 @@ void forget_view(void)
 	int fast_view_n = view_n;
 	u16b *fast_view_g = view_g;
 
-	u16b *fast_cave_info = &cave_info[0][0];
+	byte *fast_cave_info = &cave_info[0][0];
 
 
 	/* None to forget */
@@ -2563,7 +2563,7 @@ void update_view(void)
 	int fast_temp_n = 0;
 	u16b *fast_temp_g = temp_g;
 
-	u16b *fast_cave_info = &cave_info[0][0];
+	byte *fast_cave_info = &cave_info[0][0];
 
 	byte info;
 
@@ -3059,7 +3059,7 @@ void update_flow(void)
 			if (cave_when[y][x] == flow_n) continue;
 
 			/* Ignore "walls" and "rubble" */
-			if (cave_feat[y][x] >= FEAT_RUBBLE) continue;
+			if (f_info[cave_feat[y][x]].f1 & (FF1_WALL)) continue;
 
 			/* Save the time-stamp */
 			cave_when[y][x] = flow_n;
@@ -3115,12 +3115,12 @@ void map_area(void)
 		for (x = x1; x < x2; x++)
 		{
 			/* All non-walls are "checked" */
-			if (cave_feat[y][x] < FEAT_SECRET)
+			if (!(f_info[cave_feat[y][x]].f1 & (FF1_WALL)))
 			{
 				if (distance(p_ptr->py, p_ptr->px, y, x) > 25) continue;
 
-				/* Memorize normal features */
-				if (cave_feat[y][x] > FEAT_INVIS)
+				/* Memorize non-boring features */
+				if (!(f_info[cave_feat[y][x]].f1 & (FF1_BORING)))
 				{
 					/* Memorize the object */
 					cave_info[y][x] |= (CAVE_MARK);
@@ -3133,7 +3133,7 @@ void map_area(void)
 					int xx = x + ddx_ddd[i];
 
 					/* Memorize walls (etc) */
-					if (cave_feat[yy][xx] >= FEAT_SECRET)
+					if (f_info[cave_feat[yy][xx]].f1 & (FF1_WALL))
 					{
 						/* Memorize the walls */
 						cave_info[yy][xx] |= (CAVE_MARK);
@@ -3195,7 +3195,7 @@ void wiz_light(void)
 		for (x = 1; x < DUNGEON_WID-1; x++)
 		{
 			/* Process all non-walls */
-			if (cave_feat[y][x] < FEAT_SECRET)
+			if (!(f_info[cave_feat[y][x]].f1 & (FF1_WALL)))
 			{
 				/* Scan all neighbors */
 				for (i = 0; i < 9; i++)
@@ -3207,7 +3207,7 @@ void wiz_light(void)
 					cave_info[yy][xx] |= (CAVE_GLOW);
 
 					/* Memorize normal features */
-					if (cave_feat[yy][xx] > FEAT_INVIS)
+					if (!(f_info[cave_feat[y][x]].f1 & (FF1_BORING)))
 					{
 						/* Memorize the grid */
 						cave_info[yy][xx] |= (CAVE_MARK);
@@ -3293,8 +3293,8 @@ void town_illuminate(bool daytime)
 	{
 		for (x = 0; x < TOWN_WID; x++)
 		{
-			/* Interesting grids */
-			if (cave_feat[y][x] > FEAT_INVIS)
+			/* Non-boring grids */
+			if (!(f_info[cave_feat[y][x]].f1 & (FF1_BORING)))
 			{
 				/* Illuminate the grid */
 				cave_info[y][x] |= (CAVE_GLOW);
@@ -3338,8 +3338,7 @@ void town_illuminate(bool daytime)
 		for (x = 0; x < TOWN_WID; x++)
 		{
 			/* Track shop doorways */
-			if ((cave_feat[y][x] >= FEAT_SHOP_HEAD) &&
-			    (cave_feat[y][x] <= FEAT_SHOP_TAIL))
+			if (f_info[cave_feat[y][x]].f1 & (FF1_STORE))
 			{
 				for (i = 0; i < 8; i++)
 				{
@@ -3381,7 +3380,7 @@ void cave_set_feat(int y, int x, int feat)
 	cave_feat[y][x] = feat;
 
 	/* Handle "wall/door" grids */
-	if (feat >= FEAT_DOOR_HEAD)
+	if (f_info[feat].f1 & (FF1_BLOCKING))
 	{
 		cave_info[y][x] |= (CAVE_WALL);
 	}

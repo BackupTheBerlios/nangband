@@ -1511,8 +1511,8 @@ void move_player(int dir, int jumping)
 	else
 	{
 		/* See if trap detection status will change */
-		old_dtrap = ((cave_info[py][px] & (CAVE_TRAP_DETECT)) != 0);
-		new_dtrap = ((cave_info[y][x] & (CAVE_TRAP_DETECT)) != 0);
+		old_dtrap = (cave_info2[py][px] & (CAVE2_TDETECT));
+		new_dtrap = (cave_info2[y][x] & (CAVE2_TDETECT));
 
 		/* Note the change in the detect status */
 		if (old_dtrap != new_dtrap) p_ptr->redraw |= (PR_DTRAP);

@@ -65,7 +65,7 @@
  * PORTERS
  *  For the info box. [eg. "Musus Umbra"]
  */
-#define PORTERS		"Antony Sidwell"
+#define PORTERS		"Andrew Sidwell"
 
 /*
  * ICONNAME

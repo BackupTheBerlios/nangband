@@ -1274,7 +1274,8 @@ static errr init_other(void)
 	/*** Prepare dungeon arrays ***/
 
 	/* Padded into array */
-	C_MAKE(cave_info, DUNGEON_HGT, u16b_256);
+	C_MAKE(cave_info, DUNGEON_HGT, byte_256);
+	C_MAKE(cave_info2, DUNGEON_HGT, byte_256);
 
 	/* Feature array */
 	C_MAKE(cave_feat, DUNGEON_HGT, byte_wid);

@@ -645,15 +645,15 @@ static void prt_state(void)
  * Prints trap detection status
  *
  * One could use another p_ptr flag to divorce this function from
- * cave_info[][], with codes to update it properly in some places.
+ * cave_info2[][], with codes to update it properly in some places.
  * I can't decide which is better. -- pelpel
  */
 static void prt_dtrap(void)
 {
-	u16b info = cave_info[p_ptr->py][p_ptr->px];
+	byte info = cave_info2[p_ptr->py][p_ptr->px];
 
 	/* The player is in a trap-detected grid */
-	if (info & (CAVE_TRAP_DETECT))
+	if (info & (CAVE2_TDETECT))
 	{
 		c_put_str(TERM_GREEN, "DTrap", ROW_DTRAP, COL_DTRAP);
 	}

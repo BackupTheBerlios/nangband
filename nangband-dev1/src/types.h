@@ -145,6 +145,8 @@ struct feature_type
 
 	byte x_attr;		/* Desired feature attribute */
 	char x_char;		/* Desired feature character */
+
+	u32b f1;	/* Flags */
 };
 
 

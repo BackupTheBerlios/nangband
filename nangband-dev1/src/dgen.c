@@ -10,6 +10,35 @@
 #include "angband.h"
 #include "dtype.h"
 
+/*
+ * Memory Management Section
+ */
+
+/* Allocate memory for a map */
+map_grid_t *map_alloc(int width, int height)
+{
+	map_grid_t *dungeon;
+	
+	/* Allocate the memory */
+	dungeon = ralloc(sizeof(map_grid_t) * x * y);
+	if (!dungeon) exit();
+	
+	/* Set the memory to nothing */
+	memset(dungeon, 0, sizeof(map_grid_t) * x * y);
+	
+	/* Return a pointer the the space */
+	return (dungeon);
+}
+
+/* Free up memory for a map */
+void map_free(map_grid_t *dungeon)
+{
+	/* Free the space up */
+	rnfree((vptr) dungeon);
+
+	return;
+}
+
 static void generate_dungeon(map_grid_t *dungeon, int width, int height, int level, int exeption)
 {
 	map_grid_t *this_grid;
@@ -39,9 +68,13 @@ static void generate_dungeon(map_grid_t *dungeon, int width, int height, int lev
 
 int main(int argc, char **argv)
 {
-	map_grid_t dungeon[80][80];
+	map_grid_t *dungeon;
 	
-	generate_dungeon(&dungeon, 80, 80, 2, 0);
+	dungeon = map_alloc(80, 80);
+	
+	generate_dungeon(dungeon, 80, 80, 2, 0);
+	
+	map_free(dungeon);
 	
 	return(0);
 }

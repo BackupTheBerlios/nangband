@@ -1,23 +1,14 @@
-/* File: borg3.c */
+/*
+ * borg3.c: Borg object/shop/splell code.
+ */
 
-/* Purpose: Object and Spell routines for the Borg -BEN- */
+#ifdef ALLOW_BORG
 
 #include "angband.h"
 #include "z-virt.h"
 
-#ifdef ALLOW_BORG
-
 #include "borg1.h"
 #include "borg3.h"
-
-
-
-/*
- * This file helps the Borg analyze "objects" and "shops", and to
- * deal with objects and spells.
- */
-
-
 
 /*
  * Some variables
@@ -3265,11 +3256,13 @@ bool borg_activate_artifact(int name1, int location)
          * he plays with magic to gain experience.  But I am not about
          * to undertake that coding.  He needs to *ID* it anyway to learn
          * of the resists that go with the artifact.
-         * Lights dont need *id* just regular id.
+         * Lights don't need *id* just regular id.
+		 *
+		 * Before, this check checked if item->name1 wasn't
+		 * ART_GALADRIEL, ART_ELENDIL, or ATR_THRAIN. This was a hack.
+		 * --takkaria (13/02/2002)
          */
-        if  (adult_rand_artifacts /* && (item->name1 != ART_GALADRIEL &&
-              item->name1 != ART_ELENDIL &&
-              item->name1 != ART_THRAIN) */ &&
+        if  (adult_rand_artifacts && (item->tval != TV_LITE) &&
              (!item->fully_identified))
         {
             borg_note(format("# %s must be *ID*'d before activation.", item->desc));

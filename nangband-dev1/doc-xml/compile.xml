@@ -9,26 +9,138 @@ these ports are normally available precompiled.  However, if you want to
 compile your own personalized version (or if the port for your particular
 platform doesn't exist), then read on.</p>
 
-<h2>Compiling for UNIX/Linux/etc. (quick and dirty way)</h2>
-<p>To compile on a UNIX system, you'll need sources.  These can be found at
-ftp://clockwork.dementia.org/angband/Variant/Nangband - look for the most
-recent version.  Extract the stuff from the archive (if it's a targz,
-"tar -xvzf filename", or a zip "unzip filename").  Go into the directory
-you just extracted (nangband-x.x.x, probably) and try "./configure"
-("./configure --help" if you want to change any options).  Then "make",
-and "make install", and you will have the executable "nangband" either in
-/usr/local/bin, or wherever you specified it be put.</p>
+<hr />
 
-<p>Of course, there's another makefile - "Makefile.std" in "src/".  If
-you "cd src; make -f Makefile.std portname", where "portname" is one
-of "only-gcu" (only console support), "only-x11" (only X11 support),
-"x11-gcu" (both X11 and console support in the same executable),
-and "gtk" (GTK/X11/console support). "make -f Makefile.std install"
-will copy to exectuable one level up, so:
-<pre>
-cd src/; make -f Makefile.std gtk install; cd ../; ./nangband
-</pre>
-would compile and run nangband using the "standard" makefile.
-</p>
+<h2>DOS + DJGPP</h2>
+<p>Written by Robert Ruehlmann (rr9@angband.org)</p>
+
+<list>
+	<item>Install DJGPP:
+		<p>You can get the freely available DJGPP C Compiler from (http://www.delorie.com/djgpp/).
+		   On the DJGPP-page go to the Zip-Picker (http://www.delorie.com/djgpp/zip-picker.html).
+		   This page helps you decide which ZIP files you need to download and will even try to
+		   find an FTP site near you. If you want to have graphics and sound then you also need the
+		   Allegro library (http://www.talula.demon.co.uk/allegro/). Get all files and follow the
+		   installation instructions.</p></item>
+	<item>Install the Angband source:
+		<p>Get the source code archive and the untgz tool from ftp://clockwork.dementia.org/angband/Tool/untgz.exe.
+		   Then extract the source with untgz.</p></item>
+	<item>Install other required files:
+		<p>Get the "extra archive" from (ftp://clockwork.dementia.org/angband/DOS-386/ext-dos-300.zip).
+		   Go to the angband directory and unzip the ext-dos archive into it.</p></item>
+	<item>Select the makefile:
+		<p>Go to the "src" directory and rename 'Makefile.dos' (or 'Makefile.ibm' if you don't want
+		   graphics and sound or if you didn't download the Allegro library) to 'Makefile'.</p></item>
+	<item>Compile Angband:
+		<p>Run "make install".  Angband should now be compiled and installed into the Angband folder.</p></item>
+	<item>Run Angband:
+		<p>Go back to the Angband folder and run Angband.exe.</p></item>
+</list>
+
+<p>A possible problem is that Make exits with a 'Fatal: Command arguments too long' error message;
+such problems are usually caused by using the make.exe of another compiler (like Borland C++ or cygwin).
+DJGPP uses some clever tricks to get around the limitations of the MS-DOS "126 characters are enough
+for anybody" commandline that require a specific make tool.  So make sure that DJGPP's make.exe is the
+first (or only) make.exe in your path.  See also the DJGPP FAQ entries 16.4, 16.5, and 16.6 for further
+details.</p>
+
+<hr />
+
+<h2>Windows 95/98/NT/2000 + MS Visual C++ 5.0/6.0</h2>
+<p>Written by Robert Ruehlmann (rr9@angband.org)</p>
+
+<list>
+	<item>Install the Angband source:
+		<p>Get the source code and the untgz tool from: ftp://clockwork.dementia.org/angband/Tool/untgz32.exe.
+		   Then extract the source with untgz32.</p></item>
+	<item>Install other required files:
+		<p>Get the "extra archive" from ftp://clockwork.dementia.org/angband/Windows/ext-win-300.zip.
+		   Go to the angband directory and unzip the ext-win archive into it. Again, make sure the
+		   directory structure is preserved (use the -d option in pkunzip).</p></item>
+	<item>Open the project-file:
+		<p>Go to the src folder and open the file "Angband.dsw".  That opens Visual C++ already properly
+		   configured for compiling Angband.</p></item>
+	<item>Compile Angband:
+		<p>Select "Build Angband.exe" in the Build menu.  Angband should now be compiled and the Angband.exe
+		   will be placed into the Angband folder.</p></item>
+	<item>Run Angband:
+		<p>Go back to the Angband folder and run the Angband.exe.</p></item>
+</list>
+
+<hr />
+
+<h2>Windows 95/98/NT/2000 + Borland C++ 5.5 commandline tools</h2>
+<p>Written by Robert Ruehlmann (rr9@angband.org)</p>
+
+<list>
+	<item>Getting the free commandline tools:
+		<p>Download the Borland commandline tools from http://www.borland.com/bcppbuilder/freecompiler/
+		   and follow the installation instructions.</p></item>
+	<item>Install the Angband source:
+		<p>Get the source code and the untgz tool from: ftp://clockwork.dementia.org/angband/Tool/untgz32.exe.
+		   Then extract the source with untgz32.</p></item>
+	<item>Install other required files:
+		<p>Get the "extra archive" from ftp://clockwork.dementia.org/angband/Windows/ext-win-300.zip. Go to the
+		   angband directory and unzip the ext-win archive into it. Again, make sure the directory structure is
+		   preserved (use the -d option in pkunzip).</p></item>
+	<item>Compile Angband:
+		<p>Open a command prompt window and go to the src directory.  Run "make -f makefile.bcc install".
+		   Angband should now be compiled and installed into the Angband folder.</p></item>
+	<item>Run Angband:
+		<p>Go back to the Angband folder and run the Angband.exe.</p></item>
+</list>
+
+<p>A possible problems is that make exits with a "Command line too long" error message: Try to add the -l option
+to the make command.  The make util should have the "use long command lines" option enabled by default, but some
+people reported that this is not always the case.</p>
+
+<hr />
+
+<h2>Windows + Cygwin</h2>
+<p>Written by Andrew Sidwell (nevermiah@hotmail.com)</p>
+
+<list>
+	<item>Getting the compiler:
+		<p>If you don't already have it, get the Cygwin compiler from http://sources.redhat.com/cygwin/.
+		   The cygwin tools are ports from Unices, and provide a unix-like working enviroment for
+		    Windows.</p></item>
+	<item>Extract the Angband source code
+		<p>Start up the cygwin shell, download the source and get into the right directory.  Example: if
+		   you downloaded the source to R:\Pineapples\Source\, then "cd /cygdrive/R/Pineapples/Source"
+		   Extract the source code with "tar -xvzf angband-3.0.0.tar.gz".</p></item>
+	<item>Install other required files:
+		<p>Get the "extra archive" from ftp://clockwork.dementia.org/angband/Windows/ext-win-300.zip. Go to the
+		   angband directory and unzip the ext-win archive into it. Again, make sure the directory structure is
+		   preserved (use the -d option in pkunzip).</p></item>
+	<item>Compile Angband:
+		<p>Go to the src directory.  Run "make -f makefile.cyg install". Angband should now be compiled and
+		   installed in the Angband folder.</p></item>
+	<item>Run Angband:
+		<p>Go back to the Angband folder and run the Angband.exe.</p></item>
+</list>
+
+<hr />
+
+<h2>GNU/Linux or Unix + GCC</h2>
+<p>Written by Robert Ruehlmann (rr9@angband.org)</p>
+
+<list>
+	<item>Install the Angband source:
+		<p>Extract the source code with "tar -xvzf filename.tar.gz".</p></item>
+	<item>Compile Angband:
+		<p>Run "./configure", "make", and "make install" in the Angband directory. "./configure --help" gives
+		   a list of "modules" which you can use; ---enable-gtk is probably the most useful one of these;
+		   it enables the GTK visual display.  --enable-borg is broken at the current time.  Note that if you
+		   install Angband as root, then GTK will not work; if you installing it as a user, then set the PREFIX
+		   enviroment variable to "~" or some other local, system-inspecific place.</p></item>
+	<item>Run Angband:
+		<p>Start Angband with "angband".</p></item>
+</list>
+
+<hr />
+
+<p>If you have another compiling guide for a platform not covered here, please send it to me
+(nevermiah@hotmail.com) for inclusion into future revisions of this document.</p>
+
 </body>
 </ahml>

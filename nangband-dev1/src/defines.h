@@ -53,6 +53,13 @@
 #define VERSION_PATCH	6
 #define VERSION_EXTRA	0
 
+/*
+ * Current savefile version numbers
+ */
+#define SAVEFILE_MAJOR	2
+#define SAVEFILE_MINOR	9
+#define SAVEFILE_PATCH	7
+#define SAVEFILE_EXTRA	0
 
 /*
  * Oldest version number that can still be imported

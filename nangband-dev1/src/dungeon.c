@@ -369,7 +369,7 @@ static void regen_monsters(void)
  */
 static void process_world(void)
 {
-	int i, j;
+	int i, j, n;
 
 	int regen_amount;
 
@@ -757,36 +757,15 @@ static void process_world(void)
 		(void)set_shield(p_ptr->shield - 1);
 	}
 
-	/* Oppose Acid */
-	if (p_ptr->oppose_acid)
+	/* Timed resistances */
+	for (n = 0; n < RES_MAX; n++)
 	{
-		(void)set_oppose_acid(p_ptr->oppose_acid - 1);
+		/* Reduce if neccessary */
+		if (p_ptr->resist_timed[n])
+		{
+			(void)set_timed_res(n, p_ptr->resist_timed[n] - 1);
+		}	
 	}
-
-	/* Oppose Lightning */
-	if (p_ptr->oppose_elec)
-	{
-		(void)set_oppose_elec(p_ptr->oppose_elec - 1);
-	}
-
-	/* Oppose Fire */
-	if (p_ptr->oppose_fire)
-	{
-		(void)set_oppose_fire(p_ptr->oppose_fire - 1);
-	}
-
-	/* Oppose Cold */
-	if (p_ptr->oppose_cold)
-	{
-		(void)set_oppose_cold(p_ptr->oppose_cold - 1);
-	}
-
-	/* Oppose Poison */
-	if (p_ptr->oppose_pois)
-	{
-		(void)set_oppose_pois(p_ptr->oppose_pois - 1);
-	}
-
 
 	/*** Poison and Stun and Cut ***/
 

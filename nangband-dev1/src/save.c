@@ -1089,11 +1089,12 @@ static void wr_extra(void)
 	wr_s16b(p_ptr->word_recall);
 	wr_s16b(p_ptr->see_infra);
 	wr_s16b(p_ptr->tim_infra);
-	wr_s16b(p_ptr->oppose_fire);
-	wr_s16b(p_ptr->oppose_cold);
-	wr_s16b(p_ptr->oppose_acid);
-	wr_s16b(p_ptr->oppose_elec);
-	wr_s16b(p_ptr->oppose_pois);
+
+	/* Timed resistances */
+	for (i = 0; i < RES_MAX; i++)
+	{
+		wr_s16b(p_ptr->resist_timed[i]);
+	}
 
 	wr_byte(p_ptr->confusing);
 	wr_byte(0);	/* oops */
@@ -1370,13 +1371,13 @@ static bool wr_savefile_new(void)
 
 	/* Dump the file header */
 	xor_byte = 0;
-	wr_byte(VERSION_MAJOR);
+	wr_byte(SAVEFILE_MAJOR);
 	xor_byte = 0;
-	wr_byte(VERSION_MINOR);
+	wr_byte(SAVEFILE_MINOR);
 	xor_byte = 0;
-	wr_byte(VERSION_PATCH);
+	wr_byte(SAVEFILE_PATCH);
 	xor_byte = 0;
-	wr_byte(VERSION_EXTRA);
+	wr_byte(SAVEFILE_EXTRA);
 
 
 	/* Reset the checksum */

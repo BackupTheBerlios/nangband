@@ -881,12 +881,6 @@ struct player_type
 	s16b resist_cur[RES_MAX];	/* Current % resistances */
 	s16b resist_dis[RES_MAX];	/* Displayed resistances */
 
-	s16b oppose_acid;	/* Timed -- oppose acid */
-	s16b oppose_elec;	/* Timed -- oppose lightning */
-	s16b oppose_fire;	/* Timed -- oppose heat */
-	s16b oppose_cold;	/* Timed -- oppose cold */
-	s16b oppose_pois;	/* Timed -- oppose poison */
-
 	s16b word_recall;	/* Word of recall counter */
 
 	s16b energy;		/* Current energy */

@@ -1014,7 +1014,6 @@ const byte adj_con_mhp[] =
 	128 + 25	/* 18/220+ */
 };
 
-
 /*
  * This table is used to help calculate the number of blows the player can
  * make in a single round of attacks (one player turn) with a normal weapon.
@@ -1332,6 +1331,17 @@ cptr stat_names_reduced[A_MAX] =
 	"Str: ", "Int: ", "Wis: ", "Dex: ", "Con: ", "Chr: "
 };
 
+/*
+ * This table contains the resistance names for player resistances.
+ */
+cptr res_names[RES_MAX] =
+{
+	"acid",
+	"electricity",
+	"fire",
+	"cold",
+	"poison"
+};
 
 /*
  * Certain "screens" always use the main screen, including News, Birth,

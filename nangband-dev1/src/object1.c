@@ -1624,7 +1624,7 @@ void object_desc_store(char *buf, const object_type *o_ptr, int pref, int mode)
 /*
  * Print a given object's resists/immunities.
  */
-void obj_info_resists(const object_type *o_ptr)
+void obj_info_resists(s16b *resists)
 {
 	/* Texts */
 	int vn;
@@ -1641,58 +1641,65 @@ void obj_info_resists(const object_type *o_ptr)
 	/* Collect the resists */
 	vn = cn = pc = 0;
 
-/*		if (f2 & (TR2_IM_ACID))
-		{
-			vp[vn++] = "acid";
-			vc[cn++] = TERM_L_GREEN;
-			si_acid = TRUE;
-		}
+	if (resists[RES_ACID])
+	{
+		text[vn++] = "acid";
+		colours[cn++] = TERM_L_GREEN;
+		percentages[pc++] = resists[RES_ACID];
+	}
 	
-		if (f2 & (TR2_IM_ELEC))
-		{
-			vp[vn++] = "electricity";
-			vc[cn++] = TERM_BLUE;
-			si_elec = TRUE;
-		}
+	if (resists[RES_ELEC])
+	{
+		text[vn++] = "electricity";
+		colours[cn++] = TERM_BLUE;
+		percentages[pc++] = resists[RES_ELEC];
+	}
 	
-		if (f2 & (TR2_IM_FIRE))
-		{
-			vp[vn++] = "fire";
-			vc[cn++] = TERM_RED;
-			si_fire = TRUE;
-		}
+	if (resists[RES_FIRE])
+	{
+		text[vn++] = "fire";
+		colours[cn++] = TERM_RED;
+		percentages[pc++] = resists[RES_FIRE];
+	}
 	
-		if (f2 & (TR2_IM_COLD))
+	if (resists[RES_COLD])
+	{
+		text[vn++] = "cold";
+		colours[cn++] = TERM_L_BLUE;
+		percentages[pc++] = resists[RES_COLD];
+	}
+
+	if (resists[RES_POIS])
+	{
+		text[vn++] = "poison";
+		colours[cn++] = TERM_GREEN;
+		percentages[pc++] = resists[RES_POIS];
+	}
+
+	/* Describe */
+	if (vn)
+	{
+		int n;
+
+		/* Intro */
+		text_out("It grants you ");
+
+		/* List the resists */
+		for (n = 0; n < vn; n++)
 		{
-			vp[vn++] = "cold";
-			vc[cn++] = TERM_L_BLUE;
-			si_cold = TRUE;
-		} */
-	
-		/* Describe */
-		if (vn)
-		{
-			int n;
+			/* Print the percentage */
+			text_out(format("%i", percentages[n]));
+			text_out("% resistance to ");
+			text_out_c(colours[n], text[n]);
 
 			/* Intro */
-			text_out("It grants you ");
-
-			/* List the resists */
-			for (n = 0; n < vn; n++)
-			{
-				/* Print the percentage */
-				text_out(format("%i", percentages[n]));
-				text_out("% resistance to ");
-				text_out_c(colours[n], text[n]);
-
-				/* Intro */
-				if (n < (vn - 1)) text_out(", ");
-				else text_out(" and ");
-			}
-
-			/* End the sentence */
-			text_out(".  ");
+			if (n < (vn - 1)) text_out(", ");
+			else text_out(" and ");
 		}
+
+		/* End the sentence */
+		text_out(".  ");
+	}
 
 	return;
 }
@@ -1706,6 +1713,8 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	bool needs_fuel = FALSE;
 	bool stat_boost = FALSE;
 
+	object_kind *k_ptr;
+
 	int vn;
 	cptr vp[32];
 
@@ -1717,7 +1726,10 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	/* Extract the "known" and "random" flags */
 	object_flags_aux(mode, o_ptr, &f1, &f2, &f3);
 
-	/* Mega-Hack -- describe activation */
+	/* Prepare the object base kind */
+	k_ptr = &k_info[o_ptr->k_idx];
+
+	/* Describe activation */
 	if (f3 & TR3_ACTIVATE)
 	{
 		text_out("It can be activated for ");
@@ -2006,7 +2018,7 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	}
 
 	/* Describe the resists/immunities */
-	obj_info_resists(o_ptr);
+	obj_info_resists(k_ptr->resists);
 
 	if (f2 & (TR2_RES_POIS))
 	{

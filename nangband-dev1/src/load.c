@@ -918,11 +918,25 @@ static errr rd_extra(void)
 	rd_s16b(&p_ptr->word_recall);
 	rd_s16b(&p_ptr->see_infra);
 	rd_s16b(&p_ptr->tim_infra);
-	rd_s16b(&p_ptr->oppose_fire);
-	rd_s16b(&p_ptr->oppose_cold);
-	rd_s16b(&p_ptr->oppose_acid);
-	rd_s16b(&p_ptr->oppose_elec);
-	rd_s16b(&p_ptr->oppose_pois);
+
+	/* Old savefile compatibility */
+	if (older_than(2, 9, 7))
+	{
+		rd_s16b(&p_ptr->resist_timed[RES_FIRE]);
+		rd_s16b(&p_ptr->resist_timed[RES_COLD]);
+		rd_s16b(&p_ptr->resist_timed[RES_ACID]);
+		rd_s16b(&p_ptr->resist_timed[RES_ELEC]);
+		rd_s16b(&p_ptr->resist_timed[RES_POIS]);
+	}
+	else
+	{
+		int n;
+
+		for (n = 0; n < RES_MAX; n++)
+		{
+			rd_s16b(&p_ptr->resist_timed[n]);
+		}
+	}
 
 	rd_byte(&p_ptr->confusing);
 	rd_byte(&tmp8u);	/* oops */
@@ -2035,7 +2049,7 @@ bool load_player(void)
 			err = -1;
 			what = "Savefile is too old";
 		}
-		else if (!older_than(VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH + 1))
+		else if (!older_than(SAVEFILE_MAJOR, SAVEFILE_MINOR, SAVEFILE_PATCH + 1))
 		{
 			err = -1;
 			what = "Savefile is from the future";

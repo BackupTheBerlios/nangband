@@ -28,7 +28,7 @@ TOLUAOBJS = \
 	lua/tolua.o lua/tolualua.o lua/liolib.o $(LUAOBJS)
 
 BORGOBJS = \
-	borg1.c borg2.c borg3.c borg4.c borg5.c borg6.c borg7.c borg8.c borg9.c
+	borg1.o borg2.o borg3.o borg4.o borg5.o borg6.o borg7.o borg8.o borg9.o
 
 ANGOBJS = \
 	z-util.o z-virt.o z-form.o z-rand.o z-term.o \

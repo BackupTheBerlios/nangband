@@ -98,7 +98,7 @@
 #define BLOCK_VERSION_ERROR      0
 #define BLOCK_VERSION_HEADER     1
 #define BLOCK_VERSION_OPTIONS    1
-#define BLOCK_VERSION_PLAYER     2
+#define BLOCK_VERSION_PLAYER     3
 #define BLOCK_VERSION_RNG        1
 #define BLOCK_VERSION_MESSAGES   1
 #define BLOCK_VERSION_MONLORE    1
@@ -854,7 +854,12 @@ static errr savefile_do_block_player(bool type, int ver)
 	int i = 0, n = 0;
 
 	/* Add number of past lives */
-	savefile_do_u16b(&sf_lives, type);
+	if (ver < 2)
+	{
+		u16b temp;
+
+		savefile_do_u16b(&temp, type);
+	}
 
 	/* Set the level */
 	if (type == PUT) n = i = PY_MAX_LEVEL;
@@ -2453,9 +2458,6 @@ bool load_player(void)
 				/* Done */
 				return (TRUE);
 			}
-
-			/* Count lives */
-			sf_lives++;
 
 			/* Forget turns */
 			turn = old_turn = 0;

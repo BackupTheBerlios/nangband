@@ -6,6 +6,9 @@
 //                                   //
 ///////////////////////////////////////
 
+// Silly.
+$access = 'arnold';
+
 // Include the general layout functions
 include('layout.php');
 

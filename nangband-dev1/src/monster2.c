@@ -404,7 +404,7 @@ s16b get_mon_num(int level)
 
 	long value, total;
 
-	monster_race *r_ptr;
+	monster_race *r_ptr = NULL;
 
 	alloc_entry *table = alloc_race_table;
 

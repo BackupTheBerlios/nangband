@@ -17,8 +17,12 @@ CARRY_LIGHT monsters are theoretically "carrying" light sources, which
 should be radius 1 or 2, depending on level; probably, the transition
 shouldn't occur much later than dungeon level 15.
 
+--Could this light source be dropped or somehow run out?
 
 If an ABSORB_LIGHT monster is in the vicinity of a [CARRY|EMANATE]_LIGHT
 monster, the priority of effects is EMANATE_LIGHT, ABSORB_LIGHT and then
 CARRY_LIGHT.  CARRY_LIGHT monsters may be scared by the absence of
 light, and may try to get away.
+
+--ABSORB_LIGHT monster could also possibly be afraid of EMANATE_LIGHT
+  monsters.

@@ -2,7 +2,7 @@
 <table width="95%" align="center" cellspacing="1" cellpadding="0" border="0">
 	<tr><td>
 		<table width="100%" align="center" cellspacing="0" cellpadding="15" border="0">
-		<tr><td class="border" bgcolor="#dddddd" align="center">
+		<tr><td frame="box" bgcolor="#dddddd" align="center">
 			<font size="+2"><b>nangband - <?=$title?></b></font>
 		</td></tr><tr><td bgcolor="#ffffff" align="center">
 			<?php do_links(); ?><br>

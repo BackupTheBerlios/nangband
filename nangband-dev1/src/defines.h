@@ -2213,7 +2213,7 @@
 #define RF3_UNDEAD			0x00000020	/* Undead */
 #define RF3_EVIL			0x00000040	/* Evil */
 #define RF3_ANIMAL			0x00000080	/* Animal */
-#define RF3_XXX1			0x00000100	/* (?) */
+#define RF3_ASTRAL			0x00000100	/* Exists on the Astral plane */
 #define RF3_XXX2			0x00000200	/* (?) */
 #define RF3_XXX3			0x00000400	/* Non-Vocal (?) */
 #define RF3_XXX4			0x00000800	/* Non-Living (?) */

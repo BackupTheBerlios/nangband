@@ -213,7 +213,7 @@ static cptr r_info_flags3[] =
 	"UNDEAD",
 	"EVIL",
 	"ANIMAL",
-	"XXX1X3",
+	"ASTRAL",
 	"XXX2X3",
 	"XXX3X3",
 	"XXX4X3",

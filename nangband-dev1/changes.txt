@@ -10,6 +10,10 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
   interact strangely with the shop action prompt. (pelpel)
 - Imported a couple of my lua engine fixes cleaned up by rr9 --
   this is only relevant for users of CodeWarrior (pelpel)
+- Removed size_y hack in store.c and rewrote the entire file to use the
+  real display height throughout, partly for the sake of clarity and
+  partly because it caused the empty line following the message
+  buffer overwrite the messages. (pelpel)
 
 2002-05-02
 ----------

@@ -245,7 +245,7 @@ static cptr r_info_flags3[] =
 static cptr r_info_flags4[] =
 {
 	"SHRIEK",
-	"XXX2X4",
+	"SCREAM",
 	"XXX3X4",
 	"XXX4X4",
 	"ARROW_1",
@@ -442,7 +442,7 @@ static cptr k_info_flags3[] =
 {
 	"SLOW_DIGEST",
 	"FEATHER",
-	"LITE",
+	"XXX8",
 	"REGEN",
 	"TELEPATHY",
 	"SEE_INVIS",

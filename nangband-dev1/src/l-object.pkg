@@ -23,6 +23,7 @@ typedef int sint;
 
 /*** Ego-Item indexes (see "lib/edit/ego_item.txt") ***/
 
+#define EGO_MAX_TVALS	5
 
 /* Nothing */
 /* xxx */
@@ -1089,9 +1090,9 @@ struct ego_item_type
 	byte level;			/* Minimum level */
 	byte rarity;		/* Object rarity */
 
-	byte tval[5];		/* Legal tval */
-	byte min_sval[5];	/* Minimum legal sval */
-	byte max_sval[5];	/* Maximum legal tval */
+	byte tval[EGO_MAX_TVALS];		/* Legal tval */
+	byte min_sval[EGO_MAX_TVALS];	/* Minimum legal sval */
+	byte max_sval[EGO_MAX_TVALS];	/* Maximum legal tval */
 	byte xtra;			/* Extra Sustain/Resist/Power */
 
 	byte max_to_h;		/* Maximum to-hit bonus */

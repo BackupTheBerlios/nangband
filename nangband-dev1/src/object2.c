@@ -1612,7 +1612,7 @@ static int make_ego_item(object_type *o_ptr, bool only_good)
 		if (only_good && (e_ptr->flags3 & TR3_LIGHT_CURSE)) continue;
 
 		/* Test if this is a legal ego-item type for this object */
-		for (j = 0; j < 3; j++)
+		for (j = 0; j < EGO_MAX_TVALS; j++)
 		{
 			/* Require identical base type */
 			if (o_ptr->tval == e_ptr->tval[j])
@@ -1636,7 +1636,6 @@ static int make_ego_item(object_type *o_ptr, bool only_good)
 
 	/* No legal ego-items -- create a normal unenchanted one */
 	if (total == 0) return (0);
-
 
 	/* Pick an ego-item */
 	value = rand_int(total);

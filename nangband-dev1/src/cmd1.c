@@ -162,9 +162,9 @@ sint critical_norm(int weight, int plus, int dam)
  * Note that most brands and slays are x3, except Slay Animal (x2),
  * Slay Evil (x2), and Kill dragon (x5).
  */
-sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
+sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 {
-	int mult = 1;
+	int mult = 10, bmult = 10;
 
 	monster_race *r_ptr = &r_info[m_ptr->r_idx];
 	monster_lore *l_ptr = &l_list[m_ptr->r_idx];
@@ -174,7 +174,13 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 	/* Extract the flags */
 	object_flags(o_ptr, &f1, &f2, &f3);
 
-	/* Some "weapons" and "ammo" do extra damage */
+	/*
+	 * Some weapons and ammo do extra damage.
+	 *
+	 * Slays now do 1.5x/2x/3x total damage, not base.
+	 * Brands do 1.5x total. Slays are culmultive with brand; the
+	 * best of each takes effect. 
+	 */
 	switch (o_ptr->tval)
 	{
 		case TV_SHOT:
@@ -194,7 +200,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 					l_ptr->flags3 |= (RF3_ANIMAL);
 				}
 
-				if (mult < 2) mult = 2;
+				if (mult < 15) mult = 15;
 			}
 
 			/* Slay Evil */
@@ -206,7 +212,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 					l_ptr->flags3 |= (RF3_EVIL);
 				}
 
-				if (mult < 2) mult = 2;
+				if (mult < 15) mult = 15;
 			}
 
 			/* Slay Undead */
@@ -218,7 +224,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 					l_ptr->flags3 |= (RF3_UNDEAD);
 				}
 
-				if (mult < 3) mult = 3;
+				if (mult < 20) mult = 20;
 			}
 
 			/* Slay Demon */
@@ -230,7 +236,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 					l_ptr->flags3 |= (RF3_DEMON);
 				}
 
-				if (mult < 3) mult = 3;
+				if (mult < 20) mult = 20;
 			}
 
 			/* Slay Orc */
@@ -242,7 +248,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 					l_ptr->flags3 |= (RF3_ORC);
 				}
 
-				if (mult < 3) mult = 3;
+				if (mult < 20) mult = 20;
 			}
 
 			/* Slay Troll */
@@ -254,7 +260,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 					l_ptr->flags3 |= (RF3_TROLL);
 				}
 
-				if (mult < 3) mult = 3;
+				if (mult < 20) mult = 20;
 			}
 
 			/* Slay Giant */
@@ -266,7 +272,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 					l_ptr->flags3 |= (RF3_GIANT);
 				}
 
-				if (mult < 3) mult = 3;
+				if (mult < 20) mult = 20;
 			}
 
 			/* Slay Dragon */
@@ -278,7 +284,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 					l_ptr->flags3 |= (RF3_DRAGON);
 				}
 
-				if (mult < 3) mult = 3;
+				if (mult < 20) mult = 20;
 			}
 
 			/* Execute Dragon */
@@ -290,7 +296,7 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 					l_ptr->flags3 |= (RF3_DRAGON);
 				}
 
-				if (mult < 5) mult = 5;
+				if (mult < 30) mult = 30;
 			}
 
 			/* Execute demon */
@@ -316,6 +322,8 @@ sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 
 				if (mult < 5) mult = 5;
 			}
+
+
 
 			/* Brand (Acid) */
 			if (f1 & (TR1_BRAND_ACID))

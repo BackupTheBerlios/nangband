@@ -1987,10 +1987,11 @@ errr parse_r_info(char *buf, header *head)
 		if (!r_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
 
 		/* Find the next empty blow slot (if any) */
-		for (i = 0; i < 4; i++) if (!r_ptr->blow[i].method) break;
+		for (i = 0; i < MONSTER_BLOW_MAX; i++)
+			if (!r_ptr->blow[i].method) break;
 
 		/* Oops, no more slots */
-		if (i == 4) return (PARSE_ERROR_GENERIC);
+		if (i == MONSTER_BLOW_MAX) return (PARSE_ERROR_GENERIC);
 
 		/* Analyze the first field */
 		for (s = t = buf+2; *t && (*t != ':'); t++) /* loop */;

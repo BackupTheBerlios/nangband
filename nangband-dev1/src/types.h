@@ -255,19 +255,17 @@ struct ego_item_type
 
 	byte level;			/* Minimum level */
 	byte rarity;		/* Object rarity */
+	s32b cost;			/* Cost */
 
-	byte tval[5];		/* Legal tval */
-	byte min_sval[5];	/* Minimum legal sval */
-	byte max_sval[5];	/* Maximum legal tval */
+	byte tval[EGO_MAX_TVALS];		/* Legal tval */
+	byte min_sval[EGO_MAX_TVALS];	/* Minimum legal sval */
+	byte max_sval[EGO_MAX_TVALS];	/* Maximum legal tval */
+
 	byte xtra;			/* Extra Sustain/Resist/Power */
-
 	byte max_to_h;		/* Maximum to-hit bonus */
 	byte max_to_d;		/* Maximum to-dam bonus */
 	byte max_to_a;		/* Maximum to-ac bonus */
-
 	byte max_pval;		/* Maximum pval */
-
-	s32b cost;			/* Ego-item "cost" */
 
 	u32b flags1;		/* Ego-Item Flags, set 1 */
 	u32b flags2;		/* Ego-Item Flags, set 2 */
@@ -358,13 +356,11 @@ struct monster_race
 
 
 /*
- * Monster "lore" information
+ * Monster lore information.
  *
- * Note that these fields are related to the "monster recall" and can
- * be scrapped if space becomes an issue, resulting in less "complete"
- * monster recall (no knowledge of spells, etc). XXX XXX XXX
- *
- * ToDo: The "r_" prefix is no longer needed and should be removed.
+ * This structure is for use by the monster recall functions, but
+ * is non-essential, but removing it will remove all monster
+ * knowledge.
  */
 struct monster_lore
 {

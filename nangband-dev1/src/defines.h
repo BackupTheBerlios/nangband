@@ -1554,9 +1554,10 @@
  */
 #define SV_UNKNOWN			255
 
+/* A given ego-item's maximum amount of tvals */
+#define EGO_MAX_TVALS	5
 
 /*** Monster blow constants ***/
-
 
 #define MONSTER_BLOW_MAX 4
 

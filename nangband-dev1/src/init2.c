@@ -403,8 +403,7 @@ static void display_parse_error(cptr filename, errr err, cptr buf)
 /*
  * Initialize a "*_info" array
  *
- * Note that we let each entry have a unique "name" and "text" string,
- * even if the string happens to be empty (everyone has a unique '\0').
+ * Every entry has it's own name and text strings.
  */
 static errr init_info(cptr filename, header *head)
 {
@@ -1735,22 +1734,6 @@ static errr init_alloc(void)
 
 
 /*
- * Hack -- take notes on line 23
- */
-static void note(cptr str)
-{
-/*	Term_erase(0, 23, 255);
-	Term_putstr(20, 23, -1, TERM_WHITE, str);
-	Term_fresh();*/
-
-	prompt_note((char *)str);
-
-	return;
-}
-
-
-
-/*
  * Hack -- Explain a broken "lib" folder and quit (see below).
  */
 static void init_angband_aux(cptr why)
@@ -1765,9 +1748,10 @@ static void init_angband_aux(cptr why)
 /*
  * Hack -- main Angband initialization entry point
  *
- * Verify some files, display the "news.txt" file, create
- * the high score file, initialize all internal arrays, and
- * load the basic "user pref files".
+ * This function checks that certain files exist, displays
+ * the 'splash screen' (lib/file/news.xml) creates the high
+ * score file, initializes all interal arrays and loads the
+ * basic user preference files.
  *
  * Be very careful to keep track of the order in which things
  * are initialized, in particular, the only thing *known* to
@@ -1776,32 +1760,16 @@ static void init_angband_aux(cptr why)
  * end of this function, when the default "user pref files"
  * are loaded and "Term_xtra(TERM_XTRA_REACT,0)" is called.
  *
- * Note that this function attempts to verify the "news" file,
- * and the game aborts (cleanly) on failure, since without the
- * "news" file, it is likely that the "lib" folder has not been
- * correctly located.  Otherwise, the news file is displayed for
- * the user.
- *
- * Note that this function attempts to verify (or create) the
- * "high score" file, and the game aborts (cleanly) on failure,
- * since one of the most common "extraction" failures involves
- * failing to extract all sub-directories (even empty ones), such
- * as by failing to use the "-d" option of "pkunzip", or failing
- * to use the "save empty directories" option with "Compact Pro".
- * This error will often be caught by the "high score" creation
- * code below, since the "lib/apex" directory, being empty in the
- * standard distributions, is most likely to be "lost", making it
- * impossible to create the high score file.
+ * This function attempts to verify (or create) the high score
+ * file, and the game aborts (cleanly) on failure, because
+ * the high score file is an important part of the game.
  *
  * Note that various things are initialized by this function,
  * including everything that was once done by "init_some_arrays".
  *
- * This initialization involves the parsing of special files
- * in the "lib/data" and sometimes the "lib/edit" directories.
- *
- * Note that the "template" files are initialized first, since they
- * often contain errors.  This means that macros and message recall
- * and things like that are not available until after they are done.
+ * Initialization involves parsing the "info" files in lib/edit/
+ * if ALLOW_TEMPLATES is defined, and if it is needed. Otherwise,
+ * it simply loads the "raw" files in lib/data/ into memory.
  *
  * We load the default "user pref files" here in case any "color"
  * changes are needed before character creation.
@@ -1817,7 +1785,7 @@ void init_angband(void)
 
 	char buf[1024];
 
-	/*** Show the 'splash' screen ***/
+	/*** Show the splash screen ***/
 
 	render_xml_file("/file/news.xml",FALSE,FALSE,FALSE);
 
@@ -1864,87 +1832,87 @@ void init_angband(void)
 	/*** Initialize some arrays ***/
 
 	/* Initialize size info */
-	note("[Initializing array sizes...]");
+	prompt_note("[Initializing array sizes...]");
 	if (init_z_info()) quit("Cannot initialize sizes");
 
 	/* Initialize feature info */
-	note("[Initializing arrays... (features)]");
+	prompt_note("[Initializing arrays... (features)]");
 	if (init_f_info()) quit("Cannot initialize features");
 
 	/* Initialize object info */
-	note("[Initializing arrays... (objects)]");
+	prompt_note("[Initializing arrays... (objects)]");
 	if (init_k_info()) quit("Cannot initialize objects");
 
 	/* Initialize artifact info */
-	note("[Initializing arrays... (artifacts)]");
+	prompt_note("[Initializing arrays... (artifacts)]");
 	if (init_a_info()) quit("Cannot initialize artifacts");
 
 	/* Initialize ego-item info */
-	note("[Initializing arrays... (ego-items)]");
+	prompt_note("[Initializing arrays... (ego-items)]");
 	if (init_e_info()) quit("Cannot initialize ego-items");
 
 	/* Initialize monster info */
-	note("[Initializing arrays... (monsters)]");
+	prompt_note("[Initializing arrays... (monsters)]");
 	if (init_r_info()) quit("Cannot initialize monsters");
 
 	/* Initialize feature info */
-	note("[Initializing arrays... (vaults)]");
+	prompt_note("[Initializing arrays... (vaults)]");
 	if (init_v_info()) quit("Cannot initialize vaults");
 
 	/* Initialize history info */
-	note("[Initializing arrays... (histories)]");
+	prompt_note("[Initializing arrays... (histories)]");
 	if (init_h_info()) quit("Cannot initialize histories");
 
 	/* Initialize race info */
-	note("[Initializing arrays... (races)]");
+	prompt_note("[Initializing arrays... (races)]");
 	if (init_p_info()) quit("Cannot initialize races");
 
 	/* Initialize class info */
-	note("[Initializing arrays... (classes)]");
+	prompt_note("[Initializing arrays... (classes)]");
 	if (init_c_info()) quit("Cannot initialize classes");
 
 	/* Initialize owner info */
-	note("[Initializing arrays... (owners)]");
+	prompt_note("[Initializing arrays... (owners)]");
 	if (init_b_info()) quit("Cannot initialize owners");
 
 	/* Initialize price info */
-	note("[Initializing arrays... (prices)]");
+	prompt_note("[Initializing arrays... (prices)]");
 	if (init_g_info()) quit("Cannot initialize prices");
 
 	/* Initialize flavor info */
-	note("[Initializing arrays... (flavors)]");
+	prompt_note("[Initializing arrays... (flavors)]");
 	if (init_flavor_info()) quit("Cannot initialize flavors");
 
 	/* Initialize magic book info */
-	note("[Initializing arrays... (books)]");
+	prompt_note("[Initializing arrays... (books)]");
 	if (init_book_info()) quit("Cannot initialize books");
 
 	/* Initialize magic spell info */
-	note("[Initializing arrays... (spells)]");
+	prompt_note("[Initializing arrays... (spells)]");
 	if (init_spell_info()) quit("Cannot initialize spells");
 	
 	/* Initialize some other arrays */
-	note("[Initializing arrays... (other)]");
+	prompt_note("[Initializing arrays... (other)]");
 	if (init_other()) quit("Cannot initialize other stuff");
 
 	/* Initialize some other arrays */
-	note("[Initializing arrays... (alloc)]");
+	prompt_note("[Initializing arrays... (alloc)]");
 	if (init_alloc()) quit("Cannot initialize alloc stuff");
 
 	/* Initialize scripting */
-	note("[Initializing scripts... (scripts)]");
+	prompt_note("[Initializing scripts... (scripts)]");
 	if (script_init()) quit("Cannot initialize scripts");
 
 	/*** Load default user pref files ***/
 
 	/* Initialize feature info */
-	note("[Loading basic user pref file...]");
+	prompt_note("[Loading basic user pref file...]");
 
 	/* Process that file */
 	(void)process_pref_file("pref.prf");
 
 	/* Done */
-	note("[Initialization complete]");
+	prompt_note("[Initialization complete]");
 }
 
 

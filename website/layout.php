@@ -100,7 +100,4 @@ function page_footer()
 	return;
 }
 
-// Redirect to the "real" source lister if we're not included
-if (!$included[1]) header('Location: /?source=layout');
-
 ?>

@@ -42,7 +42,7 @@ switch ($page)
 if ($redirect)
 {
 	// This redirects to another page.
-	echo 'Location: ' .$redirect;
+	header('Location: ' .$redirect);
 }
 else
 {

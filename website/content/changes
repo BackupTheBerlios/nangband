@@ -1,0 +1,23 @@
+<?php
+/*
+ * changes.php - an overview of changes for nangband.
+ * --------------------------------------------------
+ *
+ * started on:  16/03/02
+ * by:          takkaria
+ */
+
+include('general/layout.php');
+
+$creators = 'Andrew Sidwell';
+page_header('Changes', 'changes');
+?>
+<p>Nangband has made some quite major changes in the time it has been in development. A brief outline of some of them are listed here:
+<ul>
+<li>Bigscreen support for the stores. This means that stores will now use the maximum available space for display. There is still one bug related to this.</li>
+<li>Rewrite of the resist system. It is now more like EyAngband's system.</li>
+</ul>
+</p>
+<?
+page_footer($creators);
+?>

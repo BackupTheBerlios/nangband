@@ -19,7 +19,7 @@ page_header('Main Page', 'index');
 <p><em>Berlios.de</em> is hosting the project, including the CVS, the website, file releases and the mailing lists. If you are interested in this project, please join 'nangband-discussion'. A direct link to the mailing page is: <a href="http://developer.berlios.de/mail/?group_id=266">http://developer.berlios.de/mail/?group_id=266</a>.</p>
 
 <p>The CVS can be checked out using the following command:<br>
-<pre>cvs -z3 -:d:pserver:anonymous@cvs.nangband.berlios.de:/cvsroot/nangband co nangband</pre><br>
+<pre>cvs -z3 -:d:pserver:anonymous@cvs.nangband.berlios.de:/cvsroot/nangband co nangband</pre>
 Replace 'co nangband' with 'co nang-web' if you want to check out this website instead.</p>
 <?
 page_footer($creators);

@@ -1,6 +1,5 @@
 /* File: borg1.c */
 /* Purpose: Low level stuff for the Borg -BEN- */
-#ifdef COMPILE_ERRORS
 
 #include "angband.h"
 
@@ -2416,4 +2415,3 @@ static int HACK = 0;
 
 #endif
 
-#endif

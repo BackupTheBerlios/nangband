@@ -1,7 +1,5 @@
 /* File: borg2.c */
 /* Purpose: Low level dungeon mapping skills -BEN- */
-#ifdef COMPILE_ERRORS
-
 #include "angband.h"
 
 
@@ -1207,4 +1205,3 @@ static int HACK = 0;
 
 #endif
 
-#endif

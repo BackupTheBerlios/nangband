@@ -5,7 +5,6 @@
  *
  * This file is under the Angband licence.
  */
-#ifdef COMPILE_ERRORS
 #include "angband.h"
 
 #ifdef ALLOW_BORG
@@ -4811,4 +4810,4 @@ static int HACK = 0;
 #endif
 
 #endif
-#endif
+

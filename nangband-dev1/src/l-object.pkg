@@ -1076,15 +1076,14 @@ struct ego_item_type
 	u32b name;			/* Name (offset) */
 	u32b text;			/* Text (offset) */
 
-	byte slot;			/* Standard slot value */
 	byte rating;		/* Rating boost */
 
 	byte level;			/* Minimum level */
 	byte rarity;		/* Object rarity */
 
-	byte tval[3];		/* Legal tval */
-	byte min_sval[3];	/* Minimum legal sval */
-	byte max_sval[3];	/* Maximum legal tval */
+	byte tval[5];		/* Legal tval */
+	byte min_sval[5];	/* Minimum legal sval */
+	byte max_sval[5];	/* Maximum legal tval */
 	byte xtra;			/* Extra Sustain/Resist/Power */
 
 	byte max_to_h;		/* Maximum to-hit bonus */

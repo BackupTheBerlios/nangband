@@ -1647,7 +1647,6 @@ errr parse_e_info(char *buf, header *head)
 
 	static int cur_t = 0;
 
-
 	/* Process 'N' for "New/Number/Name" */
 	if (buf[0] == 'N')
 	{
@@ -1709,22 +1708,21 @@ errr parse_e_info(char *buf, header *head)
 	/* Process 'X' for "Xtra" (one line only) */
 	else if (buf[0] == 'X')
 	{
-		int slot, rating, xtra;
+		int rating, xtra;
 
 		/* There better be a current e_ptr */
 		if (!e_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
 
 		/* Scan for the values */
-		if (3 != sscanf(buf+2, "%d:%d:%d",
-			            &slot, &rating, &xtra)) return (PARSE_ERROR_GENERIC);
+		if (sscanf(buf+2, "%d:%d", &rating, &xtra) != 2)
+			return (PARSE_ERROR_GENERIC);
 
 		/* Save the values */
-		e_ptr->slot = slot;
 		e_ptr->rating = rating;
 		e_ptr->xtra = xtra;
 	}
 
-	/* Process 'T' for "Types allowed" (up to three lines) */
+	/* Process 'T' for "Types allowed" (up to five lines) */
 	else if (buf[0] == 'T')
 	{
 		int tval, sval1, sval2;
@@ -1745,7 +1743,7 @@ errr parse_e_info(char *buf, header *head)
 		cur_t++;
 
 		/* only three T: lines allowed */
-		if (cur_t > 3) return (PARSE_ERROR_GENERIC);
+		if (cur_t > 5) return (PARSE_ERROR_GENERIC);
 	}
 
 	/* Hack -- Process 'C' for "creation" */

@@ -78,16 +78,16 @@ install_sh = @install_sh@
 
 SUBDIRS = lua
 
-bin_PROGRAMS = angband
+bin_PROGRAMS = nangband
 
 WRES = windres
 
 SUFFIXES = .rc
 
-angband_LDADD = lua/liblua.a @ANGBAND_OBJS@
-angband_DEPENDENCIES = lua/liblua.a @ANGBAND_OBJS@
+nangband_LDADD = lua/liblua.a @ANGBAND_OBJS@
+nangband_DEPENDENCIES = lua/liblua.a @ANGBAND_OBJS@
 
-angband_SOURCES = \
+nangband_SOURCES = \
   z-util.c z-virt.c z-form.c z-rand.c z-term.c \
   variable.c tables.c util.c cave.c \
   object1.c object2.c monster1.c monster2.c \
@@ -110,7 +110,7 @@ angband_SOURCES = \
   borg9.c
 
 
-EXTRA_angband_SOURCES = \
+EXTRA_nangband_SOURCES = \
   main-ros.c main-ami.c main-dos.c main-emx.c \
   main-ibm.c main-lsl.c main-mac.c main-sla.c main-vme.c \
   main-xxx.c \
@@ -127,10 +127,10 @@ subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = autoconf.h
 CONFIG_CLEAN_FILES =
-bin_PROGRAMS = angband$(EXEEXT)
+bin_PROGRAMS = nangband$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-am_angband_OBJECTS = z-util.$(OBJEXT) z-virt.$(OBJEXT) z-form.$(OBJEXT) \
+am_nangband_OBJECTS = z-util.$(OBJEXT) z-virt.$(OBJEXT) z-form.$(OBJEXT) \
 	z-rand.$(OBJEXT) z-term.$(OBJEXT) variable.$(OBJEXT) \
 	tables.$(OBJEXT) util.$(OBJEXT) cave.$(OBJEXT) \
 	object1.$(OBJEXT) object2.$(OBJEXT) monster1.$(OBJEXT) \
@@ -150,8 +150,8 @@ am_angband_OBJECTS = z-util.$(OBJEXT) z-virt.$(OBJEXT) z-form.$(OBJEXT) \
 	use-obj.$(OBJEXT) borg1.$(OBJEXT) borg2.$(OBJEXT) \
 	borg3.$(OBJEXT) borg4.$(OBJEXT) borg5.$(OBJEXT) borg6.$(OBJEXT) \
 	borg7.$(OBJEXT) borg8.$(OBJEXT) borg9.$(OBJEXT)
-angband_OBJECTS = $(am_angband_OBJECTS)
-angband_LDFLAGS =
+nangband_OBJECTS = $(am_nangband_OBJECTS)
+nangband_LDFLAGS =
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I.
@@ -202,7 +202,7 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 CFLAGS = @CFLAGS@
-DIST_SOURCES = $(angband_SOURCES) $(EXTRA_angband_SOURCES)
+DIST_SOURCES = $(nangband_SOURCES) $(EXTRA_nangband_SOURCES)
 
 RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-info-recursive all-recursive install-data-recursive \
@@ -210,7 +210,7 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-recursive check-recursive installcheck-recursive
 DIST_COMMON = ./stamp-h.in Makefile.am Makefile.in autoconf.h.in
 DIST_SUBDIRS = $(SUBDIRS)
-SOURCES = $(angband_SOURCES) $(EXTRA_angband_SOURCES)
+SOURCES = $(nangband_SOURCES) $(EXTRA_nangband_SOURCES)
 
 all: autoconf.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
@@ -272,9 +272,9 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-angband$(EXEEXT): $(angband_OBJECTS) $(angband_DEPENDENCIES) 
-	@rm -f angband$(EXEEXT)
-	$(LINK) $(angband_LDFLAGS) $(angband_OBJECTS) $(angband_LDADD) $(LIBS)
+nangband$(EXEEXT): $(nangband_OBJECTS) $(nangband_DEPENDENCIES) 
+	@rm -f nangband$(EXEEXT)
+	$(LINK) $(nangband_LDFLAGS) $(nangband_OBJECTS) $(nangband_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -590,7 +590,7 @@ uninstall-info: uninstall-info-recursive
 	uninstall-binPROGRAMS uninstall-info-am \
 	uninstall-info-recursive uninstall-recursive
 
-angband.res: angband.rc
+nangband.res: nangband.rc
 	$(WRES) $< -O coff -o $@
 
 l-monst.c: lua/tolua l-monst.pkg
@@ -615,8 +615,8 @@ l-spell.c: lua/tolua l-spell.pkg
 	lua/tolua -n spell -o l-spell.c l-spell.pkg
 
 install-exec-hook:
-@SET_GID_TRUE@	chgrp "@GAMEGROUP@" "$(DESTDIR)$(bindir)/angband"
-@SET_GID_TRUE@	chmod g+s "$(DESTDIR)$(bindir)/angband"
+@SET_GID_TRUE@	chgrp "@GAMEGROUP@" "$(DESTDIR)$(bindir)/nangband"
+@SET_GID_TRUE@	chmod g+s "$(DESTDIR)$(bindir)/nangband"
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -12,6 +12,9 @@
 #include "angband.h"
 #include "lua/tolua.h"
 
+extern int tolua_dynamic_open(lua_State* tolua_S);
+extern void tolua_dynamic_close(lua_State* tolua_S);
+
 /*
  * At the moment, this function only has commented out code.
  * It serves as a brief example of how to export information
@@ -30,7 +33,7 @@ int tolua_dynamic_open(lua_State* tolua_S)
 		/* Buffer */
 		char buffer[20];
 		char class_name[14];
-		int r;
+		unsigned int r;
 
 		/* Grab the class */
 		cp_ptr = &c_info[i];
@@ -57,6 +60,8 @@ int tolua_dynamic_open(lua_State* tolua_S)
 
 void tolua_dynamic_close(lua_State* tolua_S)
 {
+	(void)tolua_S;
+
 	/* Nothing to do. */
 	return;
 }

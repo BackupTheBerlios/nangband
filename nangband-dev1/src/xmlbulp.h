@@ -29,7 +29,7 @@ typedef struct {
 	} _bulp_mem;
 	
 /* from bulp.c : */
-      int bulp_stricmp (char *s1, char *s2);
+      int bulp_stricmp (const char *s1, const char *s2);
     BULP *bulp_open    (char *filename, char *mode);
      bool bulp_close   (BULP *bulp_ptr);
       int bulp_getpos  (BULP *bulp_ptr, u32b *pos);

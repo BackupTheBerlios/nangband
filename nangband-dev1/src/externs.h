@@ -606,7 +606,6 @@ extern bool unlight_area(int dam, int rad);
 extern bool fire_ball(int typ, int dir, int dam, int rad);
 extern bool fire_swarm(int num, int typ, int dir, int dam, int rad);
 extern bool fire_meteor(int typ, int dir, int dam, int rad, int scatter, int num);
-extern bool fire_swarm(int num, int typ, int dir, int dam, int rad);
 extern bool fire_bolt(int typ, int dir, int dam);
 extern bool fire_beam(int typ, int dir, int dam);
 extern bool fire_bolt_or_beam(int prob, int typ, int dir, int dam);
@@ -775,10 +774,6 @@ extern bool target_set_interactive(int mode);
 extern bool get_aim_dir(int *dp);
 extern bool get_rep_dir(int *dp);
 extern bool confuse_dir(int *dp);
-
-
-/* xmlbulp.c */
-extern int bulp_stricmp(char *s1, char *s2);
 
 /* help.c */
 extern u32b open_help(char *file);

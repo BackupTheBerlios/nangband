@@ -26,7 +26,7 @@
 /* ---------------------------------------------------------------------
  * Does a case insensitive comparison between two strings
  * --------------------------------------------------------------------- */
-int bulp_stricmp(char *s1, char *s2)
+int bulp_stricmp(const char *s1, const char *s2)
 {
 	char ch1 = 0;
 	char ch2 = 0;

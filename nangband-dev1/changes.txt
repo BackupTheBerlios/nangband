@@ -1,6 +1,11 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-06-12
+----------
+- Merged the experimental branch into the trunk. (takkaria)
+- Cleaned out hundreds of warnings all over the source. (takkaria)
+
 2002-06-04
 ----------
 (experimental branch)

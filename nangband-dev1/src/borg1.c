@@ -2411,9 +2411,8 @@ if (!borg_rand_local)
 
 #else
 
-#ifdef MACINTOSH
-static int HACK = 0;
-#endif
+/* This throws up warnings.  Ignore them. */
+static char HACK = 0;
 
 #endif
 

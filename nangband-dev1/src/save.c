@@ -862,6 +862,9 @@ static void savefile_do_block_header(bool type, int ver)
 	char v_name[32];
 	byte v_j, v_m, v_p, v_x;
 
+	/* We don't use the version yet. */
+	(void)ver;
+
 	/* Set some variables is we are writing */
 	if (type == PUT)
 	{

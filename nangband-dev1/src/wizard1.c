@@ -1105,7 +1105,7 @@ static void spoil_artifact(cptr fname)
 			text_out(artifact.misc_desc);
 
 			/* Whee */
-//			identify_backend(i_ptr);
+			identify_backend(i_ptr);
 
 			/* Terminate the entry */
 			text_out("\n\n");

@@ -1,9 +1,10 @@
 /*
  * borg3.c: Borg object/shop/spell code.
  */
+#include "angband.h"
+
 #ifdef ALLOW_BORG
 
-#include "angband.h"
 #include "z-virt.h"
 #include "script.h"
 
@@ -4419,7 +4420,7 @@ printf(format("%s \n",buf));
         /* Save an entry */
         text[size] = string_make(buf);
         what[size] = k;
-//printf(format("%d, %s \n",size, text[size]));
+        /* printf(format("%d, %s \n",size, text[size])); */
         size++;
 
     }

@@ -79,6 +79,12 @@ HAVE_MKSTEMP = -DHAVE_MKSTEMP
 CC = gcc
 WARNINGS = -Wall
 
+# Use GCC 3.1 with extranaeous warning options
+#WARNINGS = -pedantic -W -Wmissing-prototypes -Wmissing-declarations -Wno-long-long \
+#	-Wwrite-strings -Wpointer-arith -Wbad-function-cast -Wsign-compare -Waggregate-return \
+#	-Wstrict-prototypes -Wredundant-decls -Wdisabled-optimization -Wall
+#CC = gcc-3.1
+
 # Default target
 default: x11-gcu
 

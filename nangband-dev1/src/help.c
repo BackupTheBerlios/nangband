@@ -65,12 +65,14 @@ static char help_format[]="[Press return for '%s']";
 /* Help line text strings */
 
 /* This is displayed when nothing else overrides it */
-static char help_help[80]=
+static char help_help[80] =
 "[Press up, down, left, right, page up, page down, Return, or '?' to exit]";
 
 /* This is displayed when you escape to link mode */
-static char link_help[80]=
-"[Press the key for the link you require]";
+static char link_help[80] = "[Press the key for the link you require]";
+
+/* Quick and dirty prototype */
+char *help_path_build(char *buffer, const char *file, const char *lastfile, history_blk *stack);
 
 /* -------------------------------------------------------- takkaria ---
  * Converts a string to a terminal colour byte.
@@ -4956,7 +4958,7 @@ bool history_add(history_blk *stack, char *file, int line)
 /* ------------------------------------------------------------ ajps ---
  * Takes a file link (in file) and builds the appropriate path in buffer
  * --------------------------------------------------------------------- */
-char *help_path_build(char *buffer, char *file, char *lastfile, history_blk *stack)
+char *help_path_build(char *buffer, const char *file, const char *lastfile, history_blk *stack)
 {
 	char *file_ptr = NULL;
 

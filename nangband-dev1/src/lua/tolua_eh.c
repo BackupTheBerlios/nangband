@@ -3,7 +3,7 @@
 ** Written by Waldemar Celes
 ** TeCGraf/PUC-Rio
 ** Jul 1998
-** $Id: tolua_eh.c,v 1.1 2002/02/11 19:14:54 takkaria Exp $
+** $Id: tolua_eh.c,v 1.2 2002/06/12 19:13:39 takkaria Exp $
 */
 
 /* This code is free software; you can redistribute it and/or modify it. 
@@ -35,7 +35,7 @@ void toluaI_eh_set
  toluaI_setregistry(L,"tolua_err_expected");
 }
 
-void tolua_error (lua_State* L, char* msg)
+void tolua_error (lua_State* L, const char* msg)
 {
  if (msg[0]=='#')
  {

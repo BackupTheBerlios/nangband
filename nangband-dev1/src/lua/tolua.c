@@ -3,7 +3,7 @@
 ** Written by Waldemar Celes
 ** TeCGraf/PUC-Rio
 ** Jul 1998
-** $Id: tolua.c,v 1.1 2002/02/11 19:15:03 takkaria Exp $
+** $Id: tolua.c,v 1.2 2002/06/12 19:13:39 takkaria Exp $
 */
 
 /* This code is free software; you can redistribute it and/or modify it. 
@@ -44,7 +44,7 @@ static void version (void)
  fprintf(stderr, "%s (written by W. Celes)\n",TOLUA_VERSION);
 }
 
-static void setfield (lua_State* L, int table, char* f, char* v)
+static void setfield (lua_State* L, int table, const char* f, const char* v)
 {
  lua_pushstring(L,f);
  lua_pushstring(L,v);

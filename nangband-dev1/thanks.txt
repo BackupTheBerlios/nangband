@@ -1,33 +1,24 @@
-Current maintainer:
--------------------
+Nangband Credits and Developers
+===============================
 
-Andrew Sidwell (takkaria) < nevermiah@hotmail.com >
+The DevTeam:
+    * Andrew Sidwell [takkaria] <nevermiah@hotmail.com>: Main developer
+    * Grahame White [grahame]: Secondry Developer
+    * Scott A. Marshall [parodyingbird]: Secondry Developer
 
 Previous maintainers:
----------------------
-
-Newer versions of Angband:
-Robert Ruehlmann < rr9@angband.org >
-
-Angband 2.7.0 - 2.8.5:
-Ben Harrison < benh@phial.com >
-
-Angband 2.0 - 2.4 - 2.6.2 by:
-Alex Cutler, Andy Astrand, Sean Marsh,
-Geoff Hill, Charles Teague, Charles Swiger
-
-Based on "VMS Moria":
-Robert Alan Koeneke, Jimmey Wayne Todd Jr.
-
-and also based on "Umoria" (Unix Moria):
-James E. Wilson
+    * Robert Ruehlmann <rr9@angband.org>: Current Maintainer of Angband
+    * Ben Harrison <benh@phial.com>: Angband 2.7.0 - 2.8.5
+    * Alex Cutler, Andy Astrand, Sean Marsh, Geoff Hill, Charles Teague,
+      Charles Swiger: Angband 2.0 - 2.6.2
+    * Robert Alan Koeneke, Jimmey Wayne Todd Jr.: "VMS Moria"
+    * James E. Wilson: "Unix Moria" [Umoria]
 
 Contributors:
 -------------
 
 Thanks go to the following people:
 
-Grahame White: general support, ideas, and code sharing
 Antony Sidwell: for the excellent new help system
 
 Many thanks go to the following people who have contributed patches,
@@ -110,5 +101,7 @@ I hope I've remembered everyone who ought to be mentioned here. If your
 name should be included, my apologies, and please tell me so I can correct 
 the oversight!
 
--- 
-Robert Ruehlmann < rr9@angband.org >
+--
+name:  Andrew Sidwell
+irc:   takkaria
+email: nevermiah@hotmail.com

@@ -4,7 +4,6 @@ This software may be copied and distributed for educational, research,
 and not for profit purposes provided that this copyright and statement
 are included in all such copies.  Other copyrights may also apply.
 
-
 All changes made by Ben Harrison, Robert Ruehlmann, and many other Angband
 developers are also available under the GNU GENERAL PUBLIC LICENSE.
 Note that this doesn't influence the current distribution, since parts of
@@ -15,3 +14,7 @@ license remains the original Moria/Angband license.
 More informations about Angband and the GPL can be found at:
 http://thangorodrim.angband.org/development/opensource.html
 
+--
+name:  Andrew Sidwell
+irc:   takkaria
+email: nevermiah@hotmail.com

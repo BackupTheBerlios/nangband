@@ -25,3 +25,8 @@
 Nangband is an Angband variant. In it you will find a new equipment slot,
 several new types of light source, and (hopefully) improved user
 interface.
+
+--
+name:  Andrew Sidwell
+irc:   takkaria
+email: nevermiah@hotmail.com

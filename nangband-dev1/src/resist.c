@@ -62,7 +62,7 @@ bool resist_check(byte res_idx)
 	x = resist_player_current(res_idx);
 
 	/* Roll the die */
-	if (rand_int(100) > n) return (FALSE);
+	if (rand_int(100) > x) return (FALSE);
 
 	/* The check was successful */
 	return (TRUE);

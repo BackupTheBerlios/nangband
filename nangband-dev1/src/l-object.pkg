@@ -194,6 +194,7 @@ typedef int sint;
 #define TV_JUNK          3	/* Sticks, Pottery, etc ('~') */
 #define TV_SPIKE         5	/* Spikes ('~') */
 #define TV_CHEST         7	/* Chests ('~') */
+#define TV_ORB		8
 #define TV_SHOT			16	/* Ammo for slings */
 #define TV_ARROW        17	/* Ammo for bows */
 #define TV_BOLT         18	/* Ammo for x-bows */
@@ -225,7 +226,10 @@ typedef int sint;
 #define TV_PRAYER_BOOK  91
 #define TV_GOLD         100	/* Gold can only be picked up by players */
 
-
+#define SV_ORB_FIRE_1	0
+#define SV_ORB_FIRE_2	1
+#define SV_ORB_COLD_1	2
+#define SV_ORB_COLD_2	3
 
 /* The "sval" codes for TV_SHOT/TV_ARROW/TV_BOLT */
 #define SV_AMMO_LIGHT		0	/* pebbles */

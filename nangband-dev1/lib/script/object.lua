@@ -1451,6 +1451,14 @@ function describe_item_activation_hook(object)
 		return activations[object.sval]
 	end
 
+	-- Orbs
+	if object.tval == TV_ORB then
+		local activations = {
+			[1] = "a fire bolt every now and again"}
+
+		return activations[object.sval]
+	end
+
 	-- Elemental rings
 	if object.tval == TV_RING then
 		local activations = {
@@ -1462,16 +1470,6 @@ function describe_item_activation_hook(object)
 		return activations[object.sval]
 	end
 
-	-- Orbs
-	if object.tval == TV_ORB then
-		local activations = {
-			[SV_ORB_FIRE1] = "fire bolt",
-			[SV_ORB_FIRE2] = "nothing"}
-
-		return activations[object.sval]
-	end
-
 	-- No activation
-	return ""
+	return "nothing"
 end
-

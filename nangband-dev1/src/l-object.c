@@ -1,6 +1,6 @@
 /*
 ** Lua binding: object
-** Generated automatically by tolua 4.0a - angband on Tue Feb 12 08:28:03 2002.
+** Generated automatically by tolua 4.0a - angband on Tue Feb 12 11:37:09 2002.
 */
 
 #include "lua/tolua.h"
@@ -4173,6 +4173,7 @@ int tolua_object_open (lua_State* tolua_S)
  tolua_constant(tolua_S,NULL,"TV_JUNK",TV_JUNK);
  tolua_constant(tolua_S,NULL,"TV_SPIKE",TV_SPIKE);
  tolua_constant(tolua_S,NULL,"TV_CHEST",TV_CHEST);
+ tolua_constant(tolua_S,NULL,"TV_ORB",TV_ORB);
  tolua_constant(tolua_S,NULL,"TV_SHOT",TV_SHOT);
  tolua_constant(tolua_S,NULL,"TV_ARROW",TV_ARROW);
  tolua_constant(tolua_S,NULL,"TV_BOLT",TV_BOLT);
@@ -4203,6 +4204,10 @@ int tolua_object_open (lua_State* tolua_S)
  tolua_constant(tolua_S,NULL,"TV_MAGIC_BOOK",TV_MAGIC_BOOK);
  tolua_constant(tolua_S,NULL,"TV_PRAYER_BOOK",TV_PRAYER_BOOK);
  tolua_constant(tolua_S,NULL,"TV_GOLD",TV_GOLD);
+ tolua_constant(tolua_S,NULL,"SV_ORB_FIRE_1",SV_ORB_FIRE_1);
+ tolua_constant(tolua_S,NULL,"SV_ORB_FIRE_2",SV_ORB_FIRE_2);
+ tolua_constant(tolua_S,NULL,"SV_ORB_COLD_1",SV_ORB_COLD_1);
+ tolua_constant(tolua_S,NULL,"SV_ORB_COLD_2",SV_ORB_COLD_2);
  tolua_constant(tolua_S,NULL,"SV_AMMO_LIGHT",SV_AMMO_LIGHT);
  tolua_constant(tolua_S,NULL,"SV_AMMO_NORMAL",SV_AMMO_NORMAL);
  tolua_constant(tolua_S,NULL,"SV_AMMO_HEAVY",SV_AMMO_HEAVY);
@@ -5096,6 +5101,7 @@ void tolua_object_close (lua_State* tolua_S)
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TV_JUNK");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TV_SPIKE");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TV_CHEST");
+ lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TV_ORB");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TV_SHOT");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TV_ARROW");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TV_BOLT");
@@ -5126,6 +5132,10 @@ void tolua_object_close (lua_State* tolua_S)
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TV_MAGIC_BOOK");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TV_PRAYER_BOOK");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TV_GOLD");
+ lua_pushnil(tolua_S); lua_setglobal(tolua_S,"SV_ORB_FIRE_1");
+ lua_pushnil(tolua_S); lua_setglobal(tolua_S,"SV_ORB_FIRE_2");
+ lua_pushnil(tolua_S); lua_setglobal(tolua_S,"SV_ORB_COLD_1");
+ lua_pushnil(tolua_S); lua_setglobal(tolua_S,"SV_ORB_COLD_2");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"SV_AMMO_LIGHT");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"SV_AMMO_NORMAL");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"SV_AMMO_HEAVY");

@@ -3633,7 +3633,7 @@ F:INSTA_ART
 
 N:515:Flames
 G:*:r
-I:8:1:2
+I:8:0:2
 W:0:100:5:50000
 P:0:2d8:0:0:0
 F:IGNORE_FIRE | IM_FIRE | RES_FIRE | LITE3 |
@@ -3642,7 +3642,7 @@ D:A glowing red orb, it's flame lights your path.
 
 N:516:Burning
 G:*:o
-I:8:2:1
+I:8:1:1
 W:0:100:5:50000
 P:0:2d4:0:0:0
 F:IGNORE_FIRE | IM_FIRE | RES_FIRE | LITE3 |

@@ -548,7 +548,7 @@ static void process_world(void)
 	/*** Check the Food, and Regenerate ***/
 
 	/* Digest normally */
-	if (p_ptr->food < PY_FOOD_MAX)
+	if (p_ptr->food < PY_FOOD_MAX | ((p_ptr->food < (PY_FOOD_MAX * 2) / 3) & p_ptr->hunger))
 	{
 		/* Every 100 game turns */
 		if (!(turn % 100))
@@ -560,10 +560,13 @@ static void process_world(void)
 			if (p_ptr->regenerate) i += 30;
 
 			/* Slow digestion takes less food */
-			if (p_ptr->slow_digest) i -= 10;
+			if (p_ptr->slow_digest & !p_ptr->hunger) i -= 10;
 
 			/* Minimal digestion */
 			if (i < 1) i = 1;
+
+			/* Adjust if hunger flag is set */
+			if (p_ptr->hunger) i *= 2;
 
 			/* Digest some food */
 			(void)set_food(p_ptr->food - i);
@@ -573,8 +576,16 @@ static void process_world(void)
 	/* Digest quickly when gorged */
 	else
 	{
-		/* Digest a lot of food */
-		(void)set_food(p_ptr->food - 100);
+		if (p_ptr->hunger)
+		{
+			/* Digest a *lot* of food */
+			(void)set_food(p_ptr->food - 200);
+		}
+		else
+		{
+		    /* Digest a lot of food */
+		    (void)set_food(p_ptr->food - 100);
+		}
 	}
 
 	/* Starve to death (slowly) */

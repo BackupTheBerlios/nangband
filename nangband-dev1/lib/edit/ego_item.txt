@@ -25,7 +25,7 @@
 # === Understanding ego_item.txt ===
 
 # N: serial number : ego type
-# X: inventory slot : rating : xtra
+# X: rating : xtra
 # C: max to-hit : max to-dam : max to-ac : pval
 # W: depth : rarity : weight : cost
 # T: tval : min_sval : max_sval
@@ -53,7 +53,7 @@
 # are separated by the '|' symbol.
 
 # 'T' is for possible 'tval' and 'sval' values of the base-item.
-# Up to three 'T' entries are possible for a single object. The
+# Up to four 'T' entries are possible for a single object. The
 # ego-item can only be generated from items of this tval, with sval
 # in the specified range.
 
@@ -88,7 +88,7 @@ V:2.9.6
 ### Belts ###
 
 N:1:of Archery
-X:32:15:0
+X:15:0
 W:0:55:0:45000
 C:0:0:0:2
 T:29:25:26

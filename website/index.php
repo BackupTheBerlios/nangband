@@ -6,9 +6,6 @@
 //                                   //
 ///////////////////////////////////////
 
-// Micro-hack to give nice source listings
-$included[1] = true;
-
 // Include the general layout functions and file listings
 include('sitedata.php');
 include('layout.php');
@@ -19,8 +16,7 @@ if (!$cstyle) $style = $default_style;
          else $style = $cstyle;
 
 // Check on the setting styles
-if (($newstyle == 'sidebar') ||
-    ($newstyle == 'clean') ||
+if (($newstyle == 'normal') ||
     ($newstyle == 'plain'))
 {
 	// Set a cookie for a few years
@@ -63,29 +59,8 @@ if (isset($source)) $title = 'source';
 page_header($title, $page, $style);
 
 // Include the data
-if (isset($source))
-{
-	echo '<p>The source files used in the nangband site are <a href="?source=layout">layout.php</a>,';
-	echo ' <a href="?source=files">files.php</a>, and <a href="?source=true">index.php</a>.  Click ';
-	echo 'on one of the files listed above to see it\'s source code.</p>';
-	echo '<p>Here is the source:</p>';
-
-	if ($source == 'layout') $source = 'layout.php';
-	else if ($source == 'files') $source = 'files.php';
-	else $source = 'index.php';
-
-	show_source($source);
-}
-else if ($okay)
-{
-	// Include the data
-	include($incdir.$dpage);
-}
-else 
-{
-	echo '<p><b>Sorry, that page was not found.</b></p>';
-	echo '<p>You may be looking for a page which does not exist any more; please follow the links on the sidebar.</p>';
-}
+if ($okay) include($incdir.$dpage);
+else include('error');
 
 // Output the footer
 page_footer();

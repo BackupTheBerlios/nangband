@@ -25,13 +25,9 @@ $pages[3] = 'download';
 $pages[4] = 'links';
 
 // List of styles
-$styles[0] = 'sidebar';
-$styles[1] = 'clean';
-$styles[2] = 'plain';
+$styles[0] = 'normal';
+$styles[1] = 'plain';
 
 // Default style
 $default_style = 'clean';
-
-// Redirect to the "real" source lister if we're not included
-if (!$included[1]) header('Location: /?source=files');
 ?>

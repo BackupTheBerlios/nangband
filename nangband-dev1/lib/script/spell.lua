@@ -64,7 +64,7 @@ SPELL_MASS_GENOCIDE = 48
 -- Resistance of Scarabtarices
 SPELL_RESIST_FIRE = 49
 SPELL_RESIST_COLD = 50
-SPELL_RESIST_ACID = 51
+SPELL_RESIST_ELEC = 51
 SPELL_RESIST_POISON = 52
 SPELL_RESISTANCE = 53
 
@@ -188,7 +188,7 @@ magic_books = {
 	       SPELL_GENOCIDE},
 	[4] = {SPELL_RESIST_FIRE,
 	       SPELL_RESIST_COLD,
-	       SPELL_RESIST_ACID,
+	       SPELL_RESIST_ELEC,
 	       SPELL_RESIST_POISON,
 	       SPELL_RESISTANCE},
 	[5] = {SPELL_DOOR_CREATION,
@@ -346,7 +346,7 @@ magic_name = {
 	"Mass Genocide",
 	"Resist Fire",
 	"Resist Cold",
-	"Resist Acid",
+	"Resist Lightning",
 	"Resist Poison",
 	"Resistance",
 	"Heroism",
@@ -479,7 +479,7 @@ function get_spell_info_hook(tval, index)
 			info = " dur 20+d20"
 		elseif index == SPELL_RESIST_COLD then
 			info = " dur 20+d20"
-		elseif index == SPELL_RESIST_ACID then
+		elseif index == SPELL_RESIST_ELEC then
 			info = " dur 20+d20"
 		elseif index == SPELL_RESIST_POISON then
 			info = " dur 20+d20"
@@ -745,16 +745,17 @@ function cast_spell(index)
 		set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + randint(20) + 20)
 	elseif index == SPELL_RESIST_COLD then
 		set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + randint(20) + 20)
-	elseif index == SPELL_RESIST_ACID then
-		set_timed_res(RES_ACID, player.resist_timed[RES_ACID] + randint(20) + 20)
+	elseif index == SPELL_RESIST_ELEC then
+		set_timed_res(RES_ELEC, player.resist_timed[RES_ACID] + randint(20) + 20)
 	elseif index == SPELL_RESIST_POISON then
 		set_timed_res(RES_POIS, player.resist_timed[RES_POIS] + randint(20) + 20)
 	elseif index == SPELL_RESISTANCE then
 		local time = randint(20) + 20
-		set_timed_res(RES_ACID, player.resist_timed[RES_ACID] + time)
+
 		set_timed_res(RES_POIS, player.resist_timed[RES_POIS] + time)
 		set_timed_res(RES_FIRE, player.resist_timed[RES_FIRE] + time)
 		set_timed_res(RES_COLD, player.resist_timed[RES_COLD] + time)
+		set_timed_res(RES_ACID, player.resist_timed[RES_ELEC] + time)
 	elseif index == SPELL_HEROISM then
 		hp_player(10)
 		set_hero(player.hero + randint(25) + 25)

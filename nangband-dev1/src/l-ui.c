@@ -1,6 +1,6 @@
 /*
 ** Lua binding: ui
-** Generated automatically by tolua 4.0a - angband on 02/23/02 12:06:02.
+** Generated automatically by tolua 4.0a - angband on 02/24/02 21:44:22.
 */
 
 #include "lua/tolua.h"

@@ -1792,6 +1792,13 @@ static void calc_bonuses(void)
 	/* Clear the stat modifiers */
 	for (i = 0; i < A_MAX; i++) p_ptr->stat_add[i] = 0;
 
+	/* Clear the resistance stuff */
+	for (i = 0; i < RES_MAX; i++)
+	{
+		p_ptr->resist_dis[i] = 0;
+		p_ptr->resist_cur[i] = 0;
+	}
+
 	/* Clear the Displayed/Real armor class */
 	p_ptr->dis_ac = p_ptr->ac = 0;
 

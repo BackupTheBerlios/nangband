@@ -70,8 +70,6 @@ ANGOBJS = \
 ## removing the FIRST column of "#" signs from the "block" of lines
 ## you wish to use, and commenting out "standard" block below.
 ##
-## This is not intended to be a "good" Makefile, just a "simple" one.
-##
 
 # Comment out the following line if you do not have mkstemp()
 HAVE_MKSTEMP = -DHAVE_MKSTEMP
@@ -240,11 +238,12 @@ slang: CFLAGS = -Wall -O2 -fno-strength-reduce -D"USE_SLA" -I/usr/include/slang
 slang: LIBS = -lslang
 
 # Add stuff
-CFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
+nangband: CFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
+nangband: LINKFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
 
 # Build the binary
 nangband: $(ANGOBJS) $(BORGOBJS)
-	$(CC) $(CFLAGS) $(HAVE_MKSTEMP) $(LDFLAGS) -o nangband $(ANGOBJS) $(BORGOBJS) $(LIBS)
+	$(CC) $(CFLAGS) $(LINKFLAGS) $(LDFLAGS) -o nangband $(ANGOBJS) $(BORGOBJS) $(LIBS)
 
 # Lua stuff
 lua/tolua: $(TOLUAOBJS)

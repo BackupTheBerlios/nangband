@@ -134,14 +134,14 @@ static byte *savefile_blockpos;  /* The posiition inside the block */
 static void savefile_add_byte(byte v)
 {
 	/* See if we need to allocate more memory */
-	if (!(savefile_blocksize > savefile_blockused))
+	if (savefile_blocksize == savefile_blockused)
 	{
 		vptr savefile_new;
 
 		/* Make space for the new block. */
 		C_MAKE(savefile_new, savefile_blocksize + BLOCK_INCREMENT, byte);
 
-		/* Copy the memory acros.s */
+		/* Copy the memory across */
 		COPY(savefile_new, savefile_block, vptr);
 
 		/* Wipe the old block. */
@@ -149,11 +149,18 @@ static void savefile_add_byte(byte v)
 
 		/* The new block is now the savefile block. */
 		savefile_block = savefile_new;
+
+		/* Increment variables */
+		savefile_blocksize += BLOCK_INCREMENT;
 	}
 
 	/* Add the byte to the block. */
 	*savefile_blockpos++ = v;
 
+	/* Increase the "used" counter */
+	savefile_blockused++;
+
+	/* We are done */
  	return;
 }
 
@@ -185,14 +192,13 @@ static void savefile_add_u32b(u32b v)
  */
 static void savefile_add_string(char *str, bool record)
 {
-	int i;
-
 	/* Cycle through the string */
 	if (record)
 	{
+		int i;
+
 		/* Count */
-		for (i = 0; *str; i++) *str++;
-		str -= i;
+		i = strlen(str);
 
 		/* Record it */
 		savefile_add_byte((byte) i);
@@ -262,7 +268,7 @@ static void savefile_write_block(vptr block, int fd)
 	*header_pos++ = 0;
 
 	/* Write the header */
-	fd_write(fd, (cptr) savefile_head, savefile_blockused);
+	fd_write(fd, (cptr) savefile_head, BLOCK_HEAD_SIZE);
 
 	/* Free up the header's memory */
 	header_pos = NULL;
@@ -273,9 +279,10 @@ static void savefile_write_block(vptr block, int fd)
 	savefile_head_ver = 0;
 
 	/* Write the block */
-	if (savefile_block) fd_write(fd, (cptr) savefile_block, BLOCK_HEAD_SIZE);
+	if (savefile_block) fd_write(fd, (cptr) savefile_block, savefile_blockused);
 
 	/* Free the block's memory */
+	*(int *)savefile_block = 0;
 	savefile_blockpos = NULL;
 	if (savefile_block) KILL(savefile_block);
 

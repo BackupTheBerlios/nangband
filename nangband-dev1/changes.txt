@@ -11,6 +11,8 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
 - Got all (non-lua) code compiling with TCC 0.9.8 - 0.9.9 segfaults on
   randart.c, but 0.9.8 has parsing problems with the lua header files.
   Hopefully 1.0.0 will compile Angband completely cleanly. (takkaria)
+- Made the running code take notice of terrain flags.  This should
+  prevent some problems. (takkaria)
 
 2002-07-28
 ----------

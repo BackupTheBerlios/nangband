@@ -56,20 +56,17 @@ bool run_energy = TRUE;
  */
 static bool is_walkable(int x, int y)
 {
-	/* Non-walls are not walls */
-	if (cave_feat[y][x] < FEAT_SECRET) return (TRUE);
-
-	/* Hack: the town has problems */
-/*	if (p_ptr->depth)
-	{ */
-		/* Unknown grids are not known walls */
-		if (!(cave_info[y][x] & (CAVE_MARK))) return (TRUE);
-/* 	} */
-
 	/* The curent grid is not 'walkable' */
 	if ((x == p_ptr->py) && (y == p_ptr->py)) return (FALSE);
 
-	return(FALSE);
+	/* Things that block movement are not walkable */
+	if (f_info[cave_feat[y][x]].f1 & (FF1_BLOCKING)) return (FALSE);
+
+	/* We don't want to run into stores */
+	if (f_info[cave_feat[y][x]].f1 & (FF1_STORE)) return (FALSE);
+
+	/* We default to TRUE */
+	return (TRUE);
 }
 
 /*

@@ -1,6 +1,5 @@
 # File: monster.txt
 
-
 # This file is used to initialize the "lib/data/monster.raw" file, which is
 # used to initialize the "monster race" information for the Angband game.
 
@@ -14,6 +13,7 @@
 # G: symbol : color
 # I: speed : hit points : vision : armor class : alertness
 # W: depth : rarity : unused (always 0) : experience for kill
+# R: minimum size of group : maximum size of group
 # B: attack method : attack effect : damage
 # S: spell frequency |
 # S: spell type | spell type | etc
@@ -42,6 +42,11 @@
 
 # 'W' is for more information - level, rarity, and experience for
 # killing. The third slot is currently unused.
+
+# 'R' is for group information - minumum size of a group this monster
+# may appear in, and the maximum size.  If these are not supplied,
+# or if they are 0, they default to 4 and 32 respectively.
+# (see editing.txt in this directory for more info on group generation).
 
 # 'B' is for blows - method of attack, effect of attack, and damage
 # from attack. There may be up to four of these lines; effect and

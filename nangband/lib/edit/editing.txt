@@ -1,0 +1,24 @@
+This file contains various miscellaneous informations relating to editing the
+files in this directory.  Most of it is spoilerly, so be warned.
+
+Group calculations
+==================
+
+When a group of monsters is going to be placed, various things happen regarding
+the size of the group.  First, the total starts off as a random number from 1
+to 13.  Then, if the monster's level is higher than the player's current depth,
+a random number from 1 to (monster level - player depth) is taken from the
+total.  However, if the player's depth is more than the monster's level, then
+the total is incremented by either 12 or a random number from 1 to the difference
+between the two levels, whichever is smaller.
+
+Then the "minimum size" and "maximum size" checks are performed. For the minumum
+size check, we get a random number from 1 to the max group size (specified by the
+monster, or 32 by default).  If the number is lower than the minumum group size
+(specified by the monster, or 4 by default), then the total number of monsters
+is reset to that number.  Otherwise, if the current total is lower than the group
+minimum, then it is reset to the minimum.  The maximum size check just checks that
+the total doesn't exceed the maximum group size.
+
+Note that in other variants, the minimum size check normally just ensures that the
+total has not dropped under 1.

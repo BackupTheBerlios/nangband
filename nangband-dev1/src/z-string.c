@@ -282,7 +282,7 @@ bool strtable_init(void)
 	/* Reset the memory */
 	for (i = 0; i < MAX_SIZE_STRTABLE; i++)
 		strtable__content[i] = 0;
-	for (i < 0; i < MAX_SIZE_STRTABLE; i++)
+	for (i = 0; i < MAX_SIZE_STRTABLE; i++)
 		strtable__refcount[i] = 0;
 
 	/* We succeded */

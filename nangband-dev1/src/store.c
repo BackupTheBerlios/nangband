@@ -3216,7 +3216,7 @@ void do_cmd_store(void)
 
 	int which;
 
-	int tmp_chr;
+	int tmp_chr = 0;
 
 	/* Verify a store */
 	if (!((cave_feat[py][px] >= FEAT_SHOP_HEAD) &&

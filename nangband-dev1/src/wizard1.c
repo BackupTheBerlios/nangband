@@ -494,25 +494,6 @@ static const flag_desc brand_flags_desc[] =
 };
 
 /*
- * The basic resistances
- */
-
-static const flag_desc resist_flags_desc[] =
-{
-/*	{ TR2_RES_FEAR,   "Fear" },
-	{ TR2_RES_LITE,   "Light" },
-	{ TR2_RES_DARK,   "Dark" },
-	{ TR2_RES_CONFU,  "Blindness" },
-	{ TR2_RES_CONFU,  "Confusion" },
-	{ TR2_RES_SOUND,  "Sound" },
-	{ TR2_RES_SHARD,  "Shards" },
-	{ TR2_RES_NEXUS,  "Nexus" },
-	{ TR2_RES_NETHR,  "Nether" },
-	{ TR2_RES_CHAOS,  "Chaos" },
-	{ TR2_RES_DISEN,  "Disenchantment" },*/
-};
-
-/*
  * Sustain stats -  these are given their "own" line in the
  * spoiler file, mainly for simplicity
  */
@@ -600,9 +581,6 @@ typedef struct
 
 	/* A list if an object's elemental brands */
 	cptr brands[N_ELEMENTS(brand_flags_desc) + 1];
-
-	/* A list of resistances granted by an object */
-	cptr resistances[N_ELEMENTS(resist_flags_desc) + 1];
 
 	/* A list of stats sustained by an object */
 	cptr sustains[N_ELEMENTS(sustain_flags_desc)  - 1 + 1];
@@ -779,12 +757,11 @@ static void analyze_brand(const object_type *o_ptr, cptr *brand_list)
  */
 static void analyze_resist(const object_type *o_ptr, cptr *resist_list)
 {
-	u32b f1, f2, f3;
+	byte resists[RES_MAX];
 
-	object_flags(o_ptr, &f1, &f2, &f3);
+	object_resists(o_ptr, resists);
 
-	resist_list = spoiler_flag_aux(f2, resist_flags_desc,
-	                               resist_list, N_ELEMENTS(resist_flags_desc));
+	/* [note to self - repair code] */
 
 	/* Terminate the description list */
 	*resist_list = NULL;
@@ -899,7 +876,7 @@ static void object_analyze(const object_type *o_ptr, obj_desc_list *desc_x_ptr)
 
 	analyze_slay(o_ptr, desc_x_ptr->slays);
 
-	analyze_resist(o_ptr, desc_x_ptr->resistances);
+/*	analyze_resist(o_ptr, desc_x_ptr->resists); */
 
 	analyze_sustains(o_ptr, desc_x_ptr->sustains);
 
@@ -1076,7 +1053,7 @@ static void spoiler_print_art(const obj_desc_list *art_ptr)
 
 	spoiler_outlist("", art_ptr->brands, LIST_SEP);
 
-	spoiler_outlist("Resist", art_ptr->resistances, ITEM_SEP);
+/*	spoiler_outlist("Resist", art_ptr->resistances, ITEM_SEP); */
 
 	spoiler_outlist("Sustain", art_ptr->sustains, ITEM_SEP);
 

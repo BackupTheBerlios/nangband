@@ -1151,13 +1151,12 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 	int total = o_ptr->number + j_ptr->number;
 	int i;
 
-
 	/* Require identical object types */
-	if (o_ptr->k_idx != j_ptr->k_idx) return (0);
+	if (o_ptr->k_idx != j_ptr->k_idx) return (FALSE);
 
 	if (o_ptr->cost != j_ptr->cost) return (FALSE);
-	if (!streq(strtable_content(o_ptr->name_pre), strtable_content(j_ptr->name_pre))) return (FALSE);
-	if (!streq(strtable_content(o_ptr->name_suf), strtable_content(j_ptr->name_suf))) return (FALSE);
+	if (o_ptr->name_pre != j_ptr->name_pre) return (FALSE);
+	if (o_ptr->name_suf != j_ptr->name_suf) return (FALSE);
 
 	if (o_ptr->flags1 != j_ptr->flags1) return (FALSE);
 	if (o_ptr->flags2 != j_ptr->flags2) return (FALSE);
@@ -1176,7 +1175,7 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 		case TV_CHEST:
 		{
 			/* Never okay */
-			return (0);
+			return (FALSE);
 		}
 
 		/* Food and Potions and Scrolls */
@@ -1193,7 +1192,7 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 		case TV_WAND:
 		{
 			/* Require knowledge */
-			if (!object_known_p(o_ptr) || !object_known_p(j_ptr)) return (0);
+			if (!object_known_p(o_ptr) || !object_known_p(j_ptr)) return (FALSE);
 
 			/* Fall through */
 		}
@@ -1202,7 +1201,7 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 		case TV_ROD:
 		{
 			/* Require identical charges */
-			if (o_ptr->pval != j_ptr->pval) return (0);
+			if (o_ptr->pval != j_ptr->pval) return (FALSE);
 
 			/* Probably okay */
 			break;
@@ -1214,7 +1213,7 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 		case TV_LIGHT:
 		{
 			/* Require full knowledge of both items */
-			if (!object_known_p(o_ptr) || !object_known_p(j_ptr)) return (0);
+			if (!object_known_p(o_ptr) || !object_known_p(j_ptr)) return (FALSE);
 
 			/* Fall through */
 		}
@@ -1240,12 +1239,12 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 			if (!object_known_p(o_ptr) &&
 				!(o_ptr->ident & (IDENT_SENSE) && o_ptr->discount == INSCRIP_AVERAGE))
 			{
-				return (0);
+				return (FALSE);
 			}
 			if (!object_known_p(j_ptr) &&
 				!(j_ptr->ident & (IDENT_SENSE) && j_ptr->discount == INSCRIP_AVERAGE))
 			{
-				return (0);
+				return (FALSE);
 			}
 
 			/* Fall through */
@@ -1257,7 +1256,7 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 		case TV_SHOT:
 		{
 			/* Require identical knowledge of both items */
-			if (object_known_p(o_ptr) != object_known_p(j_ptr)) return (0);
+			if (object_known_p(o_ptr) != object_known_p(j_ptr)) return (FALSE);
 
 			/* Require identical "bonuses" */
 			if (o_ptr->to_h != j_ptr->to_h) return (FALSE);
@@ -1292,7 +1291,7 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 		default:
 		{
 			/* Require knowledge */
-			if (!object_known_p(o_ptr) || !object_known_p(j_ptr)) return (0);
+			if (!object_known_p(o_ptr) || !object_known_p(j_ptr)) return (FALSE);
 
 			/* Probably okay */
 			break;
@@ -1304,7 +1303,7 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 	if (((o_ptr->ident & (IDENT_CURSED)) != (j_ptr->ident & (IDENT_CURSED))) ||
 	    ((o_ptr->ident & (IDENT_BROKEN)) != (j_ptr->ident & (IDENT_BROKEN))))
 	{
-		return (0);
+		return (FALSE);
 	}
 
 
@@ -1312,10 +1311,10 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 	if (o_ptr->note != j_ptr->note)
 	{
 		/* Normally require matching inscriptions */
-		if (!stack_force_notes) return (0);
+		if (!stack_force_notes) return (FALSE);
 
 		/* Never combine different inscriptions */
-		if (o_ptr->note && j_ptr->note) return (0);
+		if (o_ptr->note && j_ptr->note) return (FALSE);
 	}
 
 
@@ -1327,7 +1326,7 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 		    (j_ptr->discount >= INSCRIP_NULL))
 		{
 			/* Normally require matching inscriptions */
-			return (0);
+			return (FALSE);
 		}
 
 		/* One is a special inscription, one is a discount or nothing */
@@ -1335,23 +1334,23 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 		         (j_ptr->discount >= INSCRIP_NULL))
 		{
 			/* Normally require matching inscriptions */
-			if (!stack_force_notes) return (0);
+			if (!stack_force_notes) return (FALSE);
 
 			/* Hack -- Never merge a special inscription with a discount */
-			if ((o_ptr->discount > 0) && (j_ptr->discount > 0)) return (0);
+			if ((o_ptr->discount > 0) && (j_ptr->discount > 0)) return (FALSE);
 		}
 
 		/* One is a discount, one is a (different) discount or nothing */
 		else
 		{
 			/* Normally require matching discounts */
-			if (!stack_force_costs) return (0);
+			if (!stack_force_costs) return (FALSE);
 		}
 	}
 
 
 	/* Maximal "stacking" limit */
-	if (total >= MAX_STACK_SIZE) return (0);
+	if (total >= MAX_STACK_SIZE) return (FALSE);
 
 
 	/* They match, so they must be similar */
@@ -1447,9 +1446,9 @@ void object_copy(const object_type *o_ptr, object_type *j_ptr)
 	COPY(o_ptr, j_ptr, object_type);
 
 	if (o_ptr->name_suf)
-		j_ptr->name_suf = strtable_add(strtable_content(o_ptr->name_suf));
+		strtable_copy(o_ptr->name_suf, &j_ptr->name_suf);
 	if (o_ptr->name_pre)
-		j_ptr->name_pre = strtable_add(strtable_content(o_ptr->name_pre));
+		strtable_copy(o_ptr->name_pre, &j_ptr->name_pre);
 }
 
 

@@ -128,11 +128,6 @@ static cptr strtable__content[MAX_SIZE_STRTABLE];
  */
 static byte strtable__refcount[MAX_SIZE_STRTABLE];
 
-/*
- * The number of items in the table.
- */
-static u32b strtable__num = 0;
-
 
 /*
  * Find the first free index in strtable__content[].
@@ -144,10 +139,7 @@ static u32b strtable_locate_first_free(void)
 
 	for (i = 1; i < MAX_SIZE_STRTABLE; i++)
 	{
-		if (!strtable__refcount[i])
-		{
-			return (i);
-		}
+		if (!strtable__refcount[i]) return (i);
 	}
 
 	return (0);
@@ -180,7 +172,7 @@ u32b strtable_add(cptr text)
 	int free = 0;
 
 	/* First try and find an entry which is the same as "text" */
-	for (i = 1; i < strtable__num; i++)
+	for (i = 1; i < MAX_SIZE_STRTABLE; i++)
 	{
 		if (!strtable__refcount[i]) continue;
 
@@ -209,9 +201,6 @@ u32b strtable_add(cptr text)
 	/* Create a stable memory location */
 	strtable__content[free] = string_make(text);
 
-	/* One more */
-	strtable__num++;
-
 	/* Return the index to this string */
 	return (free);
 }
@@ -237,8 +226,6 @@ void strtable_remove(u32b idx)
 	{
 		string_free(strtable__content[idx]);
 
-		/* One less */
-		strtable__num--;
 	}
 
 	/* We are finished here. */
@@ -266,6 +253,25 @@ u32b strtable_modify(u32b idx, cptr text)
 }
 
 /*
+ * "Copy" from from to to.
+ */
+void strtable_copy(u32b from, u32b *to)
+{
+	/* Paranoia */
+	if (from >= MAX_SIZE_STRTABLE) return;
+	if (!strtable__refcount[from]) return;
+
+	/* Increase the refcount */
+	strtable__refcount[from]++;
+
+	/* "Copy" */
+	*to = from;
+
+	/* Done */
+	return;
+}
+
+/*
  * Initialise the table (set all memory to 0).
  *
  * Return FALSE if we fail.
@@ -289,5 +295,16 @@ bool strtable_init(void)
  */
 void strtable_cleanup(void)
 {
+	int i;
+
+	for (i = 0; i < MAX_SIZE_STRTABLE; i++)
+	{
+		if (strtable__refcount[i])
+		{
+			string_free(strtable__content[i]);
+			strtable__refcount[i] = 0;
+		}
+	}
+
 	return;
 }

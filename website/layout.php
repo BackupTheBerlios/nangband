@@ -22,6 +22,34 @@ function do_links()
 	return;
 }
 
+function do_styles($type)
+{
+	global $style;
+
+	if ($style != 'sidebar')
+	{
+		echo '<a href="?page='.$type.'&newstyle=sidebar">Sidebar-thing</a>';
+	}
+	else
+	{
+		echo 'Sidebar-thing';
+	}
+
+	echo ' | ';
+
+	if ($style != 'clean')
+	{
+		echo '<a href="?page='.$type.'&newstyle=clean">Clean</a>';
+	}
+	else
+	{
+		echo 'Clean';
+	}
+
+
+	return;
+}
+
 function page_header($title, $type)
 {
 	echo '<html>';
@@ -36,9 +64,13 @@ function page_header($title, $type)
 	echo '<table width="100%" align="center" callspacing="0" cellpadding="4" border="0">';
 	echo '<tr><td bgcolor="#eeeeee" align="center"><font face="Veranda" color="#555555" size="+2">';
 
-	echo '<b>Nangband - '.$title.'</b></font>';
+	echo '<b>nangband - '.$title.'</b></font>';
 
 	echo '<br>';
+	echo '<font face="Verdana" size="-1" color="#555555">Change style: ';
+	do_styles($type);
+	echo '</font>';
+
 	echo '<font face="Veranda" color="#555555">';
 	do_links();
 	echo '</font>';

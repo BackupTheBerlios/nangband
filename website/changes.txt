@@ -12,3 +12,5 @@ Nangband Website changelog
 - Changed a minor detail - I didn't mention that the daily compiles were
   Windows ports. (takkaria)
 - Added a script to upload the latest CVS to the webserver. (takkaria)
+- Started adding the basics of "themeability" at the user's end
+  for the site.  Silly, but never mind.  (takkaria)

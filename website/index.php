@@ -6,12 +6,6 @@
 //                                   //
 ///////////////////////////////////////
 
-// Silly.
-$access = 'arnold';
-
-// Include the general layout functions
-include('layout.php');
-
 // Ensure we don't have rubbish
 if ((($page != 'main') &&
      ($page != 'changes') &&
@@ -21,6 +15,29 @@ if ((($page != 'main') &&
 {
 	$page = 'main';
 }
+
+// Check on the setting styles
+if (($newstyle == 'sidebar') ||
+    ($newstyle == 'clean'))
+{
+	setcookie("style", $newstyle)
+	$style = $newstyle;
+}
+
+// Check on "current" styles
+if ((($style != 'sidebar') &&
+     ($style != 'clean')) ||
+     (!$style))
+{
+	$style = 'clean';
+}
+
+
+// Silly.
+$access = 'arnold';
+
+// Include the general layout functions
+include('layout.php');
 
 // Come up with a page "title"
 switch ($page)
@@ -47,7 +64,7 @@ if ($redirect)
 else
 {
 	// Output the header
-	page_header($title, $page);
+	page_header($title, $page, $pagestyle);
 
 	// Include the data
 	include($page);

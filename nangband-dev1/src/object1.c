@@ -2470,8 +2470,8 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 				iter++;
 
 				/* Set the correct values */
-				if (current_stat+1 < (A_MAX)) current_stat++;
-				else break;
+				if (current_stat+1 != (A_MAX)) current_stat++;
+				else { current_stat++; break; }
 			}
 			while (stat[current_stat].bonus == stat[current_stat+1].bonus);
 

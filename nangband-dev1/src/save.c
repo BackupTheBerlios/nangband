@@ -129,7 +129,7 @@ static u32b savefile_blocksize;  /* Current block's size */
 static u32b savefile_blockused;  /* The amount of the block that has been used */
 
 /* Hack - Counter */
-int note_cur = 0;
+int note_cur = 1;
 
 /*
  * Show information on the screen, one line at a time.
@@ -1321,7 +1321,7 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 				tmp16u = (cave_info[y][x] & (IMPORTANT_FLAGS));
 
 				/* If the run is broken, or too full, flush it */
-				if ((tmp16u != prev_char) || (count == MAX_UCHAR))
+				if ((tmp16u != prev_char) || (count == (MAX_UCHAR * 2)))
 				{
 					savefile_do_u16b(&count, type);
 					savefile_do_u16b(&prev_char, type);
@@ -1426,7 +1426,7 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		for (x = y = 0; y < DUNGEON_HGT; )
 		{
 			/* Grab RLE info */
-			savefile_do_u16b(&count, type);
+			savefile_do_byte((byte *) &count, type);
 			savefile_do_byte(&tmp8u, type);
 
 			/* Apply the RLE info */
@@ -1458,13 +1458,12 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		compact_monsters(0);
 	}
 
-
 	/* Place player in dungeon if we are loading */
 	if (type == GET)
 	{
 		if (!player_place(py, px))
 		{
-			note(format("Cannot place player (%d,%d)!", py, px), type);
+			note(format("Cannot place player at (%d, %d)!", py, px), type);
 			return (-1);
 		}
 	}

@@ -6,7 +6,8 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
 - Fiddled around with the cygwin and "standard" makefiles - they are
   (should be) much smaller in file size. (takkaria)
 - Fixed a compiler warning in util.c. (takkaria)
-- Made cave_info a u16b for pelpel to do some UI stuff. (takkaria)
+- Made cave_info a u16b array (from a byte array) for pelpel to do
+  some UI stuff - also changed savefile code appropriately. (takkaria)
 - Fix for the Half-Troll & Elf races; they were broken.  Many thanks
   to Mogami! (takkaria)
 

@@ -39,15 +39,14 @@ h1
 
 a
 {
-  text-decoration: none;
-  color: #000000;
-  font-weight: bold;
-  border: thin none;
+	color: #3399FF;
+	font-weight: normal;
+	text-decoration : none;
 }
 
 a:hover
 {
-	color : #3399FF;
+	font-style : italic;
 }
 
 hr

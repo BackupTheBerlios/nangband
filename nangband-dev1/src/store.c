@@ -1404,7 +1404,7 @@ static void display_entry(int item, int row)
  *
  * All prices are listed as "per individual object"
  */
-static void display_inventory(void)
+static void display_inventory(s16b item)
 {
 	int i, k;
 
@@ -1414,8 +1414,16 @@ static void display_inventory(void)
 		/* Stop when we run out of items */
 		if (top_item + k >= st_ptr->stock_num) break;
 
-		/* Display that line */
-		display_entry(top_item + k, 6 + k);
+		if ((item == -1) || (top_item + k == item))
+		{
+			/* Display that line */
+			display_entry(top_item + k, 6 + k);
+		}
+
+		if (top_item + k == item)
+		{
+			return;
+		}
 	}
 
 	/* Erase the extra lines and the "more" prompt */
@@ -1505,7 +1513,7 @@ static void display_store(void)
 	}
 
 	/* Draw in the inventory */
-	display_inventory();
+	display_inventory(-1);
 
 	/* Display the current gold */
 	store_prt_gold();
@@ -2458,7 +2466,7 @@ static void store_purchase(void)
 					top_item = 0;
 
 					/* Redraw everything */
-					display_inventory();
+					display_inventory(-1);
 				}
 
 				/* The object is gone */
@@ -2471,14 +2479,14 @@ static void store_purchase(void)
 					}
 
 					/* Redraw everything */
-					display_inventory();
+					display_inventory(-1);
 				}
 
 				/* The object is still here */
 				else
 				{
-					/* Redraw everything */
-					display_inventory();
+					/* Redraw the object */
+					display_inventory(item);
 				}
 			}
 
@@ -2535,14 +2543,14 @@ static void store_purchase(void)
 			}
 
 			/* Redraw everything */
-			display_inventory();
+			display_inventory(-1);
 		}
 
 		/* The object is still here */
 		else
 		{
-			/* Redraw the everything */
-			display_inventory();
+			/* Redraw the item */
+			display_inventory(item);
 		}
 	}
 
@@ -2737,7 +2745,7 @@ static void store_sell(void)
 			if (item_pos >= 0)
 			{
 				/* Redisplay wares */
-				display_inventory();
+				display_inventory(-1);
 			}
 		}
 	}
@@ -2768,7 +2776,7 @@ static void store_sell(void)
 		if (item_pos >= 0)
 		{
 			/* Redisplay wares */
-			display_inventory();
+			display_inventory(-1);
 		}
 	}
 }
@@ -2890,7 +2898,7 @@ static void store_process_command(void)
 				top_item = 0;
 			}
 
-			display_inventory();
+			display_inventory(-1);
 
 			break;
 		}
@@ -2913,7 +2921,7 @@ static void store_process_command(void)
 				top_item = st_ptr->stock_num - 1;
 			}
 
-			display_inventory();
+			display_inventory(-1);
 
 			break;
 		}
@@ -2936,7 +2944,7 @@ static void store_process_command(void)
 				top_item = 0;
 			}
 
-			display_inventory();
+			display_inventory(-1);
 
 			break;
 		}
@@ -3294,7 +3302,7 @@ void do_cmd_store(void)
 				if (item_pos >= 0)
 				{
 					/* Redisplay wares */
-					display_inventory();
+					display_inventory(-1);
 				}
 			}
 		}

@@ -1196,7 +1196,7 @@ static void store_create(void)
 		object_prep(i_ptr, k_idx);
 
 		/* Apply some "low-level" magic (no artifacts) */
-		apply_magic(i_ptr, level, FALSE, FALSE, FALSE);
+		apply_magic(i_ptr, level, FALSE, FALSE, FALSE, FALSE);
 
 		/* Hack -- Charge lights */
 		if (i_ptr->tval == TV_LIGHT)
@@ -1208,6 +1208,10 @@ static void store_create(void)
 
 		/* The object is "known" */
 		object_known(i_ptr);
+
+		/* The object is *identified* if needed */
+		if (i_ptr->xtra1 || i_ptr->name3)
+			i_ptr->ident |= IDENT_MENTAL;
 
 		/* Mega-Hack -- no chests in stores */
 		if (i_ptr->tval == TV_CHEST) continue;

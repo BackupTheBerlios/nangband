@@ -1266,8 +1266,8 @@
 /* The sval codes for TV_RING */
 #define SV_RING_WOE				0
 #define SV_RING_AGGRAVATION		1
-#define SV_RING_WEAKNESS		2
-#define SV_RING_STUPIDITY		3
+#define SV_RING_RESISTANCE		2
+#define SV_RING_XXX2		3
 #define SV_RING_TELEPORTATION	4
 /* xxx */
 #define SV_RING_SLOW_DIGESTION	6
@@ -1303,7 +1303,11 @@
 #define SV_RING_VILYA			36
 #define SV_RING_POWER			37
 #define SV_RING_LIGHTNING		38
-
+#define SV_RING_MASTERY			39
+#define SV_RING_METEORS			40
+#define SV_RING_ELEMENTS		41 /* The Ring of Elemental Mastery */
+#define SV_RING_ELVENKIND		42
+#define SV_RING_DWARROWKIND		43
 
 /* The "sval" codes for TV_STAFF */
 #define SV_STAFF_DARKNESS		0

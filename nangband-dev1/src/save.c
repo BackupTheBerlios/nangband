@@ -1241,16 +1241,10 @@ static errr savefile_do_block_randarts(bool type, int ver)
 		savefile_do_byte(&a_ptr->level, type);
 		savefile_do_byte(&a_ptr->rarity, type);
 
-		/* Activation, timeout and randtime (?) */
+		/* Activation, timeout and randtime */
 		savefile_do_byte(&a_ptr->activation, type);
 		savefile_do_u16b(&a_ptr->time, type);
 		savefile_do_u16b(&a_ptr->randtime, type);
-	}
-
-	if (type == GET)
-	{
-		/* Initialize only the randart names */
-		do_randart(seed_randart, FALSE);
 	}
 
 	/* We are done. */

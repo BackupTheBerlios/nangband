@@ -1239,6 +1239,9 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 			/* Require identical "ego-item" names */
 			if (o_ptr->name2 != j_ptr->name2) return (FALSE);
 
+			/* Require identical "randart" names */
+			if (o_ptr->name3 != j_ptr->name3) return (FALSE);
+
 			/* Hack -- Never stack "powerful" items */
 			if (o_ptr->xtra1 || j_ptr->xtra1) return (FALSE);
 
@@ -1579,9 +1582,9 @@ static void object_mention(const object_type *o_ptr)
  * If no legal ego item is found, this routine returns 0, resulting in
  * an unenchanted item.
  */
-static int make_ego_item(object_type *o_ptr, bool only_good)
+bool make_ego_item(object_type *o_ptr, bool cursed, int level)
 {
-	int i, j, level;
+	int i, j;
 
 	int e_idx;
 
@@ -1591,12 +1594,13 @@ static int make_ego_item(object_type *o_ptr, bool only_good)
 
 	alloc_entry *table = alloc_ego_table;
 
-
 	/* Fail if object already is ego or artifact */
 	if (o_ptr->name1) return (FALSE);
 	if (o_ptr->name2) return (FALSE);
+	if (o_ptr->name3) return (FALSE);
 
-	level = object_level;
+	/* Gratuitous hack: fail DSM */
+	if (o_ptr->tval == TV_DRAG_ARMOR) return (FALSE);
 
 	/* Boost level (like with object base types) */
 	if (level > 0)
@@ -1627,8 +1631,9 @@ static int make_ego_item(object_type *o_ptr, bool only_good)
 		/* Get the actual kind */
 		e_ptr = &e_info[e_idx];
 
-		/* If we force good/great, don't create cursed */
-		if (only_good && (e_ptr->flags3 & TR3_LIGHT_CURSE)) continue;
+		/* Test if this is a possible ego-item for value of (cursed) */
+		if (!cursed && (e_ptr->flags3 & TR3_LIGHT_CURSE)) continue;
+		if (cursed && !(e_ptr->flags3 & TR3_LIGHT_CURSE)) continue;
 
 		/* Test if this is a legal ego-item type for this object */
 		for (j = 0; j < EGO_MAX_TVALS; j++)
@@ -2133,6 +2138,18 @@ static void a_m_aux_3(object_type *o_ptr, int level, int power)
 					break;
 				}
 
+				/* Mastery */
+				case SV_RING_MASTERY:
+				{
+					/* Stat bonus */
+					o_ptr->pval = 1 + m_bonus(5, level);
+
+					/* Bonus to armor class */
+					o_ptr->to_a = 5 + randint(5) + m_bonus(10, level);
+
+					break;
+				}
+
 				/* Ring of Speed! */
 				case SV_RING_SPEED:
 				{
@@ -2199,18 +2216,26 @@ static void a_m_aux_3(object_type *o_ptr, int level, int power)
 					break;
 				}
 
-				/* Weakness, Stupidity */
-				case SV_RING_WEAKNESS:
-				case SV_RING_STUPIDITY:
+				/* Ring of Teleportation */
+				case SV_RING_TELEPORTATION:
 				{
-					/* Broken */
-					o_ptr->ident |= (IDENT_BROKEN);
-
 					/* Cursed */
-					o_ptr->ident |= (IDENT_CURSED);
+					if (power < 0)
+					{
+						/* Cursed */
+						o_ptr->ident |= (IDENT_CURSED);
+					}
 
-					/* Penalize */
-					o_ptr->pval = 0 - (1 + m_bonus(5, level));
+					break;
+				}
+
+				/* Ring of Elvenkind/Dwarrowkind */
+				case SV_RING_ELVENKIND:
+				case SV_RING_DWARROWKIND:
+				{
+					o_ptr->pval = 1 + m_bonus(3, level);
+
+					/* Never cursed */
 
 					break;
 				}
@@ -2560,9 +2585,9 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power)
  * "good" and "great" arguments are false.  Objects which are forced "great"
  * get three extra "attempts" to become an artifact.
  */
-void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
+void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, bool force_randart)
 {
-	int i, rolls, f1, f2, power;
+	int i, rolls, f1, f2, f3, power;
 
 
 	/* Maximum "level" for various things */
@@ -2581,6 +2606,11 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 	/* Maximal chance of being "great" */
 	if (f2 > 20) f2 = 20;
 
+	/* Base chance of being "randart" */
+	f3 = f1 / 5;
+
+	/* Maximal chance of being "randart" */
+	if (f3 > 10) f3 = 10;
 
 	/* Assume normal */
 	power = 0;
@@ -2592,7 +2622,13 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		power = 1;
 
 		/* Roll for "great" */
-		if (great || (rand_int(100) < f2)) power = 2;
+		if (great || (rand_int(100) < f2)) 
+		{
+			power = 2;
+
+			/* Roll for "randart" */
+			if (force_randart || (rand_int(100) < f3)) power = 3;
+		}
 	}
 
 	/* Roll for "cursed" */
@@ -2602,7 +2638,13 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		power = -1;
 
 		/* Roll for "broken" */
-		if (rand_int(100) < f2) power = -2;
+		if (rand_int(100) < f2) 
+		{
+			power = -2;
+
+			/* Roll for "terrible */
+			if (rand_int(100) < f3) power = -3;
+		}
 	}
 
 	/* Assume no rolls */
@@ -2613,6 +2655,9 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 
 	/* Get four rolls if forced great */
 	if (great) rolls = 4;
+
+	/* Randarts don't get rolls */
+	if (power >= 3) rolls = 0;
 
 	/* Get no rolls if not allowed */
 	if (!okay || o_ptr->name1) rolls = 0;
@@ -2674,17 +2719,21 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		case TV_POLEARM:
 		case TV_SWORD:
 		case TV_BOW:
+		{
+			if (power) a_m_aux_1(o_ptr, lev, power);
+/*			if (power > 2 || power < -2)
+ $%^&				make_randart(o_ptr, (bool)((power < 0) ? TRUE : FALSE));
+			else */ if (power > 1 || power < -1)
+				(void)make_ego_item(o_ptr, (bool)((power < 0) ? TRUE : FALSE), p_ptr->depth);
+			break;
+		}
 		case TV_SHOT:
 		case TV_ARROW:
 		case TV_BOLT:
 		{
 			if ((power > 1) || (power < -1))
 			{
-				int ego_power;
-
-				ego_power = make_ego_item(o_ptr, (bool)(good || great));
-
-				if (ego_power) power = ego_power;
+				(void)make_ego_item(o_ptr, (bool)((power < 0) ? TRUE : FALSE), p_ptr->depth);
 			}
 
 			if (power) a_m_aux_1(o_ptr, lev, power);
@@ -2703,16 +2752,12 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		case TV_BOOTS:
 		case TV_BELT:
 		{
-			if ((power > 1) || (power < -1))
-			{
-				int ego_power;
-
-				ego_power = make_ego_item(o_ptr, (bool)(good || great));
-
-				if (ego_power) power = ego_power;
-			}
-
 			if (power) a_m_aux_2(o_ptr, lev, power);
+
+/*			if (power > 2 || power < -2)
+ $%^&				make_randart(o_ptr, (bool)((power < 0) ? TRUE : FALSE));
+			else */ if (power > 1 || power < -1)
+				(void)make_ego_item(o_ptr, (bool)((power < 0) ? TRUE : FALSE), p_ptr->depth);
 
 			break;
 		}
@@ -2742,21 +2787,6 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		if (e_ptr->xtra)
 		{
 			o_ptr->xtra1 = e_ptr->xtra;
-
-			switch (o_ptr->xtra1)
-			{
-				case OBJECT_XTRA_TYPE_SUSTAIN:
-				{
-					o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_SUSTAIN);
-					break;
-				}
-
-				case OBJECT_XTRA_TYPE_POWER:
-				{
-					o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_POWER);
-					break;
-				}
-			}
 		}
 
 		/* Hack -- acquire "broken" flag */
@@ -2768,19 +2798,19 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		/* Hack -- apply extra penalties if needed */
 		if (cursed_p(o_ptr) || broken_p(o_ptr))
 		{
-            int i;
+			int i;
             
 			/* Hack -- obtain bonuses */
 			if (e_ptr->max_to_h > 0) o_ptr->to_h -= randint(e_ptr->max_to_h);
 			if (e_ptr->max_to_d > 0) o_ptr->to_d -= randint(e_ptr->max_to_d);
 			if (e_ptr->max_to_a > 0) o_ptr->to_a -= randint(e_ptr->max_to_a);
 
-            /* Hack -- obtain stat bonuses */
-            for (i = 0; i < A_MAX; i++)
-            {
-                if (e_ptr->stat_mods[i] > 0) o_ptr->stat_mods[i] -= randint(e_ptr->stat_mods[i]);
-            }
-            
+			/* Hack -- obtain stat bonuses */
+			for (i = 0; i < A_MAX; i++)
+			{
+				if (e_ptr->stat_mods[i] > 0) o_ptr->stat_mods[i] -= randint(e_ptr->stat_mods[i]);
+			}
+    
 			/* Hack -- obtain pval */
 			if (e_ptr->max_pval > 0) o_ptr->pval -= randint(e_ptr->max_pval);
 		}
@@ -2815,11 +2845,47 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		return;
 	}
 
+ 
+	/* Hack -- analyze artifacts */
+	if (o_ptr->name3)
+	{
+		randart_type *x_ptr = &x_info[o_ptr->name3];
+
+		/* Hack -- extract the "broken" flag */
+		if (!x_ptr->cost) o_ptr->ident |= (IDENT_BROKEN);
+
+		/* Hack -- extract the "cursed" flag */
+		if (x_ptr->flags3 & (TR3_LIGHT_CURSE)) o_ptr->ident |= (IDENT_CURSED);
+
+		/* Mega-Hack -- increase the rating */
+		rating += 10;
+
+		/* Mega-Hack -- increase the rating again */
+		if (x_ptr->cost > 50000L) rating += 10;
+
+		/* Cheat -- peek at the item */
+		if (cheat_peek) object_mention(o_ptr);
+
+		/* Done */
+		return;
+	}
 
 	/* Examine real objects */
 	if (o_ptr->k_idx)
 	{
 		object_kind *k_ptr = &k_info[o_ptr->k_idx];
+
+		/* Total hack - examine rings of mastery */
+		if (o_ptr->tval == TV_RING && o_ptr->sval == SV_RING_MASTERY)
+		{
+			o_ptr->xtra1 = OBJECT_XTRA_TYPE_POWER;
+		}
+
+		/* Total hack - examine amulets of the magi */
+		if (o_ptr->tval == TV_AMULET && o_ptr->sval == SV_AMULET_THE_MAGI)
+		{
+			o_ptr->xtra1 = OBJECT_XTRA_TYPE_POWER;
+		}
 
 		/* Hack -- acquire "broken" flag */
 		if (!k_ptr->cost) o_ptr->ident |= (IDENT_BROKEN);
@@ -2827,6 +2893,28 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great)
 		/* Hack -- acquire "cursed" flag */
 		if (k_ptr->flags3 & (TR3_LIGHT_CURSE)) o_ptr->ident |= (IDENT_CURSED);
 	}
+
+	/* Handle special powers */
+	if (o_ptr->xtra1)
+	{
+		switch (o_ptr->xtra1)
+		{
+			case OBJECT_XTRA_TYPE_SUSTAIN:
+			{
+				o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_SUSTAIN);
+				break;
+			}
+
+			case OBJECT_XTRA_TYPE_POWER:
+			{
+				o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_POWER);
+				break;
+			}
+		}
+	}
+
+	/* We are done. */
+	return;
 }
 
 
@@ -2922,7 +3010,7 @@ static bool kind_is_good(int k_idx)
  *
  * We assume that the given object has been "wiped".
  */
-bool make_object(object_type *j_ptr, bool good, bool great)
+bool make_object(object_type *j_ptr, bool good, bool great, bool force_randart)
 {
 	int prob, base;
 
@@ -2935,7 +3023,7 @@ bool make_object(object_type *j_ptr, bool good, bool great)
 
 
 	/* Generate a special artifact, or a normal object */
-	if ((rand_int(prob) != 0) || !make_artifact_special(j_ptr))
+	if (force_randart || (rand_int(prob) != 0) || !make_artifact_special(j_ptr))
 	{
 		int k_idx;
 
@@ -2970,7 +3058,7 @@ bool make_object(object_type *j_ptr, bool good, bool great)
 	}
 
 	/* Apply magic (allow artifacts) */
-	apply_magic(j_ptr, object_level, TRUE, good, great);
+	apply_magic(j_ptr, object_level, TRUE, good, great, force_randart);
 
 	/* Hack -- generate multiple spikes/missiles */
 	switch (j_ptr->tval)
@@ -3364,7 +3452,7 @@ void acquirement(int y1, int x1, int num, bool great)
 		object_wipe(i_ptr);
 
 		/* Make a good (or great) object (if possible) */
-		if (!make_object(i_ptr, TRUE, great)) continue;
+		if (!make_object(i_ptr, TRUE, great, FALSE)) continue;
 
 		/* Drop the object */
 		drop_near(i_ptr, -1, y1, x1);
@@ -3393,7 +3481,7 @@ void place_object(int y, int x, bool good, bool great)
 	object_wipe(i_ptr);
 
 	/* Make an object (if possible) */
-	if (make_object(i_ptr, good, great))
+	if (make_object(i_ptr, good, great, FALSE))
 	{
 		/* Give it to the floor */
 		if (!floor_carry(y, x, i_ptr))

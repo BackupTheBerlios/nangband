@@ -627,21 +627,28 @@ static void wiz_reroll_item(object_type *o_ptr)
 		else if (ch == 'n' || ch == 'N')
 		{
 			object_prep(i_ptr, o_ptr->k_idx);
-			apply_magic(i_ptr, p_ptr->depth, FALSE, FALSE, FALSE);
+			apply_magic(i_ptr, p_ptr->depth, FALSE, FALSE, FALSE, FALSE);
 		}
 
 		/* Apply good magic, but first clear object */
 		else if (ch == 'g' || ch == 'g')
 		{
 			object_prep(i_ptr, o_ptr->k_idx);
-			apply_magic(i_ptr, p_ptr->depth, FALSE, TRUE, FALSE);
+			apply_magic(i_ptr, p_ptr->depth, FALSE, TRUE, FALSE, FALSE);
 		}
 
 		/* Apply great magic, but first clear object */
 		else if (ch == 'e' || ch == 'e')
 		{
 			object_prep(i_ptr, o_ptr->k_idx);
-			apply_magic(i_ptr, p_ptr->depth, FALSE, TRUE, TRUE);
+			apply_magic(i_ptr, p_ptr->depth, FALSE, TRUE, TRUE, FALSE);
+		}
+
+		/* Apply randarism, but first clear object */
+		else if (ch == 'r' || ch == 'r')
+		{
+			object_prep(i_ptr, o_ptr->k_idx);
+			apply_magic(i_ptr, p_ptr->depth, FALSE, TRUE, TRUE, TRUE);
 		}
 	}
 
@@ -783,12 +790,10 @@ static void wiz_statistics(object_type *o_ptr)
 			object_wipe(i_ptr);
 
 			/* Create an object */
-			make_object(i_ptr, good, great);
-
+			make_object(i_ptr, good, great, FALSE);
 
 			/* Mega-Hack -- allow multiple artifacts XXX XXX XXX */
 			if (artifact_p(i_ptr)) a_info[i_ptr->name1].cur_num = 0;
-
 
 			/* Test for the same tval and sval. */
 			if ((o_ptr->tval) != (i_ptr->tval)) continue;
@@ -1044,7 +1049,7 @@ static void wiz_create_item(void)
 	object_prep(i_ptr, k_idx);
 
 	/* Apply magic (no messages, no artifacts) */
-	apply_magic(i_ptr, p_ptr->depth, FALSE, FALSE, FALSE);
+	apply_magic(i_ptr, p_ptr->depth, FALSE, FALSE, FALSE, FALSE);
 
 	/* Drop the object from heaven */
 	drop_near(i_ptr, -1, py, px);

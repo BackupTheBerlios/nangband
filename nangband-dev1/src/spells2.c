@@ -1510,13 +1510,105 @@ bool enchant(object_type *o_ptr, int n, int eflag)
 }
 
 
+static bool brand_spell(object_type *o_ptr)
+{
+	object_kind *k_ptr = &k_info[o_ptr->k_idx];
+	ego_item_type *e_ptr;
+	int prob;
+
+	/* Some items can't be branded */
+	if (artifact_p(o_ptr) || ego_item_p(o_ptr) ||
+	    cursed_p(o_ptr) || broken_p(o_ptr))
+	{
+		return (FALSE);
+	}
+
+#if 0
+	/* DSM can't be branded, either */
+	if (o_ptr->tval == TV_DRAG_ARMOR)
+	{
+		return (FALSE);
+	}
+#else
+
+	/* DSM resists enchantment a lot */
+	if (o_ptr->tval == TV_DRAG_ARMOR && rand_int(20) != 0)
+		return (FALSE);
+#endif
+
+	/* Large piles resist enchantment */
+	prob = o_ptr->number * 100;
+
+	/* Missiles are easy to enchant */
+	if ((o_ptr->tval == TV_BOLT) ||
+	    (o_ptr->tval == TV_ARROW) ||
+	    (o_ptr->tval == TV_SHOT))
+	{
+		prob = prob / 20;
+	}
+
+	/* Roll for pile resistance */
+	if (prob > 100 && rand_int(prob) >= 100) return (FALSE);
+
+	/* High level objects "resist" enchantment */
+	if (rand_int(k_ptr->level) >= 10 && rand_int(k_ptr->level) >= 10)
+		return (FALSE);
+
+	/* Enchantment occasionally fails even for normal items */
+	if (rand_int(100) < 15)
+		return (FALSE);
+
+	if (!make_ego_item(o_ptr, FALSE, k_ptr->level + randint(40)))
+		return (FALSE);
+
+	e_ptr = &e_info[o_ptr->name2];
+
+	/* Extra powers */
+	if (e_ptr->xtra)
+	{
+		o_ptr->xtra1 = e_ptr->xtra;
+	}
+
+	/* Hack -- obtain pval */
+	if (e_ptr->max_pval > 0) o_ptr->pval += randint(e_ptr->max_pval);
+
+	/* Add to-hit, to-dam and to-ac */
+	if (e_ptr->max_to_a > 0) o_ptr->to_a += randint(e_ptr->max_to_a);
+	if (e_ptr->max_to_h > 0) o_ptr->to_h += randint(e_ptr->max_to_h);
+	if (e_ptr->max_to_d > 0) o_ptr->to_d += randint(e_ptr->max_to_d);
+
+	/* Handle special powers */
+	if (o_ptr->xtra1)
+	{
+
+		switch (o_ptr->xtra1)
+		{
+			case OBJECT_XTRA_TYPE_SUSTAIN:
+			{
+				o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_SUSTAIN);
+				break;
+			}
+
+			case OBJECT_XTRA_TYPE_POWER:
+			{
+				o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_POWER);
+
+				break;
+			}
+		}
+	}
+
+
+	return (TRUE);
+}
+
 
 /*
  * Enchant an item (in the inventory or on the floor)
  * Note that "num_ac" requires armour, else weapon
  * Returns TRUE if attempted, FALSE if cancelled
  */
-bool enchant_spell(int num_hit, int num_dam, int num_ac)
+bool enchant_spell(int num_hit, int num_dam, int num_ac, bool ego)
 {
 	int item;
 	bool okay = FALSE;
@@ -1564,6 +1656,12 @@ bool enchant_spell(int num_hit, int num_dam, int num_ac)
 	if (enchant(o_ptr, num_hit, ENCH_TOHIT)) okay = TRUE;
 	if (enchant(o_ptr, num_dam, ENCH_TODAM)) okay = TRUE;
 	if (enchant(o_ptr, num_ac, ENCH_TOAC)) okay = TRUE;
+
+	/* Try to brand */
+	if (ego)
+	{
+		if (brand_spell(o_ptr)) okay = TRUE;
+	}
 
 	/* Failure */
 	if (!okay)

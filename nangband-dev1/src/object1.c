@@ -1272,6 +1272,15 @@ flavor_info[k_ptr->flavor].text; */
 			object_desc_str_macro(t, (a_name + a_ptr->name));
 		}
 
+		/* Grab any randart names */
+		else if (o_ptr->name3)
+		{
+			randart_type *x_ptr = &x_info[o_ptr->name3];
+
+			object_desc_chr_macro(t, ' ');
+			object_desc_str_macro(t, x_ptr->name);
+		}
+
 		/* Grab any ego-item name */
 		else if (o_ptr->name2)
 		{

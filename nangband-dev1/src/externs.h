@@ -70,10 +70,6 @@ extern byte version_major;
 extern byte version_minor;
 extern byte version_patch;
 extern byte version_extra;
-extern byte sf_major;
-extern byte sf_minor;
-extern byte sf_patch;
-extern byte sf_extra;
 extern bool arg_fiddle;
 extern bool arg_wizard;
 extern bool arg_sound;
@@ -498,8 +494,8 @@ extern s16b lookup_kind(int tval, int sval);
 extern void object_wipe(object_type *o_ptr);
 extern void object_copy(object_type *o_ptr, const object_type *j_ptr);
 extern void object_prep(object_type *o_ptr, int k_idx);
-extern void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great);
-extern bool make_object(object_type *j_ptr, bool good, bool great);
+extern void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, bool force_randart);
+extern bool make_object(object_type *j_ptr, bool good, bool great, bool force_randart);
 extern bool make_gold(object_type *j_ptr);
 extern s16b floor_carry(int y, int x, object_type *j_ptr);
 extern void drop_near(object_type *j_ptr, int chance, int y, int x);
@@ -529,6 +525,12 @@ extern s16b spell_chance(int spell);
 extern bool spell_okay(int spell, bool known);
 extern void print_spells(const byte *spells, int num, int y, int x);
 extern void display_koff(int k_idx);
+extern bool make_ego_item(object_type *o_ptr, bool cursed, int level);
+
+/* randart.c */
+// extern s32b artifact_power(object_type *o_ptr);
+extern bool make_randart_stupid(object_type *o_ptr);
+extern bool make_randart(object_type *o_ptr, bool curse);
 
 /* save.c */
 extern bool save_game(void);
@@ -577,7 +579,7 @@ extern bool detect_monsters_evil(void);
 extern bool detect_all(void);
 extern void stair_creation(void);
 extern bool enchant(object_type *o_ptr, int n, int eflag);
-extern bool enchant_spell(int num_hit, int num_dam, int num_ac);
+extern bool enchant_spell(int num_hit, int num_dam, int num_ac, bool ego);
 extern bool ident_spell(void);
 extern bool identify_fully(void);
 extern bool recharge(int num);
@@ -590,6 +592,7 @@ extern bool dispel_undead(int dam);
 extern bool dispel_evil(int dam);
 extern bool dispel_monsters(int dam);
 extern void aggravate_monsters(int who);
+extern void wake_monsters(int who);
 extern bool genocide(void);
 extern bool mass_genocide(void);
 extern bool probing(void);
@@ -600,6 +603,7 @@ extern void unlight_room(int y1, int x1);
 extern bool light_area(int dam, int rad);
 extern bool unlight_area(int dam, int rad);
 extern bool fire_ball(int typ, int dir, int dam, int rad);
+extern bool fire_meteor(int typ, int dir, int dam, int rad, int scatter, int num);
 extern bool fire_swarm(int num, int typ, int dir, int dam, int rad);
 extern bool fire_bolt(int typ, int dir, int dam);
 extern bool fire_beam(int typ, int dir, int dam);
@@ -805,9 +809,3 @@ extern void repeat_check(void);
 /* object1.c */
 extern void show_floor(const int *floor_list, int floor_num);
 #endif /* ALLOW_EASY_FLOOR */
-
-
-#ifdef GJW_RANDART
-/* randart.c */
-extern errr do_randart(u32b randart_seed, bool full);
-#endif /* GJW_RANDART */

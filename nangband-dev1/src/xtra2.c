@@ -1780,7 +1780,7 @@ void monster_death(int m_idx)
 		i_ptr->name1 = ART_GROND;
 
 		/* Mega-Hack -- Actually create "Grond" */
-		apply_magic(i_ptr, -1, TRUE, TRUE, TRUE);
+		apply_magic(i_ptr, -1, TRUE, TRUE, TRUE, FALSE);
 
 		/* Drop it in the dungeon */
 		drop_near(i_ptr, -1, y, x);
@@ -1796,7 +1796,7 @@ void monster_death(int m_idx)
 		i_ptr->name1 = ART_MORGOTH;
 
 		/* Mega-Hack -- Actually create "Morgoth" */
-		apply_magic(i_ptr, -1, TRUE, TRUE, TRUE);
+		apply_magic(i_ptr, -1, TRUE, TRUE, TRUE, FALSE);
 
 		/* Drop it in the dungeon */
 		drop_near(i_ptr, -1, y, x);
@@ -1840,7 +1840,7 @@ void monster_death(int m_idx)
 		else
 		{
 			/* Make an object */
-			if (!make_object(i_ptr, good, great)) continue;
+			if (!make_object(i_ptr, good, great, FALSE)) continue;
 
 			/* Assume seen XXX XXX XXX */
 			dump_item++;

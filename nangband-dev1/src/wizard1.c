@@ -730,21 +730,6 @@ static void analyze_brand(const object_type *o_ptr, cptr *brand_list)
 
 
 /*
- * Note the resistances granted by an object
- */
-static void analyze_resist(const object_type *o_ptr, cptr *resist_list)
-{
-	byte resists[RES_MAX];
-
-	object_resists(o_ptr, resists);
-
-	/* [note to self - repair code] */
-
-	/* Terminate the description list */
-	*resist_list = NULL;
-}
-
-/*
  * Note which stats an object sustains
  */
 static void analyze_sustains(const object_type *o_ptr, cptr *sustain_list)

@@ -229,7 +229,7 @@ static void chest_death(int y, int x, s16b o_idx)
 		else
 		{
 			/* Make an object */
-			if (!make_object(i_ptr, FALSE, FALSE)) continue;
+			if (!make_object(i_ptr, FALSE, FALSE, FALSE)) continue;
 		}
 
 		/* Drop it in the dungeon */

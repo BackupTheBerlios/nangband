@@ -54,13 +54,7 @@ fi
 # Checks for the borg.
 AC_ARG_ENABLE(borg, [  --enable-borg           enable the borg])
 if test "X${enable_borg-no}" != Xno ; then
-  AC_DEFINE(ALLOW_BORG)
-fi
-
-# Checks for debugging mode
-AC_ARG_ENABLE(debug, [  --enable-debug          enable debugging mode])
-if test "X${enable_debug-no}" != Xno ; then
-  CFLAGS="$CFLAGS -g"
+  CFLAGS="$CFLAGS -DALLOW_BORG"
 fi
 
 # Checks for libraries.

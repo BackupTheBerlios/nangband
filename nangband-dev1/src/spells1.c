@@ -4171,7 +4171,7 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg)
 			x = gx[i];
 
 			/* Affect the feature in that grid */
-			if (project_f(who, dist, y, x, dam, typ, TRUE))
+			if (project_f(who, dist, y, x, dam, typ, (bool) TRUE))
 			{
 				notice = TRUE;
 			}

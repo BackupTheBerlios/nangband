@@ -2793,7 +2793,7 @@ void screen_load(void)
 void c_put_str(byte attr, cptr str, int row, int col)
 {
 	/* Position cursor, Dump the attr/text */
-	Term_putstr(col, row, -1, attr, str);
+	Term_putstr(col, row, -1, attr, (char *)str);
 }
 
 
@@ -2803,7 +2803,7 @@ void c_put_str(byte attr, cptr str, int row, int col)
 void put_str(cptr str, int row, int col)
 {
 	/* Spawn */
-	Term_putstr(col, row, -1, TERM_WHITE, str);
+	Term_putstr(col, row, -1, TERM_WHITE, (char *)str);
 }
 
 
@@ -2887,7 +2887,7 @@ void text_out_to_file(byte attr, cptr str)
 	/* Unused */
 	(void)attr;
 
-	/* Remember the indentation when starting a new line */
+	/* Remember the indentation when starting a ew line */
 	if (!roff_buf[0])
 	{
 		/* Count the leading spaces */
@@ -2899,18 +2899,23 @@ void text_out_to_file(byte attr, cptr str)
 	for (; *str; str++)
 	{
 		char ch = *str;
+
+		/* We always "wrap" on a newline character */
 		bool wrap = (ch == '\n');
 
 		/* Reset indentation after explicit wrap */
 		if (wrap) indent = 0;
 
+		/* If character is unprintable, replace it with a space */
 		if (!isprint(ch)) ch = ' ';
 
+		/* If the pointer is 75 or more characters "in", set wrap = TRUE */
 		if (roff_p >= roff_buf + 75) wrap = TRUE;
 
+		/* If we are at a space and close to the wrap point, wrap */
 		if ((ch == ' ') && (roff_p + 2 >= roff_buf + 75)) wrap = TRUE;
 
-		/* Handle line-wrap */
+		/* Handle line-wrap (ie. print the current line in full) */
 		if (wrap)
 		{
 			/* Terminate the current line */

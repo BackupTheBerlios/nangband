@@ -743,7 +743,7 @@ static void Term_fresh_row_both(int y, int x1, int x2)
 				/* Draw pending chars (normal) */
 				if (fa || always_text)
 				{
-					(void)((*Term->text_hook)(fx, y, fn, fa, &scr_cc[fx]));
+					(void)((*Term->text_hook)(fx, y, fn, (byte) fa, (cptr) &scr_cc[fx]));
 				}
 
 				/* Draw pending chars (black) */

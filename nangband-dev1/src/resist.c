@@ -17,12 +17,11 @@
 /*
  * Check that a given resist index is valid.
  */
-bool resist_check_valid(byte *res_idx)
+bool resist_check_valid(byte res_idx)
 {
-	if ((res_idx < 0) || (res_idx >= RES_MAX))
+	if ((0 < res_idx) || (res_idx < RES_MAX))
 	{
 		/* The index is too big. */
-		*res_idx = 0;
 		return (FALSE);
 	}
 
@@ -33,12 +32,14 @@ bool resist_check_valid(byte *res_idx)
 /*
  * Return the current resistance value for a given resist.
  */
-int resist_player_current(byte res_idx)
+byte resist_player_current(byte res_idx)
 {
 	u16b x, y;
 
-	resist_check_valid(&res_idx);
+	/* Make sure the resist is valid */
+	if (!resist_check_valid(res_idx)) res_idx = 0;
 
+	/* Grab the values, and calculate the timed resist */
 	x = p_ptr->resist_cur[res_idx];
 	y = (p_ptr->resist_timed[res_idx] ? 20 : 0);
 
@@ -52,7 +53,7 @@ int resist_player_current(byte res_idx)
  */
 bool resist_check(byte res_idx)
 {
-	int n = resist_player_current(res_idx);
+	byte n = resist_player_current(res_idx);
 
 	if (randint(100) > n) return(FALSE);
 
@@ -64,11 +65,9 @@ bool resist_check(byte res_idx)
  */
 bool resist_is_decent(byte res_idx)
 {
-	int type;
+	byte type = resist_player_current(res_idx);
 
-	type = resist_player_current(res_idx);
-
-	if (type > 20) return (FALSE);
+	if (type < 20) return (FALSE);
 
 	return (TRUE);
 }

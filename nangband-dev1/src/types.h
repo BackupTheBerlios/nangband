@@ -199,79 +199,90 @@ struct object_kind
 /*
  * Information about "artifacts".
  *
+ * Note that this structure is word-aligned, and newlines occur
+ * when words are made.
+ *
  * Note that the save-file only writes "cur_num" to the savefile.
  *
  * Note that "max_num" is always "1" (if that artifact "exists")
  */
 struct artifact_type
 {
-	u32b name;			/* Name (offset) */
-	u32b text;			/* Text (offset) */
+	u32b name;                        /* Name (offset) */
 
-	byte tval;			/* Artifact type */
-	byte sval;			/* Artifact sub type */
+	u32b text;                        /* Text (offset) */
 
-	s16b pval;			/* Artifact extra info */
+	byte tval;                        /* Artifact type */
+	byte sval;                        /* Artifact sub type */
+	s16b pval;                        /* Artifact extra info */
 
-	s16b to_h;			/* Bonus to hit */
-	s16b to_d;			/* Bonus to damage */
-	s16b to_a;			/* Bonus to armor */
+	s16b to_h;                        /* Bonus to hit */
+	s16b to_d;                        /* Bonus to damage */
 
-	s16b ac;			/* Base armor */
+	s16b to_a;                        /* Bonus to armor */
+	s16b ac;                          /* Base armor */
 
-	byte dd, ds;		/* Damage when hits */
+	byte dd, ds;                      /* Damage dice and sides */
+	s16b weight;                      /* Weight */
 
-	s16b weight;		/* Weight */
+	u32b flags1;                      /* Artifact Flags, set 1 */
 
-	s32b cost;			/* Artifact "cost" */
+	u32b flags2;                      /* Artifact Flags, set 2 */
 
-	u32b flags1;		/* Artifact Flags, set 1 */
-	u32b flags2;		/* Artifact Flags, set 2 */
-	u32b flags3;		/* Artifact Flags, set 3 */
+	u32b flags3;                      /* Artifact Flags, set 3 */
 
-	byte resists[RES_MAX];	/* Item resists */
+	byte resists[STRUCT_RES_MAX - 1]; /* Item resists */
+	byte activation;                  /* Activation to use */
 
-	byte level;			/* Artifact level */
-	byte rarity;		/* Artifact rarity */
+	byte level;                       /* Artifact level */
+	byte rarity;                      /* Artifact rarity */
+	byte cur_num;                     /* Number created (0 or 1) */
+	byte max_num;                     /* Unused (should be "1") */
 
-	byte cur_num;		/* Number created (0 or 1) */
-	byte max_num;		/* Unused (should be "1") */
+	u16b time;                        /* Activation time */
+	u16b randtime;                    /* Activation time dice */
 
-	byte activation;	/* Activation to use */
-	u16b time;			/* Activation time */
-	u16b randtime;		/* Activation time dice */
+	s32b cost;                        /* Artifact "cost" */
 };
 
 
 /*
  * Information about "ego-items".
+ *
+ * Note that this structure is word-aligned, and newlines occur
+ * when words are made.
  */
 struct ego_item_type
 {
 	u32b name;			/* Name (offset) */
+
 	u32b text;			/* Text (offset) */
 
 	byte rating;		/* Rating boost */
-
 	byte level;			/* Minimum level */
 	byte rarity;		/* Object rarity */
+	byte xtra;			/* Extra Sustain/Resist/Power */
+
 	s32b cost;			/* Cost */
 
 	byte tval[EGO_MAX_TVALS];		/* Legal tval */
+
 	byte min_sval[EGO_MAX_TVALS];	/* Minimum legal sval */
+
 	byte max_sval[EGO_MAX_TVALS];	/* Maximum legal tval */
 
-	byte xtra;			/* Extra Sustain/Resist/Power */
 	byte max_to_h;		/* Maximum to-hit bonus */
 	byte max_to_d;		/* Maximum to-dam bonus */
 	byte max_to_a;		/* Maximum to-ac bonus */
 	byte max_pval;		/* Maximum pval */
 
 	u32b flags1;		/* Ego-Item Flags, set 1 */
+
 	u32b flags2;		/* Ego-Item Flags, set 2 */
+
 	u32b flags3;		/* Ego-Item Flags, set 3 */
 
-	byte resists[RES_MAX];	/* Item resists */
+	byte resists[STRUCT_RES_MAX];	/* Item resists */
 };
 
 

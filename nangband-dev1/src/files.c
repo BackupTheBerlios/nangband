@@ -2112,7 +2112,7 @@ errr file_character(cptr name, bool full)
 	}
 
 	/* Open the non-existing file */
-	if (fd < 0) fff = my_fopen(buf, "w");
+	if (fd < 0) fff = my_fopen(buf, "wb+");
 
 
 	/* Invalid file */

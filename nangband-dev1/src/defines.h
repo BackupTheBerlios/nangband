@@ -258,6 +258,7 @@
  * Maximum resists
  */
 #define RES_MAX			14
+#define STRUCT_RES_MAX	16
 
 /*
  * Store constants

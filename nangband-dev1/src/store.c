@@ -1410,10 +1410,10 @@ static void display_inventory(void)
 	for (k = 0; k < 12; k++)
 	{
 		/* Stop when we run out of items */
-		if (display_entry + k >= st_ptr->stock_num) break;
+		if (display_position + k >= st_ptr->stock_num) break;
 
 		/* Display that line */
-		display_entry(display_entry + k, display_entry + 3);
+		display_entry(display_position + k, (display_position % 12) + 6 + k);
 	}
 
 	/* Erase the extra lines and the "more" prompt */
@@ -1423,10 +1423,10 @@ static void display_inventory(void)
 	put_str("        ", 5, 20);
 
 	/* Visual reminder of "more items" */
-	if (display_entry + k < st_ptr->stock_num)
+	if (display_position + k < st_ptr->stock_num)
 	{
 		/* Show "more" reminder (after the last object) */
-		prt("-more-", k + 6, 3);
+		c_prt(TERM_L_BLUE, "more >>", k + 6, 3);
 
 		/* Indicate the "current page" */
 		/* [note - add visual reminders] */
@@ -2870,6 +2870,36 @@ static void store_process_command(void)
 			break;
 		}
 
+		/* Increase the display counter */
+		case '2':
+		{
+			display_position++;
+
+			if (display_position > st_ptr->stock_num)
+			{
+				display_position = 0;
+			}
+
+			display_inventory();
+
+			break;
+		}
+
+		/* Decrease the display counter */
+		case '8':
+		{
+			display_position--;
+
+			if (display_position == -1)
+			{
+				display_position = st_ptr->stock_num;
+			}
+
+			display_inventory();
+
+			break;
+		}
+
 		/* Browse */
 		case ' ':
 		{
@@ -2877,34 +2907,19 @@ static void store_process_command(void)
 			{
 				/* Nothing to see */
 				msg_print("Entire inventory is shown.");
+
+				/* Don't continue */
+				break;
 			}
 
-			else if (display_position == 0)
+			display_position += 12;
+
+			if (display_position > st_ptr->stock_num)
 			{
-				/* Page 2 */
-				display_position = 12;
-
-				/* Redisplay wares */
-				display_inventory();
-			}
-
-			else if (display_position == 12)
-			{
-				/* Page 3 */
-				display_position = 24;
-
-				/* Redisplay wares */
-				display_inventory();
-			}
-
-			else
-			{
-				/* Page 1 */
 				display_position = 0;
-
-				/* Redisplay wares */
-				display_inventory();
 			}
+
+			display_inventory();
 
 			break;
 		}

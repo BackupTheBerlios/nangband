@@ -29,7 +29,7 @@ OBJS = \
   tables.o util.o variable.o \
   wizard1.o wizard2.o debug.o \
   xtra1.o xtra2.o \
-  z-term.o z-rand.o z-form.o z-virt.o z-util.o \
+  z-term.o z-rand.o z-form.o z-virt.o z-string.o \
   l-monst.o l-object.o l-player.o l-random.o l-ui.o l-misc.o l-spell.o script.o \
   use-obj.o \
   $(LUAOBJS)

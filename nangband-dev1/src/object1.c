@@ -440,13 +440,9 @@ static void object_stat_bonuses_aux(int mode, const object_type *o_ptr, sbyte *m
 			}
 		}
 
-		/* Bonuses granted by object_bonus structure */
-		if (o_ptr->bonuses)
+		for (n = 0; n < RES_MAX; n++)
 		{
-			for (n = 0; n < RES_MAX; n++)
-			{
-				mods[n] += o_ptr->bonuses->stats[n];
-			}
+			mods[n] += o_ptr->stats[n];
 		}
 	}
 
@@ -510,13 +506,9 @@ static void object_resists_aux(int mode, const object_type *o_ptr, byte *resists
 			}
 		}
 
-		/* Resists granted by object_bonus structure */
-		if (o_ptr->bonuses)
+		for (n = 0; n < RES_MAX; n++)
 		{
-			for (n = 0; n < RES_MAX; n++)
-			{
-				resists[n] += o_ptr->bonuses->resists[n];
-			}
+			resists[n] += o_ptr->resists[n];
 		}
 
 		/* Randart */
@@ -585,16 +577,6 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			(*f3) |= a_ptr->flags3;
 		}
 
-		/* Flags granted by object_bonus structure */
-		if (o_ptr->bonuses)
-		{
-			object_bonus *ob_ptr = o_ptr->bonuses;
-
-			(*f1) |= ob_ptr->flags1;
-			(*f2) |= ob_ptr->flags2;
-			(*f3) |= ob_ptr->flags3;
-		}
-
 		/* Randarts */
 		if (o_ptr->name3)
 		{
@@ -604,6 +586,10 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			(*f2) |= x_ptr->flags2;
 			(*f3) |= x_ptr->flags3;
 		}
+
+		(*f1) |= o_ptr->flags1;
+		(*f2) |= o_ptr->flags2;
+		(*f3) |= o_ptr->flags3;
 	}
 	else
 	{
@@ -613,8 +599,8 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			artifact_type *a_ptr = &a_info[o_ptr->name1];
 
 			/* Obvious flags (pval) */
-			(*f1) = (a_ptr->flags1 & (TR1_PVAL_MASK));
-			(*f3) = (a_ptr->flags3 & (TR3_IGNORE_MASK));
+			(*f1) |= (a_ptr->flags1 & (TR1_PVAL_MASK));
+			(*f3) |= (a_ptr->flags3 & (TR3_IGNORE_MASK));
 		}
 		
 		/* Obvious ego-item flags */
@@ -623,8 +609,8 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			ego_item_type *e_ptr = &e_info[o_ptr->name2];
 
 			/* Obvious flags (pval) */
-			(*f1) = (e_ptr->flags1 & (TR1_PVAL_MASK));
-			(*f3) = (e_ptr->flags3 & (TR3_IGNORE_MASK));
+			(*f1) |= (e_ptr->flags1 & (TR1_PVAL_MASK));
+			(*f3) |= (e_ptr->flags3 & (TR3_IGNORE_MASK));
 		}
 
 		/* Randarts */
@@ -633,9 +619,12 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			randart_type *x_ptr = &x_info[o_ptr->name3];
 
 			/* Obvious flags (pval) */
-			(*f1) = (x_ptr->flags1 & (TR1_PVAL_MASK));
-			(*f3) = (x_ptr->flags3 & (TR3_IGNORE_MASK));
+			(*f1) |= (x_ptr->flags1 & (TR1_PVAL_MASK));
+			(*f3) |= (x_ptr->flags3 & (TR3_IGNORE_MASK));
 		}
+
+		(*f1) |= (o_ptr->flags1 & (TR1_PVAL_MASK));
+		(*f3) |= (o_ptr->flags3 & (TR3_IGNORE_MASK));
 	}
 
 	return;
@@ -1255,23 +1244,11 @@ flavor_info[k_ptr->flavor].text; */
 			object_desc_str_macro(t, (a_name + a_ptr->name));
 		}
 
-		/* Grab any randart names */
-		else if (o_ptr->bonuses)
+		/* Grab "suffix" */
+		if (o_ptr->name_suf)
 		{
-			if (o_ptr->bonuses->suffix_name)
-			{
-				object_desc_chr_macro(t, ' ');
-				object_desc_str_macro(t, o_ptr->bonuses->suffix_name);
-			}
-		}
-
-		/* Grab any ego-item name */
-		else if (o_ptr->name2)
-		{
-			ego_item_type *e_ptr = &e_info[o_ptr->name2];
-
 			object_desc_chr_macro(t, ' ');
-			object_desc_str_macro(t, (e_name + e_ptr->name));
+			object_desc_str_macro(t, strtable_content(o_ptr->name_suf));
 		}
 	}
 
@@ -1754,7 +1731,7 @@ void object_desc_store(char *buf, const object_type *o_ptr, int pref, int mode)
 	i_ptr = &object_type_body;
 
 	/* Copy the object */
-	object_copy(i_ptr, o_ptr);
+	object_copy(i_ptr, (object_type *) o_ptr);
 
 	/* Save the "flavor" */
 	hack_flavor = k_info[i_ptr->k_idx].flavor;

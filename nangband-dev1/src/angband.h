@@ -17,9 +17,10 @@
 /*
  * Include the mid-level includes.
  */
-#include "z-util.h"
+#include "z-misc.h"
 #include "z-virt.h"
 #include "z-form.h"
+#include "z-string.h"
 #include "z-rand.h"
 #include "z-term.h"
 

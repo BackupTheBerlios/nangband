@@ -1489,7 +1489,7 @@ static void calc_mana(void)
 		/* Normal gloves hurt mage-type spells */
 		if (o_ptr->k_idx &&
 		    !(f3 & (TR3_FREE_ACT)) &&
-		    !(o_ptr->bonuses ? o_ptr->bonuses->stats[A_DEX] : 0))
+		    !o_ptr->stats[A_DEX])
 		{
 			/* Encumbered */
 			p_ptr->cumber_glove = TRUE;
@@ -1754,8 +1754,8 @@ static void calc_bonuses(void)
 
 	/* Flags, resists and stat bonuses temp */
 	u32b f1, f2, f3;
-	byte res_mods[RES_MAX];
-	s16b stat_mods[A_MAX];
+	sbyte res_mods[RES_MAX];
+	sbyte stat_mods[A_MAX];
 
 	/*** Memorize ***/
 

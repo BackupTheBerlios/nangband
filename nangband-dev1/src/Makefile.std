@@ -31,7 +31,7 @@ BORGOBJS = \
 	borg1.o borg2.o borg3.o borg4.o borg5.o borg6.o borg7.o borg8.o borg9.o
 
 ANGOBJS = \
-	z-util.o z-virt.o z-form.o z-rand.o z-term.o \
+	z-string.o z-misc.o z-virt.o z-form.o z-rand.o z-term.o \
 	variable.o tables.o util.o cave.o \
 	object1.o object2.o monster1.o monster2.o \
 	xtra1.o xtra2.o spells1.o spells2.o \
@@ -96,6 +96,8 @@ WARNINGS = -Wall
 # CC = tcc
 # OPTIMISATION = 
 # WARNINGS =
+# CFLAGS = -I/usr/lib/include/tcc
+# LIBS = -L/usr/lib/tcc
 
 ## OPTION: Use ~/Choices/Angband/Nangband instead of ~/.angband/Nangband
 ##         as the user directory.
@@ -332,7 +334,7 @@ HDRS = \
 INCS = \
   angband.h \
   config.h defines.h types.h externs.h \
-  z-term.h z-rand.h z-util.h z-virt.h z-form.h $(HDRS)
+  z-term.h z-rand.h z-string.h z-misc.h z-virt.h z-form.h $(HDRS)
 
 #
 # Dependency information
@@ -390,11 +392,12 @@ wizard1.o: wizard1.c $(INCS)
 wizard2.o: wizard2.c $(INCS) script.h
 xtra1.o: xtra1.c $(INCS) script.h
 xtra2.o: xtra2.c $(INCS)
-z-form.o: z-form.c $(HDRS) z-form.h z-util.h z-virt.h
-z-rand.o: z-rand.c $(HDRS) z-rand.h
-z-term.o: z-term.c $(HDRS) z-term.h z-virt.h
-z-util.o: z-util.c $(HDRS) z-util.h
-z-virt.o: z-virt.c $(HDRS) z-virt.h z-util.h
+z-form.o: z-form.c $(HDRS)
+z-rand.o: z-rand.c $(HDRS)
+z-term.o: z-term.c $(HDRS)
+z-string.o: z-string.c $(HDRS)
+z-misc.o: z-misc.c $(HDRS)
+z-virt.o: z-virt.c $(HDRS)
 
 #
 # Build wrappers

@@ -751,6 +751,7 @@ startover:
 static void name_randart(object_type *o_ptr)
 {
 	char *word;
+	char buffer[18];
 
 	do
 	{
@@ -758,9 +759,12 @@ static void name_randart(object_type *o_ptr)
 	} while (strlen(word) >= 17);
 
 	if (rand_int(3) == 0)
-		sprintf(o_ptr->bonuses->suffix_name, "'%s'", word);
+		sprintf(buffer, "'%s'", word);
 	else
-		sprintf(o_ptr->bonuses->suffix_name, "of %s", word);
+		sprintf(buffer, "of %s", word);
+
+	/* "Make" the string */
+	o_ptr->name_pre = strtable_add(buffer);
 
 	/* We are done. */
 	return;
@@ -798,7 +802,6 @@ s32b artifact_power(object_type *o_ptr)
 {
 	const randart_type *x_ptr = &x_info[o_ptr->name3];
 	object_kind *k_ptr;
-	const object_bonus *ob_ptr = o_ptr->bonuses;
 
 	s32b p = 0, b;
 	s16b k_idx;
@@ -941,14 +944,14 @@ s32b artifact_power(object_type *o_ptr)
 	/* Do the stat bonuses */
 	for (i = 0; i < A_MAX; i++)
 	{
-		int b = ob_ptr->stats[i];
+		int b = o_ptr->stats[i];
 		if (b > 8) b = 8;
 
 		if (i == A_CHR) p += 3 * b;
 		else
 		{
-			if (ob_ptr->stats[i] > 0) p += 3 * pval_table[b];
-			else if (ob_ptr->stats[i] < 0) p += 2 * b;
+			if (o_ptr->stats[i] > 0) p += 3 * pval_table[b];
+			else if (o_ptr->stats[i] < 0) p += 2 * b;
 		}
 	}
 
@@ -1076,19 +1079,17 @@ static void do_pval(object_type *o_ptr)
  * --------------------------------------------------------------------- */
 static void do_statbonus(object_type *o_ptr, int i)
 {
-	object_bonus *ob_ptr = o_ptr->bonuses;
-
-	if (ob_ptr->stats[i] == 0)
+	if (o_ptr->stats[i] == 0)
 	{
-		ob_ptr->stats[i] = 1 + rand_int(3);
+		o_ptr->stats[i] = 1 + rand_int(3);
 	}
-	else if (ob_ptr->stats[i] < 0)
+	else if (o_ptr->stats[i] < 0)
 	{
-		if (rand_int(2) == 0) ob_ptr->stats[i]--;
+		if (rand_int(2) == 0) o_ptr->stats[i]--;
 	}
 	else if (rand_int(3) > 0)
 	{
-		ob_ptr->stats[i]++;
+		o_ptr->stats[i]++;
 	}
 
 	/* We are done. */
@@ -1101,7 +1102,6 @@ static void do_statbonus(object_type *o_ptr, int i)
 static void remove_contradictory(object_type *o_ptr)
 {
 	randart_type *x_ptr = &x_info[o_ptr->name3];
-	const object_bonus *ob_ptr = o_ptr->bonuses;
 
 	/* Aggravation removes stealth */
 	if (x_ptr->flags3 & TR3_AGGRAVATE) x_ptr->flags1 &= ~(TR1_STEALTH);
@@ -1115,12 +1115,12 @@ static void remove_contradictory(object_type *o_ptr)
 	}
 
 	/* If a stat is damaged, no sustains */
-	if (ob_ptr->stats[A_STR] < 0) x_ptr->flags2 &= ~(TR2_SUST_STR);
-	if (ob_ptr->stats[A_INT] < 0) x_ptr->flags2 &= ~(TR2_SUST_INT);
-	if (ob_ptr->stats[A_WIS] < 0) x_ptr->flags2 &= ~(TR2_SUST_WIS);
-	if (ob_ptr->stats[A_DEX] < 0) x_ptr->flags2 &= ~(TR2_SUST_DEX);
-	if (ob_ptr->stats[A_CON] < 0) x_ptr->flags2 &= ~(TR2_SUST_CON);
-	if (ob_ptr->stats[A_CHR] < 0) x_ptr->flags2 &= ~(TR2_SUST_CHR);
+	if (o_ptr->stats[A_STR] < 0) x_ptr->flags2 &= ~(TR2_SUST_STR);
+	if (o_ptr->stats[A_INT] < 0) x_ptr->flags2 &= ~(TR2_SUST_INT);
+	if (o_ptr->stats[A_WIS] < 0) x_ptr->flags2 &= ~(TR2_SUST_WIS);
+	if (o_ptr->stats[A_DEX] < 0) x_ptr->flags2 &= ~(TR2_SUST_DEX);
+	if (o_ptr->stats[A_CON] < 0) x_ptr->flags2 &= ~(TR2_SUST_CON);
+	if (o_ptr->stats[A_CHR] < 0) x_ptr->flags2 &= ~(TR2_SUST_CHR);
 
 	/* Execute removes slay */
 	if (x_ptr->flags1 & TR1_KILL_DRAGON) x_ptr->flags1 &= ~(TR1_SLAY_DRAGON);
@@ -1966,8 +1966,6 @@ bool make_randart_stupid(object_type *o_ptr)
 
 	if (!x_idx) return (FALSE);
 
-	object_make_bonuses(o_ptr);
-
 	o_ptr->name3 = x_idx;
 
 	x_ptr = &x_info[x_idx];
@@ -2015,9 +2013,6 @@ bool make_randart(object_type *o_ptr, bool curse)
 	}
 
 	if (!x_idx) return (FALSE);
-
-	/* Make sure everything's set up */
-	object_make_bonuses(o_ptr);
 
 	/* Get the object's current flags */
 	object_flags(o_ptr, &f1, &f2, &f3);

@@ -1,59 +1,37 @@
-/* File z-util.h */
-
 /*
- * Copyright (c) 1997 Ben Harrison
+ * File: z-string.h
  *
- * This software may be copied and distributed for educational, research,
- * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.
+ * Abstract: Header file for z-string.c.
+ *
+ * For licencing terms, please see angband.h.
  */
-
-#ifndef INCLUDED_Z_UTIL_H
-#define INCLUDED_Z_UTIL_H
+#ifndef INCLUDED_Z_STRING_H
+#define INCLUDED_Z_STRING_H
 
 #include "h-basic.h"
 
+/*** String comparison functions ***/
+extern int my_stricmp(cptr s1, cptr s2);
 
-/*
- * Extremely basic stuff, like global temp and constant variables.
- * Also, some very useful low level functions, such as "streq()".
- * All variables and functions in this file are "addressable".
- */
+extern bool streq(cptr s1, cptr s2);
+extern bool strieq(cptr s1, cptr s2);
 
-
-/**** Available variables ****/
-
-/* A cptr to the name of the program */
-extern cptr argv0;
-
-
-/* Aux functions */
-extern void (*plog_aux)(cptr);
-extern void (*quit_aux)(cptr);
-extern void (*core_aux)(cptr);
-
-
-/**** Available Functions ****/
-
-/* Compare */
-extern int my_stricmp(const char *s1, const char *s2);
-
-/* Test equality, prefix, suffix */
-extern bool streq(cptr s, cptr t);
 extern bool prefix(cptr s, cptr t);
 extern bool suffix(cptr s, cptr t);
 
-/* Print an error message */
-extern void plog(cptr str);
+/*** String management functions ***/
 
-/* Exit, with optional message */
-extern void quit(cptr str);
+/* Constants */
+#define MAX_SIZE_STRTABLE     1024
 
-/* Dump core, with optional message */
-extern void core(cptr str);
+/* Functions */
+extern u32b strtable_add(cptr text); 
+extern cptr strtable_content(u32b index); 
+extern u32b strtable_modify(u32b idx, cptr text); 
+extern void strtable_remove(u32b idx); 
 
-
+/* Do not use these outside of init*.c */
+extern bool strtable_init(void); 
+extern void strtable_cleanup(void); 
 
 #endif
-
-

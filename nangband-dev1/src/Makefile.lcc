@@ -17,7 +17,7 @@ CFLAGS	=	-I$(INCS) -DHAS_STRICMP
 
 OBJS=\
 	z-virt.obj \
-	z-util.obj \
+	z-string.obj \
 	z-term.obj \
 	z-rand.obj \
 	z-form.obj \
@@ -72,22 +72,22 @@ Z-VIRT_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 
 z-virt.obj: $(Z-VIRT_C) z-virt.c
 	$(CC) -c $(CFLAGS) z-virt.c
 
 # Build Z-UTIL.C
 Z-UTIL_C=\
-	z-util.h\
+	z-string.h z-misc.h\
 	h-basic.h\
 	h-config.h\
 	h-system.h\
 	h-type.h\
 	h-define.h\
 
-z-util.obj: $(Z-UTIL_C) z-util.c
-	$(CC) -c $(CFLAGS) z-util.c
+z-string.obj: $(Z-UTIL_C) z-util.c
+	$(CC) -c $(CFLAGS) z-string.c z-misc.c
 
 # Build Z-TERM.C
 Z-TERM_C=\
@@ -97,7 +97,7 @@ Z-TERM_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -130,7 +130,7 @@ Z-FORM_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 
 z-form.obj: $(Z-FORM_C) z-form.c
@@ -144,7 +144,7 @@ XTRA2_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -165,7 +165,7 @@ XTRA1_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -186,7 +186,7 @@ WIZARD2_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -207,7 +207,7 @@ WIZARD1_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -228,7 +228,7 @@ VARIABLE_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -249,7 +249,7 @@ UTIL_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -270,7 +270,7 @@ TABLES_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -291,7 +291,7 @@ STORE_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -312,7 +312,7 @@ SPELLS2_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -333,7 +333,7 @@ SPELLS1_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -354,7 +354,7 @@ SAVE_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -382,7 +382,7 @@ OBJECT2_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -403,7 +403,7 @@ OBJECT1_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -424,7 +424,7 @@ MONSTER2_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -445,7 +445,7 @@ MONSTER1_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -466,7 +466,7 @@ MELEE2_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -487,7 +487,7 @@ MELEE1_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -508,7 +508,7 @@ MAIN-WIN_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -530,7 +530,7 @@ LOAD_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -551,7 +551,7 @@ INIT2_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -572,7 +572,7 @@ INIT1_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -593,7 +593,7 @@ GENERATE_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -614,7 +614,7 @@ FILES_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -635,7 +635,7 @@ DUNGEON_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -656,7 +656,7 @@ CMD6_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -677,7 +677,7 @@ CMD5_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -698,7 +698,7 @@ CMD4_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -719,7 +719,7 @@ CMD3_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -740,7 +740,7 @@ CMD2_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -761,7 +761,7 @@ CMD1_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -782,7 +782,7 @@ CAVE_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -803,7 +803,7 @@ BIRTH_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\
@@ -824,7 +824,7 @@ RANDART_C=\
 	h-system.h\
 	h-type.h\
 	h-define.h\
-	z-util.h\
+	z-string.h z-misc.h\
 	z-virt.h\
 	z-form.h\
 	z-rand.h\

@@ -14,7 +14,7 @@ nangband_LDADD = lua/liblua.a @ANGBAND_OBJS@
 nangband_DEPENDENCIES = lua/liblua.a @ANGBAND_OBJS@
 
 nangband_SOURCES = \
-  z-util.c z-virt.c z-form.c z-rand.c z-term.c \
+  z-string.c z-misc.c z-virt.c z-form.c z-rand.c z-term.c \
   variable.c tables.c util.c cave.c \
   object1.c object2.c monster1.c monster2.c \
   xtra1.c xtra2.c spells1.c spells2.c \
@@ -29,7 +29,7 @@ nangband_SOURCES = \
   generate.c dungeon.c init1.c init2.c randart.c \
   angband.h config.h defines.h externs.h h-basic.h \
   h-config.h h-define.h h-system.h h-type.h init.h \
-  types.h z-form.h z-rand.h z-term.h z-util.h \
+  types.h z-form.h z-rand.h z-term.h z-string.h z-misc.h \
   z-virt.h main.h \
   script.c script.h debug.c \
   l-monst.c l-object.c l-player.c l-random.c l-ui.c l-misc.c l-spell.c \

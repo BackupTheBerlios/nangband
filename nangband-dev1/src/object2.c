@@ -197,26 +197,6 @@ void delete_object(int y, int x)
 }
 
 /*
- * Create an object_bonuses structure if neccessary.
- */
-void object_make_bonuses(object_type *o_ptr)
-{
-	/* Paranoia -- check for validity of o_ptr */
-	if (!o_ptr)
-	{
-		msg_print("object_make_bonuses() called with a NULL pointer!");
-		return;
-	}
-
-	/* Only allocate if needed */
-	if (!o_ptr->bonuses)
-		MAKE(o_ptr->bonuses, object_bonus);
-
-	return;
-}
-
-
-/*
  * Move an object from index i1 to index i2 in the object list
  */
 static void compact_objects_aux(int i1, int i2)
@@ -919,16 +899,6 @@ static s32b object_value_real(const object_type *o_ptr)
 		value = a_ptr->cost;
 	}
 
-	/* Bonuses */
-	else if (o_ptr->bonuses)
-	{
-		/* Hack -- "worthless" "bonuses" */
-		if (!o_ptr->bonuses->cost) return (0L);
-
-		/* Increase our value count */
-		value += o_ptr->bonuses->cost;
-	}
-
 	/* Randart */
 	else if (o_ptr->name3)
 	{
@@ -953,6 +923,11 @@ static s32b object_value_real(const object_type *o_ptr)
 		value += e_ptr->cost;
 	}
 
+	/* Hack -- "worthless"  */
+	if (!o_ptr->cost) return (0L);
+
+	/* Increase our value count */
+	value += o_ptr->cost;
 
 	/* Analyze pval bonus */
 	switch (o_ptr->tval)
@@ -979,8 +954,6 @@ static s32b object_value_real(const object_type *o_ptr)
 		case TV_AMULET:
 		case TV_RING:
 		{
-			object_bonus *ob_ptr = o_ptr->bonuses;
-
 			/* Hack -- Negative "pval" is always bad */
 			if (o_ptr->pval < 0) return (0L);
 
@@ -1001,14 +974,11 @@ static s32b object_value_real(const object_type *o_ptr)
 			/* Give credit for speed bonus */
 			if (f1 & (TR1_SPEED)) value += (o_ptr->pval * 30000L);
 
-			/* No "other" bonuses */
-			if (!ob_ptr) break;
-
 			/* Give credit for stat bonuses */
 			for (i = 0; i < A_MAX; i++)
 			{
-				if (ob_ptr->stats[i])
-					value += (ob_ptr->stats[i] * 200L);
+				if (o_ptr->stats[i])
+					value += (o_ptr->stats[i] * 200L);
 			}
 
 			break;
@@ -1202,37 +1172,25 @@ s32b object_value(const object_type *o_ptr)
 bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 {
 	int total = o_ptr->number + j_ptr->number;
+	int i;
 
 
 	/* Require identical object types */
 	if (o_ptr->k_idx != j_ptr->k_idx) return (0);
 
-	if ((o_ptr->bonuses && !j_ptr->bonuses) ||
-	    (!o_ptr->bonuses && j_ptr->bonuses))
-	{
-		return (FALSE);
-	}
+	if (o_ptr->cost != j_ptr->cost) return (FALSE);
+	if (!streq(strtable_content(o_ptr->name_pre), strtable_content(j_ptr->name_pre))) return (FALSE);
+	if (!streq(strtable_content(o_ptr->name_suf), strtable_content(j_ptr->name_suf))) return (FALSE);
 
-	if (o_ptr->bonuses && j_ptr->bonuses)
-	{
-		object_bonus *ob_ptr = o_ptr->bonuses;
-		object_bonus *jb_ptr = j_ptr->bonuses;
-		int i;
+	if (o_ptr->flags1 != j_ptr->flags1) return (FALSE);
+	if (o_ptr->flags2 != j_ptr->flags2) return (FALSE);
+	if (o_ptr->flags3 != j_ptr->flags3) return (FALSE);
 
-		if (ob_ptr->cost != jb_ptr->cost) return (FALSE);
-		if (!streq(ob_ptr->prefix_name, jb_ptr->prefix_name)) return (FALSE);
-		if (!streq(ob_ptr->suffix_name, jb_ptr->suffix_name)) return (FALSE);
+	for (i = 0; i < A_MAX; i++)
+		if (o_ptr->stats[i] != j_ptr->stats[i]) return (FALSE);
 
-		if (ob_ptr->flags1 != jb_ptr->flags1) return (FALSE);
-		if (ob_ptr->flags2 != jb_ptr->flags2) return (FALSE);
-		if (ob_ptr->flags3 != jb_ptr->flags3) return (FALSE);
-
-		for (i = 0; i < A_MAX; i++)
-			if (ob_ptr->stats[i] != jb_ptr->stats[i]) return (FALSE);
-
-		for (i = 0; i < RES_MAX; i++)
-			if (ob_ptr->resists[i] != jb_ptr->resists[i]) return (FALSE);
-	}
+	for (i = 0; i < RES_MAX; i++)
+		if (o_ptr->resists[i] != j_ptr->resists[i]) return (FALSE);
 
 	/* Analyze the items */
 	switch (o_ptr->tval)
@@ -1495,8 +1453,8 @@ s16b lookup_kind(int tval, int sval)
 void object_wipe(object_type *o_ptr)
 {
 	/* Destroy the object_bonuses struct */
-	if (o_ptr->bonuses)
-		(void)WIPE(o_ptr->bonuses, object_bonus);
+	if (o_ptr->name_suf) strtable_remove(o_ptr->name_suf);
+	if (o_ptr->name_pre) strtable_remove(o_ptr->name_pre);
 
 	/* Wipe the structure */
 	(void)WIPE(o_ptr, object_type);
@@ -1506,14 +1464,15 @@ void object_wipe(object_type *o_ptr)
 /*
  * Prepare an object based on an existing object
  */
-void object_copy(object_type *o_ptr, const object_type *j_ptr)
+void object_copy(const object_type *o_ptr, object_type *j_ptr)
 {
 	/* Copy the structure */
 	COPY(o_ptr, j_ptr, object_type);
 
-	/* Copy the object_bonuses struct if it exists */
-	if (o_ptr->bonuses)
-		COPY(o_ptr->bonuses, j_ptr->bonuses, object_bonus);
+	if (o_ptr->name_suf)
+		j_ptr->name_suf = strtable_add(strtable_content(o_ptr->name_suf));
+	if (o_ptr->name_pre)
+		j_ptr->name_pre = strtable_add(strtable_content(o_ptr->name_pre));
 }
 
 
@@ -2655,14 +2614,12 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power)
  */
 void object_add_xtra(object_type *o_ptr, int xtra)
 {
-	object_bonus *ob_ptr = o_ptr->bonuses;
-
 	switch (xtra)
 	{
 		case OBJECT_XTRA_SUSTAIN:
 		{
 			/* Choose a random sustain */
-			ob_ptr->flags2 |= (TR2_SUST_STR << randint(A_MAX));
+			o_ptr->flags2 |= (TR2_SUST_STR << randint(A_MAX));
 
 			break;
 		}
@@ -2691,7 +2648,7 @@ void object_add_xtra(object_type *o_ptr, int xtra)
 			}
 
 			/* Set the flag */
-			ob_ptr->flags3 |= flag_to_set;
+			o_ptr->flags3 |= flag_to_set;
 
 			break;
 		}
@@ -2733,7 +2690,7 @@ void object_add_xtra(object_type *o_ptr, int xtra)
 					break;
 			}
 
-			ob_ptr->resists[res_index] += res_amnt;
+			o_ptr->resists[res_index] += res_amnt;
 
 			break;
 		}
@@ -2984,31 +2941,26 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, 
 	if (o_ptr->name2)
 	{
 		ego_item_type *e_ptr = &e_info[o_ptr->name2];
-		object_bonus *ob_ptr;
-
-		/* Check for bonuses */
-		object_make_bonuses(o_ptr);
-		ob_ptr = o_ptr->bonuses;
 
 		/* Copy the flags across */
-		ob_ptr->flags1 |= e_ptr->flags1;
-		ob_ptr->flags2 |= e_ptr->flags2;
-		ob_ptr->flags3 |= e_ptr->flags3;
+		o_ptr->flags1 |= e_ptr->flags1;
+		o_ptr->flags2 |= e_ptr->flags2;
+		o_ptr->flags3 |= e_ptr->flags3;
 
 		/* Add the "xtra" flags */
 		if (e_ptr->xtra) object_add_xtra(o_ptr, e_ptr->xtra);
 
 		/* Copy the prefix name */
-		strcpy(ob_ptr->suffix_name, (e_name + e_ptr->name));
+		o_ptr->name_suf = strtable_add((e_name + e_ptr->name));
 
 		/* Copy the price */
-		ob_ptr->cost += e_ptr->cost;
+		o_ptr->cost += e_ptr->cost;
 
 		/* Hack -- acquire "broken" flag */
-		if (!ob_ptr->cost) o_ptr->ident |= (IDENT_BROKEN);
+		if (!o_ptr->cost) o_ptr->ident |= (IDENT_BROKEN);
 
 		/* Hack -- acquire "cursed" flag */
-		if (ob_ptr->flags3 & (TR3_LIGHT_CURSE)) o_ptr->ident |= (IDENT_CURSED);
+		if (o_ptr->flags3 & (TR3_LIGHT_CURSE)) o_ptr->ident |= (IDENT_CURSED);
 
 		/* Apply extra penalties if needed */
 		if (cursed_p(o_ptr) || broken_p(o_ptr))
@@ -3022,14 +2974,14 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, 
 			for (i = 0; i < A_MAX; i++)
 			{
 				if (e_ptr->stat_mods[i])
-					ob_ptr->stats[i] -= randint(e_ptr->stat_mods[i]);
+					o_ptr->stats[i] -= randint(e_ptr->stat_mods[i]);
 			}
 
 			/* Obtain resist penalties */
 			for (i = 0; i < RES_MAX; i++)
 			{
 				if (e_ptr->resist_max[i] > e_ptr->resist_min[i])
-					ob_ptr->resists[i] -= (rand_range((int)e_ptr->resist_min[i], (int)e_ptr->resist_max) * 5);
+					o_ptr->resists[i] -= (rand_range((int)e_ptr->resist_min[i], (int)e_ptr->resist_max) * 5);
 			}
     
 			/* Obtain pval */
@@ -3048,16 +3000,16 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, 
 			for (i = 0; i < A_MAX; i++)
 			{
 				if (e_ptr->stat_mods[i])
-					ob_ptr->stats[i] += randint(e_ptr->stat_mods[i]);
+					o_ptr->stats[i] += randint(e_ptr->stat_mods[i]);
 			}         
 
 			/* Obtain resist penalties */
 			for (i = 0; i < RES_MAX; i++)
 			{
 				if (e_ptr->resist_max[i] > e_ptr->resist_min[i])
-					ob_ptr->resists[i] += (rand_range((int)e_ptr->resist_min[i], (int)e_ptr->resist_max) * 5);
+					o_ptr->resists[i] += (rand_range((int)e_ptr->resist_min[i], (int)e_ptr->resist_max) * 5);
 				else if (e_ptr->resist_max[i] == e_ptr->resist_min[i])
-					ob_ptr->resists[i] += e_ptr->resist_max[i];
+					o_ptr->resists[i] += e_ptr->resist_max[i];
 			}
    
 			/* Obtain pval */

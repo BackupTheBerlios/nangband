@@ -63,7 +63,7 @@ OBJS = \
   z-rand.o \
   z-form.o \
   z-virt.o \
-  z-util.o \
+  z-string.o \
   script.o \
   l-monst.o l-object.o l-player.o l-random.o l-ui.o l-misc.o l-spell.o \
   use-obj.o \

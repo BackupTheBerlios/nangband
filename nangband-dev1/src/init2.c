@@ -1254,6 +1254,10 @@ static errr init_other(void)
 	/* Initialize the "message" package */
 	(void)messages_init();
 
+	/* Initialize the "strtable" package */
+	(void)strtable_init();
+
+
 	/*** Prepare grid arrays ***/
 
 	/* Array of grids */
@@ -1869,7 +1873,6 @@ void cleanup_angband(void)
 {
 	int i, j;
 
-
 	/* Free the scripting support */
 	script_free();
 
@@ -1880,8 +1883,8 @@ void cleanup_angband(void)
 		string_free(macro__act[i]);
 	}
 
-	FREE((void*)macro__pat);
-	FREE((void*)macro__act);
+	FREE((void *) macro__pat);
+	FREE((void *) macro__act);
 
 	/* Free the keymaps */
 	for (i = 0; i < KEYMAP_MODES; ++i)
@@ -1955,6 +1958,9 @@ void cleanup_angband(void)
 
 	/* Free the "quarks" */
 	quarks_free();
+
+	/* Cleanup the "strtable" package */
+	strtable_cleanup();
 
 	/* Free the info, name, and text arrays */
 	free_info(&flavor_head);

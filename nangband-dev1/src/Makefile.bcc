@@ -47,7 +47,7 @@ OBJ = \
   spells2.obj store.obj tables.obj util.obj \
   variable.obj wizard1.obj wizard2.obj xtra1.obj \
   xtra2.obj z-form.obj z-rand.obj z-term.obj \
-  z-util.obj z-virt.obj \
+  z-string.obj z-virt.obj z-misc.obj \
   script.obj debug.obj \
   l-monst.obj l-object.obj l-player.obj l-random.obj l-random.obj \
   l-ui.obj l-misc.obj l-spell.obj \

@@ -429,10 +429,11 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	object_kind *k_ptr;
 
 	byte temp;
-	bool has_bonus;
 
 	byte old_dd = 0;
 	byte old_ds = 0;
+
+	int i;
 
 	u32b f1, f2, f3;
 
@@ -487,10 +488,6 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	savefile_do_byte(&o_ptr->name2, type);
 	savefile_do_u16b(&o_ptr->name3, type);
 
-	/* Whether this structure has an associated object_bonus */
-	if (type == PUT) has_bonus = (o_ptr->bonuses) ? TRUE : FALSE;
-	savefile_do_bool(&has_bonus, type);
-
 	/* Timeout field */
 	savefile_do_s16b(&o_ptr->timeout, type);
 
@@ -535,32 +532,47 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 		savefile_do_u16b(&x_ptr->randtime, type);
 	}
 
-	/* Do "object_bonus" stuff if appropriate */
-	if (has_bonus)
+	if (o_ptr->name_suf && type == PUT) temp = TRUE;
+	else if (type == PUT) temp = FALSE;
+	savefile_do_byte(&temp, type);
+
+	if (temp)
 	{
-		int i;
-		object_bonus *ob_ptr;
-
-		/* Create the structure */
-		if (type == GET) object_make_bonuses(o_ptr);
-
-		ob_ptr = o_ptr->bonuses;
-
-		savefile_do_string(ob_ptr->suffix_name, type);
-		savefile_do_string(ob_ptr->prefix_name, type);
-
-		savefile_do_s32b(&ob_ptr->cost, type);
-
-		savefile_do_u32b(&ob_ptr->flags1, type);
-		savefile_do_u32b(&ob_ptr->flags2, type);
-		savefile_do_u32b(&ob_ptr->flags3, type);
-
-		for (i = 0; i < RES_MAX; i++)
-			savefile_do_sbyte(&ob_ptr->resists[i], type);
-
-		for (i = 0; i < A_MAX; i++)
-			savefile_do_sbyte(&ob_ptr->stats[i], type);
+		cptr note;
+		char buf[50];
+		if (type == PUT) note = strtable_content(o_ptr->name_suf);
+		else note = buf;
+		savefile_do_string((char *) &note, type);
+		buf[49] = '\0';
+		if (type == GET) o_ptr->name_suf = strtable_add(buf);
 	}
+
+	if (o_ptr->name_pre && type == PUT) temp = TRUE;
+	else if (type == PUT) temp = FALSE;
+	savefile_do_byte(&temp, type);
+
+	if (temp)
+	{
+		cptr note;
+		char buf[50];
+		if (type == PUT) note = strtable_content(o_ptr->name_pre);
+		else note = buf;
+		savefile_do_string((char *) &note, type);
+		buf[49] = '\0';
+		if (type == GET) o_ptr->name_suf = strtable_add(buf);
+	}
+
+	savefile_do_s32b(&o_ptr->cost, type);
+
+	savefile_do_u32b(&o_ptr->flags1, type);
+	savefile_do_u32b(&o_ptr->flags2, type);
+	savefile_do_u32b(&o_ptr->flags3, type);
+
+	for (i = 0; i < RES_MAX; i++)
+		savefile_do_sbyte(&o_ptr->resists[i], type);
+
+	for (i = 0; i < A_MAX; i++)
+		savefile_do_sbyte(&o_ptr->stats[i], type);
 
 	/* Write the index of the monster holding this item */
 	savefile_do_s16b(&o_ptr->held_m_idx, type);
@@ -2217,15 +2229,14 @@ static errr read_savefile(int fd)
 {
 	byte *savefile_head;
 	bool finished = FALSE;
+	int version = 0;
+	int type = 0;
 
 	/* Loop through the savefile */
 	while (!finished)
 	{
-		int version = 0;
-		int type = 0;
-
 		/* Allocate memory for the header */
-		savefile_head = C_RNEW(BLOCK_HEAD_SIZE, byte);
+		savefile_head = ralloc(sizeof(byte)*BLOCK_HEAD_SIZE);
 
 		/* Read the data */
 		fd_read(fd, (char *) savefile_head, BLOCK_HEAD_SIZE);
@@ -2257,7 +2268,7 @@ static errr read_savefile(int fd)
 		fd_read(fd, (char *) savefile_block, savefile_blocksize);
 
 		/* Be verbose */
-		if (arg_savefile_verbose) printf("Block %d loaded; version %d.\n", type, version);
+		if (arg_savefile_verbose) printf("Block type %d loaded; version %d.\n", type, version);
 
 		/* Switch */
 		switch (type)

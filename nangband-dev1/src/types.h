@@ -1,9 +1,10 @@
 /*
  * File: types.h
  *
- * Abstract: Basic types for the Angband game.
+ * Abstract: More complex types for the Angband game; structures for 
+ *           monsters, quests, objects, the player, etc.
  *
- * Licences: the Traditional Angband Licence, see angband.h
+ * For licencing terms, please see angband.h.
  */
 
 /*
@@ -67,7 +68,6 @@ typedef struct maxima maxima;
 typedef struct feature_type feature_type;
 typedef struct object_kind object_kind;
 typedef struct object_type object_type;
-typedef struct object_bonus object_bonus;
 typedef struct artifact_type artifact_type;
 typedef struct randart_type randart_type;
 typedef struct ego_item_type ego_item_type;
@@ -263,23 +263,6 @@ struct artifact_type
 	u16b randtime;                    /* Activation time dice */
 
 	s32b cost;                        /* Artifact "cost" */
-};
-
-/*
- * Information for an object's bonuses; this is very similar
- * to the randart structure below.
- */
-struct object_bonus
-{
-	char prefix_name[20];         /* Name which comes before item type */
-	char suffix_name[20];         /* Name which comes after item type */
-
-	s32b cost;                    /* Cost in stores */
-
-	u32b flags1, flags2, flags3;  /* Flags */
-
-	sbyte resists[RES_MAX],       /* Extra resistances */
-	      stats[A_MAX];           /* Stat bonuses */
 };
 
 /*
@@ -510,47 +493,48 @@ struct vault_type
  */
 struct object_type
 {
-	s16b k_idx;			/* Kind index (zero if "dead") */
+	s16b k_idx;        /* Kind index (zero if "dead") */
 
-	byte iy;			/* Y-position on map, or zero */
-	byte ix;			/* X-position on map, or zero */
+	byte iy;           /* Y-position on map, or zero */
+	byte ix;           /* X-position on map, or zero */
 
-	byte tval;			/* Item type (from kind) */
-	byte sval;			/* Item sub-type (from kind) */
+	byte tval;         /* Item type (from kind) */
+	byte sval;         /* Item sub-type (from kind) */
+	s16b pval;         /* Extra parameter for object */
 
-	s16b pval;			/* Item extra-parameter */
+	byte discount;     /* Discount (if any) */
+	byte number;       /* Number of items */
+	s32b cost;         /* Cost in stores */
 
-	byte discount;			/* Discount (if any) */
+	s16b weight;       /* Item weight */
 
-	byte number;			/* Number of items */
+	byte name1;        /* Artifact type, if any */
+	byte name2;        /* Ego-Item type, if any */
+	u16b name3;        /* Randart type, if any */
 
-	s16b weight;			/* Item weight */
+	s16b to_h;         /* Plusses to hit */
+	s16b to_d;         /* Plusses to damage */
+	s16b to_a;         /* Plusses to AC */
 
-	byte name1;			/* Artifact type, if any */
-	byte name2;			/* Ego-Item type, if any */
-	u16b name3;			/* Randart type, if any */
+	s16b ac;           /* Normal AC */
+	byte dd, ds;       /* Damage dice/sides */
 
-	s16b to_h;			/* Plusses to hit */
-	s16b to_d;			/* Plusses to damage */
-	s16b to_a;			/* Plusses to AC */
-
-	s16b ac;			/* Normal AC */
-
-	object_bonus *bonuses;   /* Other bonuses */
-
-	byte dd, ds;		/* Damage dice/sides */
-
-	s16b timeout;		/* Timeout Counter */
+	s16b timeout;      /* Timeout Counter */
 
 	byte ident;			/* Special flags */
-
 	byte marked;		/* Object is marked */
 
-	u16b note;			/* Inscription index */
+	u16b note;        /* Inscription index */
+	u32b name_pre;    /* Index in string table for name "prefix" */
+	u32b name_suf;    /* Index in string table for name "suffix" */
 
 	s16b next_o_idx;	/* Next object in stack (if any) */
-
 	s16b held_m_idx;	/* Monster holding us (if any) */
+
+	u32b flags1, flags2, flags3;  /* Flags */
+
+	sbyte resists[RES_MAX],       /* Extra resistances */
+	      stats[A_MAX];           /* Stat bonuses */
 };
 
 

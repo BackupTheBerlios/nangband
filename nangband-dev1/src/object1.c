@@ -1631,9 +1631,13 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 {
 	bool known = FALSE;
 	bool needs_fuel = FALSE;
+	bool stat_boost = FALSE;
 
 	int vn;
-	cptr vp[64];
+	cptr vp[32];
+
+	int vcn;
+	int vc[32];
 
 	u32b f1, f2, f3;
 
@@ -1664,16 +1668,14 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	{
 		/* Intro */
 		text_out("It provides ");
-		text_out(vp[0]);
+		text_out_c(TERM_L_DARK, vp[0]);
 		text_out(" light ");
 		if (needs_fuel) text_out("when it is fueled");
 		else text_out("permanently");
 
 		/* Finish */
-		text_out(".  ");
+		text_out(".  \n");
 	}
-
-	/* Describe stat bonuses */
 
 	/* Count the stats affected */
 	vn = 0;
@@ -1689,25 +1691,34 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	{
 		int n;
 
+		/* XXX XXX XXX */
+		stat_boost = TRUE;
+
 		/* Intro */
 		text_out("It ");
 
 		/* What does it do? */
 		if (o_ptr->pval > 0)
 		{
-			text_out("increases");
+			text_out_c(TERM_L_GREEN, "increases");
 		}
 		else if (o_ptr->pval < 0)
 		{
-			text_out("decreases");
+			text_out_c(TERM_RED, "decreases");
 		}
 		else if (o_ptr->pval == 0)
 		{
 			text_out("does not affect");
 		}
 
+		/* Do something simpler */
+		if (vn == 5)
+		{
+			text_out_c(TERM_L_GREEN, "all your stats");
+		}
+
 		/* Print stats */
-		for (n = 0; n < vn; n++)
+		else for (n = 0; n < vn; n++)
 		{
 			/* Connectives */
 			if (n == 0) text_out(" your ");
@@ -1721,6 +1732,53 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		/* What's the bonus? */
 		text_out(" by ");
 		text_out(format("%i", ABS(o_ptr->pval)));
+	}
+
+	/* Count the stats affected */
+	vn = 0;
+	if (f1 & (TR2_SUST_STR)) vp[vn++] = "strength";
+	if (f1 & (TR2_SUST_INT)) vp[vn++] = "intellegence";
+	if (f1 & (TR2_SUST_WIS)) vp[vn++] = "wisdom";
+	if (f1 & (TR2_SUST_DEX)) vp[vn++] = "dexterity";
+	if (f1 & (TR2_SUST_CON)) vp[vn++] = "constitution";
+	if (f1 & (TR2_SUST_CHR)) vp[vn++] = "charisma";
+
+	/* Describe */
+	if (vn)
+	{
+		int n;
+
+		/* Intro */
+		if (stat_boost)
+		{
+			text_out(" and sustains");
+		}
+		else
+		{
+			text_out("It sustains");
+		}
+
+		/* Simplify things */
+		if (vn == 5)
+		{
+			text_out("all your stats");
+		}
+		else for (n = 0; n < vn; n++)
+		{
+			/* Connectives */
+			if (n == 0) text_out(" your ");
+			else if (n < (vn - 1)) text_out(", ");
+			else text_out(" and ");
+
+			text_out(vp[n]);
+		}
+
+
+		/* Finish */
+		text_out(".  ");
+	}
+	else if (stat_boost)
+	{
 
 		/* Finish */
 		text_out(".  ");
@@ -1732,6 +1790,10 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	if (f1 & (TR1_SEARCH)) vp[vn++] = "searching";
 	if (f1 & (TR1_INFRA)) vp[vn++] = "infravision";
 	if (f1 & (TR1_TUNNEL)) vp[vn++] = "ability to tunnel";
+	if (f1 & (TR1_SPEED)) vp[vn++] = "speed";
+	if (f1 & (TR1_BLOWS)) vp[vn++] = "attack speed";
+	if (f1 & (TR1_SHOTS)) vp[vn++] = "shooting speed";
+	if (f1 & (TR1_MIGHT)) vp[vn++] = "shooting power";
 
 	/* Describe */
 	if (vn)
@@ -1744,11 +1806,11 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		/* What does it do? */
 		if (o_ptr->pval > 0)
 		{
-			text_out("increases");
+			text_out_c(TERM_L_GREEN, "increases");
 		}
 		else if (o_ptr->pval < 0)
 		{
-			text_out("decreases");
+			text_out_c(TERM_RED, "decreases");
 		}
 		else if (o_ptr->pval == 0)
 		{
@@ -1773,28 +1835,6 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 
 		/* Finish */
 		text_out(".  ");
-	}
-
-
-	if (f1 & (TR1_SPEED))
-	{
-		text_out("It affects your speed.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_BLOWS))
-	{
-		text_out("It affects your attack speed.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_SHOTS))
-	{
-		text_out("It affects your shooting speed.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_MIGHT))
-	{
-		text_out("It affects your shooting power.\n");
-		known = TRUE;
 	}
 
 	/* Collect the slays */
@@ -1814,13 +1854,13 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		int n;
 
 		/* Intro */
-		text_out("It is very deadly ");
+		text_out("It is very deadly");
 
 		/* List the slays */
 		for (n = 0; n < vn; n++)
 		{
 			/* Intro */
-			if (n == 0) text_out("against ");
+			if (n == 0) text_out(" against ");
 			else if (n < (vn - 1)) text_out(", ");
 			else text_out(" and ");
 
@@ -1831,78 +1871,69 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		text_out(".  ");
 	}
 
+	/* Collect the executes */
+	vn = 0;
+	if (f1 & (TR1_KILL_DRAGON)) vp[vn++] = "dragons";
+	if (f1 & (TR1_KILL_DEMON)) vp[vn++] = "demons";
+	if (f1 & (TR1_KILL_UNDEAD)) vp[vn++] = "undead";
 
-	if (f1 & (TR1_KILL_DRAGON))
+	/* Describe */
+	if (vn)
 	{
-		text_out("It is a great bane of dragons.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_KILL_DEMON))
-	{
-		text_out("It is a great bane of demons.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_KILL_UNDEAD))
-	{
-		text_out("It is a great bane of undeads.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_BRAND_ACID))
-	{
-		text_out("It does extra damage from acid.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_BRAND_ELEC))
-	{
-		text_out("It does extra damage from electricity.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_BRAND_FIRE))
-	{
-		text_out("It does extra damage from fire.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_BRAND_COLD))
-	{
-		text_out("It does extra damage from frost.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_BRAND_POIS))
-	{
-		text_out("It does extra damage from poison.\n");
-		known = TRUE;
+		int n;
+
+		/* Intro */
+		text_out("It is a great bane");
+
+		/* List the slays */
+		for (n = 0; n < vn; n++)
+		{
+			/* Intro */
+			if (n == 0) text_out(" of ");
+			else if (n < (vn - 1)) text_out(", ");
+			else text_out(" and ");
+
+			/* Dump it */
+			text_out(vp[n]);
+		}
+
+		text_out(".  ");
 	}
 
-	if (f2 & (TR2_SUST_STR))
+	/* Collect the executes */
+	vn = 0;
+	vcn = 0;
+	if (f1 & (TR1_BRAND_ACID)) { vp[vn++] = "acid"; vc[vcn++] = TERM_L_GREEN; }
+	if (f1 & (TR1_BRAND_ELEC)) { vp[vn++] = "electricity"; vc[vcn++] = TERM_L_BLUE; }
+	if (f1 & (TR1_BRAND_FIRE)) { vp[vn++] = "fire"; vc[vcn++] = TERM_RED; }
+	if (f1 & (TR1_BRAND_COLD)) { vp[vn++] = "cold"; vc[vcn++] = TERM_BLUE; }
+	if (f1 & (TR1_BRAND_POIS)) { vp[vn++] = "poison"; vc[vcn++] = TERM_GREEN; }
+	if (f3 & (TR3_BRAND_NETHR)) { vp[vn++] = "nether"; vc[vcn++] = TERM_L_DARK; }
+
+	/* Describe */
+	if (vn)
 	{
-		text_out("It sustains your strength.\n");
-		known = TRUE;
+		int n;
+
+		/* Intro */
+		text_out("It is branded");
+
+		/* List the slays */
+		for (n = 0; n < vn; n++)
+		{
+			/* Intro */
+			if (n == 0) text_out(" with ");
+			else if (n < (vn - 1)) text_out(", ");
+			else text_out(" and ");
+
+			/* Dump it */
+			text_out_c(vc[n], vp[n]);
+		}
+
+		text_out(".  ");
 	}
-	if (f2 & (TR2_SUST_INT))
-	{
-		text_out("It sustains your intelligence.\n");
-		known = TRUE;
-	}
-	if (f2 & (TR2_SUST_WIS))
-	{
-		text_out("It sustains your wisdom.\n");
-		known = TRUE;
-	}
-	if (f2 & (TR2_SUST_DEX))
-	{
-		text_out("It sustains your dexterity.\n");
-		known = TRUE;
-	}
-	if (f2 & (TR2_SUST_CON))
-	{
-		text_out("It sustains your constitution.\n");
-		known = TRUE;
-	}
-	if (f2 & (TR2_SUST_CHR))
-	{
-		text_out("It sustains your charisma.\n");
-		known = TRUE;
-	}
+
+	/* Here is the old stuff */
 
 	if (f2 & (TR2_IM_ACID))
 	{
@@ -2195,7 +2226,7 @@ bool identify_fully_aux(const object_type *o_ptr)
 		known = TRUE;
 
 	/* Prompt the user */
-	text_out_c(TERM_L_BLUE, "(press any key to continue)\n");
+	text_out_c(TERM_L_BLUE, "\n(press any key to continue)\n");
 
 	/* XXX XXX XXX Wait for a keypress */
 	inkey();

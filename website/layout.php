@@ -30,7 +30,7 @@ function page_header($title, $type)
 /*	echo '<link rel="stylesheet" rev="content" type="text/css" href="style.css">'; */
 	echo '<meta name="description" content="A site about Nangband, an Angband variant.">\n';
 	echo '</head>\n';
-	echo '<body bgcolor="#ffffee">\n';
+	echo "<body bgcolor="#ffffee">\n";
 	echo '<table width="95%" align="center" callspacing="1" cellpadding="0" border="0">\n';
 	echo '<tr><td>\n';
 	echo '<table width="100%" align="center" callspacing="0" cellpadding="4" border="0">\n';

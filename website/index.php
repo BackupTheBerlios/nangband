@@ -25,7 +25,7 @@ The CVS can be checked out using the following command:<br>
 <pre>
 cvs -z3 -:d:pserver:anonymous@cvs.nangband.berlios.de:/cvsroot/nangband co nangband
 </pre><br>
-Replace 'co nangband' with 'co nang-web' if you want to check out this websiter instead.</p>
+Replace 'co nangband' with 'co nang-web' if you want to check out this website instead.</p>
 </p>
 <?
 page_footer($creators);

@@ -1,6 +1,11 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-07-09
+----------
+- Fixed two bugs; enchant_spell() was called incorrectly from the Lua scripts,
+  and the logic for bounds checking in cmd1.c was reversed. (takkaria)
+
 2002-07-01
 ----------
 - Renamed the disturb_panel option to disturb_detect. It disturbs the player

@@ -421,18 +421,18 @@ function read_scroll(object)
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_ENCHANT_ARMOR then
 		ident = TRUE
-		if not enchant_spell(0, 0, 1) then used_up = FALSE end
+		if not enchant_spell(0, 0, 1, 0) then used_up = FALSE end
 	elseif object.sval == SV_SCROLL_ENCHANT_WEAPON_TO_HIT then
-		if not enchant_spell(1, 0, 0) then used_up = FALSE end
+		if not enchant_spell(1, 0, 0, 0) then used_up = FALSE end
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_ENCHANT_WEAPON_TO_DAM then
-		if not enchant_spell(0, 1, 0) then used_up = FALSE end
+		if not enchant_spell(0, 1, 0, 0) then used_up = FALSE end
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_STAR_ENCHANT_ARMOR then
-		if not enchant_spell(0, 0, randint(3) + 2) then used_up = FALSE end
+		if not enchant_spell(0, 0, randint(3) + 2, 0) then used_up = FALSE end
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_STAR_ENCHANT_WEAPON then
-		if not enchant_spell(randint(3), randint(3), 0) then used_up = FALSE end
+		if not enchant_spell(randint(3), randint(3), 0, 0) then used_up = FALSE end
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_RECHARGING then
 		if not recharge(60) then used_up = FALSE end

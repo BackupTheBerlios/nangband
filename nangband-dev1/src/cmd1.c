@@ -1416,8 +1416,8 @@ void move_player(int dir, int jumping)
 	x = px + ddx[dir];
 
 	/* Make sure the player can't move out of bounds */
-	if ((cave_feat[y][x] >= FEAT_PERM_EXTRA) &&
-	    (cave_feat[y][x] <= FEAT_PERM_SOLID) &&
+	if (((cave_feat[y][x] >= FEAT_PERM_EXTRA) &&
+	     (cave_feat[y][x] <= FEAT_PERM_SOLID)) ||
 	    (!in_bounds_xy(x, y)))
 	{
 		pass_walls = FALSE;

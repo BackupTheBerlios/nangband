@@ -2069,24 +2069,11 @@ bool load_player(void)
 		/* Clear screen */
 		Term_clear();
 
-		if (older_than(OLD_VERSION_MAJOR, OLD_VERSION_MINOR, OLD_VERSION_PATCH))
-		{
-			err = -1;
-			what = "Savefile is too old";
-		}
-		else if (!older_than(SAVEFILE_MAJOR, SAVEFILE_MINOR, SAVEFILE_PATCH + 1))
-		{
-			err = -1;
-			what = "Savefile is from the future";
-		}
-		else
-		{
-			/* Attempt to load */
-			err = rd_savefile();
+		/* Attempt to load */
+		err = rd_savefile();
 
-			/* Message (below) */
-			if (err) what = "Cannot parse savefile";
-		}
+		/* Message (below) */
+		if (err) what = "Cannot parse savefile";
 	}
 
 	/* Paranoia */

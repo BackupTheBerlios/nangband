@@ -39,15 +39,15 @@
 /*
  * Current version string
  */
-#define VERSION_STRING	"2.9.7 CVS"
+#define VERSION_STRING	"1.0.0 CVS"
 
 
 /*
  * Current version numbers
  */
-#define VERSION_MAJOR	2
-#define VERSION_MINOR	9
-#define VERSION_PATCH	7
+#define VERSION_MAJOR	1
+#define VERSION_MINOR	0
+#define VERSION_PATCH	0
 #define VERSION_EXTRA	0
 
 /*
@@ -57,6 +57,13 @@
 #define SAVEFILE_MINOR	9
 #define SAVEFILE_PATCH	9
 #define SAVEFILE_EXTRA	0
+
+/*
+ * Hack -- current lib/edit version numbers
+ */
+#define LIBEDIT_MAJOR	2
+#define LIBEDIT_MINOR	9
+#define LIBEDIT_PATCH	7
 
 /*
  * Oldest version number that can still be imported

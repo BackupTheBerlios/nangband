@@ -1668,7 +1668,7 @@ static void display_player_flag_info(void)
 		head = display_player_flag_head[x];
 
 		/* Header */
-		c_put_str(TERM_WHITE, "abcdefghijkl@", row++, col+6);
+		c_put_str(TERM_WHITE, "abcdefghijklm@", row++, col+6);
 
 		/* Eight rows */
 		for (y = 0; y < 8; y++)
@@ -1742,7 +1742,7 @@ static void display_player_flag_info(void)
 		}
 
 		/* Footer */
-		c_put_str(TERM_WHITE, "abcdefghijkl@", row++, col+6);
+		c_put_str(TERM_WHITE, "abcdefghijklm@", row++, col+6);
 
 		/* Equippy */
 		display_player_equippy(row++, col+6);
@@ -1924,7 +1924,7 @@ static void display_player_sust_info(void)
 	col = 26;
 
 	/* Header */
-	c_put_str(TERM_WHITE, "abcdefghijkl@", row-1, col);
+	c_put_str(TERM_WHITE, "abcdefghijklm@", row-1, col);
 
 	/* Process equipment */
 	for (i = INVEN_WIELD; i < INVEN_TOTAL; ++i)
@@ -2016,7 +2016,7 @@ static void display_player_sust_info(void)
 	col = 26;
 
 	/* Footer */
-	c_put_str(TERM_WHITE, "abcdefghijkl@", row+6, col);
+	c_put_str(TERM_WHITE, "abcdefghijklm@", row+6, col);
 
 	/* Equippy */
 	display_player_equippy(row+7, col);

@@ -504,7 +504,7 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	/* Identification info */
 	savefile_do_byte(&o_ptr->ident, type);
 
-	/* "marked" (???) */
+	/* "marked" ( ??? ) */
 	savefile_do_byte(&o_ptr->marked, type);
 
 	/* Load ranadrt info (if appropriate) */

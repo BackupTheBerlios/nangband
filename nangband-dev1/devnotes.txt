@@ -19,10 +19,28 @@ shouldn't occur much later than dungeon level 15.
 
 --Could this light source be dropped or somehow run out?
 
+--GW-- well if a basic monster inventory could be created this could
+done, however the balancing issues would be pretty major. Of course
+if we are to make this variant truely different then this could be an
+interesting way of doing it. Another way could be to add lines into
+the info files for the monsters to specify some generic drop types
+I suppose themed drops would be more accurate, in fact I think this
+has been done in other variants, but I'm not too sure how successfully
+though. The main problem with the second idea is that the light source
+wouldn't 'exist' until the creature is killed and therefore would be
+more difficult to make run out in a nice way.
+
 If an ABSORB_LIGHT monster is in the vicinity of a [CARRY|EMANATE]_LIGHT
 monster, the priority of effects is EMANATE_LIGHT, ABSORB_LIGHT and then
 CARRY_LIGHT.  CARRY_LIGHT monsters may be scared by the absence of
 light, and may try to get away.
 
+--GW-- hmm, if a monster with [EMANATE|CARRY]_LIGHT has no other way of
+seeing in the dark (ie infra_vision, esp, etc) then maybe they would
+fear being in the dark, or maybe ,if they do have an alternate sense,
+the may just merely be slightly more timid and not all out scared.
+
 --ABSORB_LIGHT monster could also possibly be afraid of EMANATE_LIGHT
   monsters.
+
+--GW-- see above

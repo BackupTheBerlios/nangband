@@ -20,22 +20,6 @@ BORGOBJS = \
   borg1.o borg2.o borg3.o borg4.o borg5.o borg6.o borg7.o \
   borg8.o borg9.o
 
-SRCS = \
-  z-util.c z-virt.c z-form.c z-rand.c z-term.c \
-  variable.c tables.c util.c cave.c \
-  object1.c object2.c monster1.c monster2.c \
-  xtra1.c xtra2.c spells1.c spells2.c \
-  melee1.c melee2.c save.c files.c \
-  cmd1.c cmd2.c cmd3.c cmd4.c cmd5.c cmd6.c \
-  resist.c \
-  store.c birth.c load.c \
-  wizard1.c wizard2.c \
-  generate.c dungeon.c init1.c init2.c randart.c \
-  main-gtk.c maid-x11.c main.c \
-  script.c use-obj.c \
-  l-monst.c l-object.c l-player.c l-random.c l-ui.c \
-  l-misc.c l-spell.c
-
 OBJS = \
   z-util.o z-virt.o z-form.o z-rand.o z-term.o \
   variable.o tables.o util.o cave.o \
@@ -47,7 +31,7 @@ OBJS = \
   wizard1.o wizard2.o \
   generate.o dungeon.o init1.o init2.o randart.o \
   main-gtk.o maid-x11.o main.o \
-  script.o use-obj.o \
+  script.o use-obj.o interface.o \
   l-monst.o l-object.o l-player.o l-random.o l-ui.o \
   l-misc.o l-spell.o \
   $(LUAOBJS) \
@@ -96,14 +80,6 @@ angband: $(OBJS)
 clean:
 	\rm -f *.o angband
 	\rm -f ./lua/*.o ./lua/tolua
-
-
-#
-# Generate dependencies automatically
-#
-
-depend:
-	makedepend -D__MAKEDEPEND__ $(SRCS)
 
 
 #

@@ -14,11 +14,11 @@ CFLAGS = -Wall -W -pedantic -mno-cygwin -O2 -fno-strength-reduce -DWINDOWS
 LUALIBS = -s -mno-cygwin
 
 LUAOBJS = \
-	lua/lapi.o      lua/ldebug.o  lua/lmem.o     lua/lstrlib.o  lua/lvm.o       lua/tolua_lb.o \
-	lua/lauxlib.o   lua/ldo.o     lua/lobject.o  lua/ltable.o   lua/lzio.o      lua/tolua_rg.o \
-	lua/lbaselib.o  lua/lfunc.o   lua/lparser.o  lua/ltests.o   lua/tolua_bd.o  lua/tolua_tm.o \
-	lua/lcode.o     lua/lgc.o     lua/lstate.o   lua/ltm.o      lua/tolua_eh.o  lua/tolua_tt.o \
-	lua/ldblib.o    lua/llex.o    lua/lstring.o  lua/lundump.o  lua/tolua_gp.o
+	lua/lapi.o lua/ldebug.o lua/lmem.o lua/lstrlib.o lua/lvm.o lua/tolua_lb.o \
+	lua/lauxlib.o lua/ldo.o lua/lobject.o lua/ltable.o lua/lzio.o lua/tolua_rg.o \
+	lua/lbaselib.o lua/lfunc.o lua/lparser.o lua/ltests.o lua/tolua_bd.o \
+	lua/tolua_tm.o lua/lcode.o lua/lgc.o lua/lstate.o lua/ltm.o lua/tolua_eh.o \
+	lua/tolua_tt.o lua/ldblib.o lua/llex.o lua/lstring.o lua/lundump.o lua/tolua_gp.o
 
 TOLUAOBJS = \
 	lua/tolua.o lua/tolualua.o lua/liolib.o \
@@ -34,6 +34,7 @@ EXOBJS = \
 	cmd4.o \
 	cmd5.o \
 	cmd6.o \
+	interface.o \
 	help.o xmlbulp.o \
 	resist.o \
 	dungeon.o \

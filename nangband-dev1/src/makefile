@@ -1,21 +1,20 @@
 # File: Makefile.std
 
-# This is not a very "nice" Makefile, but it usually works.
-
 #
 # Note that you may have to make modifications below according
 # to your machine, available libraries, compilation options,
 # and your "visual module" of choice.  This Makefile is intended
 # for use with Unix machines running X11, gtk, (n)curses, termcap,
-# or VT100, Slang, Linux VCS or SVGA library,
-# or possibly for "Atari" or "Amiga" computers with "Curses" ports,
-# see below for more information.
+# or VT100, Slang, Linux VCS or SVGA library, or possibly for "Atari"
+# or "Amiga" computers with "Curses" ports, see below for more
+# information.
 #
 # Note that "main-mac.c", the visual module for the Macintosh,
 # must be compiled in a special way, see elsewhere.
 #
 # Note that "main-win.c", the visual module for Windows,
-# must be compiled in a special way, see elsewhere.
+# must be compiled in a special way, except for cygwin.
+# Makefile.cyg may be incoporated into this makefile at some point.
 #
 # Note that "main-ibm.c", "main-dos.c", and "main-emx.c",
 # the visual modules for various types of IBM-PC computers,
@@ -34,6 +33,8 @@
 # This Makefile comes with "default" dependencies that may be obsolete.
 #
 
+# Comment out the following line if you do not have mkstemp()
+HAVE_MKSTEMP = -DHAVE_MKSTEMP
 
 LUAOBJS = \
   lua/lapi.o lua/ldebug.o lua/lmem.o lua/lstrlib.o lua/lvm.o \
@@ -47,12 +48,7 @@ TOLUAOBJS = \
   lua/tolua.o lua/tolualua.o lua/liolib.o \
   $(LUAOBJS)
 
-
-#
-# The "source" and "object" files.
-#
-
-SRCS = \
+ANGSRCS = \
   z-util.c z-virt.c z-form.c z-rand.c z-term.c \
   variable.c tables.c util.c cave.c \
   object1.c object2.c monster1.c monster2.c \
@@ -69,7 +65,7 @@ SRCS = \
   l-monst.c l-object.c l-player.c l-random.c l-ui.c \
   l-misc.c l-spell.c
 
-OBJS = \
+ANGOBJS = \
   z-util.o z-virt.o z-form.o z-rand.o z-term.o \
   variable.o tables.o util.o cave.o \
   object1.o object2.o monster1.o monster2.o \
@@ -137,8 +133,8 @@ CC = gcc
 # including "USE_GETCH" and "USE_CURS_SET".  Note that "config.h" will
 # attempt to "guess" at many of these flags based on your system.
 #
-#CFLAGS = -Wall -O1 -pipe -g -D"USE_X11" -D"USE_GCU"
-#LIBS = -lX11 -lcurses -ltermcap
+CFLAGS = -Wall -O1 -pipe -g -D"USE_X11" -D"USE_GCU"
+LIBS = -lX11 -lcurses -ltermcap
 
 
 ##
@@ -163,10 +159,10 @@ CC = gcc
 
 
 ##
-## Variation -- Use "main-gtk.c" instead of "main-x11.c"
+## Variation -- Use "main-gtk.c" and "main-x11.c"
 ## Note: gtk-config adds GTK and X11 includes and libraries as appropriate.
 ##
-#CFLAGS = -Wall -O `gtk-config --cflags` -g -D"USE_GTK" -D"USE_GCU"
+#CFLAGS = -Wall -O `gtk-config --cflags` -g -DUSE_GTK -DUSE_GCU -DUSE_X11
 #LIBS = `gtk-config --libs` -lcurses -ltermcap
 
 
@@ -189,10 +185,10 @@ CC = gcc
 ## Allows the use of Angband in the console using ncurses,
 ## as well as under X11.
 ##
-CFLAGS = -I/usr/X11R6/include -I/usr/include/ncurses -Wall \
-         -O2 -fno-strength-reduce \
-         -D"USE_X11" -D"USE_GCU" -D"USE_NCURSES"
-LIBS = -L/usr/X11R6/lib -lXaw -lXext -lSM -lICE -lXmu -lXt -lX11 -lncurses
+#CFLAGS = -I/usr/X11R6/include -I/usr/include/ncurses -Wall \
+#         -O2 -fno-strength-reduce \
+#         -D"USE_X11" -D"USE_GCU" -D"USE_NCURSES"
+#LIBS = -L/usr/X11R6/lib -lXaw -lXext -lSM -lICE -lXmu -lXt -lX11 -lncurses
 
 
 ##
@@ -292,16 +288,26 @@ all: angband
 # Install the game.
 #
 
-install: angband
-	cp angband ..
+install: cp angband ../
 
+#
+# Make the GTK port
+#
+gtk:
+	make -f Makefile.gtk
+
+#
+# Make the cygwin port
+#
+cygwin:
+	make -f Makefile.cyg
 
 #
 # Build the "Angband" program
 #
 
-angband: $(OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o angband $(OBJS) $(LIBS)
+angband: $(ANGOBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o angband $(ANGOBJS) $(LIBS)
 
 
 #

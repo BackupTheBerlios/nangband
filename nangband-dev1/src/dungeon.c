@@ -2198,7 +2198,6 @@ static void dungeon(void)
 	shimmer_objects = TRUE;
 
 	/* Reset repair flags */
-	repair_mflag_born = TRUE;
 	repair_mflag_nice = TRUE;
 	repair_mflag_show = TRUE;
 	repair_mflag_mark = TRUE;

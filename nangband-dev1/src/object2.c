@@ -2802,6 +2802,19 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, 
 			break;
 		}
 
+		case TV_LIGHT:
+		case TV_ORB:
+		{
+			if (power > 2 || power < -2)
+				make_randart(o_ptr, (bool)((power < 0) ? TRUE : FALSE));
+			else if (power > 1 || power < -1)
+				(void)make_ego_item(o_ptr, (bool)((power < 0) ? TRUE : FALSE), p_ptr->depth);
+
+			/* Fuel it */
+			a_m_aux_4(o_ptr, lev, power);
+			break;
+		}
+
 		default:
 		{
 			a_m_aux_4(o_ptr, lev, power);

@@ -103,7 +103,6 @@ extern s16b coin_type;
 extern bool opening_chest;
 extern bool shimmer_monsters;
 extern bool shimmer_objects;
-extern bool repair_mflag_born;
 extern bool repair_mflag_nice;
 extern bool repair_mflag_show;
 extern bool repair_mflag_mark;
@@ -222,6 +221,8 @@ extern bool (*get_mon_num_hook)(int r_idx);
 extern bool (*get_obj_num_hook)(int k_idx);
 extern FILE *text_out_file;
 extern void (*text_out_hook)(byte a, cptr str);
+extern int text_out_wrap;
+extern int text_out_indent;
 extern int highscore_fd;
 extern bool use_transparency;
 

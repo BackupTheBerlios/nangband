@@ -94,7 +94,6 @@ bool opening_chest;		/* Hack -- prevent chest generation */
 bool shimmer_monsters;	/* Hack -- optimize multi-hued monsters */
 bool shimmer_objects;	/* Hack -- optimize multi-hued objects */
 
-bool repair_mflag_born;	/* Hack -- repair monster flags (born) */
 bool repair_mflag_nice;	/* Hack -- repair monster flags (nice) */
 bool repair_mflag_show;	/* Hack -- repair monster flags (show) */
 bool repair_mflag_mark;	/* Hack -- repair monster flags (mark) */
@@ -684,6 +683,21 @@ FILE *text_out_file = NULL;
  * screen or to a file.
  */
 void (*text_out_hook)(byte a, cptr str);
+
+
+/*
+ * Hack -- Where to wrap the text when using text_out().  Use the default
+ * value (for example the screen width) when 'text_out_wrap' is 0.
+ *
+ */
+int text_out_wrap = 0;
+
+
+/*
+ * Hack -- Indentation for the text when using text_out().
+ *
+ */
+int text_out_indent = 0;
 
 
 /*

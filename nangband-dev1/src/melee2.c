@@ -4169,10 +4169,6 @@ static void process_monster(int m_idx)
  * Most of the rest of the time is spent in "update_view()" and "light_spot()",
  * especially when the player is running.
  *
- * Note the special "MFLAG_BORN" flag, which prevents monsters from doing
- * anything during the game turn in which they are created.  This flag is
- * optimized via the "repair_mflag_born" flag.
- *
  * Note the special "MFLAG_NICE" flag, which prevents "nasty" monsters from
  * using any of their spell attacks until the player gets a turn.  This flag
  * is optimized via the "repair_mflag_nice" flag.
@@ -4184,27 +4180,6 @@ void process_monsters(byte minimum_energy)
 
 	monster_type *m_ptr;
 	monster_race *r_ptr;
-
-
-	/* Repair "born" flags */
-	if (repair_mflag_born)
-	{
-		/* Clear flag */
-		repair_mflag_born = FALSE;
-
-		/* Process the monsters */
-		for (i = 1; i < m_max; i++)
-		{
-			/* Get the monster */
-			m_ptr = &m_list[i];
-
-			/* Ignore "dead" monsters */
-			/* if (!m_ptr->r_idx) continue; */
-
-			/* Clear "born" flag */
-			m_ptr->mflag &= ~(MFLAG_BORN);
-		}
-	}
 
 
 	/* Process the monsters (backwards) */
@@ -4220,10 +4195,6 @@ void process_monsters(byte minimum_energy)
 
 		/* Ignore "dead" monsters */
 		if (!m_ptr->r_idx) continue;
-
-
-		/* Ignore "born" monsters XXX XXX */
-		if (m_ptr->mflag & (MFLAG_BORN)) continue;
 
 
 		/* Not enough energy to move */

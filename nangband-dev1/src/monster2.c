@@ -1507,13 +1507,6 @@ static bool place_monster_one(int y, int x, int r_idx, bool slp)
 		repair_mflag_nice = TRUE;
 	}
 
-	/* Monster is still being born */
-	n_ptr->mflag |= (MFLAG_BORN);
-
-	/* Optimize -- Repair flags */
-	repair_mflag_born = TRUE;
-
-
 	/* Place the monster in the dungeon */
 	if (!monster_place(y, x, n_ptr)) return (FALSE);
 

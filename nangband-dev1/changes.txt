@@ -1,6 +1,11 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-06-02
+----------
+- Updated to the latest [v] CVS; this brings some niceties.
+  (takkaria)
+
 2002-05-26
 ----------
 - New RISC OS resources files for lua; fixed using some quick hacks.

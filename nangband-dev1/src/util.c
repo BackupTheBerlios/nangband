@@ -2831,26 +2831,119 @@ void prt(cptr str, int row, int col)
 	c_prt(TERM_WHITE, str, row, col);
 }
 
-
 /*
- * Passes the text to put_continuous_text, starting at the current
- * cursor position. 
+ * Print some (colored) text to the screen at the current cursor position,
+ * automatically "wrapping" existing text (at spaces) when necessary to
+ * avoid placing any text into the last column, and clearing every line
+ * before placing any text in that line.  Also, allow "newline" to force
+ * a "wrap" to the next line.  Advance the cursor as needed so sequential
+ * calls to this function will work correctly.
+ *
+ * Once this function has been called, the cursor should not be moved
+ * until all the related "text_out()" calls to the window are complete.
+ *
+ * This function will correctly handle any width up to the maximum legal
+ * value of 256, though it works best for a standard 80 character width.
  */
 void text_out_to_screen(byte a, cptr str)
 {
 	int x, y;
 
-	int w, h;
+	int wid, h;
+
+	int wrap;
+
+	cptr s;
+
 
 	/* Obtain the size */
-	(void)Term_get_size(&w, &h);
+	(void)Term_get_size(&wid, &h);
 
 	/* Obtain the cursor */
 	(void)Term_locate(&x, &y);
 
-	put_continuous_text(x, y, (char *) str, a, TRUE);
+	/* Use special wrapping boundary? */
+	if ((text_out_wrap > 0) && (text_out_wrap < wid))
+		wrap = text_out_wrap;
+	else
+		wrap = wid;
 
-	return;
+	/* Process the string */
+	for (s = str; *s; s++)
+	{
+		char ch;
+
+		/* Force wrap */
+		if (*s == '\n')
+		{
+			/* Wrap */
+			x = text_out_indent;
+			y++;
+
+			/* Clear line, move cursor */
+			Term_erase(x, y, 255);
+
+			continue;
+		}
+
+		/* Clean up the char */
+		ch = (isprint(*s) ? *s : ' ');
+
+		/* Wrap words as needed */
+		if ((x >= wrap - 1) && (ch != ' '))
+		{
+			int i, n = 0;
+
+			byte av[256];
+			char cv[256];
+
+			/* Wrap word */
+			if (x < wrap)
+			{
+				/* Scan existing text */
+				for (i = wrap - 2; i >= 0; i--)
+				{
+					/* Grab existing attr/char */
+					Term_what(i, y, &av[i], &cv[i]);
+
+					/* Break on space */
+					if (cv[i] == ' ') break;
+
+					/* Track current word */
+					n = i;
+				}
+			}
+
+			/* Special case */
+			if (n == 0) n = wrap;
+
+			/* Clear line */
+			Term_erase(n, y, 255);
+
+			/* Wrap */
+			x = text_out_indent;
+			y++;
+
+			/* Clear line, move cursor */
+			Term_erase(x, y, 255);
+
+			/* Wrap the word (if any) */
+			for (i = n; i < wrap - 1; i++)
+			{
+				/* Dump */
+				Term_addch(av[i], cv[i]);
+
+				/* Advance (no wrap) */
+				if (++x > wrap) x = wrap;
+			}
+		}
+
+		/* Dump */
+		Term_addch(a, ch);
+
+		/* Advance */
+		if (++x > wrap) x = wrap;
+	}
 }
 
 
@@ -2887,7 +2980,7 @@ void text_out_to_file(byte attr, cptr str)
 	/* Unused */
 	(void)attr;
 
-	/* Remember the indentation when starting a ew line */
+	/* Remember the indentation when starting a new line */
 	if (!roff_buf[0])
 	{
 		/* Count the leading spaces */
@@ -2899,23 +2992,18 @@ void text_out_to_file(byte attr, cptr str)
 	for (; *str; str++)
 	{
 		char ch = *str;
-
-		/* We always "wrap" on a newline character */
 		bool wrap = (ch == '\n');
 
 		/* Reset indentation after explicit wrap */
 		if (wrap) indent = 0;
 
-		/* If character is unprintable, replace it with a space */
 		if (!isprint(ch)) ch = ' ';
 
-		/* If the pointer is 75 or more characters "in", set wrap = TRUE */
 		if (roff_p >= roff_buf + 75) wrap = TRUE;
 
-		/* If we are at a space and close to the wrap point, wrap */
 		if ((ch == ' ') && (roff_p + 2 >= roff_buf + 75)) wrap = TRUE;
 
-		/* Handle line-wrap (ie. print the current line in full) */
+		/* Handle line-wrap */
 		if (wrap)
 		{
 			/* Terminate the current line */
@@ -2931,7 +3019,7 @@ void text_out_to_file(byte attr, cptr str)
 			}
 
 			/* Output the line */
-			fprintf(text_out_file, "%s", roff_buf);
+			fprintf(text_out_file, "%s\n", roff_buf);
 
 			/* Reset the buffer */
 			roff_s = NULL;
@@ -2961,7 +3049,6 @@ void text_out_to_file(byte attr, cptr str)
 		*roff_p++ = ch;
 	}
 }
-
 
 /*
  * Output text to the screen or to a file depending on the selected

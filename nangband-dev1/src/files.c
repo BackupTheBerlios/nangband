@@ -1499,11 +1499,18 @@ static void display_player_xtra_info(void)
 	desc = likert(xsrh, 6);
 	c_put_str(likert_color, format("%9s", desc), 17, col+14);
 
-	/* Bottom */
-	col = 3;
+	/* Output to the screen and wrap at column 72 */
+	text_out_hook = text_out_to_screen;
+	text_out_wrap = 72;
+	text_out_indent = 1;
 
 	/* History */
-	putstr_multi(col, 19, 77, TERM_L_GREEN, p_ptr->history, FALSE);
+	Term_gotoxy(text_out_indent, 19);
+	text_out(p_ptr->history);
+
+	/* Reset text_out() vars */
+	text_out_wrap = 0;
+	text_out_indent = 0;
 
 	/* We are done. */
 	return;

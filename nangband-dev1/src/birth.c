@@ -197,11 +197,11 @@ static int adjust_stat(int value, int amount, int auto_roll)
 			}
 			else if (value < 18+70)
 			{
-				value += ((auto_roll ? 15 : randint(15)) + 5);
+				value += (int)((auto_roll ? 15 : randint(15)) + 5);
 			}
 			else if (value < 18+90)
 			{
-				value += ((auto_roll ? 6 : randint(6)) + 2);
+				value += (int)((auto_roll ? 6 : randint(6)) + 2);
 			}
 			else if (value < 18+100)
 			{
@@ -238,7 +238,7 @@ static void get_stats(void)
 		for (j = i = 0; i < 18; i++)
 		{
 			/* Roll the dice */
-			dice[i] = randint(3 + i % 3);
+			dice[i] = (int)randint(3 + i % 3);
 
 			/* Collect the maximum */
 			j += dice[i];
@@ -320,7 +320,7 @@ static void get_extra(void)
 		/* Roll the hitpoint values */
 		for (i = 1; i < PY_MAX_LEVEL; i++)
 		{
-			j = randint(p_ptr->hitdie);
+			j = (int)randint(p_ptr->hitdie);
 			p_ptr->player_hp[i] = p_ptr->player_hp[i-1] + j;
 		}
 
@@ -359,7 +359,7 @@ static void get_history(void)
 		i = 0;
 
 		/* Roll for nobility */
-		roll = randint(100);
+		roll = (int)randint(100);
 
 		/* Get the proper entry in the table */
 		while ((chart != h_info[i].chart) || (roll > h_info[i].roll)) i++;
@@ -392,7 +392,7 @@ static void get_history(void)
 static void get_ahw(void)
 {
 	/* Calculate the age */
-	p_ptr->age = rp_ptr->b_age + randint(rp_ptr->m_age);
+	p_ptr->age = rp_ptr->b_age + (int)randint(rp_ptr->m_age);
 
 	/* Calculate the height/weight for males */
 	if (p_ptr->psex == SEX_MALE)
@@ -422,7 +422,7 @@ static void get_money(void)
 	int gold;
 
 	/* Social Class determines starting gold */
-	gold = (p_ptr->sc * 6) + randint(100) + 300;
+	gold = (p_ptr->sc * 6) + (int)randint(100) + 300;
 
 	/* Process the stats */
 	for (i = 0; i < A_MAX; i++)
@@ -560,7 +560,7 @@ static void player_outfit(void)
 	/* Hack -- Give the player some torches */
 	object_prep(i_ptr, lookup_kind(TV_LIGHT, SV_LIGHT_TORCH));
 	i_ptr->number = (byte)rand_range(3, 7);
-	i_ptr->pval = rand_range(3, 7) * 500;
+	i_ptr->pval = (int)rand_range(3, 7) * 500;
 	object_aware(i_ptr);
 	object_known(i_ptr);
 	(void)inven_carry(i_ptr);

@@ -3,7 +3,7 @@
 ** Written by Waldemar Celes
 ** TeCGraf/PUC-Rio
 ** Jul 1998
-** $Id: tolua_tt.c,v 1.2 2002/06/12 19:13:39 takkaria Exp $
+** $Id: tolua_tt.c,v 1.3 2002/06/29 19:42:24 ajps Exp $
 */
 
 /* This code is free software; you can redistribute it and/or modify it. 
@@ -286,7 +286,7 @@ int tolua_arrayistype (lua_State* L, int narg, int tag, int dim, int def)
  for (i=0; i<dim; ++i)
  {
   int tf;
-  lua_pushnumber(L,i+1);
+  lua_pushnumber(L,(long)(i+1));
   lua_gettable(L,narg);
   tf = lua_gettop(L);
   if (!istype(L,tf,tag) && (!def || !lua_isnil(L,tf)))

@@ -14,6 +14,7 @@ CC = cc
 LD = link
 SQ = squeeze
 RM = remove
+MV = rename
 tolua = lua.tolua
 
 # Flags:
@@ -44,7 +45,7 @@ OBJS = z-util.o z-virt.o z-form.o z-rand.o z-term.o \
   melee1.o melee2.o files.o \
   cmd1.o cmd2.o cmd3.o cmd4.o cmd5.o cmd6.o \
   store.o birth.o save.o interface.o resist.o \
-  xmlbulp.o help.o \
+  xmlbulp.o help.o running.o \
   wizard1.o wizard2.o \
   generate.o dungeon.o init1.o init2.o randart.o \
   main-ros.o main.o \
@@ -62,14 +63,14 @@ compile: ^.!RunImage lua/tolua
 # The normal !RunImage:
 ^.!RunImage:	$(LUAPKGS) $(OBJS) $(LIBS)
 		$(LD) $(LDFLAGS) -o !RunImage $(OBJS) $(LIBS)
-		$(SQ) $(SQFLAGS) !RunImage ^.!RunImage
-		$(RM) !RunImage
+		$(SQ) $(SQFLAGS) !RunImage !RunImage
+		$(MV) !RunImage ^.!RunImage
 
 # The Borg RunImage
 ^.!RunImageB:	$(LUAPKGS) $(BOBJS) $(LIBS)
 		$(LD) $(LDFLAGS) -o !RunImage $(BOBJS) $(LIBS)
-		$(SQ) $(SQFLAGS) !RunImageB ^.!RunImageB
-		$(RM) !RunImageB
+		$(SQ) $(SQFLAGS) !RunImageB !RunImageB
+		$(MV) !RunImageB ^.!RunImageB
 
 # tolua
 lua/tolua: $(TOLUAOBJS)
@@ -112,3 +113,4 @@ monster2.o:
 	$(CC) -Otime $(CCFLAGS) -c -o $@ $<
 
 # Dynamic dependencies:
+

@@ -580,7 +580,7 @@ static bool player_birth_aux_1(void)
 #endif
 	char p2 = ')';
 
-	char buf[80];
+	char buf[160];
 
 
 	/*** Instructions ***/
@@ -589,20 +589,20 @@ static bool player_birth_aux_1(void)
 	Term_clear();
 
 	/* Display some helpful information */
-	Term_putstr(5, 10, -1, TERM_WHITE,
-	            "Please answer the following questions.  Most of the questions");
-	Term_putstr(5, 11, -1, TERM_WHITE,
-	            "display a set of standard answers, and many will also accept");
-	Term_putstr(5, 12, -1, TERM_WHITE,
-	            "some special responses, including 'Q' to quit, 'S' to restart,");
-	Term_putstr(5, 13, -1, TERM_WHITE,
-	            "and '?' for help.  Note that 'Q' and 'S' must be capitalized.");
-
+	Term_gotoxy(20, 2);
+	text_out_indent = 20;
+	text_out_to_screen(TERM_WHITE,
+		"Please answer the following questions.  Most of the questions"
+		" display a set of standard answers, and many will also accept"
+		" some special responses, including 'Q' to quit, 'S' to restart,"
+		" and '?' for help.  Note that 'Q' and 'S' must be capitalized.");
 
 	/*** Player sex ***/
 
 	/* Extra info */
-	Term_putstr(5, 15, -1, TERM_WHITE,
+	Term_gotoxy(2, 10);
+	text_out_indent = 2;
+	text_out_to_screen(TERM_WHITE,
 		"Your 'sex' does not have any significant gameplay effects.");
 
 	/* Prompt for "Sex" */
@@ -615,7 +615,7 @@ static bool player_birth_aux_1(void)
 
 		/* Display */
 		strnfmt(buf, sizeof(buf), "%c%c %s", I2A(n), p2, str);
-		put_str(buf, 21 + (n/5), 2 + 15 * (n%5));
+		put_str(buf, 17 + (n/5), 2 + 15 * (n%5));
 	}
 
 	/* Choose */
@@ -623,7 +623,7 @@ static bool player_birth_aux_1(void)
 	{
 		sprintf(buf, "Choose a sex (%c-%c, or * for random): ",
 		        I2A(0), I2A(n-1));
-		put_str(buf, 20, 2);
+		put_str(buf, 16, 2);
 		ch = inkey();
 		if (ch == 'Q') quit(NULL);
 		if (ch == 'S') return (FALSE);
@@ -644,14 +644,16 @@ static bool player_birth_aux_1(void)
 	c_put_str(TERM_L_BLUE, sp_ptr->title, 3, 8);
 
 	/* Clean up */
-	clear_from(15);
+	clear_from(9);
 
 
 	/*** Player race ***/
 
 	/* Extra info */
-	Term_putstr(5, 15, -1, TERM_WHITE,
-	            "Your 'race' determines various intrinsic factors and bonuses.");
+	Term_gotoxy(2, 10);
+	text_out_indent = 2;
+	text_out_to_screen(TERM_WHITE,
+		"Your 'race' determines various intrinsic factors and bonuses.");
 
 	/* Dump races */
 	for (n = 0; n < z_info->p_max; n++)
@@ -663,7 +665,7 @@ static bool player_birth_aux_1(void)
 
 		/* Display */
 		strnfmt(buf, sizeof(buf), "%c%c %s", I2A(n), p2, str);
-		put_str(buf, 21 + (n/5), 2 + 15 * (n%5));
+		put_str(buf, 17 + (n/5), 2 + 15 * (n%5));
 	}
 
 	/* Choose */
@@ -671,7 +673,7 @@ static bool player_birth_aux_1(void)
 	{
 		sprintf(buf, "Choose a race (%c-%c, or * for random): ",
 		        I2A(0), I2A(n-1));
-		put_str(buf, 20, 2);
+		put_str(buf, 16, 2);
 		ch = inkey();
 		if (ch == 'Q') quit(NULL);
 		if (ch == 'S') return (FALSE);
@@ -698,10 +700,11 @@ static bool player_birth_aux_1(void)
 	/*** Player class ***/
 
 	/* Extra info */
-	Term_putstr(5, 15, -1, TERM_WHITE,
-	            "Your 'class' determines various intrinsic abilities and bonuses.");
-	Term_putstr(5, 16, -1, TERM_WHITE,
-	            "Any entries with a (*) should only be used by advanced players.");
+	Term_gotoxy(2, 10);
+	text_out_indent = 2;
+	text_out_to_screen(TERM_WHITE,
+		"Your 'class' determines various intrinsic abilities and bonuses."
+		" Any entries with a (*) should only be used by advanced players.");
 
 	/* Dump classes */
 	for (n = 0; n < z_info->c_max; n++)
@@ -719,7 +722,7 @@ static bool player_birth_aux_1(void)
 
 		/* Display */
 		strnfmt(buf, sizeof(buf), "%c%c %s%s", I2A(n), p2, str, mod);
-		put_str(buf, 21 + (n/3), 2 + 20 * (n%3));
+		put_str(buf, 17 + (n/3), 2 + 20 * (n%3));
 	}
 
 	/* Get a class */
@@ -727,7 +730,7 @@ static bool player_birth_aux_1(void)
 	{
 		sprintf(buf, "Choose a class (%c-%c, or * for random): ",
 		        I2A(0), I2A(n-1));
-		put_str(buf, 20, 2);
+		put_str(buf, 16, 2);
 		ch = inkey();
 		if (ch == 'Q') quit(NULL);
 		if (ch == 'S') return (FALSE);
@@ -760,22 +763,22 @@ static bool player_birth_aux_1(void)
 	c_put_str(TERM_L_BLUE, c_name + cp_ptr->name, 5, 8);
 
 	/* Clean up */
-	clear_from(15);
-
+	clear_from(9);
 
 	/*** Birth options ***/
 
 	/* Extra info */
-	Term_putstr(5, 15, -1, TERM_WHITE,
-	            "You can change your options at any time, but the 'Birth' options");
-	Term_putstr(5, 16, -1, TERM_WHITE,
-	            "must be changed now to affect the birth of this character.");
+	Term_gotoxy(2, 10);
+	text_out_indent = 2;
+	text_out_to_screen(TERM_WHITE,
+		"You can change your options at any time, but the 'Birth' options"
+		" must be changed now to affect the birth of this character.");
 
 	/* Verify birth options */
 	while (1)
 	{
 		sprintf(buf, "Modify options (y/n)? ");
-		put_str(buf, 20, 2);
+		put_str(buf, 16, 2);
 		ch = inkey();
 		if (ch == 'Q') quit(NULL);
 		if (ch == 'S') return (FALSE);

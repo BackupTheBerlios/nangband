@@ -1238,8 +1238,8 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 
 	u16b limit;
 
-	byte count = 0,
-	     prev_char = 0,
+	byte count,
+	     prev_char,
 	     cave = 0;
 
 	/* Check version */
@@ -1318,6 +1318,9 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 
 	/*** Simple "Run-Length-Encoding" of cave ***/
 
+	/* Sanitize prev_char and count */
+	prev_char = count = 0;
+
 	/* Do RLE/RLD */
 	if (type == PUT)
 	{
@@ -1334,7 +1337,7 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 				 * increase the count of this character.
 				 */
 				if ((cave != prev_char) ||
-				    (count == (MAX_UCHAR * 2)))
+				    (count == (MAX_UCHAR)))
 				{
 					savefile_do_byte(&count, type);
 					savefile_do_byte(&prev_char, type);
@@ -1352,7 +1355,10 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 			savefile_do_byte(&prev_char, type);
 		}
 
-		/* Dump the cave_info[][] flags to the file */
+		/* Sanitize prev_char and count */
+		prev_char = count = 0;
+
+		/* Dump the cave_info2[][] flags to the file */
 		for (y = 0; y < DUNGEON_HGT; y++)
 		{
 			for (x = 0; x < DUNGEON_WID; x++)
@@ -1361,12 +1367,12 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 				 * If the run is broken, or full, flush it; otherwise,
 				 * increase the count of this character.
 				 */
-				if ((cave_info[y][x] != prev_char) ||
-				    (count == (MAX_UCHAR * 2)))
+				if ((cave_info2[y][x] != prev_char) ||
+				    (count == (MAX_UCHAR)))
 				{
 					savefile_do_byte(&count, type);
 					savefile_do_byte(&prev_char, type);
-					prev_char = cave_info[y][x];
+					prev_char = cave_info2[y][x];
 					count = 1;
 				}
 				else count++;
@@ -1382,6 +1388,9 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 	}
 	else
 	{
+		/* Sanitize prev_char and count */
+		prev_char = cave = 0;
+
 		/* Load the dungeon data */
 		for (x = y = 0; y < DUNGEON_HGT; )
 		{
@@ -1406,6 +1415,9 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 				}
 			}
 		}
+
+		/* Sanitize prev_char and count */
+		prev_char = cave = 0;
 
 		/* Load the dungeon data */
 		for (x = y = 0; y < DUNGEON_HGT; )

@@ -3,4 +3,4 @@
 # This script by moose/takka.
 
 echo "Topics covered in the developer notes are:"
-grep -i '.*[0-9]:' developer_readme.txt
+grep -i '.*[0-9]:' devnotes.txt

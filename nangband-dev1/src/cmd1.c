@@ -124,17 +124,17 @@ sint critical_norm(int weight, int plus, int dam)
 	{
 		k = weight + randint(650);
 
-		if (k > 400)
+		if (k > 500)
 		{
-			if (k < 700)
+			if (k < 800)
 			{
 				msg_print("It was a weak hit.");
-				dam = .6 * dam;
+				dam = .5 * dam;
 			}
-			else if (k < 1000)
+			else if (k < 1100)
 			{
 				msg_print("It was a feeble hit.");
-				dam = .3 * dam;
+				dam = .25 * dam;
 			}
 			else
 			{
@@ -142,7 +142,7 @@ sint critical_norm(int weight, int plus, int dam)
 				dam = 1;
 			}
 		}
-	}	
+	}
 
 	return (dam);
 }

@@ -878,7 +878,7 @@ bool set_timed_res(int res_idx, int amount)
 	{
 		if (!p_ptr->resist_timed[res_idx])
 		{
-			char text[32];
+			char text[64];
 
 			sprintf(text, "You feel resistant to %s!", res_names[res_idx]);
 			msg_print(text);
@@ -892,7 +892,7 @@ bool set_timed_res(int res_idx, int amount)
 	{
 		if (p_ptr->resist_timed[res_idx])
 		{
-			char text[38];
+			char text[64];
 
 			sprintf(text, "You feel less resistant to %s!", res_names[res_idx]);
 			msg_print(text);

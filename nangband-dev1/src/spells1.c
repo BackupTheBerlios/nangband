@@ -854,14 +854,8 @@ void acid_dam(int dam, cptr kb_str)
 	/* Total Immunity */
 	if ((p_ptr->resist_cur[RES_ACID] > 90) || (dam <= 0)) return;
 
-	/*
-	 * Grab a current % resist value
-	 *
-	 * [note to self - create a function that decreases the % gain for
-     * temporary resistances based on time left] --takkaria
-	 */
-	resist_percent = p_ptr->resist_cur[RES_ACID] +
-		(p_ptr->resist_timed[RES_ACID] ? 20 : 0);
+	/* Grab a current % resist value */
+	resist_percent = resist_player_current(RES_ACID);
 
 	/* Resist the damage */
 	dam /= resist_percent;
@@ -888,14 +882,8 @@ void elec_dam(int dam, cptr kb_str)
 	/* Total Immunity */
 	if ((p_ptr->resist_cur[RES_ELEC] > 90) || (dam <= 0)) return;
 
-	/*
-	 * Grab a current % resist value
-	 *
-	 * [note to self - create a function that decreases the % gain for
-     * temporary resistances based on time left] --takkaria
-	 */
-	resist_percent = p_ptr->resist_cur[RES_ELEC] +
-		(p_ptr->resist_timed[RES_ELEC] ? 20 : 0);
+	/* Grab a current % resist value */
+	resist_percent = resist_player_current(RES_ELEC);
 
 	/* Resist the damage */
 	dam /= resist_percent;
@@ -919,14 +907,8 @@ void fire_dam(int dam, cptr kb_str)
 	/* Total Immunity */
 	if ((p_ptr->resist_cur[RES_FIRE] > 90) || (dam <= 0)) return;
 
-	/*
-	 * Grab a current % resist value
-	 *
-	 * [note to self - create a function that decreases the % gain for
-     * temporary resistances based on time left] --takkaria
-	 */
-	resist_percent = p_ptr->resist_cur[RES_FIRE] +
-		(p_ptr->resist_timed[RES_FIRE] ? 20 : 0);
+	/* Grab a current % resist value */
+	resist_percent = resist_player_current(RES_FIRE);
 
 	/* Resist the damage */
 	dam /= resist_percent;
@@ -950,14 +932,8 @@ void cold_dam(int dam, cptr kb_str)
 	/* Total Immunity */
 	if ((p_ptr->resist_cur[RES_COLD] > 90) || (dam <= 0)) return;
 
-	/*
-	 * Grab a current % resist value
-	 *
-	 * [note to self - create a function that decreases the % gain for
-     * temporary resistances based on time left] --takkaria
-	 */
-	resist_percent = p_ptr->resist_cur[RES_COLD] +
-		(p_ptr->resist_timed[RES_COLD] ? 20 : 0);
+	/* Grab a current % resist value */
+	resist_percent = resist_player_current(RES_COLD);
 
 	/* Take damage */
 	take_hit(dam, kb_str);
@@ -3317,14 +3293,8 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ)
 			/* Total Immunity */
 			if ((p_ptr->resist_cur[RES_POIS] > 90)) break;
 
-			/*
-			 * Grab a current % resist value
-			 *
-			 * [note to self - create a function that decreases the % gain for
- 			 * temporary resistances based on time left] --takkaria
-			 */
-			resist_percent = p_ptr->resist_cur[RES_POIS] +
-				(p_ptr->resist_timed[RES_POIS] ? 20 : 0);
+			/* Grab the % value */
+			resist_percent = resist_player_current(RES_POIS);
 
 			/* Print a message */
 			if (fuzzy) msg_print("You are hit by poison!");

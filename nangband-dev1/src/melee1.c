@@ -456,14 +456,8 @@ bool make_attack_normal(int m_idx)
 				{
 					int resist_percent = 0;
 
-					/*
-					 * Grab a current % resist value
-					 *
-					 * [note to self - create a function that decreases the % gain
-					 * for temporary resistances based on time left] --takkaria
-					 */
-					resist_percent = p_ptr->resist_cur[RES_POIS] +
-						(p_ptr->resist_timed[RES_POIS] ? 20 : 0);
+					/* Grab a current % resist value */
+					resist_percent = resist_player_current(RES_POIS);
 
 					if (resist_percent > 15) damage = damage * (3/4);
 

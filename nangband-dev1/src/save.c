@@ -15,7 +15,7 @@
  * Version numbers of the savefile code.
  */
 #define SAVEFILE_VERSION_MAJOR   1
-#define SAVEFILE_VERSION_MINOR   1
+#define SAVEFILE_VERSION_MINOR   2
 
 /*
  * The new savefile format was first the idea of Ben Harrison.
@@ -98,7 +98,7 @@
 #define BLOCK_VERSION_ERROR      0
 #define BLOCK_VERSION_HEADER     1
 #define BLOCK_VERSION_OPTIONS    1
-#define BLOCK_VERSION_PLAYER     4
+#define BLOCK_VERSION_PLAYER     5
 #define BLOCK_VERSION_RNG        1
 #define BLOCK_VERSION_MESSAGES   1
 #define BLOCK_VERSION_MONLORE    1
@@ -427,7 +427,7 @@ static void savefile_write_block(int fd, byte type, byte version)
 static errr savefile_helper_item(object_type *o_ptr, bool type)
 {
 	int temp_kind;
-	byte version = HELPER_VERSION_OBJECT;
+	byte version;
 	object_kind *k_ptr;
 
 	byte temp;
@@ -700,6 +700,12 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
  */
 static void savefile_helper_monster(monster_type *m_ptr, bool type)
 {
+	byte version;
+
+	/* Simple version */
+	if (type == PUT) version = HELPER_VERSION_MONSTER;
+	savefile_do_byte(&version, type);
+
 	/* Monster race */
 	savefile_do_s16b(&m_ptr->r_idx, type);
 
@@ -732,6 +738,11 @@ static void savefile_helper_monster(monster_type *m_ptr, bool type)
 static void savefile_helper_store(store_type *st_ptr, bool type)
 {
 	int i = 0;
+	byte version;
+
+	/* Simple version */
+	if (type == PUT) version = HELPER_VERSION_STORE;
+	savefile_do_byte(&version, type);
 
 	/* Save the "open" counter */
 	savefile_do_s32b(&st_ptr->store_open, type);
@@ -904,6 +915,7 @@ static errr savefile_do_block_player(bool type, int ver)
 {
 	int i = 0, n = 0;
 	byte temp;
+	u16b t16u;
 
 	/* Add number of past lives */
 	if (ver < 3)
@@ -914,16 +926,13 @@ static errr savefile_do_block_player(bool type, int ver)
 	}
 
 	/* Set the level */
-	if (type == PUT) n = temp = PY_MAX_LEVEL;
+	if (type == PUT) temp = PY_MAX_LEVEL;
 
 	/* Do the numebr of HP entries */
 	savefile_do_byte(&temp, type);
 
-	/* Set the level */
-	if (type == GET) n = temp;
-
 	/* Incompatible save files */
-	if (n > PY_MAX_LEVEL)
+	if (temp > PY_MAX_LEVEL)
 	{
 		/* Warn */
 		note(format("Too many hitpoint entries! (%i player levels)", n), type);
@@ -933,35 +942,18 @@ static errr savefile_do_block_player(bool type, int ver)
 	}
 
 	/* Do the entries */
-	for (i = 0; i < n; i++)
+	for (i = 0; i < temp; i++)
 		savefile_do_s16b(&p_ptr->player_hp[i], type);
 
-	/* Do spell data */
-	savefile_do_u32b(&p_ptr->spell_learned1, type);
-	savefile_do_u32b(&p_ptr->spell_learned2, type);
-	savefile_do_u32b(&p_ptr->spell_worked1, type);
-	savefile_do_u32b(&p_ptr->spell_worked2, type);
-	savefile_do_u32b(&p_ptr->spell_forgotten1, type);
-	savefile_do_u32b(&p_ptr->spell_forgotten2, type);
+	/* Write the spell "max index" */
+	if (type == PUT) t16u = PY_MAX_SPELLS;
+	savefile_do_u16b(&t16u, type);
 
-#if 0
-	/* The magic spells were changed drastically in Angband 2.9.7 */
-	if (older_than(2, 9, 7) &&
-	    (c_info[p_ptr->pclass].spell_book == TV_MAGIC_BOOK))
-	{
-		/* Discard old spell info */
-		strip_bytes(24);
+	/* Loop */
+	for (i = 0; i < t16u; i++)
+		savefile_do_byte(&p_ptr->spell_flags[i], type);
 
-		/* Discard old spell order */
-		strip_bytes(PY_MAX_SPELLS);
-
-		/* None of the spells have been learned yet */
-		for (i = 0; i < PY_MAX_SPELLS; i++)
-			p_ptr->spell_order[i] = 99;
-	}
-#endif
-
-	/* Do the ordered spells */
+	/* Do the ordered spells (or not) */
 	for (i = 0; i < PY_MAX_SPELLS; i++)
 		savefile_do_byte(&p_ptr->spell_order[i], type);
 
@@ -2383,10 +2375,13 @@ bool load_player(void)
 			else if (header[pos++] != 97) { what = "Invalid savefile"; err = 1; }
 			else if (header[pos++] != 118) { what = "Invalid savefile"; err = 1; }
 			else if (header[pos++] != 101) { what = "Invalid savefile"; err = 1; }
-			else if ((header[pos++] == 1) && (header[pos++] = 0))
+			else if ((header[pos++] == 1) && (header[pos++] < 2))
 			{
 				/* Old savefile! */
 				err = 1;
+
+				/* Note */
+				note("Sorry, this savefile cannot be loaded, due to internal changes.", GET);
 
 				/* Error */
 				what = "Cannot import this savefile";

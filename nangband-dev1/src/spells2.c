@@ -2026,7 +2026,7 @@ bool recharge(int num)
  *
  * Note that affected monsters are NOT auto-tracked by this usage.
  */
-static bool project_hack(int typ, int dam)
+bool project_los(int typ, int dam)
 {
 	int i, x, y;
 
@@ -2064,7 +2064,7 @@ static bool project_hack(int typ, int dam)
  */
 bool speed_monsters(void)
 {
-	return (project_hack(GF_OLD_SPEED, p_ptr->lev));
+	return (project_los(GF_OLD_SPEED, p_ptr->lev));
 }
 
 /*
@@ -2072,7 +2072,7 @@ bool speed_monsters(void)
  */
 bool slow_monsters(void)
 {
-	return (project_hack(GF_OLD_SLOW, p_ptr->lev));
+	return (project_los(GF_OLD_SLOW, p_ptr->lev));
 }
 
 /*
@@ -2080,7 +2080,7 @@ bool slow_monsters(void)
  */
 bool sleep_monsters(void)
 {
-	return (project_hack(GF_OLD_SLEEP, p_ptr->lev));
+	return (project_los(GF_OLD_SLEEP, p_ptr->lev));
 }
 
 
@@ -2089,7 +2089,7 @@ bool sleep_monsters(void)
  */
 bool banish_evil(int dist)
 {
-	return (project_hack(GF_AWAY_EVIL, dist));
+	return (project_los(GF_AWAY_EVIL, dist));
 }
 
 
@@ -2098,7 +2098,7 @@ bool banish_evil(int dist)
  */
 bool turn_undead(void)
 {
-	return (project_hack(GF_TURN_UNDEAD, p_ptr->lev));
+	return (project_los(GF_TURN_UNDEAD, p_ptr->lev));
 }
 
 
@@ -2107,7 +2107,7 @@ bool turn_undead(void)
  */
 bool dispel_undead(int dam)
 {
-	return (project_hack(GF_DISP_UNDEAD, dam));
+	return (project_los(GF_DISP_UNDEAD, dam));
 }
 
 /*
@@ -2115,7 +2115,7 @@ bool dispel_undead(int dam)
  */
 bool dispel_evil(int dam)
 {
-	return (project_hack(GF_DISP_EVIL, dam));
+	return (project_los(GF_DISP_EVIL, dam));
 }
 
 /*
@@ -2123,7 +2123,7 @@ bool dispel_evil(int dam)
  */
 bool dispel_monsters(int dam)
 {
-	return (project_hack(GF_DISP_ALL, dam));
+	return (project_los(GF_DISP_ALL, dam));
 }
 
 

@@ -386,6 +386,14 @@
 
 
 /*
+ * Flags for player_type.spell_flags[]
+ */
+#define PY_SPELL_LEARNED    0x01 /* Spell has been learned */
+#define PY_SPELL_WORKED     0x02 /* Spell has been successfully tried */
+#define PY_SPELL_FORGOTTEN  0x04 /* Spell has been forgotten */
+
+
+/*
  * Maximum number of "normal" pack slots, and the index of the "overflow"
  * slot, which can hold an item, but only temporarily, since it causes the
  * pack to "overflow", dropping the "last" item onto the ground.  Since this

@@ -272,6 +272,10 @@ gcc-3.0: WARNINGS = -Wall
 gcc-3.0: CC = gcc-3.0
 gcc-3.0: nangband
 
+# Remove the binary
+rmbin:
+	rm ../nangband
+
 # Move the binary one level up.
 install: nangband
 	cp nangband ../

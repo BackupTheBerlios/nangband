@@ -9,7 +9,6 @@ function eat_food(object)
 	local ident = FALSE
 
 	if object.sval == SV_FOOD_RATION or
-	   object.sval == SV_FOOD_CAVIAR or
 	   object.sval == SV_FOOD_BISCUIT or
 	   object.sval == SV_FOOD_JERKY or
 	   object.sval == SV_FOOD_SLIME_MOLD or
@@ -211,11 +210,11 @@ function quaff_potion(object)
 			set_fast(player.fast + 5)
 		end
 	elseif object.sval == SV_POTION_RESIST_HEAT then
-		if alter_timed_res(RES_FIRE, randint(10) + 10) then
+		if set_oppose_fire(player.oppose_fire + randint(10) + 10) then
 			ident = TRUE
 		end
 	elseif object.sval == SV_POTION_RESIST_COLD then
-		if alter_timed_res(RES_COLD, randint(10) + 10) then
+		if set_oppose_cold(player.oppose_cold + randint(10) + 10) then
 			ident = TRUE
 		end
 	elseif object.sval == SV_POTION_HEROISM then
@@ -322,12 +321,12 @@ function quaff_potion(object)
 		if do_inc_stat(A_CHR) then ident = TRUE end
 	elseif object.sval == SV_POTION_ENLIGHTENMENT then
 		msg_print("An image of your surroundings forms in your mind...")
-		wiz_light()
+		wiz_lite()
 		ident = TRUE
 	elseif object.sval == SV_POTION_STAR_ENLIGHTENMENT then
 		msg_print("You begin to feel more enlightened...")
 		message_flush()
-		wiz_light()
+		wiz_lite()
 		do_inc_stat(A_INT)
 		do_inc_stat(A_WIS)
 		detect_traps()
@@ -371,7 +370,7 @@ function read_scroll(object)
 		if not player.resist_blind then
 			set_blind(player.blind + 3 + randint(5))
 		end
-		if unlight_area(10, 3) then ident = TRUE end
+		if unlite_area(10, 3) then ident = TRUE end
 	elseif object.sval == SV_SCROLL_AGGRAVATE_MONSTER then
 		msg_print("There is a high pitched humming noise.")
 		aggravate_monsters(0)
@@ -422,24 +421,24 @@ function read_scroll(object)
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_ENCHANT_ARMOR then
 		ident = TRUE
-		if not enchant_spell(0, 0, 1, FALSE) then used_up = FALSE end
+		if not enchant_spell(0, 0, 1) then used_up = FALSE end
 	elseif object.sval == SV_SCROLL_ENCHANT_WEAPON_TO_HIT then
-		if not enchant_spell(1, 0, 0, FALSE) then used_up = FALSE end
+		if not enchant_spell(1, 0, 0) then used_up = FALSE end
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_ENCHANT_WEAPON_TO_DAM then
-		if not enchant_spell(0, 1, 0, FALSE) then used_up = FALSE end
+		if not enchant_spell(0, 1, 0) then used_up = FALSE end
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_STAR_ENCHANT_ARMOR then
-		if not enchant_spell(0, 0, randint(3) + 2, FALSE) then used_up = FALSE end
+		if not enchant_spell(0, 0, randint(3) + 2) then used_up = FALSE end
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_STAR_ENCHANT_WEAPON then
-		if not enchant_spell(randint(3), randint(3), 0, FALSE) then used_up = FALSE end
+		if not enchant_spell(randint(3), randint(3), 0) then used_up = FALSE end
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_RECHARGING then
 		if not recharge(60) then used_up = FALSE end
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_LIGHT then
-		if light_area(damroll(2, 8), 2) then ident = TRUE end		
+		if lite_area(damroll(2, 8), 2) then ident = TRUE end		
 	elseif object.sval == SV_SCROLL_MAPPING then
 		map_area()
 		ident = TRUE
@@ -508,7 +507,7 @@ function use_staff(object)
 		if not player.resist_blind then
 			if set_blind(player.blind + 3 + randint(5)) then ident = TRUE end
 		end
-		if unlight_area(10, 3) then ident = TRUE end
+		if unlite_area(10, 3) then ident = TRUE end
 	elseif object.sval == SV_STAFF_SLOWNESS then
 		if set_slow(player.slow + randint(30) + 15) then ident = TRUE end
 	elseif object.sval == SV_STAFF_HASTE_MONSTERS then
@@ -532,17 +531,17 @@ function use_staff(object)
 			end
 			ident = TRUE
 		end
-	elseif object.sval == SV_STAFF_STARLIGHT then
+	elseif object.sval == SV_STAFF_STARLITE then
 		if player.blind == 0 then
 			msg_print("The end of the staff glows brightly...")
 		end
 
 		for i = 1, 9 do
-			light_line(ddd[i])
+			lite_line(ddd[i])
 		end
 		ident = TRUE
-	elseif object.sval == SV_STAFF_LIGHT then
-		if light_area(damroll(2, 8), 2) then ident = TRUE end
+	elseif object.sval == SV_STAFF_LITE then
+		if lite_area(damroll(2, 8), 2) then ident = TRUE end
 	elseif object.sval == SV_STAFF_MAPPING then
 		map_area()
 		ident = TRUE
@@ -639,7 +638,7 @@ function aim_wand(object)
 	player.energy_use = 100
 
 	-- Get the object level
-	local lev = k_info[object.k_idx + 1].level
+	local lev = k_info[object.k_idx].level
 
 	-- Base chance of success
 	local chance = player.skill_dev
@@ -700,9 +699,9 @@ function aim_wand(object)
 		if destroy_door(dir) then ident = TRUE end
 	elseif sval == SV_WAND_STONE_TO_MUD then
 		if wall_to_mud(dir) then ident = TRUE end
-	elseif sval == SV_WAND_LIGHT then
+	elseif sval == SV_WAND_LITE then
 		msg_print("A line of blue shimmering light appears.")
-		light_line(dir)
+		lite_line(dir)
 		ident = TRUE
 	elseif sval == SV_WAND_SLEEP_MONSTER then
 		if sleep_monster(dir) then ident = TRUE end
@@ -796,7 +795,7 @@ function zap_rod(object)
 	player.energy_use = 100
 
 	-- Get the object level
-	local lev = k_info[object.k_idx + 1].level
+	local lev = k_info[object.k_idx].level
 
 	-- Base chance of success
 	local chance = player.skill_dev
@@ -850,7 +849,7 @@ function zap_rod(object)
 		ident = TRUE
 		object.pval = 60
 	elseif sval == SV_ROD_ILLUMINATION then
-		if light_area(damroll(2, 8), 2) then ident = TRUE end
+		if lite_area(damroll(2, 8), 2) then ident = TRUE end
 		object.pval = 30
 	elseif sval == SV_ROD_MAPPING then
 		map_area()
@@ -898,9 +897,9 @@ function zap_rod(object)
 	elseif sval == SV_ROD_DISARMING then
 		if disarm_trap(dir) then ident = TRUE end
 		object.pval = 30
-	elseif sval == SV_ROD_LIGHT then
+	elseif sval == SV_ROD_LITE then
 		msg_print("A line of blue shimmering light appears.")
-		light_line(dir)
+		lite_line(dir)
 		ident = TRUE
 		object.pval = 9
 	elseif sval == SV_ROD_SLEEP_MONSTER then
@@ -952,27 +951,6 @@ function zap_rod(object)
 	return ident, used_charge
 end
 
-function get_activation(object)
-	local activation, time, randtime
-
-	if object.name1 > 0 then
-		local artifact = a_info[object.name1 + 1]
-
-		-- Grab the data
-		activation = artifact.activation
-		time = artifact.time
-		randtime = artifact.randtime
-	elseif object.name3 > 0 then
-		local randart = x_info[object.name3 + 1]
-
-		-- Grab the data
-		activation = randart.activation
-		time = randart.time
-		randtime = artifact.randtime
-	end
-
-	return activation, time, randtime
-end
 
 function activate_object(object)
 	local success
@@ -988,251 +966,240 @@ function activate_object(object)
 
 	-- Artifacts
 	if object.name1 > 0 then
-		local activation, time, randtime
-
-		-- Get the activation info
-		activation, time, randtime = get_activation(object)
+		local artifact = a_info[object.name1 + 1]
 
 		-- Get the basic name of the object
 		local o_name = object_desc(object, FALSE, 0)
 
-		if activation == ACT_ILLUMINATION then
+		if artifact.activation == ACT_ILLUMINATION then
 			msg_print(format("The %s wells with clear light...", o_name))
-			light_area(damroll(2, 15), 3)
-		elseif activation == ACT_MAGIC_MAP then
+			lite_area(damroll(2, 15), 3)
+		elseif artifact.activation == ACT_MAGIC_MAP then
 			msg_print(format("The %s shines brightly...", o_name))
 			map_area()
-		elseif activation == ACT_CLAIRVOYANCE then
+		elseif artifact.activation == ACT_CLAIRVOYANCE then
 			msg_print(format("The %s glows a deep green...", o_name))
-			wiz_light()
+			wiz_lite()
 			detect_traps()
 			detect_doors()
 			detect_stairs()
-		elseif activation == ACT_PROT_EVIL then
+		elseif artifact.activation == ACT_PROT_EVIL then
 			msg_print(format("The %s lets out a shrill wail...", o_name))
 			set_protevil(player.protevil + randint(25) + 3 * player.lev)
-		elseif activation == ACT_DISP_EVIL then
+		elseif artifact.activation == ACT_DISP_EVIL then
 			msg_print(format("The %s floods the area with goodness...", o_name))
 			dispel_evil(player.lev * 5)
-		elseif activation == ACT_HASTE2 then
+		elseif artifact.activation == ACT_HASTE2 then
 			msg_print(format("The %s glows brightly...", o_name))
 			if player.fast == 0 then
 				set_fast(randint(75) + 75)
 			else
 				set_fast(player.fast + 5)
 			end
-		elseif activation == ACT_FIRE3 then
+		elseif artifact.activation == ACT_FIRE3 then
 			msg_print(format("The %s glows deep red...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_ball(GF_FIRE, dir, 120, 3)
-		elseif activation == ACT_FROST5 then
+		elseif artifact.activation == ACT_FROST5 then
 			msg_print(format("The %s glows bright white...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_ball(GF_COLD, dir, 200, 3)
-		elseif activation == ACT_ELEC2 then
+		elseif artifact.activation == ACT_ELEC2 then
 			msg_print(format("The %s glows deep blue...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_ball(GF_ELEC, dir, 250, 3)
-		elseif activation == ACT_BIZZARE then
+		elseif artifact.activation == ACT_BIZZARE then
 			msg_print(format("The %s glows intensely black...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			ring_of_power(dir)
-		elseif activation == ACT_STAR_BALL then
+		elseif artifact.activation == ACT_STAR_BALL then
 			msg_print(format("Your %s is surrounded by lightning...", o_name))
 			for i = 1, 9 do fire_ball(GF_ELEC, ddd[i], 150, 3) end
-		elseif activation == ACT_RAGE_BLESS_RESIST then
+		elseif artifact.activation == ACT_RAGE_BLESS_RESIST then
 			msg_print(format("Your %s glows many colours...", o_name))
 			hp_player(30)
 			set_afraid(0)
 			set_shero(player.shero + randint(50) + 50)
 			set_blessed(player.blessed + randint(50) + 50)
-			alter_timed_res(RES_ACID, randint(50) + 50)
-			alter_timed_res(RES_ELEC, randint(50) + 50)
-			alter_timed_res(RES_FIRE, randint(50) + 50)
-			alter_timed_res(RES_COLD, randint(50) + 50)
-			alter_timed_res(RES_POIS, randint(50) + 50)
-		elseif activation == ACT_HEAL2 then
+			set_oppose_acid(player.oppose_acid + randint(50) + 50)
+			set_oppose_elec(player.oppose_elec + randint(50) + 50)
+			set_oppose_fire(player.oppose_fire + randint(50) + 50)
+			set_oppose_cold(player.oppose_cold + randint(50) + 50)
+			set_oppose_pois(player.oppose_pois + randint(50) + 50)
+		elseif artifact.activation == ACT_HEAL2 then
 			msg_print(format("Your %s glows a bright white...", o_name))
 			msg_print("You feel much better...")
 			hp_player(1000)
 			set_cut(0)
-		elseif activation == ACT_PHASE then
+		elseif artifact.activation == ACT_PHASE then
 			msg_print(format("Your %s twists space around you...", o_name))
 			teleport_player(10)
-		elseif activation == ACT_GENOCIDE then
+		elseif artifact.activation == ACT_GENOCIDE then
 			msg_print(format("Your %s glows deep blue...", o_name))
 			genocide()
-		elseif activation == ACT_TRAP_DOOR_DEST then
+		elseif artifact.activation == ACT_TRAP_DOOR_DEST then
 			msg_print(format("Your %s glows bright red...", o_name))
 			destroy_doors_touch()
-		elseif activation == ACT_DETECT then
+		elseif artifact.activation == ACT_DETECT then
 			msg_print(format("Your %s glows bright white...", o_name))
 			msg_print("An image forms in your mind...")
 			detect_all()
-		elseif activation == ACT_HEAL1 then
+		elseif artifact.activation == ACT_HEAL1 then
 			msg_print(format("Your %s glows deep blue...", o_name))
 			msg_print("You feel a warm tingling inside...")
 			hp_player(500)
 			set_cut(0)
-		elseif activation == ACT_RESIST then
+		elseif artifact.activation == ACT_RESIST then
 			msg_print(format("Your %s glows many colours...", o_name))
-			alter_timed_res(RES_ACID, randint(20) + 20)
-			alter_timed_res(RES_ELEC, randint(20) + 20)
-			alter_timed_res(RES_FIRE, randint(20) + 20)
-			alter_timed_res(RES_COLD, randint(20) + 20)
-			alter_timed_res(RES_POIS, randint(20) + 20)
-		elseif activation == ACT_SLEEP then
+			set_oppose_acid(player.oppose_acid + randint(20) + 20)
+			set_oppose_elec(player.oppose_elec + randint(20) + 20)
+			set_oppose_fire(player.oppose_fire + randint(20) + 20)
+			set_oppose_cold(player.oppose_cold + randint(20) + 20)
+			set_oppose_pois(player.oppose_pois + randint(20) + 20)
+		elseif artifact.activation == ACT_SLEEP then
 			msg_print(format("Your %s glows deep blue...", o_name))
 			sleep_monsters_touch()
-		elseif activation == ACT_RECHARGE1 then
+		elseif artifact.activation == ACT_RECHARGE1 then
 			msg_print(format("Your %s glows bright yellow...", o_name))
 			recharge(60)
-		elseif activation == ACT_TELEPORT then
+		elseif artifact.activation == ACT_TELEPORT then
 			msg_print(format("Your %s twists space around you...", o_name))
 			teleport_player(100)
-		elseif activation == ACT_RESTORE_LIFE then
+		elseif artifact.activation == ACT_RESTORE_LIFE then
 			msg_print(format("Your %s glows a deep red...", o_name))
 			restore_level()
-		elseif activation == ACT_MISSILE then
+		elseif artifact.activation == ACT_MISSILE then
 			msg_print(format("Your %s glows extremely brightly...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_bolt(GF_MISSILE, dir, damroll(2, 6))
-		elseif activation == ACT_FIRE1 then
+		elseif artifact.activation == ACT_FIRE1 then
 			msg_print(format("Your %s is covered in fire...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_bolt(GF_FIRE, dir, damroll(9, 8))
-		elseif activation == ACT_FROST1 then
+		elseif artifact.activation == ACT_FROST1 then
 			msg_print(format("Your %s is covered in frost...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_bolt(GF_COLD, dir, damroll(6, 8))
-		elseif activation == ACT_LIGHTNING_BOLT then
+		elseif artifact.activation == ACT_LIGHTNING_BOLT then
 			msg_print(format("Your %s is covered in sparks...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_bolt(GF_ELEC, dir, damroll(4, 8))
-		elseif activation == ACT_ACID1 then
+		elseif artifact.activation == ACT_ACID1 then
 			msg_print(format("Your %s is covered in acid...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_bolt(GF_ACID, dir, damroll(5, 8))
-		elseif activation == ACT_ARROW then
+		elseif artifact.activation == ACT_ARROW then
 			msg_print(format("Your %s grows magical spikes...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_bolt(GF_ARROW, dir, 150)
-		elseif activation == ACT_HASTE1 then
+		elseif artifact.activation == ACT_HASTE1 then
 			msg_print(format("Your %s glows bright green...", o_name))
 			if player.fast == 0 then
 				set_fast(randint(20) + 20)
 			else
 				set_fast(player.fast + 5)
 			end
-		elseif activation == ACT_REM_FEAR_POIS then
+		elseif artifact.activation == ACT_REM_FEAR_POIS then
 			msg_print(format("Your %s glows deep blue...", o_name))
 			set_afraid(0)
 			set_poisoned(0)
-		elseif activation == ACT_STINKING_CLOUD then
+		elseif artifact.activation == ACT_STINKING_CLOUD then
 			msg_print(format("Your %s throbs deep green...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_ball(GF_POIS, dir, 12, 3)
-		elseif activation == ACT_FROST2 then
+		elseif artifact.activation == ACT_FROST2 then
 			msg_print(format("Your %s is covered in frost...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_ball(GF_COLD, dir, 48, 2)
-		elseif activation == ACT_FROST4 then
+		elseif artifact.activation == ACT_FROST4 then
 			msg_print(format("Your %s glows a pale blue...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_bolt(GF_COLD, dir, damroll(12, 8))
-		elseif activation == ACT_FROST3 then
+		elseif artifact.activation == ACT_FROST3 then
 			msg_print(format("Your %s glows a intense blue...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_ball(GF_COLD, dir, 100, 2)
-		elseif activation == ACT_FIRE2 then
+		elseif artifact.activation == ACT_FIRE2 then
 			msg_print(format("Your %s rages in fire...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_ball(GF_FIRE, dir, 72, 2)
-		elseif activation == ACT_DRAIN_LIFE2 then
+		elseif artifact.activation == ACT_DRAIN_LIFE2 then
 			msg_print(format("Your %s glows black...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			drain_life(dir, 120)
-		elseif activation == ACT_STONE_TO_MUD then
+		elseif artifact.activation == ACT_STONE_TO_MUD then
 			msg_print(format("Your %s pulsates...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			wall_to_mud(dir)
-		elseif activation == ACT_MASS_GENOCIDE then
+		elseif artifact.activation == ACT_MASS_GENOCIDE then
 			msg_print(format("Your %s lets out a long, shrill note...", o_name))
 			mass_genocide()
-		elseif activation == ACT_CURE_WOUNDS then
+		elseif artifact.activation == ACT_CURE_WOUNDS then
 			msg_print(format("Your %s radiates deep purple...", o_name))
 			hp_player(damroll(4, 8))
 			set_cut((player.cut / 2) - 50)
-		elseif activation == ACT_TELE_AWAY then
+		elseif artifact.activation == ACT_TELE_AWAY then
 			msg_print(format("Your %s glows deep red...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			teleport_monster(dir)
-		elseif activation == ACT_WOR then
+		elseif artifact.activation == ACT_WOR then
 			msg_print(format("Your %s glows soft white...", o_name))
 			set_recall()
-		elseif activation == ACT_CONFUSE then
+		elseif artifact.activation == ACT_CONFUSE then
 			msg_print(format("Your %s glows in scintillating colours...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			confuse_monster(dir, 20)
-		elseif activation == ACT_IDENTIFY then
+		elseif artifact.activation == ACT_IDENTIFY then
 			msg_print(format("Your %s glows yellow...", o_name))
 			if not ident_spell() then return FALSE, FALSE end
-		elseif activation == ACT_PROBE then
+		elseif artifact.activation == ACT_PROBE then
 			msg_print(format("Your %s glows brightly...", o_name))
 			probing()
-		elseif activation == ACT_DRAIN_LIFE1 then
+		elseif artifact.activation == ACT_DRAIN_LIFE1 then
 			msg_print(format("Your %s glows white...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			drain_life(dir, 90)
-		elseif activation == ACT_FIREBRAND then
+		elseif artifact.activation == ACT_FIREBRAND then
 			msg_print(format("Your %s glows deep red...", o_name))
 			brand_bolts()
-		elseif activation == ACT_STARLIGHT then
+		elseif artifact.activation == ACT_STARLIGHT then
 			msg_print(format("Your %s glows with the light of a thousand stars...", o_name))
-			for i = 1, 9 do strong_light_line(ddd[k]) end
-		elseif activation == ACT_MANA_BOLT then
+			for i = 1, 9 do strong_lite_line(ddd[k]) end
+		elseif artifact.activation == ACT_MANA_BOLT then
 			msg_print(format("Your %s glows white...", o_name))
 			success, dir = get_aim_dir()
 			if not success then return FALSE, FALSE end
 			fire_bolt(GF_MANA, dir, damroll(12, 8))
-		elseif activation == ACT_BERSERKER then
+		elseif artifact.activation == ACT_BERSERKER then
 			msg_print(format("Your %s glows in anger...", o_name))
 			set_shero(player.shero + randint(50) + 50)
-		elseif activation == ACT_ELEMENTS then
-			msg_print(format("Your %s glows brilliant white...", o_name))
-			success, dir = get_aim_dir()
-			if not success then return FALSE, FALSE end
-			fire_ball(GF_MISSILE, dir, 400, 3)
-		elseif activation == ACT_SAT_HUNGER then
-			msg_print(format("Your %s blazes with a satisfying light", o_name))
-			set_food(PY_FOOD_MAX - 1);
 		end
 
 		-- Set the recharge time
-		if randtime then
-			object.timeout = time + randint(randtime)
+		if artifact.randtime then
+			object.timeout = artifact.time + randint(artifact.randtime)
 		else
-			object.timeout = time
+			object.timeout = artifact.time
 		end
 
 		-- Window stuff
@@ -1308,7 +1275,7 @@ function activate_object(object)
 		elseif object.sval == SV_DRAGON_SHINING then
 			local chance = randint(2)
 			local name = {"light", "darkness"}
-			local effect = {GF_LIGHT, GF_DARK}
+			local effect = {GF_LITE, GF_DARK}
 			msg_print(format("You breathe %s.", name[chance]))
 			fire_ball(effect[chance], dir, 200, 2)
 			object.timeout = rand_int(300) + 300
@@ -1324,25 +1291,6 @@ function activate_object(object)
 		return FALSE, FALSE
 	end
 
-	-- Some orbs can be activated
-	if object.tval == TV_ORB then
-		-- Get a direction for firing (or abort)
-		success, dir = get_aim_dir()
-		if not success then return FALSE, FALSE end
-
-		if object.sval == SV_ORB_FLAMES then
-			fire_bolt(GF_FIRE, dir, 80)
-			object.timeout = rand_int(30) + 30
-		end
-
-		if object.sval == SV_ORB_FROST then
-			fire_bolt(GF_COLD, dir, 100)
-			object.timeout = rand_int(30) + 35
-		end
-
-		return FALSE, FALSE
-	end
-
 	-- Some Rings can be activated for double resist and element ball
 	if object.tval == TV_RING then
 		-- Get a direction for firing (or abort)
@@ -1353,35 +1301,23 @@ function activate_object(object)
 		if object.sval == SV_RING_ACID then
 			msg_print("You feel resistant to acid.")
 			fire_ball(GF_ACID, dir, 70, 2)
-			alter_timed_res(RES_ACID, randint(20) + 20)
+			set_oppose_acid(player.oppose_acid + randint(20) + 20)
 			object.timeout = rand_int(50) + 50
 		elseif object.sval == SV_RING_FLAMES then
 			msg_print("You feel resistant to fire.")
 			fire_ball(GF_FIRE, dir, 80, 2)
-			alter_timed_res(RES_FIRE, randint(20) + 20)
+			set_oppose_fire(player.oppose_fire + randint(20) + 20)
 			object.timeout = rand_int(50) + 50
 		elseif object.sval == SV_RING_ICE then
 			msg_print("You feel resistant to cold.")
 			fire_ball(GF_COLD, dir, 75, 2)
-			alter_timed_res(RES_COLD, randint(20) + 20)
+			set_oppose_cold(player.oppose_cold + randint(20) + 20)
 			object.timeout = rand_int(50) + 50
--- 		elseif object.sval == SV_RING_LIGHTNING then
--- 			msg_print("You feel resistant to electricity.")
--- 			fire_ball(GF_ELEC, dir, 85, 2)
--- 			alter_timed_res(RES_ELEC, randint(20) + 20)
--- 			object.timeout = rand_int(50) + 50
-		elseif object.sval == SV_RING_TELEPORTATION then
-			msg_format("Your %s twists space around you...", o_name)
-			teleport_player(100)
+		elseif object.sval == SV_RING_LIGHTNING then
+			msg_print("You feel resistant to electricity.")
+			fire_ball(GF_ELEC, dir, 85, 2)
+			set_oppose_elec(player.oppose_elec + randint(20) + 20)
 			object.timeout = rand_int(50) + 50
-		elseif object.sval == SV_RING_MASTERY then
-			msg_format("Your %s glows brilliant white.", o_name)
-			dispel_monsters(100)
-			object.timeout = rand_int(1000) + 1000
-		elseif object.sval == SV_RING_METEORS then
-			msg_format("Your %s releases a swarm of meteors.", o_name)
-			fire_meteor(GF_METEOR, dir, 30, 2, 2, 1 + randint(7))
-			object.timeout = rand_int(15) + 15
 		end
 
 		-- Window stuff
@@ -1472,9 +1408,7 @@ function describe_item_activation_hook(object)
 			"fire branding of bolts",
 			"starlight (10d8)",
 			"mana bolt (12d8)",
-			"berserk rage (50+d50 turns)",
-			"the elements (400)",
-			"satisfy hunger"}
+			"berserk rage (50+d50 turns)"}
 
 		local artifact = a_info[object.name1 + 1]
 
@@ -1517,16 +1451,6 @@ function describe_item_activation_hook(object)
 		return activations[object.sval]
 	end
 
-	-- Orbs
-	if object.tval == TV_ORB then
-		local activations = {
-			[SV_ORB_FLAMES] = "a fire bolt (80) every 30+d30 turns",
-			[SV_ORB_FROST] = "a frost bolt (100) every 30+d35 turns"
-		}
-
-		return activations[object.sval]
-	end
-
 	-- Elemental rings
 	if object.tval == TV_RING then
 		local activations = {
@@ -1539,5 +1463,6 @@ function describe_item_activation_hook(object)
 	end
 
 	-- No activation
-	return "nothing"
+	return ""
 end
+

@@ -521,7 +521,8 @@ static void do_cmd_options_aux(int page, cptr info)
 		 * to allow using the roguelike keys for navigation.
 		 */
 		dir = target_dir(ch);
-		if (dir) ch = I2D(dir);
+		if ((dir == 2) || (dir == 4) || (dir == 6) || (dir == 8))
+			ch = I2D(dir);
 
 		/* Analyze */
 		switch (ch)

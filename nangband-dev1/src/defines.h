@@ -39,7 +39,7 @@
 /*
  * Current version string
  */
-#define VERSION_STRING	"2.9.7 alpha"
+#define VERSION_STRING	"2.9.7 CVS"
 
 
 /*
@@ -101,7 +101,7 @@
 #define COL_MAP			13
 
 /* Number of grids in each screen (vertically & horizontally) */
-#define SCREEN_HGT	(Term->hgt - ROW_MAP - 1)
+#define SCREEN_HGT	(Term->hgt - ROW_MAP)
 #define SCREEN_WID	(Term->wid - COL_MAP - 1)
 
 
@@ -379,7 +379,7 @@
 #define INVEN_PACK		23
 
 /*
- * Indexes used for various "equipment" slots (hard-coded by savefiles, etc).
+ * Indeces used for various "equipment" slots (hard-coded).
  */
 #define INVEN_WIELD		24
 #define INVEN_BOW       25
@@ -445,9 +445,6 @@
 #define ROW_CLASS		2
 #define COL_CLASS		0	/* <class name> */
 
-#define ROW_TITLE		3
-#define COL_TITLE		0	/* <title> or <mode> */
-
 #define ROW_LEVEL		4
 #define COL_LEVEL		0	/* "LEVEL xxxxxx" */
 
@@ -487,7 +484,9 @@
 #define ROW_STUN		22
 #define COL_STUN		0	/* <stun> */
 
+/*#define ROW_HUNGRY		(Term->hgt - 1) */
 #define ROW_HUNGRY		(Term->hgt - 1)
+
 #define COL_HUNGRY		0	/* "Weak" / "Hungry" / "Full" / "Gorged" */
 
 #define ROW_BLIND		(Term->hgt - 1)

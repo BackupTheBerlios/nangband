@@ -139,7 +139,7 @@ static void prt_stat(int stat)
 }
 
 
-
+#ifdef COMPILED_UNUSED_FUNCTIONS
 
 /*
  * Prints "title", including "wizard" or "winner" as needed.
@@ -169,6 +169,7 @@ static void prt_title(void)
 	prt_field(p, ROW_TITLE, COL_TITLE);
 }
 
+#endif
 
 /*
  * Prints level
@@ -817,7 +818,7 @@ static void prt_frame_basic(void)
 	prt_field(c_name + cp_ptr->name, ROW_CLASS, COL_CLASS);
 
 	/* Title */
-	prt_title();
+/*	prt_title(); */
 
 	/* Level/Experience */
 	prt_level();
@@ -2772,8 +2773,8 @@ void redraw_stuff(void)
 
 	if (p_ptr->redraw & (PR_TITLE))
 	{
-		p_ptr->redraw &= ~(PR_TITLE);
-		prt_title();
+/*		p_ptr->redraw &= ~(PR_TITLE);
+		prt_title(); */
 	}
 
 	if (p_ptr->redraw & (PR_LEV))

@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# renumber is to be invoked thus:
+#   renumber <filename> <version>
+#
+# This will change the version stamp of <filename> to <version>.
 
-sed "s/^V:$2$/V:$3/" $1 > s
+sed "s/^V:*.*.*$/V:$2/" $1 > s
 mv s $1

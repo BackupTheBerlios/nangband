@@ -1,7 +1,8 @@
 Todo list for Nangband
 ======================
 
-- Remove Lua from the game.
+- Add race/class powers to the game using Lua.  Can be done like the
+  spells.
 - Remove haggling.
 - (Suggested by Zach Levi) Add inscriptions that exclude items from the
   using list.

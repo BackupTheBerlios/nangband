@@ -1,6 +1,13 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-04-28
+----------
+- Many fixes from pelpel.  Character now load, even if they are very
+  messed up. (takkaria)
+- Twiddled with object recall.  Not quite perfect in relation to the
+  new stat code. (takkaria)
+
 2002-04-27
 ----------
 - Efficientised the o_ptr->note code.  It now reads/writes a byte for

@@ -454,11 +454,24 @@ bool make_attack_normal(int m_idx)
 
 				case RBE_POISON:
 				{
+					int resist_percent = 0;
+
+					/*
+					 * Grab a current % resist value
+					 *
+					 * [note to self - create a function that decreases the % gain
+					 * for temporary resistances based on time left] --takkaria
+					 */
+					resist_percent = p_ptr->resist_cur[RES_POIS] +
+						(p_ptr->resist_timed[RES_POIS] ? 20 : 0);
+
+					if (resist_percent > 15) damage = damage * (3/4);
+
 					/* Take damage */
 					take_hit(damage, ddesc);
 
 					/* Take "poison" effect */
-					if (!(p_ptr->resist_pois || p_ptr->oppose_pois))
+					if (!resist_percent)
 					{
 						if (set_poisoned(p_ptr->poisoned + randint(rlev) + 5))
 						{

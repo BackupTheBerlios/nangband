@@ -3101,7 +3101,7 @@ void update_flow(void)
 
 
 /*
- * Map the current panel (plus some) ala "magic mapping"
+ * Map a radius 25 map (ala "magic mapping")
  *
  * We must never attempt to map the outer dungeon walls, or we
  * might induce illegal cave grid references.
@@ -3131,6 +3131,8 @@ void map_area(void)
 			/* All non-walls are "checked" */
 			if (cave_feat[y][x] < FEAT_SECRET)
 			{
+				if (distance(p_ptr->py, p_ptr->px, y, x) > 25) continue;
+
 				/* Memorize normal features */
 				if (cave_feat[y][x] > FEAT_INVIS)
 				{

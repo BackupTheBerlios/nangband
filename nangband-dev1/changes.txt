@@ -7,6 +7,8 @@ Nangband ChangeLog
   'The Iron Lady'. (takkaria)
 - Added in Antiband's new roller code, along with changes to init1.c
   so defaults can be non-hardcoded. (takkaria)
+- Added Antiband's new vaults. (takkaria)
+
 
 2002-03-15
 ----------

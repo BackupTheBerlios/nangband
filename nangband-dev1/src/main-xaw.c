@@ -654,8 +654,14 @@ static void Resize_term(AngbandWidget wnew)
 	int oy = wnew->angband.internal_border;
 
 	int i;
-	term_data *old_td = (term_data*)(Term->data);
+	term_data *old_td;
 	term_data *td = &data[0];
+
+	/* Mega-Hack -- It can be called during widget initialisation */
+	if (!Term) return;
+
+	/* Remember currently active term */
+	old_td = (term_data*)(Term->data);
 
 	/* Hack - Find the term to activate */
 	for (i = 0; i < num_term; i++)

@@ -72,3 +72,11 @@ the may just merely be slightly more timid and not all out scared.
 monsters.
 
 --GW-- see above
+
+--pel^2-- This light priority rule would require three m_list loops
+(lighting for CARRY_LIGHT, darkening for ABSORB_LIGHT, followed by lighting
+for EMANATE_LIGHT), all using Z's fairly complicated multiple radii code.
+It can be done, but I wonder how practical it is. CPUs are faster than
+necessary these days, though. And if you don't like players to see
+through darkness created by ABSORB_LIGHT monsters, we have to rewrite
+update_view() as well, that means very substantial amount of work...

@@ -9,6 +9,7 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
   were shown on-screen rather than in the file - fixed. (takkaria)
 - Fixed a typo in thanks.txt. (takkaria)
 - Got autoconf & friends working again. (takkaria)
+- Added weak hits, from Parodyingband. (parody)
 
 2002-05-26
 ----------

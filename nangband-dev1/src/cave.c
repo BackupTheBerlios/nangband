@@ -2731,7 +2731,8 @@ void update_view(void)
 						}
 
 						/* Perma-lit grids */
-						else if (info & (CAVE_GLOW))
+						else if ((info & (CAVE_GLOW)) &&
+						         !(info2 & (CAVE2_MDARK)))
 						{
 							int y = GRID_Y(g);
 							int x = GRID_X(g);
@@ -2744,11 +2745,14 @@ void update_view(void)
 
 							/* Check for "complex" illumination */
 							if ((!(cave_info[yy][xx] & (CAVE_WALL)) &&
-							      (cave_info[yy][xx] & (CAVE_GLOW))) ||
+							      (cave_info[yy][xx] & (CAVE_GLOW)) &&
+							     !(cave_info2[yy][xx] & (CAVE2_MDARK))) ||
 							    (!(cave_info[y][xx] & (CAVE_WALL)) &&
-							      (cave_info[y][xx] & (CAVE_GLOW))) ||
+							      (cave_info[y][xx] & (CAVE_GLOW)) &&
+							     !(cave_info2[y][xx] & (CAVE2_MDARK))) ||
 							    (!(cave_info[yy][x] & (CAVE_WALL)) &&
-							      (cave_info[yy][x] & (CAVE_GLOW))))
+							      (cave_info[yy][x] & (CAVE_GLOW)) &&
+							     !(cave_info2[yy][x] & (CAVE2_MDARK))))
 							{
 								/* Mark as seen */
 								info |= (CAVE_SEEN);
@@ -2757,7 +2761,8 @@ void update_view(void)
 #else /* UPDATE_VIEW_COMPLEX_WALL_ILLUMINATION */
 
 							/* Check for "simple" illumination */
-							if (cave_info[yy][xx] & (CAVE_GLOW))
+							if ((cave_info[yy][xx] & (CAVE_GLOW)) &&
+							    !(cave_info2[yy][xx] & (CAVE2_MDARK)))
 							{
 								/* Mark as seen */
 								info |= (CAVE_SEEN);
@@ -2808,7 +2813,8 @@ void update_view(void)
 						}
 
 						/* Perma-lit or monster-lit grids */
-						else if ((info & (CAVE_GLOW)) ||
+						else if (((info & (CAVE_GLOW)) &&
+						          !(info2 & (CAVE2_MDARK))) ||
 						         (info2 & (CAVE2_MLIGHT)))
 						{
 							/* Mark as "CAVE_SEEN" */
@@ -2925,13 +2931,42 @@ void forget_monster_light(void)
 		/* Access grid */
 		g = fast_light_g[i];
 
-		/* Clear monster light flag */
-		fast_cave_info2[g] &= ~(CAVE2_MLIGHT);
+		/* Clear monster light and darkness flags */
+		fast_cave_info2[g] &= ~(CAVE2_MLIGHT | CAVE2_MDARK);
 	}
 
 	/* Forget light array */
 	light_n = 0;
 }
+
+
+/*
+ * Hold light-affecting monsters, sorted by light priority,
+ * i.e. EMANATE_LIGHT > ABSORB_LIGHT > CARRY_LIGHT.
+ */
+
+typedef struct lighting_info lighting_info;
+
+#define PRIO_EMANATE_LIGHT	2
+#define PRIO_ABSORB_LIGHT	1
+#define PRIO_CARRY_LIGHT	0
+
+struct lighting_info
+{
+	byte prio;
+	byte rad;	/* Radius 1 -- 3 */
+	byte fy, fx; /* m_ptr->fy and m_ptr->fx */
+};
+
+
+/*
+ * XXX XXX Personally don't like to have global variables outside of
+ * variable.c...
+ * If sorting severely affects performance, use three queues, one for
+ * each priority, instead.
+ * Grids (== max number of monsters) in radius MAX_SIGHT + 3 == 1505
+ */
+static lighting_info mqueue[3][VIEW_MAX];
 
 
 /*
@@ -2957,8 +2992,32 @@ static int monster_light_radius(monster_race *r_ptr)
 		else rad = 3;
 	}
 
+
+	/* ABSORB_LIGHT monsters */
+	else if (r_ptr->flags2 & (RF2_ABSORB_LIGHT))
+	{
+		if (r_ptr->level < 20) rad = 1;
+		else rad = 2;
+	}
 	/* Done */
 	return (rad);
+}
+
+
+/*
+ * A helper function for update_monster_light.
+ *
+ * Determine light kind & priority of given monster race
+ */
+static int monster_light_priority(monster_race *r_ptr)
+{
+	int prio;
+
+	if      (r_ptr->flags2 & (RF2_EMANATE_LIGHT)) prio = PRIO_EMANATE_LIGHT;
+	else if (r_ptr->flags2 & (RF2_ABSORB_LIGHT))  prio = PRIO_ABSORB_LIGHT;
+	else                                          prio = PRIO_CARRY_LIGHT;
+
+	return (prio);
 }
 
 
@@ -2974,8 +3033,6 @@ static int monster_light_radius(monster_race *r_ptr)
  * The CAVE_TEMP flag is used to store the state during the updating.
  * Only squares in view of the player, whose state changes are drawn via
  * light_spot().
- *
- * RF2_ABSORB_LIGHT is not implemented (yet, maybe).
  */
 void update_monster_light(void)
 {
@@ -2993,6 +3050,9 @@ void update_monster_light(void)
 	int fast_temp_n;
 	u16b *fast_temp_g = temp_g;
 
+	int p;
+	int mqueue_n[3];
+
 	byte *fast_cave_info = &cave_info[0][0];
 	byte *fast_cave_info2 = &cave_info2[0][0];
 
@@ -3000,14 +3060,14 @@ void update_monster_light(void)
 	/*** Handle special case -- blindness ***/
 	if (p_ptr->blind)
 	{
-		/* Clear all the monster-lit grids */
+		/* Clear all the monster-affected grids */
 		for (i = 0; i < fast_light_n; i++)
 		{
 			/* Access grid */
 			g = fast_light_g[i];
 
-			/* Clear monster light flag */
-			fast_cave_info2[g] &= ~(CAVE2_MLIGHT);
+			/* Clear monster light and darkness flags */
+			fast_cave_info2[g] &= ~(CAVE2_MLIGHT | CAVE2_MDARK);
 
 			/* XXX XXX Square is invisible */
 			fast_cave_info[g] &= ~(CAVE_SEEN);
@@ -3031,16 +3091,39 @@ void update_monster_light(void)
 		info = fast_cave_info[g];
 		info2 = fast_cave_info2[g];
 
-		/* Remember it by setting the CAVE_TEMP flag */
-		info |= (CAVE_TEMP);
-
-		/* Forget monster light */
-		info2 &= ~(CAVE2_MLIGHT);
-
-		/* Unseen unless it's glowing or illuminated by player light source */
-		if (!(info & (CAVE_GLOW)) && !(info2 & (CAVE2_PLIGHT)))
+		/* The grid was lit */
+		if (info2 & (CAVE2_MLIGHT))
 		{
-			info &= ~(CAVE_SEEN);
+			/* Remember it by setting the CAVE_TEMP flag */
+			info |= (CAVE_TEMP);
+
+			/* Forget monster light */
+			info2 &= ~(CAVE2_MLIGHT);
+
+			/*
+			 * Unseen unless it's glowing or illuminated by player light
+			 * source
+			 */
+			if (!(info & (CAVE_GLOW)) && !(info2 & (CAVE2_PLIGHT)))
+			{
+				info &= ~(CAVE_SEEN);
+			}
+		}
+
+		/* The grid was darkened */
+		else
+		{
+			/* Remember it by setting the CAVE2_TEMP flag */
+			info2 |= (CAVE2_TEMP);
+
+			/* Forget monster darkness */
+			info2 &= ~(CAVE2_MDARK);
+
+			/* Seen if it perma-lit or torch-lit */
+			if ((info & (CAVE_GLOW)) || (info2 & (CAVE2_PLIGHT)))
+			{
+				info |= (CAVE_SEEN);
+			}
 		}
 
 		/* Save cave info flags */
@@ -3051,23 +3134,17 @@ void update_monster_light(void)
 
 	/*** Step 2 -- build list of newly lit grids ***/
 
-	/* Clear the temp list */
-	fast_temp_n = 0;
+	/* Clear the monster queues */
+	mqueue_n[0] = mqueue_n[1] = mqueue_n[2] = 0;
 
-	/* Loop through monsters, adding newly lit grids to the temp queue */
+	/* Loop through monsters, adding newly lit grids to the temp queues */
 	for (i = 1; i < m_max; i++)
 	{
 		monster_type *m_ptr = &m_list[i];
 		monster_race *r_ptr = &r_info[m_ptr->r_idx];
+		lighting_info *l_ptr;
 
-		int rad;
-		int fy, fx;
-
-		/* XXX XXX */
-		byte queue_y[40];
-		byte queue_x[40];
-		int queue_n, q;
-
+		int rad, prio;
 
 		/* Skip dead monsters */
 		if (!m_ptr->r_idx) continue;
@@ -3081,264 +3158,318 @@ void update_monster_light(void)
 		/* Skip monsters not carrying light sources */
 		if (rad <= 0) continue;
 
-		/* Access the location */
-		fy = m_ptr->fy;
-		fx = m_ptr->fx;
+		/* Get light priority... C doesn't have VALUES... */
+		prio = monster_light_priority(r_ptr);
 
-		/*
-		 * Because the following sections might look intimidating...
-		 *
-		 * Light / darkness paths of radii 1 -- 3, in accordance with the field
-		 * of view algorithm of angband 2.8.2 beta -- 3.0.1 and variants based
-		 * on them.
-		 *
-		 *     3 3 3
-		 *     |\|/|
-		 *   3 2 2 2 3
-		 *    \ \|/ /
-		 * 3-2 1 1 1 2-3
-		 *  \ \ \|/ / /
-		 * 3-2-1-0-1-2-3
-		 *  / / /|\ \ \
-		 * 3-2 1 1 1 2-3
-		 *    / /|\ \
-		 *   3 2 2 2 3
-		 *     |/|\|
-		 *     3 3 3
-		 */
+		/* Current queue slot */
+		l_ptr = &mqueue[prio][mqueue_n[prio]++];
 
-		/* Clear queue */
-		queue_n = 0;
+		/* Enqueue the monster */
+		l_ptr->prio = prio;
+		l_ptr->rad = rad;
+		l_ptr->fy = m_ptr->fy;
+		l_ptr->fx = m_ptr->fx;
+	}
 
-		/* XXX XXX */
-		#define enqueue_loc(Y, X) \
-			if (in_bounds(Y, X)) \
-			{ \
-				queue_y[queue_n] = Y; \
-				queue_x[queue_n] = X; \
-				queue_n++; \
-			}
 
-		/** Radius 0 **/
+	/* Clear the temp list */
+	fast_temp_n = 0;
 
-		/* the square it is on **/
-		enqueue_loc(fy,     fx    );
-
-		/** Radius 1 **/
-
-		/* Adjacent grids */
-		enqueue_loc(fy,     fx + 1);
-		enqueue_loc(fy,     fx - 1);
-		enqueue_loc(fy + 1, fx    );
-		enqueue_loc(fy - 1, fx    );
-		enqueue_loc(fy + 1, fx + 1);
-		enqueue_loc(fy - 1, fx + 1);
-		enqueue_loc(fy + 1, fx - 1);
-		enqueue_loc(fy - 1, fx - 1);
-
-		/** Radius 2 and non-diagonal radius 3 **/
-		if (rad >= 2)
+	/* Process queued monsters */
+	for (p = PRIO_EMANATE_LIGHT; p >= PRIO_CARRY_LIGHT; p--)
+	{
+		for (i = 0; i < mqueue_n[p]; i++)
 		{
-			/* South of the monster */
-			if (in_bounds_floor(fy + 1, fx))
-			{
-				enqueue_loc(fy + 2, fx + 1);
-				enqueue_loc(fy + 2, fx    );
-				enqueue_loc(fy + 2, fx - 1);
+			lighting_info *l_ptr;
+			int rad, prio;
+			int fy, fx;
 
-				/* Radius 3 */
-				if (rad >= 3)
+			/* XXX XXX */
+			byte queue_y[40];
+			byte queue_x[40];
+			int queue_n, q;
+
+			/* Retrieve monster light information */
+			l_ptr = &mqueue[p][i];
+
+			prio = l_ptr->prio;
+			rad = l_ptr->rad;
+			fy = l_ptr->fy;
+			fx = l_ptr->fx;
+
+			/*
+			 * Because the following sections might look intimidating...
+			 *
+			 * Light / darkness paths of radii 1 -- 3, in accordance with
+			 * the field of view algorithm of angband 2.8.2 beta -- 3.0.1
+			 * and variants based on them.
+			 *
+			 *     3 3 3
+			 *     |\|/|
+			 *   3 2 2 2 3
+			 *    \ \|/ /
+			 * 3-2 1 1 1 2-3
+			 *  \ \ \|/ / /
+			 * 3-2-1-0-1-2-3
+			 *  / / /|\ \ \
+			 * 3-2 1 1 1 2-3
+			 *    / /|\ \
+			 *   3 2 2 2 3
+			 *     |/|\|
+			 *     3 3 3
+			 */
+
+			/* Clear queue */
+			queue_n = 0;
+
+			/* XXX XXX */
+			#define enqueue_loc(Y, X) \
+				if (in_bounds(Y, X)) \
+				{ \
+					queue_y[queue_n] = Y; \
+					queue_x[queue_n] = X; \
+					queue_n++; \
+				}
+
+			/** Radius 0 **/
+
+			/* the square it is on **/
+			enqueue_loc(fy,     fx    );
+
+			/** Radius 1 **/
+
+			/* Adjacent grids */
+			enqueue_loc(fy,     fx + 1);
+			enqueue_loc(fy,     fx - 1);
+			enqueue_loc(fy + 1, fx    );
+			enqueue_loc(fy - 1, fx    );
+			enqueue_loc(fy + 1, fx + 1);
+			enqueue_loc(fy - 1, fx + 1);
+			enqueue_loc(fy + 1, fx - 1);
+			enqueue_loc(fy - 1, fx - 1);
+
+			/** Radius 2 and non-diagonal radius 3 **/
+			if (rad >= 2)
+			{
+				/* South of the monster */
+				if (in_bounds_floor(fy + 1, fx))
 				{
-					if (in_bounds_floor(fy + 2, fx))
+					enqueue_loc(fy + 2, fx + 1);
+					enqueue_loc(fy + 2, fx    );
+					enqueue_loc(fy + 2, fx - 1);
+
+					/* Radius 3 */
+					if (rad >= 3)
 					{
-						enqueue_loc(fy + 3, fx + 1);
-						enqueue_loc(fy + 3, fx    );
-						enqueue_loc(fy + 3, fx - 1);
-					}
-					else
-					{
-						if (in_bounds_floor(fy + 2, fx + 1))
+						if (in_bounds_floor(fy + 2, fx))
 						{
 							enqueue_loc(fy + 3, fx + 1);
-						}
-						if (in_bounds_floor(fy + 2, fx - 1))
-						{
+							enqueue_loc(fy + 3, fx    );
 							enqueue_loc(fy + 3, fx - 1);
 						}
+						else
+						{
+							if (in_bounds_floor(fy + 2, fx + 1))
+							{
+								enqueue_loc(fy + 3, fx + 1);
+							}
+							if (in_bounds_floor(fy + 2, fx - 1))
+							{
+								enqueue_loc(fy + 3, fx - 1);
+							}
+						}
 					}
 				}
-			}
 
-			/* North of the monster */
-			if (in_bounds_floor(fy - 1, fx))
-			{
-				enqueue_loc(fy - 2, fx + 1);
-				enqueue_loc(fy - 2, fx    );
-				enqueue_loc(fy - 2, fx - 1);
-
-				/* Radius 3 */
-				if (rad >= 3)
+				/* North of the monster */
+				if (in_bounds_floor(fy - 1, fx))
 				{
-					if (in_bounds_floor(fy - 2, fx))
+					enqueue_loc(fy - 2, fx + 1);
+					enqueue_loc(fy - 2, fx    );
+					enqueue_loc(fy - 2, fx - 1);
+
+					/* Radius 3 */
+					if (rad >= 3)
 					{
-						enqueue_loc(fy - 3, fx + 1);
-						enqueue_loc(fy - 3, fx    );
-						enqueue_loc(fy - 3, fx - 1);
-					}
-					else
-					{
-						if (in_bounds_floor(fy - 2, fx + 1))
+						if (in_bounds_floor(fy - 2, fx))
 						{
 							enqueue_loc(fy - 3, fx + 1);
-						}
-						if (in_bounds_floor(fy - 2, fx - 1))
-						{
+							enqueue_loc(fy - 3, fx    );
 							enqueue_loc(fy - 3, fx - 1);
 						}
+						else
+						{
+							if (in_bounds_floor(fy - 2, fx + 1))
+							{
+								enqueue_loc(fy - 3, fx + 1);
+							}
+							if (in_bounds_floor(fy - 2, fx - 1))
+							{
+								enqueue_loc(fy - 3, fx - 1);
+							}
+						}
 					}
 				}
-			}
 
-			/* East of the monster */
-			if (in_bounds_floor(fy, fx + 1))
-			{
-				enqueue_loc(fy + 1, fx + 2);
-				enqueue_loc(fy    , fx + 2);
-				enqueue_loc(fy - 1, fx + 2);
-
-				/* Radius 3 */
-				if (rad >= 3)
+				/* East of the monster */
+				if (in_bounds_floor(fy, fx + 1))
 				{
-					if (in_bounds_floor(fy, fx + 2))
+					enqueue_loc(fy + 1, fx + 2);
+					enqueue_loc(fy    , fx + 2);
+					enqueue_loc(fy - 1, fx + 2);
+
+					/* Radius 3 */
+					if (rad >= 3)
 					{
-						enqueue_loc(fy + 1, fx + 3);
-						enqueue_loc(fy    , fx + 3);
-						enqueue_loc(fy - 1, fx + 3);
-					}
-					else
-					{
-						if (in_bounds_floor(fy + 1, fx + 2))
+						if (in_bounds_floor(fy, fx + 2))
 						{
 							enqueue_loc(fy + 1, fx + 3);
-						}
-						if (in_bounds_floor(fy - 1, fx + 2))
-						{
+							enqueue_loc(fy    , fx + 3);
 							enqueue_loc(fy - 1, fx + 3);
 						}
+						else
+						{
+							if (in_bounds_floor(fy + 1, fx + 2))
+							{
+								enqueue_loc(fy + 1, fx + 3);
+							}
+							if (in_bounds_floor(fy - 1, fx + 2))
+							{
+								enqueue_loc(fy - 1, fx + 3);
+							}
+						}
 					}
 				}
-			}
 
-			/* West of the monster */
-			if (in_bounds_floor(fy, fx - 1))
-			{
-				enqueue_loc(fy + 1, fx - 2);
-				enqueue_loc(fy    , fx - 2);
-				enqueue_loc(fy - 1, fx - 2);
-
-				/* Radius 3 */
-				if (rad >= 3)
+				/* West of the monster */
+				if (in_bounds_floor(fy, fx - 1))
 				{
-					if (in_bounds_floor(fy, fx - 2))
+					enqueue_loc(fy + 1, fx - 2);
+					enqueue_loc(fy    , fx - 2);
+					enqueue_loc(fy - 1, fx - 2);
+
+					/* Radius 3 */
+					if (rad >= 3)
 					{
-						enqueue_loc(fy + 1, fx - 3);
-						enqueue_loc(fy    , fx - 3);
-						enqueue_loc(fy - 1, fx - 3);
-					}
-					else
-					{
-						if (in_bounds_floor(fy + 1, fx - 2))
+						if (in_bounds_floor(fy, fx - 2))
 						{
 							enqueue_loc(fy + 1, fx - 3);
-						}
-						if (in_bounds_floor(fy - 1, fx - 2))
-						{
+							enqueue_loc(fy    , fx - 3);
 							enqueue_loc(fy - 1, fx - 3);
+						}
+						else
+						{
+							if (in_bounds_floor(fy + 1, fx - 2))
+							{
+								enqueue_loc(fy + 1, fx - 3);
+							}
+							if (in_bounds_floor(fy - 1, fx - 2))
+							{
+								enqueue_loc(fy - 1, fx - 3);
+							}
 						}
 					}
 				}
 			}
-		}
 
-		/** Radius 3 diagonal **/
-		if (rad >= 3)
-		{
-			/* South-East of the monster */
-			if (in_bounds_floor(fy + 1, fx + 1))
+			/** Radius 3 diagonal **/
+			if (rad >= 3)
 			{
-				enqueue_loc(fy + 2, fx + 2);
+				/* South-East of the monster */
+				if (in_bounds_floor(fy + 1, fx + 1))
+				{
+					enqueue_loc(fy + 2, fx + 2);
+				}
+
+				/* South-West of the monster */
+				if (in_bounds_floor(fy + 1, fx - 1))
+				{
+					enqueue_loc(fy + 2, fx - 2);
+				}
+
+				/* North-East of the monster */
+				if (in_bounds_floor(fy - 1, fx + 1))
+				{
+					enqueue_loc(fy - 2, fx + 2);
+				}
+
+				/* North-West of the monster */
+				if (in_bounds_floor(fy - 1, fx - 1))
+				{
+					enqueue_loc(fy - 2, fx - 2);
+				}
 			}
 
-			/* South-West of the monster */
-			if (in_bounds_floor(fy + 1, fx - 1))
+			/* XXX XXX */
+			#undef enqueue_loc
+
+			/* Process queued positions */
+			for (q = 0; q < queue_n; q++)
 			{
-				enqueue_loc(fy + 2, fx - 2);
+				/* Monster-lit location */
+				y = queue_y[q];
+				x = queue_x[q];
+
+				/* Reject out-of-bound grids */
+				/* if (!in_bounds(y, x)) continue; */
+
+				/* Very important -- reject already affected grids */
+				if (cave_info2[y][x] & (CAVE2_MLIGHT | CAVE2_MDARK)) continue;
+
+				/* Access basic flags */
+				info = cave_info[y][x];
+
+				/* Ignore locations outside of the current field of view */
+				if (!(info & (CAVE_VIEW))) continue;
+
+				/* Wall illumination is always complicated */
+				if (info & (CAVE_WALL))
+				{
+					int dy1, dx1, dy2, dx2;
+
+					/* Get player-grid and light source-grid vectors */
+					dy1 = p_ptr->py - y;
+					dx1 = p_ptr->px - x;
+					dy2 = fy - y;
+					dx2 = fx - x;
+
+					/*
+					 * Use a dot product to determine angle of illumination
+					 * so that only the correct sides of walls are illuminated.
+					 */
+					if (dx1 * dx2 + dy1 * dy2 < 0) continue;
+				}
+
+				/* Convert coordinate to grid */
+				g = GRID(y, x);
+
+				/* Add the grid to the temporary list */
+				fast_temp_g[fast_temp_n++] = g;
+
+				/* Affected by monster light source */
+				if (prio != PRIO_ABSORB_LIGHT)
+				{
+					/* Mark the grid as lit by monster light source */
+					fast_cave_info2[g] |= (CAVE2_MLIGHT);
+
+					/* Mark the grid as seen by the player */
+					fast_cave_info[g] |= (CAVE_SEEN);
+				}
+
+				/* Affected by monster darkness source */
+				else
+				{
+					/* Mark the grid as darkened by monster */
+					fast_cave_info2[g] |= (CAVE2_MDARK);
+
+					/* Don't affect torch-lit grids, or it would be too nasty */
+					if (!(fast_cave_info2[g] & (CAVE2_PLIGHT)))
+					{
+						/* Mark the grid as seen by the player */
+						fast_cave_info[g] &= ~(CAVE_SEEN);
+					}
+				}
 			}
-
-			/* North-East of the monster */
-			if (in_bounds_floor(fy - 1, fx + 1))
-			{
-				enqueue_loc(fy - 2, fx + 2);
-			}
-
-			/* North-West of the monster */
-			if (in_bounds_floor(fy - 1, fx - 1))
-			{
-				enqueue_loc(fy - 2, fx - 2);
-			}
-		}
-
-		/* XXX XXX */
-		#undef enqueue_loc
-
-		/* Process queued positions */
-		for (q = 0; q < queue_n; q++)
-		{
-			/* Monster-lit location */
-			y = queue_y[q];
-			x = queue_x[q];
-
-			/* Reject out-of-bound grids */
-			/* if (!in_bounds(y, x)) continue; */
-
-			/* Already illuminated */
-			if (cave_info2[y][x] & (CAVE2_MLIGHT)) continue;
-
-			/* Access basic flags */
-			info = cave_info[y][x];
-
-			/* Ignore locations outside of the current field of view */
-			if (!(info & (CAVE_VIEW))) continue;
-
-			/* Wall illumination is always complicated */
-			if (info & (CAVE_WALL))
-			{
-				int dy1, dx1, dy2, dx2;
-
-				/* Get player-grid and light source-grid vectors */
-				dy1 = p_ptr->py - y;
-				dx1 = p_ptr->px - x;
-				dy2 = fy - y;
-				dx2 = fx - x;
-
-				/*
-				 * Use a dot product to determine angle of illumination so that
-				 * only the correct sides of walls are illuminated.
-				 */
-				if (dx1 * dx2 + dy1 * dy2 < 0) continue;
-			}
-
-			/* Convert coordinate to grid */
-			g = GRID(y, x);
-
-			/* Add the grid to the temporary list */
-			fast_temp_g[fast_temp_n++] = g;
-
-			/* Mark the grid as lit by monster light source */
-			fast_cave_info2[g] |= (CAVE2_MLIGHT);
-
-			/* Mark the grid as seen by the player */
-			fast_cave_info[g] |= (CAVE_SEEN);
 		}
 	}
 
@@ -3353,25 +3484,34 @@ void update_monster_light(void)
 		y = GRID_Y(g);
 		x = GRID_X(g);
 
+		/* Flags */
+		info = fast_cave_info[g];
+		info2 = fast_cave_info2[g];
+
 		/* Monster index */
 		m_idx = cave_m_idx[y][x];
 
-		/* Was lit, is no longer lit */
-		if (!(fast_cave_info2[g] & (CAVE2_MLIGHT)))
+		/* Was affected */
+		if ((info & (CAVE_TEMP)) || (info2 & (CAVE2_TEMP)))
 		{
-			/* Clear the temp flag */
-			fast_cave_info[g] &= ~(CAVE_TEMP);
+			/* Is no longer affected */
+			if (!(info2 & (CAVE2_MLIGHT | CAVE2_MDARK)))
+			{
+				/* Clear the temp flags */
+				fast_cave_info[g] &= ~(CAVE_TEMP);
+				fast_cave_info2[g] &= ~(CAVE2_TEMP);
 
-			/* See if there was a visible monster */
-			if (player_has_los_bold(y, x) && m_idx)
-			{
-				/* Hide the monster */
-				update_mon(m_idx, FALSE);
-			}
-			else
-			{
-				/* Redraw */
-				light_spot(y, x);
+				/* See if there was a visible monster */
+				if (player_has_los_bold(y, x) && m_idx)
+				{
+					/* Show/Hide the monster */
+					update_mon(m_idx, FALSE);
+				}
+				else
+				{
+					/* Redraw */
+					light_spot(y, x);
+				}
 			}
 		}
 	}
@@ -3382,19 +3522,34 @@ void update_monster_light(void)
 		/* Access grids */
 		g = fast_temp_g[i];
 
-		/* Retrieve cave info */
+		/* Access cave flags */
 		info = fast_cave_info[g];
+		info2 = fast_cave_info2[g];
 
-		/* No changes in illumination */
-		if (info & (CAVE_TEMP))
+		/* Was lit and now lit */
+		if ((info & (CAVE_TEMP)) && (info2 & (CAVE2_MLIGHT)))
 		{
 			/* Clear the temp flag */
 			fast_cave_info[g] &= ~(CAVE_TEMP);
 		}
 
-		/* Was not lit, is now lit */
+		/* Was darkened and now darkened */
+		else if ((info2 & (CAVE2_TEMP)) && (info2 & (CAVE2_MDARK)))
+		{
+			/* Clear the temp flag */
+			fast_cave_info2[g] &= ~(CAVE2_TEMP);
+		}
+
+		/* Change in illumination / darkening */
 		else
 		{
+			/*
+			 * Need to clear the flags anyway, because a monster-lit grid can
+			 * be monster-darkened or vice versa.
+			 */
+			fast_cave_info[g] &= ~(CAVE_TEMP);
+			fast_cave_info2[g] &= ~(CAVE2_TEMP);
+
 			/* Location */
 			y = GRID_Y(g);
 			x = GRID_X(g);
@@ -3408,7 +3563,7 @@ void update_monster_light(void)
 			/* See if there is a monster */
 			if (m_idx)
 			{
-				/* Show it */
+				/* Show/Hide it */
 				update_mon(m_idx, FALSE);
 			}
 			else

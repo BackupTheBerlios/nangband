@@ -40,7 +40,8 @@ void delete_monster_idx(int i)
 	if (r_ptr->flags2 & (RF2_MULTIPLY)) num_repro--;
 
 	/* Hack -- Notice change in lighting effects */
-	if (r_ptr->flags2 & (RF2_ABSORB_LIGHT|RF2_EMANATE_LIGHT|RF2_CARRY_LIGHT))
+	if (r_ptr->flags2 & (RF2_EMANATE_LIGHT | RF2_CARRY_LIGHT |
+	                     RF2_ABSORB_LIGHT))
 	{
 		/* Update monster light later */
 		p_ptr->update |= (PU_UPDATE_LIGHT);

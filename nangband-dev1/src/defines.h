@@ -1835,6 +1835,8 @@
 #define CAVE2_TDETECT        0x01     /* trap detection flag */
 #define CAVE2_PLIGHT         0x02     /* Player light */
 #define CAVE2_MLIGHT         0x04     /* Monster light */
+#define CAVE2_MDARK          0x08     /* Monster darkness */
+#define CAVE2_TEMP           0x10     /* Yet another temp flag */
 
 
 

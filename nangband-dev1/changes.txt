@@ -1,6 +1,11 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-07-29
+----------
+- Added support for ABSORB_LIGHT, using three queues to avoid the calls for
+  ang_sort. They uses about 18K of additional memory... (pelpel)
+
 2002-07-28
 ----------
 - generate_cave() didn't clear the cave_info2 array, causing various weird

@@ -1838,6 +1838,9 @@ static void item_info_brief(const object_type *o_ptr, int mode)
 	/* An "object kind" */
 	object_kind *k_ptr;
 
+	/* Eric. */
+	int i = 0;
+
 	/* A counter, and text */
 	int vn;
 	cptr vp[32];
@@ -1890,12 +1893,11 @@ static void item_info_brief(const object_type *o_ptr, int mode)
 
 	/* Count the stats affected */
 	vn = 0;
-	if (f1 & (TR1_STR)) vp[vn++] = "STR";
-	if (f1 & (TR1_INT)) vp[vn++] = "INT";
-	if (f1 & (TR1_WIS)) vp[vn++] = "WIS";
-	if (f1 & (TR1_DEX)) vp[vn++] = "DEX";
-	if (f1 & (TR1_CON)) vp[vn++] = "CON";
-	if (f1 & (TR1_CHR)) vp[vn++] = "CHA";
+
+	for (i = 0; i < A_MAX; i++)
+	{
+		if (o_ptr->stat_mods[i]) vp[vn++] = stat_names_full[i];
+	}
 
 	/* Describe */
 	if (vn)
@@ -2215,6 +2217,9 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	/* The object name */
 	char o_name[80];
 
+	/* In the entire Angband! */
+	int i = 0;
+
 	/* A counter, and text */
 	int vn;
 	cptr vp[32];
@@ -2282,12 +2287,11 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 	/* Count the stats affected */
 	vn = 0;
-	if (f1 & (TR1_STR)) vp[vn++] = "strength";
-	if (f1 & (TR1_INT)) vp[vn++] = "intellegence";
-	if (f1 & (TR1_WIS)) vp[vn++] = "wisdom";
-	if (f1 & (TR1_DEX)) vp[vn++] = "dexterity";
-	if (f1 & (TR1_CON)) vp[vn++] = "constitution";
-	if (f1 & (TR1_CHR)) vp[vn++] = "charisma";
+
+	for (i = 0; i < A_MAX; i++)
+	{
+		if (o_ptr->stat_mods[i]) vp[vn++] = stat_names_full[i];
+	}
 
 	/* Describe */
 	if (vn)

@@ -856,6 +856,8 @@ static s32b object_value_real(const object_type *o_ptr)
 {
 	s32b value;
 
+	int i;
+
 	u32b f1, f2, f3;
 
 	object_kind *k_ptr = &k_info[o_ptr->k_idx];
@@ -929,12 +931,10 @@ static s32b object_value_real(const object_type *o_ptr)
 			if (!o_ptr->pval) break;
 
 			/* Give credit for stat bonuses */
-			if (f1 & (TR1_STR)) value += (o_ptr->pval * 200L);
-			if (f1 & (TR1_INT)) value += (o_ptr->pval * 200L);
-			if (f1 & (TR1_WIS)) value += (o_ptr->pval * 200L);
-			if (f1 & (TR1_DEX)) value += (o_ptr->pval * 200L);
-			if (f1 & (TR1_CON)) value += (o_ptr->pval * 200L);
-			if (f1 & (TR1_CHR)) value += (o_ptr->pval * 200L);
+			for (i = 0; i < A_MAX; i++)
+			{
+				if (o_ptr->stat_mods[i]) value += (o_ptr->stat_mods[i] * 200L);
+			}
 
 			/* Give credit for stealth and searching */
 			if (f1 & (TR1_STEALTH)) value += (o_ptr->pval * 100L);

@@ -13,6 +13,18 @@
 
 #include "init.h"
 
+/* This should be macro - XXX XXX */
+static int power(unsigned int n, unsigned int r)
+{
+	int i, y = 1;
+
+	/* Do the stuff */
+	for (i = 0; i < r; i++) y *= n;
+
+	/* Return result */
+	return (y);
+}
+
 /*
  * Random artifact generator (randart) by Greg Wooledge.
  *
@@ -864,6 +876,7 @@ static s32b artifact_power(int a_idx)
 	const artifact_type *a_ptr = &a_info[a_idx];
 	s32b p = 0;
 	s16b k_idx;
+	int i;
 	object_kind *k_ptr;
 
 	/* Try to use the cache */
@@ -1007,20 +1020,20 @@ static s32b artifact_power(int a_idx)
 
 	if (a_ptr->pval > 0)
 	{
-		if (a_ptr->flags1 & TR1_STR) p += a_ptr->pval * a_ptr->pval;
-		if (a_ptr->flags1 & TR1_INT) p += a_ptr->pval * a_ptr->pval;
-		if (a_ptr->flags1 & TR1_WIS) p += a_ptr->pval * a_ptr->pval;
-		if (a_ptr->flags1 & TR1_DEX) p += a_ptr->pval * a_ptr->pval;
-		if (a_ptr->flags1 & TR1_CON) p += a_ptr->pval * a_ptr->pval;
+		for (i = 0; i < A_MAX; i++)
+		{
+			if (a_ptr->stat_mods[i]) p += power(a_ptr->stat_mods[i], 2);
+		}
+
 		if (a_ptr->flags1 & TR1_STEALTH) p += a_ptr->pval * a_ptr->pval;
 	}
 	else if (a_ptr->pval < 0)	/* hack: don't give large negatives */
 	{
-		if (a_ptr->flags1 & TR1_STR) p += a_ptr->pval;
-		if (a_ptr->flags1 & TR1_INT) p += a_ptr->pval;
-		if (a_ptr->flags1 & TR1_WIS) p += a_ptr->pval;
-		if (a_ptr->flags1 & TR1_DEX) p += a_ptr->pval;
-		if (a_ptr->flags1 & TR1_CON) p += a_ptr->pval;
+		for (i = 0; i < A_MAX; i++)
+		{
+			if (a_ptr->stat_mods[i]) p += a_ptr->stat_mods[i];
+		}
+
 		if (a_ptr->flags1 & TR1_STEALTH) p += a_ptr->pval;
 	}
 	if (a_ptr->flags1 & TR1_CHR) p += a_ptr->pval;
@@ -1386,6 +1399,25 @@ static void do_pval(artifact_type *a_ptr)
 		if (rand_int(2) == 0) a_ptr->pval--;
 	}
 	else if (rand_int(3) > 0) a_ptr->pval++;
+
+	/* We are done. */
+	return;
+}
+
+
+/* -------------------------------------------- takkaria, 2002-04-24 ---
+ * We've just added an stat bonus.  Make sure it's
+ * not zero.  If it's currently negative, leave it negative (heh heh).
+ * --------------------------------------------------------------------- */
+static void do_statbonus(artifact_type *a_ptr, int i)
+{
+	if (a_ptr->stat_mods[i] == 0) a_ptr->stat_mods[i] = 1 + rand_int(3);
+
+	else if (a_ptr->stat_mods[i] < 0 && rand_int(2) == 0) a_ptr->stat_mods[i]--;
+	else if (rand_int(3) > 0) a_ptr->stat_mods[i]++;
+
+	/* We are done. */
+	return;
 }
 
 
@@ -1393,18 +1425,15 @@ static void remove_contradictory(artifact_type *a_ptr)
 {
 	if (a_ptr->flags3 & TR3_AGGRAVATE) a_ptr->flags1 &= ~(TR1_STEALTH);
 
-	if (a_ptr->pval < 0)
-	{
-		if (a_ptr->flags1 & TR1_STR) a_ptr->flags2 &= ~(TR2_SUST_STR);
-		if (a_ptr->flags1 & TR1_INT) a_ptr->flags2 &= ~(TR2_SUST_INT);
-		if (a_ptr->flags1 & TR1_WIS) a_ptr->flags2 &= ~(TR2_SUST_WIS);
-		if (a_ptr->flags1 & TR1_DEX) a_ptr->flags2 &= ~(TR2_SUST_DEX);
-		if (a_ptr->flags1 & TR1_CON) a_ptr->flags2 &= ~(TR2_SUST_CON);
-		if (a_ptr->flags1 & TR1_CHR) a_ptr->flags2 &= ~(TR2_SUST_CHR);
-		a_ptr->flags1 &= ~(TR1_BLOWS);
-	}
+	if (a_ptr->pval < 0) a_ptr->flags1 &= ~(TR1_BLOWS);
 
-	if (a_ptr->flags3 & TR3_LIGHT_CURSE) a_ptr->flags3 &= ~(TR3_BLESSED);
+	if (a_ptr->stat_mods[A_STR] < 0) a_ptr->flags2 &= ~(TR2_SUST_STR);
+	if (a_ptr->stat_mods[A_INT] < 0) a_ptr->flags2 &= ~(TR2_SUST_INT);
+	if (a_ptr->stat_mods[A_WIS] < 0) a_ptr->flags2 &= ~(TR2_SUST_WIS);
+	if (a_ptr->stat_mods[A_DEX] < 0) a_ptr->flags2 &= ~(TR2_SUST_DEX);
+	if (a_ptr->stat_mods[A_CON] < 0) a_ptr->flags2 &= ~(TR2_SUST_CON);
+	if (a_ptr->stat_mods[A_CHR] < 0) a_ptr->flags2 &= ~(TR2_SUST_CHR);
+
 	if (a_ptr->flags1 & TR1_KILL_DRAGON) a_ptr->flags1 &= ~(TR1_SLAY_DRAGON);
 	if (a_ptr->flags1 & TR1_KILL_DEMON) a_ptr->flags1 &= ~(TR1_SLAY_DEMON);
 	if (a_ptr->flags1 & TR1_KILL_UNDEAD) a_ptr->flags1 &= ~(TR1_SLAY_UNDEAD);
@@ -1678,35 +1707,29 @@ static void add_ability(artifact_type *a_ptr)
 		switch (r)
 		{
 			case 0:
-				a_ptr->flags1 |= TR1_STR;
-				do_pval(a_ptr);
+				do_statbonus(a_ptr, A_STR);
 				if (rand_int(2) == 0) a_ptr->flags2 |= TR2_SUST_STR;
 				break;
 			case 1:
-				a_ptr->flags1 |= TR1_INT;
-				do_pval(a_ptr);
+				do_statbonus(a_ptr, A_INT);
 				if (rand_int(2) == 0) a_ptr->flags2 |= TR2_SUST_INT;
 				break;
 			case 2:
-				a_ptr->flags1 |= TR1_WIS;
-				do_pval(a_ptr);
+				do_statbonus(a_ptr, A_WIS);
 				if (rand_int(2) == 0) a_ptr->flags2 |= TR2_SUST_WIS;
 				if (a_ptr->tval == TV_SWORD || a_ptr->tval == TV_POLEARM)
 					a_ptr->flags3 |= TR3_BLESSED;
 				break;
 			case 3:
-				a_ptr->flags1 |= TR1_DEX;
-				do_pval(a_ptr);
+				do_statbonus(a_ptr, A_DEX);
 				if (rand_int(2) == 0) a_ptr->flags2 |= TR2_SUST_DEX;
 				break;
 			case 4:
-				a_ptr->flags1 |= TR1_CON;
-				do_pval(a_ptr);
+				do_statbonus(a_ptr, A_CON);
 				if (rand_int(2) == 0) a_ptr->flags2 |= TR2_SUST_CON;
 				break;
 			case 5:
-				a_ptr->flags1 |= TR1_CHR;
-				do_pval(a_ptr);
+				do_statbonus(a_ptr, A_CHR);
 				if (rand_int(2) == 0) a_ptr->flags2 |= TR2_SUST_CHR;
 				break;
 
@@ -1730,26 +1753,17 @@ static void add_ability(artifact_type *a_ptr)
 
 			case 10:
 				a_ptr->flags2 |= TR2_SUST_STR;
-				if (rand_int(2) == 0)
-				{
-					a_ptr->flags1 |= TR1_STR;
-					do_pval(a_ptr);
-				}
+				if (rand_int(2) == 0) do_statbonus(a_ptr, A_STR);
 				break;
 			case 11:
 				a_ptr->flags2 |= TR2_SUST_INT;
-				if (rand_int(2) == 0)
-				{
-					a_ptr->flags1 |= TR1_INT;
-					do_pval(a_ptr);
-				}
+				if (rand_int(2) == 0) do_statbonus(a_ptr, A_INT);
 				break;
 			case 12:
 				a_ptr->flags2 |= TR2_SUST_WIS;
 				if (rand_int(2) == 0)
 				{
-					a_ptr->flags1 |= TR1_WIS;
-					do_pval(a_ptr);
+					do_statbonus(a_ptr, A_WIS);
 					if (a_ptr->tval == TV_SWORD || a_ptr->tval == TV_POLEARM)
 						a_ptr->flags3 |= TR3_BLESSED;
 				}

@@ -55,6 +55,7 @@ extern const byte chest_traps[64];
 extern cptr color_names[16];
 extern cptr stat_names[A_MAX];
 extern cptr stat_names_reduced[A_MAX];
+extern char *stat_names_full[A_MAX];
 extern cptr res_names[RES_MAX];
 extern cptr window_flag_desc[32];
 extern cptr option_text[OPT_MAX];

@@ -223,6 +223,8 @@ struct artifact_type
 	byte dd, ds;                      /* Damage dice and sides */
 	s16b weight;                      /* Weight */
 
+	s16b stat_mods[A_MAX];
+
 	u32b flags1;                      /* Artifact Flags, set 1 */
 
 	u32b flags2;                      /* Artifact Flags, set 2 */
@@ -273,6 +275,8 @@ struct ego_item_type
 	byte max_to_d;		/* Maximum to-dam bonus */
 	byte max_to_a;		/* Maximum to-ac bonus */
 	byte max_pval;		/* Maximum pval */
+
+	s16b stat_mods[A_MAX];
 
 	u32b flags1;		/* Ego-Item Flags, set 1 */
 
@@ -479,6 +483,8 @@ struct object_type
 	s16b to_a;			/* Plusses to AC */
 
 	s16b ac;			/* Normal AC */
+
+	s16b stat_mods[A_MAX];
 
 	byte dd, ds;		/* Damage dice/sides */
 

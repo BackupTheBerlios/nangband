@@ -327,7 +327,7 @@ static void savefile_do_string(char *str, bool record, bool type)
 	while (TRUE)
 	{
 		/* Put the byte */
-		savefile_do_byte(&str[pos], type);
+		savefile_do_byte((byte *) &str[pos], type);
 
 		/* Check the value */
 		if (str[pos - 1] != '\0' || pos < i) pos++;
@@ -1137,7 +1137,7 @@ static errr savefile_do_block_player(bool type, int ver)
 	savefile_do_u16b(&p_ptr->noscore, type);
 
 	/* Write death */
-	savefile_do_byte((bool *) &p_ptr->is_dead, type);
+	savefile_do_byte((byte *) &p_ptr->is_dead, type);
 
 	/* Write feeling */
 	savefile_do_byte(&feeling, type);

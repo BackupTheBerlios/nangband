@@ -3727,7 +3727,7 @@ byte color_char_to_attr(char c)
 		case 'U': return (TERM_L_UMBER);
 	}
 
-	return (-1);
+	return (TERM_WHITE);
 }
 
 

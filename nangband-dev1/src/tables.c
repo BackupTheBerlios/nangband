@@ -1332,6 +1332,14 @@ cptr stat_names_reduced[A_MAX] =
 };
 
 /*
+ * Full stat names.
+ */
+char *stat_names_full[A_MAX] =
+{
+	"strength", "intelligence", "wisdom", "dexterity", "constitution", "charisma"
+};
+
+/*
  * This table contains the resistance names for player resistances.
  */
 cptr res_names[RES_MAX] =

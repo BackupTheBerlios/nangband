@@ -135,11 +135,17 @@ function page_footer()
 		do_links(0, 0, 1);
 		echo '</font>';
 		echo '<br>';
-		echo '<div align="center"><font size="-1" color="#555555">';
+		echo '<div align="center">';
+		echo '<font size="-1" color="#555555">';
 		echo 'Material &copy; Nangband Developers. Contact ';
 		echo '<a href="mailto:nevermiah@hotmail.com">nevermiah@hotmail.com</a>';
+		echo '<br>';
+		echo '<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS 2.0 Compliant</a>';
+		echo ' | ';
+		echo '<a href="http://validator.w3.org/check/referer">HTML 4.01 Compliant</a>';
+		echo '</font>';
 
-		echo '</font></div></td></tr>';
+		echo '</div></td></tr>';
 		echo '</table></td></tr></table>';
 	}
 	else if ($style == 'sidebar')
@@ -155,8 +161,14 @@ function page_footer()
 <table align="center" border="0">
 	<tr>
 		<td>
-			<font color="#555555" size="-1">&copy; Nangband Developers.<br>
-Contact <a href="mailto:nevermiah@hotmail.com">nevermiah@hotmail.com</a></font>
+<!-- Page footer -->
+<font color="#555555" size="-1">&copy; Nangband Developers.<br>
+Contact <a href="mailto:nevermiah@hotmail.com">nevermiah@hotmail.com</a>
+<br>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS 2.0 Compliant</a> |
+<a href="http://validator.w3.org/check/referer">HTML 4.01 Compliant</a>
+</font>
+<!-- End page footer -->
 		</td>
 	</tr>
 </table>

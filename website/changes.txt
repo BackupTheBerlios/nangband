@@ -5,8 +5,11 @@ Nangband Website changelog
 --------
 - Added a timing counter to the Nangband changes page for fun.  It
   needs gmtime.inc which is now in the content/ directory.
+  (takkaria)
 - Removed the "content lister" - I've chosen a different approach
-  now.
+  now. (takkaria)
+- Really got the site valid, and added links to the validators at
+  the bottom of the page. (takkaria)
 
 01-07-02
 --------

@@ -214,7 +214,7 @@ static cptr r_info_flags3[] =
 	"EVIL",
 	"ANIMAL",
 	"ASTRAL",
-	"XXX2X3",
+	"ALLOW_DUNGEON",
 	"XXX3X3",
 	"XXX4X3",
 	"HURT_LIGHT",

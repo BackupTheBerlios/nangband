@@ -1,6 +1,8 @@
 Todo list for Nangband
 ======================
 
+- (Suggested by Zach Levi) Add inscriptions that exclude items from the
+  using list.
 - Write a Qt port.
 - Externalize more stuff; things that have been suggested are equipment
   slots, tvals and stores.

@@ -1662,11 +1662,15 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	/* Describe */
 	if (vn)
 	{
+		/* Intro */
 		text_out("It provides ");
 		text_out(vp[0]);
 		text_out(" light ");
-		if (needs_fuel) text_out("when it is fueled.");
-		else text_out("permanently.\n");	
+		if (needs_fuel) text_out("when it is fueled");
+		else text_out("permanently");
+
+		/* Finish */
+		text_out(".  ");
 	}
 
 	/* Describe stat bonuses */
@@ -1719,22 +1723,22 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		text_out(format("%i", ABS(o_ptr->pval)));
 
 		/* Finish */
-		text_out(".  \n");
+		text_out(".  ");
 	}
 
 	if (f1 & (TR1_STEALTH))
 	{
-		text_out("It affects your stealth.\n");
+		text_out("It affects your stealth.");
 		known = TRUE;
 	}
 	if (f1 & (TR1_SEARCH))
 	{
-		text_out("It affects your searching.\n");
+		text_out("It affects your searching.");
 		known = TRUE;
 	}
 	if (f1 & (TR1_INFRA))
 	{
-		text_out("It affects your infravision.\n");
+		text_out("It affects your infravision.");
 		known = TRUE;
 	}
 	if (f1 & (TR1_TUNNEL))
@@ -1763,46 +1767,41 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		known = TRUE;
 	}
 
-	if (f1 & (TR1_SLAY_ANIMAL))
+	/* Collect the slays */
+	vn = 0;
+	if (f1 & (TR1_SLAY_ANIMAL)) vp[vn++] = "natural";
+	if (f1 & (TR1_SLAY_EVIL)) vp[vn++] = "evil";
+	if (f1 & (TR1_SLAY_UNDEAD)) vp[vn++] = "undead";
+	if (f1 & (TR1_SLAY_DEMON)) vp[vn++] = "demons";
+	if (f1 & (TR1_SLAY_ORC)) vp[vn++] = "orcs";
+	if (f1 & (TR1_SLAY_TROLL)) vp[vn++] = "trolls";
+	if (f1 & (TR1_SLAY_GIANT)) vp[vn++] = "giants";
+	if (f1 & (TR1_SLAY_DRAGON)) vp[vn++] = "dragons";
+
+	/* Describe */
+	if (vn)
 	{
-		text_out("It is especially deadly against natural creatures.\n");
-		known = TRUE;
+		int n;
+
+		/* Intro */
+		text_out("It is very deadly ");
+
+		/* List the slays */
+		for (n = 0; n < vn; n++)
+		{
+			/* Intro */
+			if (n == 0) text_out("against ");
+			else if (n < (vn - 1)) text_out(", ");
+			else text_out(" and ");
+
+			/* Dump it */
+			text_out(vp[n]);
+		}
+
+		text_out(".  ");
 	}
-	if (f1 & (TR1_SLAY_EVIL))
-	{
-		text_out("It fights against evil with holy fury.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_SLAY_UNDEAD))
-	{
-		text_out("It strikes at undead with holy wrath.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_SLAY_DEMON))
-	{
-		text_out("It strikes at demons with holy wrath.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_SLAY_ORC))
-	{
-		text_out("It is especially deadly against orcs.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_SLAY_TROLL))
-	{
-		text_out("It is especially deadly against trolls.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_SLAY_GIANT))
-	{
-		text_out("It is especially deadly against giants.\n");
-		known = TRUE;
-	}
-	if (f1 & (TR1_SLAY_DRAGON))
-	{
-		text_out("It is especially deadly against dragons.\n");
-		known = TRUE;
-	}
+
+
 	if (f1 & (TR1_KILL_DRAGON))
 	{
 		text_out("It is a great bane of dragons.\n");
@@ -2143,20 +2142,15 @@ void identify_random_gen(const object_type *o_ptr)
  */
 bool identify_fully_aux(const object_type *o_ptr)
 {
-	FILE *fff;
-	char file_name[1024];
 	bool known = FALSE;
 
-
-	/* Temporary file */
-	fff = my_fopen_temp(file_name, 1024);
-
-	/* Failure */
-	if (!fff) return (FALSE);
+	/* Save the screen */
+	screen_save();
 
 	/* Redirect output to the temporary file. */
-	text_out_hook = text_out_to_file;
-	text_out_file = fff;
+	text_out_hook = text_out_to_screen;
+
+	text_out("\n");
 
 	/* Display the object description */
 	if (k_info[o_ptr->k_idx].text)
@@ -2170,30 +2164,14 @@ bool identify_fully_aux(const object_type *o_ptr)
 	if (identify_fully_aux2(o_ptr, OBJECT_FLAGS_KNOWN))
 		known = TRUE;
 
-	/* Close the file */
-	my_fclose(fff);
+	/* Prompt the user */
+	text_out_c(TERM_L_BLUE, "(press any key to continue)\n");
 
-	/* HACK: Browse books */
-	if (o_ptr->tval == cp_ptr->spell_book)
-	{
-		do_cmd_browse_aux(o_ptr);
-	}
+	/* XXX XXX XXX Wait for a keypress */
+	inkey();
 
-	/* Anything known? */
-	if (known)
-	{
-		/* Save screen */
-		screen_save();
-
-		/* Display the file contents */
-		show_file(file_name, "Item Attributes", 0, 0);
-
-		/* Restore screen */
-		screen_load();
-	}
-
-	/* Remove the file */
-	fd_kill(file_name);
+	/* Load the screen */
+	screen_load();
 
 	return (known);
 }

@@ -10,6 +10,8 @@
 #include "angband.h"
 #include "dtype.h"
 
+#define DEBUG
+
 /*
  * Memory Management Section
  */

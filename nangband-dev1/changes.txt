@@ -1,3 +1,6 @@
+Changed in Nangband 2.9.7:
+- Added Orbs. These are permanent, non-artifact light sources.
+
 Changes in Angband 2.9.6 alpha4:
 - Added usage lines for the main-*.c files (Hallvard B Furuseth).
 - Fixed the problems with the 'repeat command' command.

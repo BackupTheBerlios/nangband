@@ -34,14 +34,26 @@ bool resist_check_valid(byte res_idx)
  */
 byte resist_player_current(byte res_idx)
 {
-	u16b x = 0;
+	u16b x = 0, i = 0;
 
 	/* Make sure the resist is valid */
 	RES_VALIDIZE(res_idx);
 
-	/* Grab the values, and calculate the timed resist */
+	/* Grab the current resist value */
 	x += p_ptr->resist_cur[res_idx];
-	x += (p_ptr->resist_timed[res_idx] ? 20 : 0);
+
+	/* Hack to avoid work */
+	if (!p_ptr->resist_timed[res_idx]) return (x);
+
+	/* Do some complex math to work out timed resist */
+	if ((p_ptr->resist_timed[res_idx] * 100) <= (75 * p_ptr->resist_tim_max[res_idx)])
+	{
+		x += 50 - ((-30/75) * p_ptr->resist_timed[res_idx]);
+	}
+	else
+	{
+		x += 20 - ((-20/25) * (p_ptr->resist_timed[res_idx] - 20));
+	}
 
 	/* Return the total resistance */
 	return (x);

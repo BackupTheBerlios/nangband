@@ -91,6 +91,9 @@ typedef int errr;
 /* An unsigned byte of memory */
 typedef unsigned char byte;
 
+/* A sined byte of memory */
+typedef signed char sbyte;
+
 /* Note that a bool is smaller than a full "int" */
 /* Simple True/False type */
 typedef char bool;

@@ -926,6 +926,7 @@ struct player_type
 	s16b tim_infra;		/* Timed -- Infra Vision */
 
 	byte resist_timed[RES_MAX];	/* Timed resistances */
+	byte resist_tim_start[RES_MAX];	/* Original time of resistance */
 	byte resist_cur[RES_MAX];	/* Current % resistances */
 	byte resist_dis[RES_MAX];	/* Displayed resistances */
 

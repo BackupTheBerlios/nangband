@@ -863,9 +863,13 @@ bool set_timed_res(int res_idx, int amount)
 
 	/* Hack -- Force good values */
 	amount = (amount > 10000) ? 10000 : (amount < 0) ? 0 : amount;
-	res_idx = (res_idx > RES_MAX) ? 0 : res_idx;
 
-	res_idx = stupid;
+	/* Check the index for valididity */
+	if (!resist_check(res_idx)) res_idx = 0;
+
+	/* Do a quick check for the original time */
+	if (!p_ptr->resist_timed[res_idx])
+		p_ptr->resist_tim_max[res_idx] = amount;
 
 	/* Open */
 	if (amount)
@@ -888,7 +892,7 @@ bool set_timed_res(int res_idx, int amount)
 		{
 			char text[64];
 
-			sprintf(text, "You feel less resistant to %s!", res_names[res_idx]);
+			sprintf(text, "You feel your resistance to %s slip away...", res_names[res_idx]);
 			msg_print(text);
 
 			notice = TRUE;

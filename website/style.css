@@ -40,14 +40,14 @@ h1
 a
 {
   text-decoration: none;
-  color: #3399FF;
-  font-weight: normal;
+  color: #000000;
+  font-weight: bold;
   border: thin none;
 }
 
 a:hover
 {
-	font-weight : bold;
+	color : #3399FF;
 }
 
 hr

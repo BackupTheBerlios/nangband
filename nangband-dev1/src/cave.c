@@ -2953,7 +2953,7 @@ static int monster_light_radius(monster_race *r_ptr)
 	/* EMANATE_LIGHT monsters */
 	else if (r_ptr->flags2 & (RF2_EMANATE_LIGHT))
 	{
-		if (r_ptr->level < 20) rad = 1;
+		if (r_ptr->level < 20) rad = 2;
 		else rad = 3;
 	}
 
@@ -3308,7 +3308,7 @@ void update_monster_light(void)
 			info = cave_info[y][x];
 
 			/* Ignore locations outside of the current field of view */
-			if (info & (CAVE_VIEW)) continue;
+			if (!(info & (CAVE_VIEW))) continue;
 
 			/* Wall illumination is always complicated */
 			if (info & (CAVE_WALL))

@@ -1409,7 +1409,7 @@ static void display_inventory(void)
 	int i, k;
 
 	/* Display all the items we can */
-	for (k = 0; k < (size_y - 6); k++)
+	for (k = 0; k < (size_y - 11); k++)
 	{
 		/* Stop when we run out of items */
 		if (top_item + k >= st_ptr->stock_num) break;
@@ -1419,10 +1419,7 @@ static void display_inventory(void)
 	}
 
 	/* Erase the extra lines and the "more" prompt */
-	for (i = k; i < (size_y - 6); i++) prt("", 6 + i, 0);
-
-	/* Assume "no current page" */
-	put_str("        ", 5, 20);
+	for (i = k; i < (size_y - 11); i++) prt("", 6 + i, 0);
 
 	/* Tell the player if there are more items */
 	if (top_item + k < st_ptr->stock_num)
@@ -1446,10 +1443,10 @@ static void store_prt_gold(void)
 {
 	char out_val[64];
 
-	prt("Gold Remaining: ", size_y - 4, 53);
+	prt("Gold Remaining: ", size_y - 3, 53);
 
 	sprintf(out_val, "%9ld", (long)p_ptr->au);
-	prt(out_val, size_y - 4, 68);
+	prt(out_val, size_y - 3, 68);
 }
 
 
@@ -1507,11 +1504,13 @@ static void display_store(void)
 		put_str("Price", 5, (size_x - 6));
 	}
 
+	/* Draw in the inventory */
+	display_inventory();
+
 	/* Display the current gold */
 	store_prt_gold();
 
-	/* Draw in the inventory */
-	display_inventory();
+	return;
 }
 
 
@@ -3298,7 +3297,7 @@ void do_cmd_store(void)
 		tmp_chr = p_ptr->stat_use[A_CHR];
 
 		/* Clear */
-		clear_from(size_y - 3);
+		clear_from(size_y - 2);
 
 		/* Basic commands */
 		prt(" ESC) Exit from Building.", size_y - 1, 0);

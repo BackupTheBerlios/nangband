@@ -65,7 +65,6 @@ AC_EXEEXT
 
 if test "$CYGWIN" = "yes"; then
   AC_DEFINE(WINDOWS)
-  AC_DEFINE(USE_TRANSPARENCY)
   LIBS="$LIBS -lwinmm"
   LDFLAGS="$LDFLAGS -s -mno-cygwin -mwindows -e _mainCRTStartup"
   CFLAGS="$CFLAGS -mno-cygwin"
@@ -137,7 +136,6 @@ else
   if test "$no_x" != "yes"; then
     AC_DEFINE(USE_X11)
     AC_DEFINE(USE_XPJ)
-    AC_DEFINE(USE_TRANSPARENCY)
 
     LIBS="-lX11 $X_EXTRA_LIBS $LIBS"
     CFLAGS="$CFLAGS $X_CFLAGS"

@@ -95,8 +95,8 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	install-exec-recursive installdirs-recursive install-recursive \
 	uninstall-recursive check-recursive installcheck-recursive
 DIST_COMMON = Makefile.am Makefile.in acconfig.h acinclude.m4 \
-	aclocal.m4 config.guess config.sub configure configure.ac \
-	depcomp install-sh missing mkinstalldirs
+	aclocal.m4 config.guess configure configure.ac install-sh \
+	missing mkinstalldirs
 DIST_SUBDIRS = $(SUBDIRS)
 all: all-recursive
 

@@ -1705,7 +1705,7 @@ static errr savefile_do_block_monlore(bool type, int ver)
 
 		/* Count blows of each type */
 		for (j = 0; j < MONSTER_BLOW_MAX; j++)
-			savefile_do_byte(&l_ptr->blows[n], type);
+			savefile_do_byte(&l_ptr->blows[j], type);
 
 		/* Memorize flags */
 		savefile_do_u32b(&l_ptr->flags1, type);

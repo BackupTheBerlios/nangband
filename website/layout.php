@@ -11,7 +11,7 @@ function page_header($title, $type)
 {
 	echo '<html>';
 	echo '<head><title>Nangband - ' . $title . '</title></head>';
-	echo '<body bgcolor="#000000" text="#ffffff">';
+	echo '<body bgcolor="#ffffff" text="#000000">';
 	echo '<h1 align="center">' . $title . '</h1>';
 	echo '<div align="center">';
 	echo '[ <a href="http://developer.berlios.de/projects/nangband">Berlios Project Page</a> ] ';

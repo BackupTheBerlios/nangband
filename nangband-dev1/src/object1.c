@@ -2452,13 +2452,13 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 			text_out(" your ");
 
 			/* Count stuff */
-			vn = current_stat; r = iter = 0;
-			while (stat[vn].bonus == stat[vn+1].bonus)
+			r = 0; iter = 0;
+			for (vn = current_stat; (vn < A_MAX) && (vn+1 != A_MAX); vn++)
 			{
-				/* Calculate */
-				if (vn+1 != (A_MAX)) vn++;
-				else break;
+				/* Check */
+				if (stat[vn].bonus != stat[vn+1].bonus) break;
 
+				/* Incrememnt */
 				r++;
 			}
 
@@ -2477,7 +2477,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 				iter++;
 
 				/* Set the correct values */
-				if (current_stat+1 != (A_MAX)) current_stat++;
+				if (current_stat+1 <= (A_MAX)) current_stat++;
 				else { current_stat++; break; }
 			}
 			while (stat[current_stat].bonus == stat[current_stat+1].bonus);

@@ -2067,7 +2067,7 @@ static bool write_savefile(int fd)
 static errr read_savefile(int fd)
 {
 	byte *savefile_head;
-    bool finished = FALSE;
+	bool finished = FALSE;
 
 	/* Loop through the savefile */
 	while (!finished)

@@ -105,7 +105,7 @@
 #define BLOCK_VERSION_QUESTS     1
 #define BLOCK_VERSION_ARTIFACTS  1
 #define BLOCK_VERSION_STORES     1
-#define BLOCK_VERSION_DUNGEON    1
+#define BLOCK_VERSION_DUNGEON    2
 #define BLOCK_VERSION_INVENTORY  1
 
 /* "Helper" functions - versions */
@@ -1247,10 +1247,11 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 	u16b py, px;
 
 	byte tmp8u;
+	u16b tmp16u = 0;
 
 	u16b limit;
 
-	byte count = 0, prev_char = 0;
+	u16b count = 0, prev_char = 0;
 
 	/* We don't use the version yet. */
 	(void)ver;
@@ -1317,14 +1318,14 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 			for (x = 0; x < DUNGEON_WID; x++)
 			{
 				/* Extract the important cave_info flags */
-				tmp8u = (cave_info[y][x] & (IMPORTANT_FLAGS));
+				tmp16u = (cave_info[y][x] & (IMPORTANT_FLAGS));
 
 				/* If the run is broken, or too full, flush it */
-				if ((tmp8u != prev_char) || (count == MAX_UCHAR))
+				if ((tmp16u != prev_char) || (count == MAX_UCHAR))
 				{
-					savefile_do_byte(&count, type);
-					savefile_do_byte(&prev_char, type);
-					prev_char = tmp8u;
+					savefile_do_u16b(&count, type);
+					savefile_do_u16b(&prev_char, type);
+					prev_char = tmp16u;
 					count = 1;
 				}
 
@@ -1339,8 +1340,8 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		/* Flush the data (if any) */
 		if (count)
 		{
-			savefile_do_byte(&count, type);
-			savefile_do_byte(&prev_char, type);
+			savefile_do_u16b(&count, type);
+			savefile_do_u16b(&prev_char, type);
 		}
 	}
 	else
@@ -1349,14 +1350,22 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		for (x = y = 0; y < DUNGEON_HGT; )
 		{
 			/* Grab RLE info */
-			savefile_do_byte(&count, type);
-			savefile_do_byte(&tmp8u, type);
+			if (ver < 2)
+			{
+				savefile_do_byte((byte *) &count, type);
+				savefile_do_byte((byte *) &tmp16u, type);
+			}
+			else
+			{
+				savefile_do_u16b(&count, type);
+				savefile_do_u16b(&tmp16u, type);
+			}
 
 			/* Apply the RLE info */
 			for (i = count; i > 0; i--)
 			{
 				/* Extract "info" */
-				cave_info[y][x] = tmp8u;
+				cave_info[y][x] = tmp16u;
 
 				/* Advance/Wrap */
 				if (++x >= DUNGEON_WID)
@@ -1390,8 +1399,8 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 				/* If the run is broken, or too full, flush it */
 				if ((tmp8u != prev_char) || (count == MAX_UCHAR))
 				{
-					savefile_do_byte(&count, type);
-					savefile_do_byte(&prev_char, type);
+					savefile_do_byte((byte *) &count, type);
+					savefile_do_byte((byte *) &prev_char, type);
 					prev_char = tmp8u;
 					count = 1;
 				}
@@ -1407,8 +1416,8 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		/* Flush the data (if any) */
 		if (count)
 		{
-			savefile_do_byte(&count, type);
-			savefile_do_byte(&prev_char, type);
+			savefile_do_byte((byte *) &count, type);
+			savefile_do_byte((byte *) &prev_char, type);
 		}
 	}
 	else
@@ -1417,7 +1426,7 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		for (x = y = 0; y < DUNGEON_HGT; )
 		{
 			/* Grab RLE info */
-			savefile_do_byte(&count, type);
+			savefile_do_u16b(&count, type);
 			savefile_do_byte(&tmp8u, type);
 
 			/* Apply the RLE info */

@@ -15,8 +15,10 @@
  * Hack -- Link a copyright message into the executable
  */
 cptr copyright =
-	"Copyright (c) 1997 Ben Harrison, James E. Wilson, Robert A. Keoneke\n"
+	"Nangband is placed under the GPL, version 2 or any later version.\n"
+	"All new code is (c) Nangband developers, 2001-2002.\n"
 	"\n"
+	"Nangband is based on Angband, which has the following licence:\n"
 	"This software may be copied and distributed for educational, research,\n"
 	"and not for profit purposes provided that this copyright and statement\n"
 	"are included in all such copies.  Other copyrights may also apply.\n";
@@ -262,7 +264,7 @@ byte *temp_x;
  * This array is padded to a width of 256 to allow fast access to elements
  * in the array via "grid" values (see the GRID() macros).
  */
-byte (*cave_info)[256];
+u16b (*cave_info)[256];
 
 /*
  * Array[DUNGEON_HGT][DUNGEON_WID] of cave grid feature codes

@@ -39,10 +39,14 @@
 
 
 /*
- * An array of 256 byte's
+ * An array of 256 bytes
  */
 typedef byte byte_256[256];
 
+/*
+ * An array of 256 u16bs
+ */
+typedef u16b u16b_256[256];
 
 /*
  * An array of DUNGEON_WID byte's

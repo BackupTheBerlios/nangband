@@ -2422,7 +2422,7 @@ void forget_view(void)
 	int fast_view_n = view_n;
 	u16b *fast_view_g = view_g;
 
-	byte *fast_cave_info = &cave_info[0][0];
+	u16b *fast_cave_info = &cave_info[0][0];
 
 
 	/* None to forget */
@@ -2563,7 +2563,7 @@ void update_view(void)
 	int fast_temp_n = 0;
 	u16b *fast_temp_g = temp_g;
 
-	byte *fast_cave_info = &cave_info[0][0];
+	u16b *fast_cave_info = &cave_info[0][0];
 
 	byte info;
 

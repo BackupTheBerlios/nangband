@@ -1448,7 +1448,7 @@ static void display_inventory(s16b item)
 	}
 
 	/* Erase the extra lines and the "more" prompt */
-	for (i = k; i < (size_y - 12); i++) prt("", 6 + i, 0);
+	for (i = k; i <= (size_y - 12); i++) prt("", 6 + i, 0);
 
 	/* Tell the player if there are more items */
 	if (top_item + k < st_ptr->stock_num)

@@ -7,7 +7,9 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
   hence disabled, mixing the Z and Tome one (which is based on the former),
   with necessary modifications to make it work with the GRID macros.
   I'm very hesitant to code multiple light radii, though... It's too
-  complicated as a cosmetic feature to suit my tastes. (pelpel)
+  complicated as a cosmetic feature to suit my tastes. Please note that
+  if (view_monster_light) is commented out in xtra1.c because it isn't
+  defined yet. (pelpel)
 
 2002-07-23
 ----------

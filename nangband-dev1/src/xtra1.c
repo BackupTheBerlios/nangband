@@ -2757,7 +2757,7 @@ void update_stuff(void)
 	if (p_ptr->update & (PU_UPDATE_LIGHT))
 	{
 		p_ptr->update &= ~(PU_UPDATE_LIGHT);
-		if (view_monster_light) update_monster_light();
+		/* if (view_monster_light) */ update_monster_light();
 	}
 
 	if (p_ptr->update & (PU_PANEL))

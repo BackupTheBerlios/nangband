@@ -1652,7 +1652,7 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ, bool fadin
 				obvious = TRUE;
 
 				/* Fully update the visuals */
-				p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS
+				p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |
 				                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 			}
 
@@ -1680,7 +1680,7 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ, bool fadin
 				obvious = TRUE;
 
 				/* Fully update the visuals */
-				p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS
+				p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |
 				                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 			}
 

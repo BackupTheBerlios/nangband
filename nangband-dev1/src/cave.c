@@ -2912,7 +2912,6 @@ void update_view(void)
 void forget_monster_light(void)
 {
 	int i, g;
-	int y, x;
 
 	int fast_light_n = light_n;
 	u16b *fast_light_g = light_g;
@@ -2997,7 +2996,7 @@ static bool need_update(int y, int x)
 		/* Convert to grid */ \
 		g = GRID(y, x); \
 		/* Add the grid to the temporary list */ \
-		temp_g[fast_temp_n++] = g; \
+		fast_temp_g[fast_temp_n++] = g; \
 		/* Mark the grid as lit by monster light source */ \
 		fast_cave_info2[g] |= CAVE2_MLIGHT; \
 		/* Mark the grid as seen by the player */ \
@@ -3155,9 +3154,6 @@ void update_monster_light(void)
 		monster_light_my = fy;
 		monster_light_mx = fx;
 
-		/* Clear the queue */
-		queue_n = 0;
-
 		/*
 		 * Because the following sections might look intimidating...
 		 *
@@ -3197,7 +3193,7 @@ void update_monster_light(void)
 		monster_light_hack(fy + 1, fx - 1);
 		monster_light_hack(fy - 1, fx - 1);
 
-		if (rad < 2) contiue;
+		if (rad < 2) continue;
 
 		/** Radius 2 and non-diagonal radius 3 **/
 
@@ -3809,7 +3805,7 @@ void wiz_dark(void)
 	}
 
 	/* Fully update the visuals */
-	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS
+	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |
 	                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 
 	/* Redraw map */
@@ -3901,7 +3897,7 @@ void town_illuminate(bool daytime)
 
 
 	/* Fully update the visuals */
-	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS
+	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |
 	                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 
 	/* Redraw map */

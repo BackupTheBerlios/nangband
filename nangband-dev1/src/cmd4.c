@@ -52,7 +52,7 @@ void do_cmd_redraw(void)
 	p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA | PU_SPELLS);
 
 	/* Fully update the visuals */
-	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS
+	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |
 	                  PU_FORGET_LIGHT | PU_UPDATE_LIGHT);
 
 	/* Redraw everything */

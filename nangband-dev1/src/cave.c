@@ -939,6 +939,16 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 				c = dc;
 			}
 
+			/* Random-hued monster */
+			else if (r_ptr->flags2 & (RF2_ATTR_RANDOM))
+			{
+				/* Random-hued attr */
+				a = m_idx % 15 + 1;
+
+				/* Normal char */
+				c = dc;
+			}
+
 			/* Normal monster (not "clear" in any way) */
 			else if (!(r_ptr->flags1 & (RF1_ATTR_CLEAR | RF1_CHAR_CLEAR)))
 			{

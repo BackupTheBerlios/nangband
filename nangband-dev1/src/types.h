@@ -66,6 +66,7 @@ typedef struct maxima maxima;
 typedef struct feature_type feature_type;
 typedef struct object_kind object_kind;
 typedef struct artifact_type artifact_type;
+typedef struct randart_type randart_type;
 typedef struct ego_item_type ego_item_type;
 typedef struct monster_blow monster_blow;
 typedef struct monster_race monster_race;
@@ -111,7 +112,9 @@ struct maxima
 	u16b h_max;		/* Max size for "h_info[]" */
 	u16b b_max;		/* Max size per element of "b_info[]" */
 	u16b c_max;		/* Max size for "c_info[]" */
-	u16b flavor_max; /* Max size for "flavor_info[]" */
+
+	u16b flavor_max;        /* Max size for "flavor_info[]" */
+	u16b randart_max;       /* Max randarts */
 
 	u16b o_max;		/* Max size for "o_list[]" */
 	u16b m_max;		/* Max size for "m_list[]" */
@@ -179,7 +182,7 @@ struct object_kind
 	byte extra;			/* Something */
 
 	byte resists[RES_MAX];	/* Item resists */
-    s16b stat_mods[A_MAX];  /* stat mods */
+	s16b stat_mods[A_MAX];  /* stat mods */
 
 	byte d_attr;		/* Default object attribute */
 	char d_char;		/* Default object character */
@@ -244,6 +247,27 @@ struct artifact_type
 	u16b randtime;                    /* Activation time dice */
 
 	s32b cost;                        /* Artifact "cost" */
+};
+
+/*
+ * Information about "random artifacts".
+ *
+ * This holds much less data than artifact_type, because much
+ * of the dats is stored in the object itself.
+ */
+struct randart_type
+{
+	char name[20];               /* Randart name */
+
+	s32b cost;                   /* "Cost" */
+
+	u32b flags1, flags2, flags3; /* Flags; sets 1-3 */
+
+	byte level;                  /* Randart level */
+
+	byte activation;             /* Activation */
+	u16b time;                   /* Randart charge time */
+	u16b randtime;               /* Randart charge time dice */
 };
 
 
@@ -467,14 +491,15 @@ struct object_type
 
 	s16b pval;			/* Item extra-parameter */
 
-	byte discount;		/* Discount (if any) */
+	byte discount;			/* Discount (if any) */
 
-	byte number;		/* Number of items */
+	byte number;			/* Number of items */
 
-	s16b weight;		/* Item weight */
+	s16b weight;			/* Item weight */
 
 	byte name1;			/* Artifact type, if any */
 	byte name2;			/* Ego-Item type, if any */
+	byte name3;			/* Randart type, if any */
 
 	byte xtra1;			/* Extra info type */
 	byte xtra2;			/* Extra info index */
@@ -1029,6 +1054,7 @@ struct player_type
 	bool hold_life;		/* Hold life */
 
 	bool nethr_brand, nexus_brand, chaos_brand;
+		/* Life draining, teleport or chaos blows */
 
 	bool hunger;		/* Extra hungry */
 	bool impact;		/* Earthquake blows */

@@ -13,17 +13,11 @@
 
 #include "init.h"
 
-/* This should be macro - XXX XXX */
+/*
+ * Calculate n^r, using integers.
+ */
 static int power(unsigned int n, unsigned int r)
-{
-	int i, y = 1;
-
-	/* Do the stuff */
-	for (i = 0; i < r; i++) y *= n;
-
-	/* Return result */
-	return (y);
-}
+{ int i, y = 1; for (i = 0; i < r; i++) y *= n; return (y); }
 
 /*
  * Random artifact generator (randart) by Greg Wooledge.

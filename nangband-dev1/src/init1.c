@@ -168,7 +168,7 @@ static cptr r_info_flags2[] =
 {
 	"STUPID",
 	"SMART",
-	"XXX1X2",
+	"ATTR_RANDOM",
 	"XXX2X2",
 	"INVISIBLE",
 	"COLD_BLOOD",
@@ -761,6 +761,18 @@ errr parse_z_info(char *buf, header *head)
 
 		/* Save the value */
 		z_info->a_max = max;
+	}
+
+	/* Process 'X' for "Maximum x_info[] index" */
+	if (buf[2] == 'X')
+	{
+		int max;
+
+		/* Scan for the value */
+		if (1 != sscanf(buf+4, "%d", &max)) return (PARSE_ERROR_GENERIC);
+
+		/* Save the value */
+		z_info->randart_max = max;
 	}
 
 	/* Process 'E' for "Maximum e_info[] index" */

@@ -1054,19 +1054,20 @@ static s32b artifact_power(int a_idx)
 	if (a_ptr->resists[RES_DARK] >= 100) p += 16;
 	else if (a_ptr->resists[RES_DARK] >= 50) p += 8;
 
-	if (a_ptr->flags3 & TR3_FREE_ACT) p += 8;
-	if (a_ptr->flags3 & TR3_HOLD_LIFE) p += 10;
-	if (a_ptr->flags2 & TR2_NO_BLIND) p += 10;
 /*	if (a_ptr->flags2 & TR2_RES_CONFU) p += 8; 
-	if (a_ptr->flags2 & TR2_RES_SOUND) p += 10; */
+	if (a_ptr->flags2 & TR2_RES_SOUND) p += 10;
 	if (a_ptr->flags2 & TR2_RES_SHARD) p += 8;
 	if (a_ptr->flags2 & TR2_RES_NETHR) p += 12;
 	if (a_ptr->flags2 & TR2_RES_NEXUS) p += 10;
-	if (a_ptr->flags2 & TR2_RES_CHAOS) p += 12;
-	if (a_ptr->flags2 & TR2_RES_DISEN) p += 12;
+	if (a_ptr->flags2 & TR2_RES_CHAOS) p += 12; */
+	if (a_ptr->flags2 & TR2_NO_BLIND) p += 10;
+	if (a_ptr->flags2 & TR2_NO_DISENCHANT) p += 12;
+	if (a_ptr->flags3 & TR3_FREE_ACT) p += 8;
+	if (a_ptr->flags3 & TR3_HOLD_LIFE) p += 10;
 	if (a_ptr->flags2 & TR2_LITE1) p += 2;
-	if (a_ptr->flags2 & TR2_LITE2) p += 3;
-	if (a_ptr->flags2 & TR2_LITE3) p += 4;
+	if (a_ptr->flags2 & TR2_LITE2) p += 5;
+	if (a_ptr->flags2 & TR2_LITE3) p += 10;
+	if (a_ptr->flags2 & TR2_LITE4) p += 14;
 
 	if (a_ptr->flags3 & TR3_FEATHER) p += 2;
 	if (a_ptr->flags3 & TR3_SEE_INVIS) p += 8;
@@ -1815,16 +1816,16 @@ static void add_ability(artifact_type *a_ptr)
 			case 29: a_ptr->flags2 |= TR2_NO_BLIND; break;
 			case 30: a_ptr->resists[RES_CONF] += 20; break;
 			case 31: a_ptr->resists[RES_SOUND] += 20; break;
-			case 32: a_ptr->flags2 |= TR2_RES_SHARD; break;
+			case 32: a_ptr->resists[RES_SHARDS] += 20; break;
 			case 33:
 				if (rand_int(2) == 0)
-					a_ptr->flags2 |= TR2_RES_NETHR;
+					a_ptr->resists[RES_NETHER] += 20;
 				break;
-			case 34: a_ptr->flags2 |= TR2_RES_NEXUS; break;
-			case 35: a_ptr->flags2 |= TR2_RES_CHAOS; break;
+			case 34: a_ptr->resists[RES_NEXUS] += 20; break;
+			case 35: a_ptr->resists[RES_CHAOS] += 20; break;
 			case 36:
 				if (rand_int(2) == 0)
-					a_ptr->flags2 |= TR2_RES_DISEN;
+					a_ptr->flags2 |= TR2_NO_DISENCHANT;
 				break;
 			case 37: a_ptr->flags3 |= TR3_FEATHER; break;
 			case 38: a_ptr->flags2 |= TR2_LITE1; break;

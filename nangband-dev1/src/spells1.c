@@ -3439,14 +3439,14 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ)
 		case GF_SHARD:
 		{
 			if (fuzzy) msg_print("You are hit by something sharp!");
-			if (p_ptr->resist_shard)
-			{
-				dam *= 6; dam /= (randint(6) + 6);
-			}
-			else
+
+			resist_apply(resist_player_current(RES_CHAOS), dam);
+
+			if (!resist_check(RES_SHARDS))
 			{
 				(void)set_cut(p_ptr->cut + dam);
 			}
+
 			take_hit(dam, killer);
 			break;
 		}

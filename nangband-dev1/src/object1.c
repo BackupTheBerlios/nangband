@@ -1781,6 +1781,34 @@ void obj_info_resists(byte *resists)
 		percentages[pc++] = resists[RES_SOUND];
 	}
 
+	if (resists[RES_SHARDS])
+	{
+		text[vn++] = "shards";
+		colours[cn++] = TERM_RED;
+		percentages[pc++] = resists[RES_SHARDS];
+	}
+
+	if (resists[RES_NEXUS])
+	{
+		text[vn++] = "nexus";
+		colours[cn++] = TERM_ORANGE;
+		percentages[pc++] = resists[RES_NEXUS];
+	}
+
+	if (resists[RES_NETHER])
+	{
+		text[vn++] = "nether";
+		colours[cn++] = TERM_L_DARK;
+		percentages[pc++] = resists[RES_NETHER];
+	}
+
+	if (resists[RES_CHAOS])
+	{
+		text[vn++] = "chaos";
+		colours[cn++] = TERM_RED;
+		percentages[pc++] = resists[RES_CHAOS];
+	}
+
 	/* Describe */
 	if (vn)
 	{
@@ -1798,7 +1826,8 @@ void obj_info_resists(byte *resists)
 			text_out_c(colours[n], text[n]);
 
 			/* Connectives */
-			if (n < (vn - 1)) text_out(", ");
+			if (n == vn) text_out("and ");
+			else if (n < (vn - 1)) text_out(", ");
 			else if (n == (vn - 1)) text_out(".  ");
 			else text_out(" and ");
 		}
@@ -2137,33 +2166,9 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		known = TRUE;
 	}
 
-	if (f2 & (TR2_RES_SHARD))
-	{
-		text_out("It provides resistance to shards.\n");
-		known = TRUE;
-	}
-
-	if (f2 & (TR2_RES_NEXUS))
-	{
-		text_out("It provides resistance to nexus.\n");
-		known = TRUE;
-	}
-
-	if (f2 & (TR2_RES_NETHR))
-	{
-		text_out("It provides resistance to nether.\n");
-		known = TRUE;
-	}
-
-	if (f2 & (TR2_RES_CHAOS))
-	{
-		text_out("It provides resistance to chaos.\n");
-		known = TRUE;
-	}
-
 	if (f2 & (TR2_RES_DISEN))
 	{
-		text_out("It provides resistance to disenchantment.\n");
+		text_out("It is immune to disenchantment.  ");
 		known = TRUE;
 	}
 

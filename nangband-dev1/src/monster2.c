@@ -2382,13 +2382,17 @@ void update_smart_learn(int m_idx, int what)
 
 		case DRS_RES_SHARD:
 		{
-			if (p_ptr->resist_shard) m_ptr->smart |= (SM_RES_SHARD);
+			if (p_ptr->resist_cur[RES_SHARDS] || p_ptr->resist_timed[RES_SHARDS])
+				m_ptr->smart |= (SM_RES_SHARD);
+
 			break;
 		}
 
 		case DRS_RES_NEXUS:
 		{
-			if (p_ptr->resist_nexus) m_ptr->smart |= (SM_RES_NEXUS);
+			if (p_ptr->resist_cur[RES_NEXUS] || p_ptr->resist_timed[RES_NEXUS])
+				m_ptr->smart |= (SM_RES_NEXUS);
+
 			break;
 		}
 

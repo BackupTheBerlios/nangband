@@ -862,6 +862,17 @@ bool set_timed_res(int res_idx, int amount)
 	/* Hack -- Force good values */
 	amount = (amount > 10000) ? 10000 : (amount < 0) ? 0 : amount;
 
+	if (res_idx > (RES_MAX - 1) || res_idx < 0)
+	{
+		res_idx = 0;
+		msg_print("xtra2: set_timed_res() - res_idx too big!");
+	}
+
+	if (amount > 1999)
+	{
+		msg_print("xtra2: set_timed_res() - amount is stupidly large or out of bounds!");
+	}
+
 	/* Open */
 	if (amount)
 	{

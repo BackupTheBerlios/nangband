@@ -267,11 +267,12 @@ lua/tolua: $(TOLUAOBJS)
 
 # Set up the cygwin port
 cygwin: CC := gcc
-	WRES := windres
-	LUALIBS := -s -mno-cygwin
-	LIBS := -s -mno-cygwin -mwindows -e _mainCRTStartup -lwinmm
-	CFLAGS := -Wall -pedantic -mno-cygwin -O2 -fno-strength-reduce -DWINDOWS
-	ANGOBJS += angband.res
+cygwin: WRES := windres
+cygwin: LUALIBS := -s -mno-cygwin
+cygwin: LIBS := -s -mno-cygwin -mwindows -e _mainCRTStartup -lwinmm
+cygwin: CFLAGS := -Wall -pedantic -mno-cygwin -O2 -fno-strength-reduce \
+	-DWINDOWS
+cygwin: ANGOBJS += angband.res
 cygwin: nangband
 
 # Set up other stuff

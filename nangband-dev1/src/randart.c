@@ -1073,9 +1073,11 @@ static s32b artifact_power(int a_idx)
 	if (a_ptr->flags2 & TR2_RES_NEXUS) p += 10;
 	if (a_ptr->flags2 & TR2_RES_CHAOS) p += 12;
 	if (a_ptr->flags2 & TR2_RES_DISEN) p += 12;
+        if (a_ptr->flags2 & TR2_LITE1) p += 2;
+	if (a_ptr->flags2 & TR2_LITE2) p += 3;
+	if (a_ptr->flags2 & TR2_LITE3) p += 4;
 
 	if (a_ptr->flags3 & TR3_FEATHER) p += 2;
-	if (a_ptr->flags3 & TR3_LITE) p += 2;
 	if (a_ptr->flags3 & TR3_SEE_INVIS) p += 8;
 	if (a_ptr->flags3 & TR3_TELEPATHY) p += 20;
 	if (a_ptr->flags3 & TR3_SLOW_DIGEST) p += 4;
@@ -1812,7 +1814,7 @@ static void add_ability(artifact_type *a_ptr)
 					a_ptr->flags2 |= TR2_RES_DISEN;
 				break;
 			case 37: a_ptr->flags3 |= TR3_FEATHER; break;
-			case 38: a_ptr->flags3 |= TR3_LITE; break;
+			case 38: a_ptr->flags2 |= TR2_LITE1; break;
 			case 39: a_ptr->flags3 |= TR3_SEE_INVIS; break;
 			case 40:
 				if (rand_int(3) == 0)

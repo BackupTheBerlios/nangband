@@ -551,7 +551,6 @@ static const flag_desc misc_flags3_desc[] =
 {
 	{ TR3_SLOW_DIGEST,        "Slow Digestion" },
 	{ TR3_FEATHER,            "Feather Falling" },
-	{ TR3_LITE,               "Permanent Light" },
 	{ TR3_REGEN,              "Regeneration" },
 	{ TR3_TELEPATHY,          "ESP" },
 	{ TR3_SEE_INVIS,          "See Invisible" },

@@ -1619,11 +1619,6 @@ static void calc_torch(void)
 		if (f2 & TR2_LITE3) p_ptr->cur_lite += 3;
 	}
 
-
-	/* Player is glowing */
-	if (p_ptr->lite) p_ptr->cur_lite++;
-
-
 	/* Reduce lite when running if requested */
 	if (p_ptr->running && view_reduce_lite)
 	{
@@ -1842,7 +1837,6 @@ static void calc_bonuses(void)
 	/* Good flags */
 	if (f3 & (TR3_SLOW_DIGEST)) p_ptr->slow_digest = TRUE;
 	if (f3 & (TR3_FEATHER)) p_ptr->ffall = TRUE;
-	if (f3 & (TR3_LITE)) p_ptr->lite = TRUE;
 	if (f3 & (TR3_REGEN)) p_ptr->regenerate = TRUE;
 	if (f3 & (TR3_TELEPATHY)) p_ptr->telepathy = TRUE;
 	if (f3 & (TR3_SEE_INVIS)) p_ptr->see_inv = TRUE;

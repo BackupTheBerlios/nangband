@@ -16,6 +16,10 @@ TOLUAOBJS = \
   lua/tolua.o lua/tolualua.o lua/liolib.o \
   $(LUAOBJS)
 
+BORGOBJS = \
+  borg1.o borg2.o borg3.o borg4.o borg5.o borg6.o borg7.o \
+  borg8.o borg9.o
+
 SRCS = \
   z-util.c z-virt.c z-form.c z-rand.c z-term.c \
   variable.c tables.c util.c cave.c \
@@ -45,7 +49,8 @@ OBJS = \
   script.o use-obj.o \
   l-monst.o l-object.o l-player.o l-random.o l-ui.o \
   l-misc.o l-spell.o \
-  $(LUAOBJS)
+  $(LUAOBJS) \
+  $(BORGOBJS)
 
 
 #
@@ -123,6 +128,19 @@ INCS = \
 
 
 birth.o: birth.c $(INCS)
+borg1.o: borg1.c borg1.h $(INCS)
+borg2.o: borg2.c borg1.h borg2.h $(INCS)
+borg3.o: borg3.c borg1.h borg3.h $(INCS)
+borg4.o: borg4.c borg1.h borg2.h borg3.h borg3.h borg4.h $(INCS)
+borg5.o: borg5.c borg1.h borg2.h borg3.h borg3.h borg4.h borg5.h $(INCS)
+borg6.o: borg6.c borg1.h borg2.h borg3.h borg3.h borg4.h borg5.h \
+         borg6.h $(INCS)
+borg7.o: borg7.c borg1.h borg2.h borg3.h borg3.h borg4.h borg5.h \
+         borg6.h borg7.h $(INCS)
+borg8.o: borg8.c borg1.h borg2.h borg3.h borg3.h borg4.h borg5.h \
+         borg6.h borg7.h borg8.h $(INCS)
+borg9.o: borg9.c borg1.h borg2.h borg3.h borg3.h borg4.h borg5.h \
+         borg6.h borg7.h borg8.h borg8.h $(INCS)
 cave.o: cave.c $(INCS)
 cmd1.o: cmd1.c $(INCS)
 cmd2.o: cmd2.c $(INCS)

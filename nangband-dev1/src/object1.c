@@ -1852,6 +1852,25 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		known = TRUE;
 	}
 
+	if (f2 & (TR2_LITE1))
+	{
+		text_out("It increases your light radius by 1.");
+		known = TRUE;
+	}
+
+        if (f2 & (TR2_LITE2))
+        {
+                text_out("It increases your light radius by 2.");
+                known = TRUE;
+        }
+
+        if (f2 & (TR2_LITE3))
+        {
+                text_out("It increases your light radius by 3.");
+                known = TRUE;
+        }
+
+
 	if (f2 & (TR2_IM_ACID))
 	{
 		text_out("It provides immunity to acid.\n");
@@ -1977,12 +1996,6 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	if (f3 & (TR3_FEATHER))
 	{
 		text_out("It induces feather falling.\n");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_LITE))
-	{
-		text_out("It provides permanent light.\n");
 		known = TRUE;
 	}
 

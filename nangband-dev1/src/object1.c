@@ -2471,7 +2471,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 				/* Connectives */
 				if (no_the_same == 1) text_out(" "); 
                 else if (iter == (no_the_same - 2)) text_out(" and ");
-                else text_out(", ");
+                else if (iter < (no_the_same - 2)) text_out(", ");
 			}
 
 			/* Write out the bonus */

@@ -840,21 +840,11 @@ static void wr_store(const store_type *st_ptr)
 {
 	int j;
 
-	/* Save the "open" counter */
-	wr_u32b(st_ptr->store_open);
-
-	/* Save the "insults" */
-	wr_s16b(st_ptr->insult_cur);
-
 	/* Save the current owner */
 	wr_byte(st_ptr->owner);
 
 	/* Save the stock size */
 	wr_byte(st_ptr->stock_num);
-
-	/* Save the "haggle" info */
-	wr_s16b(st_ptr->good_buy);
-	wr_s16b(st_ptr->bad_buy);
 
 	/* Save the stock */
 	for (j = 0; j < st_ptr->stock_num; j++)

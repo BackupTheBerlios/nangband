@@ -2410,7 +2410,7 @@
 #define OPT_verify_special			29
 #define OPT_allow_quantity			30
 /* xxx */
-#define OPT_auto_haggle				32
+/* xxx */
 #define OPT_auto_scum				33
 /* xxx testing_stack */
 /* xxx testing_carry */
@@ -2530,7 +2530,7 @@
 #define verify_special			op_ptr->opt[OPT_verify_special]
 #define allow_quantity			op_ptr->opt[OPT_allow_quantity]
 /* xxx */
-#define auto_haggle				op_ptr->opt[OPT_auto_haggle]
+/* xxx */
 #define auto_scum				op_ptr->opt[OPT_auto_scum]
 /* xxx testing_stack */
 /* xxx testing_carry */
@@ -2904,21 +2904,22 @@ extern int PlayerUID;
 #define MSG_TPOTHER         14
 #define MSG_HITWALL         15
 #define MSG_EAT             16
-#define MSG_STORE1          17
-#define MSG_STORE2          18
-#define MSG_STORE3          19
-#define MSG_STORE4          20
-#define MSG_DIG             21
-#define MSG_OPENDOOR        22
-#define MSG_SHUTDOOR        23
-#define MSG_TPLEVEL         24
-#define MSG_BELL            25
-#define MSG_NOTHING_TO_OPEN 26
-#define MSG_LOCKPICK_FAIL   27
-#define MSG_STAIRS          28
-#define MSG_HITPOINT_WARN   29
+#define MSG_STORE	    17
+#define MSG_STORE1          18
+#define MSG_STORE2          19
+#define MSG_STORE3          20
+#define MSG_STORE4          21
+#define MSG_DIG             22
+#define MSG_OPENDOOR        23
+#define MSG_SHUTDOOR        24
+#define MSG_TPLEVEL         25
+#define MSG_BELL            26
+#define MSG_NOTHING_TO_OPEN 27
+#define MSG_LOCKPICK_FAIL   28
+#define MSG_STAIRS          29
+#define MSG_HITPOINT_WARN   30
 
-#define MSG_MAX             30
+#define MSG_MAX             31
 
 
 /*** Sound constants ***/

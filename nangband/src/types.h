@@ -586,14 +586,9 @@ struct owner_type
 {
 	u32b owner_name;	/* Name (offset) */
 
+	s16b inflate;		/* Greed */
+
 	s16b max_cost;		/* Purse limit */
-
-	byte max_inflate;	/* Inflation (max) */
-	byte min_inflate;	/* Inflation (min) */
-
-	byte haggle_per;	/* Haggle unit */
-
-	byte insult_max;	/* Insult limit */
 
 	byte owner_race;	/* Owner race */
 };
@@ -608,13 +603,6 @@ struct owner_type
 struct store_type
 {
 	byte owner;				/* Owner index */
-
-	s16b insult_cur;		/* Insult counter */
-
-	s16b good_buy;			/* Number of "good" buys */
-	s16b bad_buy;			/* Number of "bad" buys */
-
-	s32b store_open;		/* Closed until this turn */
 
 	byte stock_num;			/* Stock -- Number of entries */
 	s16b stock_size;		/* Stock -- Total Size of Array */

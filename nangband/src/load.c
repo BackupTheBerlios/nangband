@@ -567,12 +567,8 @@ static errr rd_store(int n)
 
 
 	/* Read the basic info */
-	rd_s32b(&st_ptr->store_open);
-	rd_s16b(&st_ptr->insult_cur);
 	rd_byte(&own);
 	rd_byte(&num);
-	rd_s16b(&st_ptr->good_buy);
-	rd_s16b(&st_ptr->bad_buy);
 
 	/* Paranoia */
 	if (own >= z_info->b_max)

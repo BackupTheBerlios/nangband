@@ -2937,22 +2937,19 @@ errr parse_b_info(char *buf, header *head)
 	/* Process 'I' for "Info" (one line only) */
 	else if (buf[0] == 'I')
 	{
-		int idx, gld, max, min, hgl, tol;
+		int idx, gld, min;
 
 		/* There better be a current ot_ptr */
 		if (!ot_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
 
 		/* Scan for the values */
-		if (6 != sscanf(buf+2, "%d:%d:%d:%d:%d:%d",
-			            &idx, &gld, &max, &min, &hgl, &tol)) return (PARSE_ERROR_GENERIC);
+		if (3 != sscanf(buf+2, "%d:%d:%d",
+			            &idx, &gld, &min)) return (PARSE_ERROR_GENERIC);
 
 		/* Save the values */
 		ot_ptr->owner_race = idx;
 		ot_ptr->max_cost = gld;
-		ot_ptr->max_inflate = max;
-		ot_ptr->min_inflate = min;
-		ot_ptr->haggle_per = hgl;
-		ot_ptr->insult_max = tol;
+		ot_ptr->inflate = min;
 	}
 	else
 	{

@@ -1428,7 +1428,7 @@ cptr option_text[OPT_MAX] =
 	"verify_special",			/* OPT_verify_special */
 	"allow_quantity",			/* OPT_allow_quantity */
 	NULL,						/* xxx */
-	"auto_haggle",				/* OPT_auto_haggle */
+	NULL,					/* xxx */
 	"auto_scum",				/* OPT_auto_scum */
 	NULL,						/* xxx testing_stack */
 	NULL,						/* xxx testing_carry */
@@ -1692,7 +1692,7 @@ cptr option_desc[OPT_MAX] =
 	"Verify use of special commands",			/* OPT_verify_special */
 	"Allow quantity specification",				/* OPT_allow_quantity */
 	NULL,										/* xxx */
-	"Auto-haggle in stores",					/* OPT_auto_haggle */
+	NULL,							/* xxx */
 	"Auto-scum for good levels",				/* OPT_auto_scum */
 	NULL,										/* xxx testing_stack */
 	NULL,										/* xxx testing_carry */
@@ -1956,7 +1956,7 @@ const bool option_norm[OPT_MAX] =
 	TRUE,		/* OPT_verify_special */
 	TRUE,		/* OPT_allow_quantity */
 	FALSE,		/* xxx */
-	TRUE,		/* OPT_auto_haggle */
+	FALSE,		/* xxx */
 	FALSE,		/* OPT_auto_scum */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
@@ -2241,7 +2241,6 @@ const byte option_page[OPT_PAGE_MAX][OPT_PAGE_PER] =
 	/*** Game-Play ***/
 
 	{
-		OPT_auto_haggle,
 		OPT_auto_scum,
 		OPT_expand_look,
 		OPT_expand_list,
@@ -2255,6 +2254,7 @@ const byte option_page[OPT_PAGE_MAX][OPT_PAGE_PER] =
 		OPT_smart_packs,
 		OPT_smart_learn,
 		OPT_smart_cheat,
+		OPT_NONE,
 		OPT_NONE,
 		OPT_NONE,
 		OPT_NONE,

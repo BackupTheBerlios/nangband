@@ -140,7 +140,7 @@ borg7.o: borg7.c borg1.h borg2.h borg3.h borg3.h borg4.h borg5.h \
 borg8.o: borg8.c borg1.h borg2.h borg3.h borg3.h borg4.h borg5.h \
          borg6.h borg7.h borg8.h $(INCS)
 borg9.o: borg9.c borg1.h borg2.h borg3.h borg3.h borg4.h borg5.h \
-         borg6.h borg7.h borg8.h borg8.h $(INCS)
+         borg6.h borg7.h borg8.h borg9.h $(INCS)
 cave.o: cave.c $(INCS)
 cmd1.o: cmd1.c $(INCS)
 cmd2.o: cmd2.c $(INCS)

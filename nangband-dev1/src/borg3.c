@@ -3,7 +3,7 @@
 /* Purpose: Object and Spell routines for the Borg -BEN- */
 
 #include "angband.h"
-
+#include "z-virt.h"
 
 #ifdef ALLOW_BORG
 
@@ -1169,11 +1169,12 @@ bool borg_object_star_id_aux(borg_item *borg_item, object_type *real_item)
                 continue;
             }
             /* It Glows! */
-            if (prefix(buf, "It provides permanent light."))
+/*            if (prefix(buf, "It provides permanent light."))
             {
                 f3 &= TR3_LITE;
                 continue;
             }
+ */
             /* See Invisible */
             if (prefix(buf, "It allows you to see invisible monsters."))
             {
@@ -3266,9 +3267,9 @@ bool borg_activate_artifact(int name1, int location)
          * of the resists that go with the artifact.
          * Lights dont need *id* just regular id.
          */
-        if  (adult_rand_artifacts && (item->name1 != ART_GALADRIEL &&
+        if  (adult_rand_artifacts /* && (item->name1 != ART_GALADRIEL &&
               item->name1 != ART_ELENDIL &&
-              item->name1 != ART_THRAIN) &&
+              item->name1 != ART_THRAIN) */ &&
              (!item->fully_identified))
         {
             borg_note(format("# %s must be *ID*'d before activation.", item->desc));
@@ -3310,11 +3311,11 @@ bool borg_equips_artifact(int name1, int location)
 
         /* Check charge.  But not on certain ones  Wor, ID, phase, TELEPORT.*/
         /* this is to ensure that his borg_prep code is working ok */
-        if ((name1 != ART_AVAVIR &&
+/*        if ((name1 != ART_AVAVIR &&
              name1 != ART_ERIRIL &&
              name1 != ART_BELEGENNON &&
              name1 != ART_COLANNON) &&
-           (item->timeout) ) continue;
+           (item->timeout) ) continue;*/ 
         /*
          * Random Artifact must be *ID* to know the activation power.
          * The borg will cheat with random artifacts to know if the
@@ -3326,9 +3327,9 @@ bool borg_equips_artifact(int name1, int location)
          * of the resists that go with the artifact.
          * Lights dont need *id* just regular id.
          */
-        if  (adult_rand_artifacts && (item->name1 != ART_GALADRIEL &&
+        if  (adult_rand_artifacts /*&& (item->name1 != ART_GALADRIEL &&
               item->name1 != ART_ELENDIL &&
-              item->name1 != ART_THRAIN) &&
+              item->name1 != ART_THRAIN)*/ &&
              (!item->fully_identified))
         {
             borg_note(format("# %s must be *ID*'d before activation.", item->desc));
@@ -4359,17 +4360,17 @@ static void prepare_book_info(int book)
 
 
     /* Extract spells */
-    for (i = 0; i < 64; i++)
-    {
+/*    for (i = 0; i < 64; i++)
+    {*/ 
         /* Check for this spell */
-        if ((i < 32) ?
+/*        if ((i < 32) ?
             (spell_flags[cp_ptr->spell_type][book][0] & (1L << i)) :
             (spell_flags[cp_ptr->spell_type][book][1] & (1L << (i - 32))))
-        {
+        {*/
             /* Collect this spell */
-            spell[num++] = i;
+            /*spell[num++] = i;
         }
-    }
+    }*/ 
 
 
     /* Process each existing spell */
@@ -4383,19 +4384,19 @@ static void prepare_book_info(int book)
         if (s_ptr->slevel == 99) continue;
 
         /* Save the spell name */
-        as->name = spell_names[cp_ptr->spell_type][spell[what]];
+/*        as->name = spell_names[cp_ptr->spell_type][spell[what]];*/
 
         /* Save the spell index */
-        as->cheat = spell[what];
+        /*as->cheat = spell[what];*/
 
         /* Hack -- assume excessive level */
         as->status = BORG_MAGIC_HIGH;
 
         /* Access the correct "method" */
-        as->method = borg_magic_method[cp_ptr->spell_type][book][what];
+/*        as->method = borg_magic_method[cp_ptr->spell_type][book][what];*/
 
         /* Access the correct "rating" */
-        as->rating = borg_magic_rating[cp_ptr->spell_type][book][what];
+/*        as->rating = borg_magic_rating[cp_ptr->spell_type][book][what];*/
 
         /* Extract the level and power */
         as->level = s_ptr->slevel;
@@ -4476,19 +4477,19 @@ static void ang_sort_swap_hook(vptr u, vptr v, int a, int b)
 
 void borg_clear_3(void)
 {
-    C_KILL(borg_items, INVEN_TOTAL, borg_item);
-    C_KILL(borg_shops, 9, borg_shop);
-    C_KILL(safe_items, INVEN_TOTAL, borg_item);
-    C_KILL(safe_home,  STORE_INVEN_MAX, borg_item);
-    C_KILL(safe_shops, 8, borg_shop);
-    C_KILL(borg_plural_text, borg_plural_size, cptr);
-    C_KILL(borg_sv_plural_text, borg_plural_size, cptr);
-    C_KILL(borg_plural_what, borg_plural_size, s16b);
-    C_KILL(borg_single_text, borg_single_size, cptr);
-    C_KILL(borg_single_what, borg_single_size, s16b);
-    C_KILL(borg_artego_text, borg_artego_size, cptr);
-    C_KILL(borg_sv_art_text, borg_artego_size, cptr);
-    C_KILL(borg_artego_what, borg_artego_size, s16b);
+    C_KILL(borg_items, INVEN_TOTAL);
+    C_KILL(borg_shops, 9);
+    C_KILL(safe_items, INVEN_TOTAL);
+    C_KILL(safe_home,  STORE_INVEN_MAX);
+    C_KILL(safe_shops, 8);
+    C_KILL(borg_plural_text, borg_plural_size);
+    C_KILL(borg_sv_plural_text, borg_plural_size);
+    C_KILL(borg_plural_what, borg_plural_size);
+    C_KILL(borg_single_text, borg_single_size);
+    C_KILL(borg_single_what, borg_single_size);
+    C_KILL(borg_artego_text, borg_artego_size);
+    C_KILL(borg_sv_art_text, borg_artego_size);
+    C_KILL(borg_artego_what, borg_artego_size);
 }
 
 /*

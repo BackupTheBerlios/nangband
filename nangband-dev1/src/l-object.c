@@ -1,6 +1,6 @@
 /*
 ** Lua binding: object
-** Generated automatically by tolua 4.0a - angband on Tue Feb 12 13:31:55 2002.
+** Generated automatically by tolua 4.0a - angband on Tue Feb 12 13:34:05 2002.
 */
 
 #include "lua/tolua.h"
@@ -4689,7 +4689,6 @@ int tolua_object_open (lua_State* tolua_S)
  tolua_constant(tolua_S,NULL,"TR2_RES_DISEN",TR2_RES_DISEN);
  tolua_constant(tolua_S,NULL,"TR3_SLOW_DIGEST",TR3_SLOW_DIGEST);
  tolua_constant(tolua_S,NULL,"TR3_FEATHER",TR3_FEATHER);
- tolua_constant(tolua_S,NULL,"TR3_LITE",TR3_LITE);
  tolua_constant(tolua_S,NULL,"TR3_REGEN",TR3_REGEN);
  tolua_constant(tolua_S,NULL,"TR3_TELEPATHY",TR3_TELEPATHY);
  tolua_constant(tolua_S,NULL,"TR3_SEE_INVIS",TR3_SEE_INVIS);
@@ -5617,7 +5616,6 @@ void tolua_object_close (lua_State* tolua_S)
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR2_RES_DISEN");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR3_SLOW_DIGEST");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR3_FEATHER");
- lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR3_LITE");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR3_REGEN");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR3_TELEPATHY");
  lua_pushnil(tolua_S); lua_setglobal(tolua_S,"TR3_SEE_INVIS");

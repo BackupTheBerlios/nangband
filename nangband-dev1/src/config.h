@@ -162,7 +162,7 @@
 /*
  * OPTION: Hack -- Compile in support for "Borg mode"
  */
-/* #define ALLOW_BORG */
+#define ALLOW_BORG
 
 
 /*

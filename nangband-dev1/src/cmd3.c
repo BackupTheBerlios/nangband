@@ -11,10 +11,6 @@
 #include "angband.h"
 
 
-
-
-
-
 /*
  * Display inventory
  */
@@ -657,6 +653,7 @@ void do_cmd_inscribe(void)
  */
 static bool item_tester_refill_lantern(const object_type *o_ptr)
 {
+
 	/* Flasks of oil are okay */
 	if (o_ptr->tval == TV_FLASK) return (TRUE);
 
@@ -899,10 +896,6 @@ void do_cmd_refill(void)
 }
 
 
-
-
-
-
 /*
  * Target command
  */
@@ -1039,7 +1032,7 @@ static cptr ident_info[] =
 	"':An open door",
 	"(:Soft armor",
 	"):A shield",
-	"*:A vein with treasure",
+	"*:A vein with treasure, or an orb",
 	"+:A closed door",
 	",:Food (or mushroom patch)",
 	"-:A wand (or rod)",

@@ -1,6 +1,6 @@
 /* File: borg8.c */
 /* Purpose: High level functions for the Borg -BEN- */
-
+#ifdef COMPILE_ERRORS
 #include "angband.h"
 
 #ifdef ALLOW_BORG
@@ -3693,4 +3693,5 @@ void borg_init_8(void)
 static int HACK = 0;
 #endif
 
+#endif
 #endif

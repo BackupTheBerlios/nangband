@@ -1,5 +1,6 @@
 /* File: borg2.c */
 /* Purpose: Low level dungeon mapping skills -BEN- */
+#ifdef COMPILE_ERRORS
 
 #include "angband.h"
 
@@ -1202,6 +1203,8 @@ void borg_init_2(void)
 
 #ifdef MACINTOSH
 static int HACK = 0;
+#endif
+
 #endif
 
 #endif

@@ -5,6 +5,7 @@
  *
  * This file is under the Angband licence.
  */
+#ifdef COMPILE_ERRORS
 #include "angband.h"
 
 #ifdef ALLOW_BORG
@@ -4809,4 +4810,5 @@ void borg_init_5(void)
 static int HACK = 0;
 #endif
 
+#endif
 #endif

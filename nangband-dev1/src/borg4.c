@@ -1,6 +1,6 @@
 /* File: borg4.c */
 /*  Purpose: Notice and Power code for the Borg -BEN- */
-
+#ifdef COMPILE_ERRORS
 #include "angband.h"
 
 #ifdef ALLOW_BORG
@@ -9174,4 +9174,5 @@ void borg_init_4(void)
 static int HACK = 0;
 #endif
 
+#endif
 #endif

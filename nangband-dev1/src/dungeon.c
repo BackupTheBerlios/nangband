@@ -1058,6 +1058,7 @@ extern void do_cmd_debug(void);
 
 
 
+#ifdef COMPILE_ERRORS
 #ifdef ALLOW_BORG
 
 /*
@@ -1094,7 +1095,7 @@ static bool verify_borg_mode(void)
 extern void do_cmd_borg(void);
 
 #endif
-
+#endif
 
 
 /*
@@ -1162,7 +1163,7 @@ static void process_command(void)
 
 #endif
 
-
+#ifdef COMPILE_ERRORS
 #ifdef ALLOW_BORG
 
 		/* Special "borg" commands */
@@ -1173,7 +1174,7 @@ static void process_command(void)
 		}
 
 #endif
-
+#endif
 
 
 		/*** Inventory Commands ***/

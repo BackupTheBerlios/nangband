@@ -1,5 +1,5 @@
 /* File: borg9.c */
-
+#ifdef COMPILE_ERRORS
 /* Purpose: Highest level functions for the Borg -BEN- */
 #include "angband.h"
 
@@ -7897,4 +7897,5 @@ int Borg_Init(Tcl_Interp *interp, char *path)
 static int HACK = 0;
 #endif
 
+#endif
 #endif

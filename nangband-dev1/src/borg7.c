@@ -1,6 +1,6 @@
 /* File: borg7.c */
 /* Purpose: High level functions for the Borg -BEN- */
-
+#ifdef COMPILE_ERRORS
 #include "angband.h"
 
 #ifdef ALLOW_BORG
@@ -4768,6 +4768,8 @@ void borg_init_7(void)
 
 #ifdef MACINTOSH
 static int HACK = 0;
+#endif
+
 #endif
 
 #endif

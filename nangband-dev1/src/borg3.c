@@ -1,6 +1,7 @@
 /*
- * borg3.c: Borg object/shop/splell code.
+ * borg3.c: Borg object/shop/spell code.
  */
+#ifdef COMPILE_ERRORS
 
 #ifdef ALLOW_BORG
 
@@ -4794,6 +4795,8 @@ cptr borg_prt_item(int item)
 
 #ifdef MACINTOSH
 static int HACK = 0;
+#endif
+
 #endif
 
 #endif

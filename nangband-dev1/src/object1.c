@@ -2391,7 +2391,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	if (f2 & ((TR2_LIGHT1) | (TR2_LIGHT2) | (TR2_LIGHT3) | (TR2_LIGHT4)))
 	{
 		/* Describe */
-		text_out("It provides ");
+		text_out("It provides light, ");
 
 		/* Show the radius */
 		if (f2 & (TR2_LIGHT1)) text_out("radius 1");
@@ -2399,14 +2399,14 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 		else if (f2 & (TR2_LIGHT3)) text_out("radius 3");
 		else if (f2 & (TR2_LIGHT4)) text_out("radius 4");
 
-		/* Complete the sentence */
-		text_out(" light ");
-		if (f2 & (TR2_NEEDS_FUEL)) text_out("when it is fueled");
-		else text_out("permanently");
+		/* Complete */
+		if (f2 & (TR2_NEEDS_FUEL)) text_out(", when it is fueled");
+		else text_out(", permanently");
 
 		/* Finish */
 		text_out(".  ");
 
+		/* Item has abilities */
 		abilities = TRUE;
 	}
 
@@ -2453,7 +2453,14 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 			/* Count stuff */
 			vn = current_stat; r = iter = 0;
-			while (stat[vn].bonus == stat[vn+1].bonus) { r++; vn++; }
+			while (stat[vn].bonus == stat[vn+1].bonus)
+			{
+				/* Calculate */
+				if (vn+1 != (A_MAX)) vn++;
+				else break;
+
+				r++;
+			}
 
 			/* Do the stats */
 			do

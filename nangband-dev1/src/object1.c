@@ -1928,6 +1928,14 @@ int qsort_hook(const void *arg1, const void *arg2)
 	bonus_data *comp1 = (bonus_data *) arg1;
 	bonus_data *comp2 = (bonus_data *) arg2;
 
+	/* If they are different */
+	if (comp1->bonus != comp2->bonus)
+	{
+		/* A zero is lower than anything else */
+		if (comp1->bonus == 0) return (-1);
+		if (comp2->bonus == 0) return (+1);
+	}
+
 	return (comp1->bonus - comp2->bonus);
 }
 
@@ -1935,7 +1943,6 @@ int qsort_hook(const void *arg1, const void *arg2)
 #define IDENTIFY_STATUS_NONE	0
 #define IDENTIFY_STATUS_KNOWN	1
 #define IDENTIFY_STATUS_MENTAL	2
-
 
 /*
  * Output a brief "description" of an item.
@@ -2433,61 +2440,57 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 		/* Intro */
 		text_out("It ");
+		  
+		/* Value */
+		if (stat[current_stat].bonus > 0) text_out_c(TERM_L_GREEN, "increases");
+		else if (stat[current_stat].bonus < 0) text_out_c(TERM_ORANGE, "decreases");
 
-		/* Loop */
-		while (current_stat < A_MAX)
+		/* Loop - zeroes are at the bottom, we can stop at the first one */
+		while (current_stat < A_MAX && stat[current_stat].bonus != 0)
 		{
 			/* Temp */
-			int r;
-
-			/* Make it more english */
-			if (l > 0 && stat[current_stat].bonus) text_out(", and ");
-
-			/* Value */
-			if (stat[current_stat].bonus > 0) text_out_c(TERM_L_GREEN, "increases");
-			else if (stat[current_stat].bonus < 0) text_out_c(TERM_ORANGE, "decreases");
-			else { current_stat++; continue; }
+			int no_the_same = 0;
 
 			/* Connective */
 			text_out(" your ");
 
-			/* Count stuff */
-			r = 0; iter = 0;
-			for (vn = current_stat; (vn < A_MAX) && (vn+1 != A_MAX); vn++)
+			/* Count number of identical stats bounuses / penalties */
+			vn = current_stat;
+			while ((vn < A_MAX && (stat[vn].bonus == stat[current_stat].bonus))
 			{
-				/* Check */
-				if (stat[vn].bonus != stat[vn+1].bonus) break;
-
-				/* Incrememnt */
-				r++;
+				no_the_same ++;
+				vn ++;
 			}
 
 			/* Do the stats */
-			do
+			for (iter = 0; iter < no_the_same; iter ++)
 			{
 				/* Stat name */
 				text_out(stat[current_stat].name);
 
 				/* Connectives */
-				if (iter < (r - 2)) text_out(", ");
-				else if (iter < (r - 1)) text_out(" and ");
-				else text_out(" ");
-
-				/* Increase the counter */
-				iter++;
-
-				/* Set the correct values */
-				if (current_stat+1 <= (A_MAX)) current_stat++;
-				else { current_stat++; break; }
+				if (no_the_same == 1) text_out(" ");
+                else if (iter == (no_the_same - 1)) text_out(" and ");
+                else text_out(", ");
 			}
-			while (stat[current_stat].bonus == stat[current_stat+1].bonus);
 
 			/* Write out the bonus */
 			text_out("by ");
-			text_out(format("%i", ABS(stat[current_stat-1].bonus)));
+			text_out(format("%i", ABS(stat[current_stat].bonus)));
 
-			/* XXX */
-			l++;
+			/* Move on */
+			current_stat += no_the_same;
+
+			/* Is there another stat to print? */
+			if ((current_stat < A_MAX) && (stat[current_stat].bonus))
+			{                
+				text_out(", and ");
+				/* Output this only on a change of sign */
+				if ((stat[current_stat].bonus < 0) && (stat[current_stat - no_the_same].bonus > 0))
+				{
+					text_out_c(TERM_ORANGE, "decreases");
+				}
+			}
 		}
 
 		/* Finish */

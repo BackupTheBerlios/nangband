@@ -3,8 +3,8 @@ Nangband Credits and Developers - Those who fixed what wasn't broken.
 
 The DevTeam:
     * Andrew Sidwell [takkaria] <nevermiah@hotmail.com>: Main developer
-    * Grahame White [grahame]: Secondry Developer
-    * Marshall A. Scott [parodyingbird]: Secondry Developer
+    * Grahame White [grahame]: Secondary Developer
+    * Marshall A. Scott [parodyingbird]: Secondary Developer
     * Antony Sidwell [ajps]: Tertiary Developer
 
 Previous maintainers:

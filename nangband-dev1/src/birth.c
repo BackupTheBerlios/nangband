@@ -1177,7 +1177,7 @@ static bool player_birth_aux_3(void)
 		/* Input the minimum stats */
 		for (i = 0; i < A_MAX; i++)
 		{
-			int def_weight = cp_ptr->auto_weight[p_ptr->pclass][i];
+			int def_weight = cp_ptr->auto_weight[i];
 
 			/* Get a minimum stat */
 			while (TRUE)

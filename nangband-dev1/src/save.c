@@ -1271,6 +1271,9 @@ static errr savefile_do_block_randarts(bool type, int ver)
 static errr savefile_do_block_dungeon(bool type, int ver)
 {
 	int i, y, x;
+
+	char record[80];
+
 	u16b xmax = 0, ymax = 0;
 	u16b py, px;
 
@@ -1279,6 +1282,14 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 	u16b limit;
 
 	byte count = 0, prev_char = 0;
+
+	/* Make a "sentinel" */
+	if (type == PUT) strcpy(record, "Player Dungeon");
+	savefile_do_string(record, type);
+	if (type == GET) if (!prefix(record, "Player Dungeon")) return (-1);
+
+	/* If the player's dead, forget it */
+	if (p_ptr->is_dead) return (0);
 
 	/*** Basic info ***/
 
@@ -2447,9 +2458,6 @@ bool load_player(void)
 		/* Free the memory for the header */
 		KILL(header);
 	}
-
-	/* A character was loaded */
-	character_loaded = TRUE;
 
 	/* Paranoia */
 	if (!err)

@@ -1310,7 +1310,7 @@ static cptr suffix_spell[] =
     " breathes frost.",                     /*11 RF4_BR_COLD */
     " breathes gas.",                       /*12 RF4_BR_POIS */
     " breathes nether.",                    /*13 RF4_BR_NETH */
-    " breathes light.",                     /*14 RF4_BR_LITE */
+    " breathes light.",                     /*14 RF4_BR_LIGHT */
     " breathes darkness.",                  /*15 RF4_BR_DARK */
     " breathes confusion.",                 /*16 RF4_BR_CONF */
     " breathes sound.",                     /*17 RF4_BR_SOUN */
@@ -1770,7 +1770,7 @@ static void borg_parse_aux(cptr msg, int len)
                 case TV_ROD:
                 case TV_RING:
                 case TV_AMULET:
-                case TV_LITE:
+                case TV_LIGHT:
                 case TV_SHOT:
                 case TV_ARROW:
                 case TV_BOLT:
@@ -2381,7 +2381,7 @@ static void borg_parse_aux(cptr msg, int len)
     {
 
         /* ID item (equipment) */
-        borg_item *item = &borg_items[INVEN_LITE];
+        borg_item *item = &borg_items[INVEN_LIGHT];
         item->able = TRUE;
 
         /* Hack -- Oops */
@@ -2551,7 +2551,7 @@ static void borg_parse_aux(cptr msg, int len)
                  * broken doors.  This routine is only needed if the borg
                  * is out of lite and searching in the dark.
                  */
-                 if (borg_skill[BI_CUR_LITE]) continue;
+                 if (borg_skill[BI_CUR_LIGHT]) continue;
 
                  if (ag->feat == FEAT_RUBBLE) ag->feat = FEAT_BROKEN;
              }
@@ -3256,7 +3256,7 @@ static void player_outfit_borg(void)
     i_ptr = &object_type_body;
 
     /* Hack -- Give the player some torches */
-    object_prep(i_ptr, lookup_kind(TV_LITE, SV_LITE_TORCH));
+    object_prep(i_ptr, lookup_kind(TV_LIGHT, SV_LITE_TORCH));
     i_ptr->number = (byte)rand_range(3, 7);
     i_ptr->pval = rand_range(3, 7) * 500;
     object_aware(i_ptr);
@@ -6145,7 +6145,7 @@ void borg_status(void)
    else attr = TERM_SLATE;
    Term_putstr(1, 6, -1, attr, "Fear");
 
-   if (borg_skill[BI_RLITE]) attr = TERM_BLUE;
+   if (borg_skill[BI_RLIGHT]) attr = TERM_BLUE;
    else attr = TERM_SLATE;
    Term_putstr(1, 7, -1, attr, "Lite");
 
@@ -6194,7 +6194,7 @@ void borg_status(void)
    else attr = TERM_SLATE;
    Term_putstr(12, 2, -1, attr, "Feath");
 
-   if (borg_skill[BI_LITE]) attr = TERM_BLUE;
+   if (borg_skill[BI_LIGHT]) attr = TERM_BLUE;
    else attr = TERM_SLATE;
    Term_putstr(12, 3, -1, attr, "PLite");
 
@@ -7035,7 +7035,7 @@ void do_cmd_borg(void)
                 case 'g': mask = BORG_GLOW; break;
                 case 'd': mask = BORG_DARK; break;
                 case 'o': mask = BORG_OKAY; break;
-                case 'l': mask = BORG_LITE; break;
+                case 'l': mask = BORG_LIGHT; break;
                 case 'v': mask = BORG_VIEW; break;
                 case 't': mask = BORG_TEMP; break;
                 case 'x': mask = BORG_XTRA; break;

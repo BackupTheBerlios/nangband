@@ -644,20 +644,23 @@ static bool hates_cold(const object_type *o_ptr)
 
 
 
-
-
-
-
-
 /*
  * Melt something
  */
 static int set_acid_destroy(const object_type *o_ptr)
 {
 	u32b f1, f2, f3;
+
+	/* Check if it hates acid */
 	if (!hates_acid(o_ptr)) return (FALSE);
+
+	/* Get the object flags */
 	object_flags(o_ptr, &f1, &f2, &f3);
+
+	/* Does it ignore acid? */
 	if (f3 & (TR3_IGNORE_ACID)) return (FALSE);
+
+	/* It does hate acid */
 	return (TRUE);
 }
 
@@ -668,9 +671,17 @@ static int set_acid_destroy(const object_type *o_ptr)
 static int set_elec_destroy(const object_type *o_ptr)
 {
 	u32b f1, f2, f3;
+
+	/* Check if it hates electricity */
 	if (!hates_elec(o_ptr)) return (FALSE);
+
+	/* Get the object flags */
 	object_flags(o_ptr, &f1, &f2, &f3);
+
+	/* Does it ignore electricity? */
 	if (f3 & (TR3_IGNORE_ELEC)) return (FALSE);
+
+	/* It does hate electricity */
 	return (TRUE);
 }
 
@@ -849,16 +860,9 @@ static int minus_ac(void)
 void acid_dam(int dam, cptr kb_str)
 {
 	int inv = (dam < 30) ? 1 : (dam < 60) ? 2 : 3;
-	int resist_percent = 0;
-
-	/* Total Immunity */
-	if ((p_ptr->resist_cur[RES_ACID] > 90) || (dam <= 0)) return;
-
-	/* Grab a current % resist value */
-	resist_percent = resist_player_current(RES_ACID);
 
 	/* Apply the resistance */
-	dam = resist_apply(resist_percent, dam);
+	dam = resist_apply(resist_player_current(RES_ACID), dam);
 
 	/* If any armor gets hit, defend the player */
 	if (minus_ac()) dam = (dam + 1) / 2;
@@ -868,6 +872,9 @@ void acid_dam(int dam, cptr kb_str)
 
 	/* Inventory damage */
 	inven_damage(set_acid_destroy, inv);
+
+	/* We are done. */
+	return;
 }
 
 
@@ -877,22 +884,18 @@ void acid_dam(int dam, cptr kb_str)
 void elec_dam(int dam, cptr kb_str)
 {
 	int inv = (dam < 30) ? 1 : (dam < 60) ? 2 : 3;
-	int resist_percent = 0;
-
-	/* Total Immunity */
-	if ((p_ptr->resist_cur[RES_ELEC] > 90) || (dam <= 0)) return;
-
-	/* Grab a current % resist value */
-	resist_percent = resist_player_current(RES_ELEC);
 
 	/* Apply the resistance */
-	dam = resist_apply(resist_percent, dam);
+	dam = resist_apply(resist_player_current(RES_ACID), dam);
 
 	/* Take damage */
 	take_hit(dam, kb_str);
 
 	/* Inventory damage */
 	inven_damage(set_elec_destroy, inv);
+
+	/* We are done. */
+	return;
 }
 
 
@@ -927,22 +930,18 @@ void fire_dam(int dam, cptr kb_str)
 void cold_dam(int dam, cptr kb_str)
 {
 	int inv = (dam < 30) ? 1 : (dam < 60) ? 2 : 3;
-	int resist_percent = 0;
-
-	/* Total Immunity */
-	if ((p_ptr->resist_cur[RES_COLD] > 90) || (dam <= 0)) return;
-
-	/* Grab a current % resist value */
-	resist_percent = resist_player_current(RES_COLD);
 
 	/* Apply the resistance */
-	dam = resist_apply(resist_percent, dam);
+	dam = resist_apply(resist_player_current(RES_COLD), dam);
 
 	/* Take damage */
 	take_hit(dam, kb_str);
 
 	/* Inventory damage */
 	inven_damage(set_cold_destroy, inv);
+
+	/* We are done. */
+	return;
 }
 
 

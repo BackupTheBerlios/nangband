@@ -575,7 +575,7 @@ bool borg_check_lite(void)
         (!when_detect_walls || (borg_t - when_detect_walls >= 15)))
     {
         /* Check for walls */
-        if (borg_activate_artifact(ART_ELENDIL, INVEN_LITE) ||
+        if (borg_activate_artifact(ART_ELENDIL, INVEN_LIGHT) ||
             borg_read_scroll(SV_SCROLL_MAPPING) ||
             borg_use_staff(SV_STAFF_MAPPING) ||
             borg_zap_rod(SV_ROD_MAPPING) ||
@@ -640,9 +640,9 @@ bool borg_check_lite(void)
      if (corners <= 2) do_lite = TRUE;
 
     /* Hack */
-    if (do_lite && (borg_skill[BI_CUR_LITE] >= 2) &&
-        (c_x >= borg_skill[BI_CUR_LITE]) && (c_x < AUTO_MAX_X - borg_skill[BI_CUR_LITE]) &&
-        (c_y >= borg_skill[BI_CUR_LITE]) && (c_y < AUTO_MAX_Y - borg_skill[BI_CUR_LITE]) &&
+    if (do_lite && (borg_skill[BI_CUR_LIGHT] >= 2) &&
+        (c_x >= borg_skill[BI_CUR_LIGHT]) && (c_x < AUTO_MAX_X - borg_skill[BI_CUR_LITE]) &&
+        (c_y >= borg_skill[BI_CUR_LIGHT]) && (c_y < AUTO_MAX_Y - borg_skill[BI_CUR_LITE]) &&
         (rand_int(100) < 90))
     {
 
@@ -657,7 +657,7 @@ bool borg_check_lite(void)
                 ag = &borg_grids[y][x];
 
                 /* Location must be a lit floor */
-                if (ag->info & BORG_LITE) floors ++;
+                if (ag->info & BORG_LIGHT) floors ++;
 
                 /* Location must not be glowing */
                 if (ag->info & BORG_GLOW) floors --;
@@ -677,9 +677,9 @@ bool borg_check_lite(void)
         (!when_call_lite || (borg_t - when_call_lite >= 7)))
     {
         /* Call light */
-        if (borg_activate_artifact(ART_GALADRIEL, INVEN_LITE) ||
+        if (borg_activate_artifact(ART_GALADRIEL, INVEN_LIGHT) ||
             borg_zap_rod(SV_ROD_ILLUMINATION) ||
-            borg_use_staff(SV_STAFF_LITE) ||
+            borg_use_staff(SV_STAFF_LIGHT) ||
             borg_read_scroll(SV_SCROLL_LIGHT) ||
             borg_spell(0, 3) ||
             borg_prayer(0, 4))
@@ -700,7 +700,7 @@ bool borg_check_lite(void)
         (!when_wizard_lite || (borg_t - when_wizard_lite >= 1000)))
     {
         /* Wizard lite */
-        if (borg_activate_artifact(ART_THRAIN, INVEN_LITE) ||
+        if (borg_activate_artifact(ART_THRAIN, INVEN_LIGHT) ||
             borg_prayer(5, 4))
         {
             borg_note("# Illuminating the dungeon");
@@ -775,9 +775,9 @@ bool borg_check_lite_only(void)
      if (corners <= 2) do_lite = TRUE;
 
     /* Hack */
-    if (do_lite && (borg_skill[BI_CUR_LITE] >= 2) &&
-        (c_x >= borg_skill[BI_CUR_LITE]) && (c_x < AUTO_MAX_X - borg_skill[BI_CUR_LITE]) &&
-        (c_y >= borg_skill[BI_CUR_LITE]) && (c_y < AUTO_MAX_Y - borg_skill[BI_CUR_LITE]) &&
+    if (do_lite && (borg_skill[BI_CUR_LIGHT] >= 2) &&
+        (c_x >= borg_skill[BI_CUR_LIGHT]) && (c_x < AUTO_MAX_X - borg_skill[BI_CUR_LITE]) &&
+        (c_y >= borg_skill[BI_CUR_LIGHT]) && (c_y < AUTO_MAX_Y - borg_skill[BI_CUR_LITE]) &&
         (rand_int(100) < 90))
     {
 
@@ -792,7 +792,7 @@ bool borg_check_lite_only(void)
                 ag = &borg_grids[y][x];
 
                 /* Location must be a lit floor */
-                if (ag->info & BORG_LITE) floors ++;
+                if (ag->info & BORG_LIGHT) floors ++;
 
                 /* Location must not be glowing */
                 if (ag->info & BORG_GLOW) floors --;
@@ -811,9 +811,9 @@ bool borg_check_lite_only(void)
         (!when_call_lite || (borg_t - when_call_lite >= 7)))
     {
         /* Call light */
-        if (borg_activate_artifact(ART_GALADRIEL, INVEN_LITE) ||
+        if (borg_activate_artifact(ART_GALADRIEL, INVEN_LIGHT) ||
             borg_zap_rod(SV_ROD_ILLUMINATION) ||
-            borg_use_staff(SV_STAFF_LITE) ||
+            borg_use_staff(SV_STAFF_LIGHT) ||
             borg_read_scroll(SV_SCROLL_LIGHT) ||
             borg_spell_fail(0, 3, 30) ||
             borg_prayer_fail(0, 4, 30))
@@ -835,7 +835,7 @@ bool borg_check_lite_only(void)
         (!when_wizard_lite || (borg_t - when_wizard_lite >= 1000)))
     {
         /* Wizard lite */
-        if (borg_activate_artifact(ART_THRAIN, INVEN_LITE) ||
+        if (borg_activate_artifact(ART_THRAIN, INVEN_LIGHT) ||
             borg_prayer_fail(5, 4, 30))
         {
             borg_note("# Illuminating the dungeon prior to resting");
@@ -2754,7 +2754,7 @@ bool borg_test_stuff(bool star_id)
             v = item->value;
             break;
 
-            case TV_LITE:
+            case TV_LIGHT:
 
             /* Hack -- Always identify (get artifact info) */
             v = item->value;
@@ -3904,7 +3904,7 @@ static byte borg_best_stuff_order[] =
     INVEN_HANDS,
     INVEN_FEET,
     INVEN_LEFT,
-    INVEN_LITE,
+    INVEN_LIGHT,
     INVEN_NECK,
 
     255
@@ -4173,7 +4173,7 @@ bool borg_play_magic(bool bored)
     if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED]) return (FALSE);
 
     /* Dark */
-    if (!borg_skill[BI_CUR_LITE]) return (FALSE);
+    if (!borg_skill[BI_CUR_LIGHT]) return (FALSE);
 /*    if (borg_grids[c_y][c_x].info == BORG_DARK) return (FALSE); */
 
     /* Check each book (backwards) */

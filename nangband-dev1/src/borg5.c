@@ -1201,7 +1201,7 @@ static bool borg_follow_kill_aux(int i, int y, int x)
     if (ag->info & BORG_VIEW)
     {
         /* Use "illumination" */
-        if (ag->info & (BORG_LITE | BORG_GLOW))
+        if (ag->info & (BORG_LIGHT | BORG_GLOW))
         {
             /* We can see invisible */
             if (borg_skill[BI_SINV] || borg_see_inv) return (TRUE);
@@ -1784,9 +1784,9 @@ static int borg_fear_spell(int i)
         p += 150;
         break;
 
-        case 14:    /* RF4_BR_LITE */
+        case 14:    /* RF4_BR_LIGHT */
         z = ouch;
-        if (borg_skill[BI_RLITE]) break;
+        if (borg_skill[BI_RLIGHT]) break;
         if (borg_skill[BI_RBLIND]) break;
         p += 20;
         break;
@@ -3353,7 +3353,7 @@ static void borg_update_map(void)
                 if (ag->info & BORG_VIEW) borg_do_update_view = TRUE;
 
                 /* Recalculate the lite (if needed) */
-                if (ag->info & BORG_LITE) borg_do_update_lite = TRUE;
+                if (ag->info & BORG_LIGHT) borg_do_update_lite = TRUE;
             }
         }
     }
@@ -4195,7 +4195,7 @@ void borg_update(void)
         ag = &borg_grids[y][x];
 
         /* Skip torch-lit grids */
-        if (ag->info & BORG_LITE) continue;
+        if (ag->info & BORG_LIGHT) continue;
 
         /* Assume not dark */
         ag->info &= ~BORG_DARK;

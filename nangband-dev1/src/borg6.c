@@ -777,7 +777,7 @@ static bool borg_happy_grid_bold(int y, int x)
     if (ag->feat == FEAT_GLYPH) return (TRUE);
 
     /* Hack -- weak/dark is very unhappy */
-    if (borg_skill[BI_ISWEAK] || borg_skill[BI_CUR_LITE] == 0) return (FALSE);
+    if (borg_skill[BI_ISWEAK] || borg_skill[BI_CUR_LIGHT] == 0) return (FALSE);
 
     /* Apply a control effect so that he does not get stuck in a loop */
     if ((borg_t - borg_began) >= 2000)  return (FALSE);
@@ -899,25 +899,25 @@ bool borg_lite_beam(bool simulation)
     borg_grid *ag = &borg_grids[c_y][c_x];
 
     /* Hack -- weak/dark is very unhappy */
-    if (borg_skill[BI_ISWEAK] || borg_skill[BI_CUR_LITE] == 0) return (FALSE);
+    if (borg_skill[BI_ISWEAK] || borg_skill[BI_CUR_LIGHT] == 0) return (FALSE);
 
     /* Apply a control effect so that he does not get stuck in a loop */
     if ((borg_t - borg_began) >= 2000)  return (FALSE);
 
     /* Require the abilitdy */
     if (borg_spell_okay_fail(1,6, 20) ||
-        (-1 != borg_slot(TV_WAND, SV_WAND_LITE) &&
-             borg_items[borg_slot(TV_WAND, SV_WAND_LITE)].pval) ||
-        borg_equips_rod(SV_ROD_LITE))
+        (-1 != borg_slot(TV_WAND, SV_WAND_LIGHT) &&
+             borg_items[borg_slot(TV_WAND, SV_WAND_LIGHT)].pval) ||
+        borg_equips_rod(SV_ROD_LIGHT))
         spell_ok = TRUE;
 
     /* North */
-    switch (borg_skill[BI_CUR_LITE])
+    switch (borg_skill[BI_CUR_LIGHT])
     {
 
     /* Torch */
     case 1:
-        ag = &borg_grids[c_y- (borg_skill[BI_CUR_LITE] +1)][c_x];
+        ag = &borg_grids[c_y- (borg_skill[BI_CUR_LIGHT] +1)][c_x];
         if (borg_cave_floor_bold(c_y - 1,c_x) &&
         !ag->feat == FEAT_FLOOR  && ag->feat < FEAT_DOOR_HEAD)
         {
@@ -927,7 +927,7 @@ bool borg_lite_beam(bool simulation)
         }
     /* Lantern */
     case 2:
-        ag = &borg_grids[c_y- (borg_skill[BI_CUR_LITE] +1)][c_x];
+        ag = &borg_grids[c_y- (borg_skill[BI_CUR_LIGHT] +1)][c_x];
         if (borg_cave_floor_bold(c_y - 1,c_x) &&
         borg_cave_floor_bold(c_y - 2,c_x) &&
         !ag->feat == FEAT_FLOOR  && ag->feat < FEAT_DOOR_HEAD)
@@ -938,7 +938,7 @@ bool borg_lite_beam(bool simulation)
         }
     /* Artifact */
     case 3:
-        ag = &borg_grids[c_y- (borg_skill[BI_CUR_LITE] +1)][c_x];
+        ag = &borg_grids[c_y- (borg_skill[BI_CUR_LIGHT] +1)][c_x];
 
         if (borg_cave_floor_bold(c_y - 1,c_x) &&
         borg_cave_floor_bold(c_y - 2,c_x) &&
@@ -952,10 +952,10 @@ bool borg_lite_beam(bool simulation)
     }
 
     /* South */
-    switch (borg_skill[BI_CUR_LITE])
+    switch (borg_skill[BI_CUR_LIGHT])
     {
     case 1:
-        ag = &borg_grids[c_y + (borg_skill[BI_CUR_LITE] +1)][c_x];
+        ag = &borg_grids[c_y + (borg_skill[BI_CUR_LIGHT] +1)][c_x];
         if (borg_cave_floor_bold(c_y + 1,c_x) &&
         !ag->feat == FEAT_FLOOR  && ag->feat < FEAT_DOOR_HEAD)
         {
@@ -965,7 +965,7 @@ bool borg_lite_beam(bool simulation)
         }
     /* Lantern */
     case 2:
-        ag = &borg_grids[c_y + (borg_skill[BI_CUR_LITE] +1)][c_x];
+        ag = &borg_grids[c_y + (borg_skill[BI_CUR_LIGHT] +1)][c_x];
         if (borg_cave_floor_bold(c_y + 1,c_x) &&
         borg_cave_floor_bold(c_y + 2,c_x) &&
         !ag->feat == FEAT_FLOOR  && ag->feat < FEAT_DOOR_HEAD)
@@ -976,7 +976,7 @@ bool borg_lite_beam(bool simulation)
         }
     /* Artifact */
     case 3:
-        ag = &borg_grids[c_y + (borg_skill[BI_CUR_LITE] +1)][c_x];
+        ag = &borg_grids[c_y + (borg_skill[BI_CUR_LIGHT] +1)][c_x];
         if (borg_cave_floor_bold(c_y + 1,c_x) &&
         borg_cave_floor_bold(c_y + 2,c_x) &&
         borg_cave_floor_bold(c_y + 3,c_x) &&
@@ -989,11 +989,11 @@ bool borg_lite_beam(bool simulation)
     }
 
     /* East */
-    switch (borg_skill[BI_CUR_LITE])
+    switch (borg_skill[BI_CUR_LIGHT])
     {
     /* Torch */
     case 1:
-        ag = &borg_grids[c_y][c_x+(borg_skill[BI_CUR_LITE] +1)];
+        ag = &borg_grids[c_y][c_x+(borg_skill[BI_CUR_LIGHT] +1)];
         if (borg_cave_floor_bold(c_y ,c_x +1) &&
         !ag->feat == FEAT_FLOOR  && ag->feat < FEAT_DOOR_HEAD)
         {
@@ -1003,7 +1003,7 @@ bool borg_lite_beam(bool simulation)
         }
     /* Lantern */
     case 2:
-        ag = &borg_grids[c_y][c_x+(borg_skill[BI_CUR_LITE] +1)];
+        ag = &borg_grids[c_y][c_x+(borg_skill[BI_CUR_LIGHT] +1)];
         if (borg_cave_floor_bold(c_y ,c_x + 1) &&
         borg_cave_floor_bold(c_y,c_x + 2) &&
         !ag->feat == FEAT_FLOOR  && ag->feat < FEAT_DOOR_HEAD)
@@ -1014,7 +1014,7 @@ bool borg_lite_beam(bool simulation)
         }
     /* Artifact */
     case 3:
-        ag = &borg_grids[c_y][c_x+(borg_skill[BI_CUR_LITE] +1)];
+        ag = &borg_grids[c_y][c_x+(borg_skill[BI_CUR_LIGHT] +1)];
         if (borg_cave_floor_bold(c_y ,c_x + 1) &&
         borg_cave_floor_bold(c_y ,c_x + 2) &&
         borg_cave_floor_bold(c_y ,c_x + 3) &&
@@ -1027,11 +1027,11 @@ bool borg_lite_beam(bool simulation)
     }
 
     /* West */
-    switch (borg_skill[BI_CUR_LITE])
+    switch (borg_skill[BI_CUR_LIGHT])
     {
     /* Torch */
     case 1:
-        ag = &borg_grids[c_y][c_x-(borg_skill[BI_CUR_LITE] +1)];
+        ag = &borg_grids[c_y][c_x-(borg_skill[BI_CUR_LIGHT] +1)];
         if (borg_cave_floor_bold(c_y ,c_x -1) &&
         !ag->feat == FEAT_FLOOR  && ag->feat < FEAT_DOOR_HEAD)
         {
@@ -1041,7 +1041,7 @@ bool borg_lite_beam(bool simulation)
         }
     /* Lantern */
     case 2:
-        ag = &borg_grids[c_y][c_x-(borg_skill[BI_CUR_LITE] +1)];
+        ag = &borg_grids[c_y][c_x-(borg_skill[BI_CUR_LIGHT] +1)];
         if (borg_cave_floor_bold(c_y ,c_x - 1) &&
         borg_cave_floor_bold(c_y,c_x - 2) &&
         !ag->feat == FEAT_FLOOR  && ag->feat < FEAT_DOOR_HEAD)
@@ -1052,7 +1052,7 @@ bool borg_lite_beam(bool simulation)
         }
     /* Artifact */
     case 3:
-        ag = &borg_grids[c_y][c_x-(borg_skill[BI_CUR_LITE] +1)];
+        ag = &borg_grids[c_y][c_x-(borg_skill[BI_CUR_LIGHT] +1)];
         if (borg_cave_floor_bold(c_y ,c_x - 1) &&
         borg_cave_floor_bold(c_y ,c_x - 2) &&
         borg_cave_floor_bold(c_y ,c_x - 3) &&
@@ -1081,8 +1081,8 @@ bool borg_lite_beam(bool simulation)
 
     /* cast the light beam */
     if (borg_spell_fail(1,6, 20) ||
-         borg_zap_rod(SV_ROD_LITE) ||
-         borg_aim_wand(SV_WAND_LITE))
+         borg_zap_rod(SV_ROD_LIGHT) ||
+         borg_aim_wand(SV_WAND_LIGHT))
         {   /* apply the direction */
             borg_keypress(I2D(dir));
             borg_note("# Illuminating this hallway");
@@ -2485,7 +2485,7 @@ bool borg_caution(void)
     /*** Notice "nasty" situations ***/
 
     /* About to run out of light is extremely nasty */
-    if (!borg_skill[BI_LITE] && borg_items[INVEN_LITE].pval < 250) nasty = TRUE;
+    if (!borg_skill[BI_LIGHT] && borg_items[INVEN_LITE].pval < 250) nasty = TRUE;
 
     /* Starvation is nasty */
     if (borg_skill[BI_ISWEAK]) nasty = TRUE;
@@ -2825,7 +2825,7 @@ bool borg_caution(void)
         /* Its ok to go one level deep if evading scary guy */
         if (scaryguy_on_level) stair_more = TRUE;
 
-        if (borg_skill[BI_CUR_LITE] == 0 || borg_skill[BI_ISHUNGRY] || borg_skill[BI_ISWEAK] || borg_skill[BI_FOOD] < 2)
+        if (borg_skill[BI_CUR_LIGHT] == 0 || borg_skill[BI_ISHUNGRY] || borg_skill[BI_ISWEAK] || borg_skill[BI_FOOD] < 2)
               stair_more = FALSE;
 
         /* if fleeing town, then dive */
@@ -2927,19 +2927,19 @@ bool borg_caution(void)
     /*** Deal with critical situations ***/
 
     /* Hack -- require light */
-    if (!borg_skill[BI_LITE])
+    if (!borg_skill[BI_LIGHT])
     {
-        borg_item *item = &borg_items[INVEN_LITE];
+        borg_item *item = &borg_items[INVEN_LIGHT];
 
         /* Must have light -- Refuel current torch */
-        if ((item->tval == TV_LITE) && (item->sval == SV_LITE_TORCH))
+        if ((item->tval == TV_LIGHT) && (item->sval == SV_LITE_TORCH))
         {
             /* Try to refuel the torch */
             if ((item->pval < 500) && borg_refuel_torch()) return (TRUE);
         }
 
         /* Must have light -- Refuel current lantern */
-        if ((item->tval == TV_LITE) && (item->sval == SV_LITE_LANTERN))
+        if ((item->tval == TV_LIGHT) && (item->sval == SV_LITE_LANTERN))
         {
             /* Try to refill the lantern */
             if ((item->pval < 1000) && borg_refuel_lantern()) return (TRUE);
@@ -3615,7 +3615,7 @@ enum
     BF_SPELL_CONFUSE_MONSTER,
     BF_SPELL_STONE_TO_MUD,
     BF_SPELL_POLYMORPH,
-    BF_SPELL_LITE_BEAM,
+    BF_SPELL_LIGHT_BEAM,
     BF_SPELL_SLEEP_I,
     BF_SPELL_SLEEP_II,
     BF_SPELL_SLEEP_III,
@@ -3642,7 +3642,7 @@ enum
     BF_ROD_COLD_BOLT,
     BF_ROD_ACID_BOLT,
     BF_ROD_FIRE_BOLT,
-    BF_ROD_LITE_BEAM,
+    BF_ROD_LIGHT_BEAM,
     BF_ROD_DRAIN_LIFE,
     BF_ROD_ELEC_BALL,
     BF_ROD_COLD_BALL,
@@ -3668,7 +3668,7 @@ enum
     BF_WAND_FEAR_MONSTER,
     BF_WAND_ANNIHILATION,
     BF_WAND_DRAIN_LIFE,
-    BF_WAND_LITE_BEAM,
+    BF_WAND_LIGHT_BEAM,
     BF_WAND_STINKING_CLOUD,
     BF_WAND_ELEC_BALL,
     BF_WAND_COLD_BALL,
@@ -4255,8 +4255,8 @@ int borg_launch_damage_one(int i, int dam, int typ)
 
 
         /* Weak Lite */
-        case GF_LITE_WEAK:
-        if (!(r_ptr->flags3 & RF3_HURT_LITE)) dam = 0;
+        case GF_LIGHT_WEAK:
+        if (!(r_ptr->flags3 & RF3_HURT_LIGHT)) dam = 0;
         break;
 
 
@@ -4335,7 +4335,7 @@ int borg_launch_damage_one(int i, int dam, int typ)
         case GF_FORCE:
         case GF_INERTIA:
         case GF_TIME:
-        case GF_LITE:
+        case GF_LIGHT:
         case GF_DARK:
         dam /= 2;
         break;
@@ -4846,10 +4846,10 @@ static int borg_launch_bolt_aux(int y, int x, int rad, int dam, int typ, int max
         /* dont do the check if esp */
         if (!borg_skill[BI_ESP])
         {
-            /* Check the missile path--no Infra, no HAS_LITE */
+            /* Check the missile path--no Infra, no HAS_LIGHT */
             if (dist && (borg_skill[BI_INFRA] <=0)
-#ifdef MONSTER_LITE
-             && !(r_ptr->flags2 & RF2_HAS_LITE)
+#ifdef MONSTER_LIGHT
+             && !(r_ptr->flags2 & RF2_HAS_LIGHT)
 #endif /* has_lite */
                )
             {
@@ -6749,10 +6749,10 @@ static int borg_attack_aux(int what)
         return (borg_attack_aux_spell_bolt(1, 8, rad, dam, GF_KILL_WALL));
 
         /* Spell -- light beam */
-        case BF_SPELL_LITE_BEAM:
+        case BF_SPELL_LIGHT_BEAM:
         rad = -1;
         dam = (6*(8+1)/2);
-        return (borg_attack_aux_spell_bolt(1, 6, rad, dam, GF_LITE_WEAK));
+        return (borg_attack_aux_spell_bolt(1, 6, rad, dam, GF_LIGHT_WEAK));
 
 
         /* Spell -- stinking cloud */
@@ -6897,10 +6897,10 @@ static int borg_attack_aux(int what)
         return (borg_attack_aux_rod_bolt(SV_ROD_FIRE_BOLT, rad, dam, GF_FIRE));
 
         /* Spell -- light beam */
-        case BF_ROD_LITE_BEAM:
+        case BF_ROD_LIGHT_BEAM:
         rad = -1;
         dam = (6*(8+1)/2);
-        return (borg_attack_aux_rod_bolt(SV_ROD_LITE, rad, dam, GF_LITE_WEAK));
+        return (borg_attack_aux_rod_bolt(SV_ROD_LIGHT, rad, dam, GF_LITE_WEAK));
 
         /* Spell -- drain life */
         case BF_ROD_DRAIN_LIFE:
@@ -6978,10 +6978,10 @@ static int borg_attack_aux(int what)
         return (borg_attack_aux_wand_bolt(SV_WAND_FIRE_BOLT, rad, dam, GF_FIRE));
 
         /* Spell -- light beam */
-        case BF_WAND_LITE_BEAM:
+        case BF_WAND_LIGHT_BEAM:
         rad = -1;
         dam = (6*(8+1)/2);
-        return (borg_attack_aux_wand_bolt(SV_WAND_LITE, rad, dam, GF_LITE_WEAK));
+        return (borg_attack_aux_wand_bolt(SV_WAND_LIGHT, rad, dam, GF_LITE_WEAK));
 
         /* Wand -- stinking cloud */
         case BF_WAND_STINKING_CLOUD:
@@ -7291,7 +7291,7 @@ static int borg_attack_aux(int what)
             rad =2;
             dam=200;
             return (borg_attack_aux_dragon(SV_DRAGON_SHINING, rad, dam,
-                (chance == 0 ? GF_LITE : GF_DARK)) );
+                (chance == 0 ? GF_LIGHT : GF_DARK)) );
 
             case BF_DRAGON_POWER:
             rad =2;
@@ -7522,7 +7522,7 @@ static int borg_defend_aux_bless( int p1 )
     if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED]) return (0);
 
     /* Dark */
-    if (!(ag->info & BORG_GLOW) && borg_skill[BI_CUR_LITE] == 0) return (0);
+    if (!(ag->info & BORG_GLOW) && borg_skill[BI_CUR_LIGHT] == 0) return (0);
 
 
     /* no spell */
@@ -8147,7 +8147,7 @@ static int borg_defend_aux_prot_evil( int p1)
 
     if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED] || borg_skill[BI_ISIMAGE])
         pfe_spell = FALSE;
-    if (!(ag->info & BORG_GLOW) && borg_skill[BI_CUR_LITE] == 0) pfe_spell = FALSE;
+    if (!(ag->info & BORG_GLOW) && borg_skill[BI_CUR_LIGHT] == 0) pfe_spell = FALSE;
 
     if (borg_equips_artifact(ART_CARLAMMAS,INVEN_NECK)) pfe_spell = TRUE;
 
@@ -8418,7 +8418,7 @@ static int borg_defend_aux_glyph( int p1)
 
     if ((borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED] || borg_skill[BI_ISIMAGE]) && glyph_spell)
         glyph_spell = FALSE;
-    if (!(ag->info & BORG_GLOW) && borg_skill[BI_CUR_LITE] == 0) glyph_spell = FALSE;
+    if (!(ag->info & BORG_GLOW) && borg_skill[BI_CUR_LIGHT] == 0) glyph_spell = FALSE;
 
 
     if (!glyph_spell) return (0);
@@ -9244,7 +9244,7 @@ static int borg_defend_aux_inviso(int p1)
         return (0);
 
     /* Darkness */
-    if (!(ag->info & BORG_GLOW) && !borg_skill[BI_CUR_LITE]) return (0);
+    if (!(ag->info & BORG_GLOW) && !borg_skill[BI_CUR_LIGHT]) return (0);
 
     /* No real value known, but lets cast it to find the bad guys. */
     if (borg_simulate) return (10);
@@ -10634,11 +10634,11 @@ bool borg_recover(void)
     /*** Handle annoying situations ***/
 
     /* Refuel current torch */
-    if ((borg_items[INVEN_LITE].tval == TV_LITE) &&
-        (borg_items[INVEN_LITE].sval == SV_LITE_TORCH))
+    if ((borg_items[INVEN_LIGHT].tval == TV_LITE) &&
+        (borg_items[INVEN_LIGHT].sval == SV_LITE_TORCH))
     {
         /* Refuel the torch if needed */
-        if (borg_items[INVEN_LITE].pval < 2500)
+        if (borg_items[INVEN_LIGHT].pval < 2500)
         {
             if (borg_refuel_torch()) return (TRUE);
 
@@ -10648,11 +10648,11 @@ bool borg_recover(void)
     }
 
     /* Refuel current lantern */
-    if ((borg_items[INVEN_LITE].tval == TV_LITE) &&
-        (borg_items[INVEN_LITE].sval == SV_LITE_LANTERN))
+    if ((borg_items[INVEN_LIGHT].tval == TV_LITE) &&
+        (borg_items[INVEN_LIGHT].sval == SV_LITE_LANTERN))
     {
         /* Refuel the lantern if needed */
-        if (borg_items[INVEN_LITE].pval < 5000)
+        if (borg_items[INVEN_LIGHT].pval < 5000)
         {
             if (borg_refuel_lantern()) return (TRUE);
 
@@ -11256,7 +11256,7 @@ static bool borg_play_step(int y2, int x2)
 
 
     /* Traps -- disarm -- */
-    if (borg_skill[BI_CUR_LITE] && !borg_skill[BI_ISBLIND] && !borg_skill[BI_ISCONFUSED] && !scaryguy_on_level &&
+    if (borg_skill[BI_CUR_LIGHT] && !borg_skill[BI_ISBLIND] && !borg_skill[BI_ISCONFUSED] && !scaryguy_on_level &&
         (ag->feat >= FEAT_TRAP_HEAD) && (ag->feat <= FEAT_TRAP_TAIL))
     {
 
@@ -11645,7 +11645,7 @@ bool borg_flow_stair_both(int why)
     if (!track_less_num && !track_more_num) return (FALSE);
 
     /* dont go down if hungry or low on food, unless fleeing a scary town */
-    if ((!goal_fleeing && !borg_skill[BI_CDEPTH]) && (borg_skill[BI_CUR_LITE] == 0 || borg_skill[BI_ISWEAK] || borg_skill[BI_ISHUNGRY] || borg_skill[BI_FOOD] < 2))
+    if ((!goal_fleeing && !borg_skill[BI_CDEPTH]) && (borg_skill[BI_CUR_LIGHT] == 0 || borg_skill[BI_ISWEAK] || borg_skill[BI_ISHUNGRY] || borg_skill[BI_FOOD] < 2))
         return (FALSE);
 
     /* clear the possible searching flag */
@@ -11707,7 +11707,7 @@ bool borg_flow_stair_less(int why)
         borg_flow_enqueue_grid(track_less_y[i], track_less_x[i]);
     }
 
-    if (borg_skill[BI_CLEVEL] > 35 || borg_skill[BI_CUR_LITE] == 0)
+    if (borg_skill[BI_CLEVEL] > 35 || borg_skill[BI_CUR_LIGHT] == 0)
     {
         /* Spread the flow */
         borg_flow_spread(250, TRUE, FALSE, FALSE);
@@ -11748,7 +11748,7 @@ bool borg_flow_stair_more(int why)
         return (FALSE);
 
     /* No diving if no light */
-    if (borg_skill[BI_CUR_LITE] == 0) return (FALSE);
+    if (borg_skill[BI_CUR_LIGHT] == 0) return (FALSE);
 
     /* don't head for the stairs if you are recalling,  */
     /* even if you are fleeing. */
@@ -11895,7 +11895,7 @@ bool borg_flow_shop_visit(void)
              (i != 0 && i !=7) ) continue;
 
         /* if dark--skip non food places */
-        if ( borg_skill[BI_CUR_LITE] == 0 && (i != 0 ) && borg_skill[BI_CLEVEL] >= 2) continue;
+        if ( borg_skill[BI_CUR_LIGHT] == 0 && (i != 0 ) && borg_skill[BI_CLEVEL] >= 2) continue;
 
         /* Obtain the location */
         x = track_shop_x[i];
@@ -12122,7 +12122,7 @@ bool borg_flow_kill_corridor(bool viewable)
     if (borg_skill[BI_ISCONFUSED]) return (FALSE);
 
     /* Not when darkened */
-    if (borg_skill[BI_CUR_LITE] == 0) return (FALSE);
+    if (borg_skill[BI_CUR_LIGHT] == 0) return (FALSE);
 
     /* get the summoning monster */
     kill = &borg_kills[borg_kills_summoner];
@@ -12627,7 +12627,7 @@ static bool borg_flow_dark_interesting(int y, int x, int b_stair)
         if (borg_gold >= 1000000) return (FALSE);
 
         /* Not when darkened */
-        if (borg_skill[BI_CUR_LITE] == 0) return (FALSE);
+        if (borg_skill[BI_CUR_LIGHT] == 0) return (FALSE);
 
         /* Allow "stone to mud" ability */
         if (borg_spell_legal(1, 8)) return (TRUE);
@@ -12742,7 +12742,7 @@ static bool borg_flow_dark_interesting(int y, int x, int b_stair)
         if (borg_skill[BI_ISIMAGE]) return (FALSE);
 
         /* Do not flow without lite */
-        if (borg_skill[BI_CUR_LITE] == 0) return (FALSE);
+        if (borg_skill[BI_CUR_LIGHT] == 0) return (FALSE);
 
         /* Do not disarm trap doors on level 99 */
         if (borg_skill[BI_CDEPTH] == 99 && ag->feat == FEAT_TRAP_HEAD) return (FALSE);
@@ -13179,7 +13179,7 @@ static bool borg_flow_dark_2(void)
     borg_needs_searching = TRUE;
 
     /* Maximal radius */
-    r = borg_skill[BI_CUR_LITE] + 1;
+    r = borg_skill[BI_CUR_LIGHT] + 1;
 
 
     /* Reset */

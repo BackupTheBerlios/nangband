@@ -203,7 +203,7 @@ static bool borg_object_similar(borg_item  *o_ptr, borg_item  *j_ptr)
         /* Rings, Amulets, Lites */
         case TV_RING:
         case TV_AMULET:
-        case TV_LITE:
+        case TV_LIGHT:
         {
             /* Require full knowledge of both items */
             if ((!o_ptr->able) || (!j_ptr->able)) return (0);
@@ -895,7 +895,7 @@ static bool borg_good_sell(borg_item *item, int who)
         case TV_STAFF:
         case TV_RING:
         case TV_AMULET:
-        case TV_LITE:
+        case TV_LIGHT:
 
         /* Never sell if not "known" */
         if (!item->able) return (FALSE);
@@ -971,7 +971,7 @@ static bool borg_good_sell(borg_item *item, int who)
                 case TV_CLOAK:
                 case TV_FOOD:
                 case TV_FLASK:
-                case TV_LITE:
+                case TV_LIGHT:
                 case TV_SPIKE:
                 return (TRUE);
             }
@@ -1293,7 +1293,7 @@ static bool borg_good_buy(borg_item *item, int who)
             borg_skill[BI_SDIG]) return (FALSE);
 
         /* Too many torches are heavy and spendy */
-        if (item->tval == TV_LITE && item->sval == SV_LITE_TORCH &&
+        if (item->tval == TV_LIGHT && item->sval == SV_LITE_TORCH &&
             borg_skill[BI_AFUEL] >= 3) return (FALSE);
     }
 
@@ -2182,10 +2182,10 @@ static bool borg_choose_shop(void)
     if (borg_skill[BI_ISCUT] || borg_skill[BI_ISPOISONED]) goal_shop = 3;
 
     /* If Starving  -- flow to general store */
-    if (borg_skill[BI_ISWEAK] || (borg_skill[BI_CUR_LITE] == 0 && borg_skill[BI_CLEVEL] >= 2)) goal_shop = 0;
+    if (borg_skill[BI_ISWEAK] || (borg_skill[BI_CUR_LIGHT] == 0 && borg_skill[BI_CLEVEL] >= 2)) goal_shop = 0;
 
     /* If poisoned or bleeding -- Buy items from temple */
-    if (borg_skill[BI_CUR_LITE] == 0 || borg_skill[BI_ISWEAK] || borg_skill[BI_ISCUT] || borg_skill[BI_ISPOISONED])
+    if (borg_skill[BI_CUR_LIGHT] == 0 || borg_skill[BI_ISWEAK] || borg_skill[BI_ISCUT] || borg_skill[BI_ISPOISONED])
     {
        if (borg_think_shop_buy_aux())
        {
@@ -2230,7 +2230,7 @@ static bool borg_choose_shop(void)
     /* if the borg is scumming for cash, we dont want him messing with the
        home inventory */
     if (borg_gold < borg_money_scum_amount && borg_money_scum_amount != 0 &&
-            !borg_skill[BI_CDEPTH] && borg_skill[BI_LITE])
+            !borg_skill[BI_CDEPTH] && borg_skill[BI_LIGHT])
     {
         /* Step 0 -- Buy items from the shops (for the player while scumming) */
         if (borg_think_shop_buy_aux())
@@ -3073,7 +3073,7 @@ bool borg_think_dungeon(void)
     borg_notice(TRUE);
 
     /* require light-- */
-    if (borg_skill[BI_CUR_LITE] <= 0 && borg_skill[BI_CDEPTH] >= 1)
+    if (borg_skill[BI_CUR_LIGHT] <= 0 && borg_skill[BI_CDEPTH] >= 1)
     {
         if (goal_recalling)
         {
@@ -3124,10 +3124,10 @@ bool borg_think_dungeon(void)
     if (borg_caution()) return (TRUE);
 
     /*** if returning from dungeon in bad shape...***/
-    if (borg_skill[BI_CUR_LITE] == 0 || borg_skill[BI_ISCUT] || borg_skill[BI_ISPOISONED] || borg_skill[BI_ISWEAK])
+    if (borg_skill[BI_CUR_LIGHT] == 0 || borg_skill[BI_ISCUT] || borg_skill[BI_ISPOISONED] || borg_skill[BI_ISWEAK])
     {
         /* First try to wear something */
-        if (borg_skill[BI_CUR_LITE] == 0)
+        if (borg_skill[BI_CUR_LIGHT] == 0)
         {
             /* attempt to refuel */
             if (borg_refuel_torch() || borg_refuel_lantern()) return (TRUE);
@@ -3419,7 +3419,7 @@ bool borg_think_dungeon(void)
 
     /* Leave the level (if needed) */
     if (borg_gold < borg_money_scum_amount && borg_money_scum_amount != 0 &&
-            !borg_skill[BI_CDEPTH] && borg_skill[BI_LITE])
+            !borg_skill[BI_CDEPTH] && borg_skill[BI_LIGHT])
     {
         /* Stay in town and scum for money after shopping */
     }
@@ -3458,7 +3458,7 @@ bool borg_think_dungeon(void)
 
     /* Leave the level (if possible) */
     if (borg_gold < borg_money_scum_amount && borg_money_scum_amount != 0 &&
-            !borg_skill[BI_CDEPTH] && borg_skill[BI_LITE])
+            !borg_skill[BI_CDEPTH] && borg_skill[BI_LIGHT])
     {
         /* Stay in town, scum for money now that shopping is done. */
         borg_money_scum();

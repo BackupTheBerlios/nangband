@@ -65,7 +65,7 @@
  * but sometimes it is really only "recently" dark, but was then made
  * "lite" with a "call lite" spell, and it is now torch-lit or off-screen.
  *
- * The "BORG_LITE" flag means that a grid is probably lit by the player
+ * The "BORG_LIGHT" flag means that a grid is probably lit by the player
  * torch, but this may not be true if the nearby "BORG_VIEW" flags are
  * not correct, or if the "lite radius" has changed recently.
  *
@@ -83,7 +83,7 @@
 #define BORG_GLOW   0x02    /* probably perma-lit */
 #define BORG_DARK   0x04    /* probably not perma-lit */
 #define BORG_OKAY   0x08    /* on the current panel */
-#define BORG_LITE   0x10    /* lit by the torch */
+#define BORG_LIGHT   0x10    /* lit by the torch */
 #define BORG_VIEW   0x20    /* in line of sight */
 #define BORG_TEMP   0x40    /* temporary flag */
 #define BORG_XTRA   0x80    /* extra flag */
@@ -92,7 +92,7 @@
 /*
  * Maximum size of the "lite" array
  */
-#define AUTO_LITE_MAX 1536
+#define AUTO_LIGHT_MAX 1536
 
 /*
  * Some assistance with the borg_attack and magic arrows
@@ -413,7 +413,7 @@ enum
     BI_SDEX,
     BI_SCON,
     BI_SCHR,
-    BI_LITE,
+    BI_LIGHT,
     BI_CURHP,
     BI_MAXHP,
     BI_HP_ADJ,
@@ -427,7 +427,7 @@ enum
     BI_CLEVEL,
     BI_MAXCLEVEL,
     BI_ESP,
-    BI_CUR_LITE,
+    BI_CUR_LIGHT,
     BI_RECALL,
     BI_FOOD,
     BI_SPEED,
@@ -456,7 +456,7 @@ enum
     BI_RACID,
     BI_RPOIS,
     BI_RFEAR,
-    BI_RLITE,
+    BI_RLIGHT,
     BI_RDARK,
     BI_RBLIND,
     BI_RCONF,
@@ -474,7 +474,7 @@ enum
     BI_SRACID,
     BI_SRPOIS,
     BI_SRFEAR,
-    BI_SRLITE,
+    BI_SRLIGHT,
     BI_SRDARK,
     BI_SRBLIND,
     BI_SRCONF,
@@ -1243,16 +1243,16 @@ extern borg_grid *borg_grids[AUTO_MAX_Y];   /* Current "grid list" */
  */
 
 extern s16b borg_lite_n;
-extern byte borg_lite_y[AUTO_LITE_MAX];
-extern byte borg_lite_x[AUTO_LITE_MAX];
+extern byte borg_lite_y[AUTO_LIGHT_MAX];
+extern byte borg_lite_x[AUTO_LIGHT_MAX];
 
 /*
  * Maintain a set of glow grids (liteable grids)
  */
 
 extern s16b borg_glow_n;
-extern byte borg_glow_y[AUTO_LITE_MAX];
-extern byte borg_glow_x[AUTO_LITE_MAX];
+extern byte borg_glow_y[AUTO_LIGHT_MAX];
+extern byte borg_glow_x[AUTO_LIGHT_MAX];
 
 
 /*

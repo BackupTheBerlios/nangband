@@ -415,7 +415,7 @@ void borg_forget_lite(void)
         int x = borg_lite_x[i];
 
         /* Forget that the grid is lit */
-        borg_grids[y][x].info &= ~BORG_LITE;
+        borg_grids[y][x].info &= ~BORG_LIGHT;
     }
 
     /* None left */
@@ -433,7 +433,7 @@ void borg_forget_lite(void)
  * called when the "lite" array is full.
  */
 #define borg_cave_lite_hack(Y,X) \
-    borg_grids[Y][X].info |= BORG_LITE; \
+    borg_grids[Y][X].info |= BORG_LIGHT; \
     borg_lite_y[borg_lite_n] = (Y); \
     borg_lite_x[borg_lite_n] = (X); \
     borg_lite_n++
@@ -446,7 +446,7 @@ void borg_forget_lite(void)
  * See "update_lite" in "cave.c" for complete documentation
  *
  * It is very important that the "player grid" be the first grid in the
- * array of "BORG_LITE" grids, since this is assumed in several places.
+ * array of "BORG_LIGHT" grids, since this is assumed in several places.
  */
 void borg_update_lite(void)
 {
@@ -462,14 +462,14 @@ void borg_update_lite(void)
         x = borg_lite_x[i];
 
         /* Mark the grid as not "lite" */
-        borg_grids[y][x].info &= ~BORG_LITE;
+        borg_grids[y][x].info &= ~BORG_LIGHT;
     }
 
     /* None left */
     borg_lite_n = 0;
 
     /* Hack -- Player has no lite */
-    if (borg_skill[BI_CUR_LITE] <= 0) return;
+    if (borg_skill[BI_CUR_LIGHT] <= 0) return;
 
 
     /*** Collect the new "lite" grids ***/
@@ -478,7 +478,7 @@ void borg_update_lite(void)
     borg_cave_lite_hack(c_y, c_x);
 
     /* Radius 1 -- torch radius */
-    if (borg_skill[BI_CUR_LITE] >= 1)
+    if (borg_skill[BI_CUR_LIGHT] >= 1)
     {
         /* Adjacent grid */
         borg_cave_lite_hack(c_y+1, c_x);
@@ -494,7 +494,7 @@ void borg_update_lite(void)
     }
 
     /* Radius 2 -- lantern radius */
-    if (borg_skill[BI_CUR_LITE] >= 2)
+    if (borg_skill[BI_CUR_LIGHT] >= 2)
     {
         /* South of the player */
         if (borg_cave_floor_bold(c_y+1, c_x))
@@ -530,14 +530,14 @@ void borg_update_lite(void)
     }
 
     /* Radius 3+ -- artifact radius */
-    if (borg_skill[BI_CUR_LITE] >= 3)
+    if (borg_skill[BI_CUR_LIGHT] >= 3)
     {
         int d, p;
 
         /* Maximal radius */
-        p = borg_skill[BI_CUR_LITE];
+        p = borg_skill[BI_CUR_LIGHT];
 
-        /* Paranoia -- see "LITE_MAX" */
+        /* Paranoia -- see "LIGHT_MAX" */
         if (p > 5) p = 5;
 
         /* South-East of the player */

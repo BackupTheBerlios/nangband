@@ -135,7 +135,7 @@ static void borg_notice_aux1(void)
     /* Good flags */
     if (f3 & (TR3_SLOW_DIGEST)) borg_skill[BI_SDIG] = TRUE;
     if (f3 & (TR3_FEATHER)) borg_skill[BI_FEATH] = TRUE;
-/*    if (f3 & (TR3_LITE)) borg_skill[BI_LITE] = TRUE; */
+/*    if (f3 & (TR3_LIGHT)) borg_skill[BI_LITE] = TRUE; */
     if (f3 & (TR3_REGEN)) borg_skill[BI_REG] = TRUE;
     if (f3 & (TR3_TELEPATHY)) borg_skill[BI_ESP] = TRUE;
     if (f3 & (TR3_SEE_INVIS)) borg_skill[BI_SINV] = TRUE;
@@ -162,7 +162,7 @@ static void borg_notice_aux1(void)
     if (f2 & (TR2_RES_COLD)) borg_skill[BI_RCOLD] = TRUE;
     if (f2 & (TR2_RES_POIS)) borg_skill[BI_RPOIS] = TRUE;
     if (f2 & (TR2_RES_FEAR)) borg_skill[BI_RFEAR] = TRUE;
-    if (f2 & (TR2_RES_LITE)) borg_skill[BI_RLITE] = TRUE;
+    if (f2 & (TR2_RES_LIGHT)) borg_skill[BI_RLITE] = TRUE;
     if (f2 & (TR2_RES_DARK)) borg_skill[BI_RDARK] = TRUE;
     if (f2 & (TR2_RES_BLIND)) borg_skill[BI_RBLIND] = TRUE;
     if (f2 & (TR2_RES_CONFU)) borg_skill[BI_RCONF] = TRUE;
@@ -259,7 +259,7 @@ static void borg_notice_aux1(void)
         if (item->flags3 & TR3_REGEN) borg_skill[BI_REG] = TRUE;
         if (item->flags3 & TR3_TELEPATHY) borg_skill[BI_ESP] = TRUE;
 		/* [fixme] */
-        /* if (item->flags3 & TR3_LITE) borg_skill[BI_LITE] = TRUE; */
+        /* if (item->flags3 & TR3_LIGHT) borg_skill[BI_LITE] = TRUE; */
         if (item->flags3 & TR3_SEE_INVIS) borg_skill[BI_SINV] = TRUE;
         if (item->flags3 & TR3_FEATHER) borg_skill[BI_FEATH] = TRUE;
         if (item->flags3 & TR3_FREE_ACT) borg_skill[BI_FRACT] = TRUE;
@@ -300,7 +300,7 @@ static void borg_notice_aux1(void)
         if (item->flags2 & TR2_RES_POIS) borg_skill[BI_RPOIS] = TRUE;
         if (item->flags2 & TR2_RES_CONFU) borg_skill[BI_RCONF] = TRUE;
         if (item->flags2 & TR2_RES_SOUND) borg_skill[BI_RSND] = TRUE;
-        if (item->flags2 & TR2_RES_LITE) borg_skill[BI_RLITE] = TRUE;
+        if (item->flags2 & TR2_RES_LIGHT) borg_skill[BI_RLITE] = TRUE;
         if (item->flags2 & TR2_RES_DARK) borg_skill[BI_RDARK] = TRUE;
         if (item->flags2 & TR2_RES_CHAOS) borg_skill[BI_RKAOS] = TRUE;
         if (item->flags2 & TR2_RES_DISEN) borg_skill[BI_RDIS] = TRUE;
@@ -740,35 +740,35 @@ static void borg_notice_aux1(void)
 
 
     /* Examine the lite */
-    item = &borg_items[INVEN_LITE];
+    item = &borg_items[INVEN_LIGHT];
 
     /* Assume normal lite radius */
-    borg_skill[BI_CUR_LITE] = 0;
+    borg_skill[BI_CUR_LIGHT] = 0;
 
     /* Glowing player has light */
-    if (borg_skill[BI_LITE]) borg_skill[BI_CUR_LITE] = 1;
+    if (borg_skill[BI_LIGHT]) borg_skill[BI_CUR_LITE] = 1;
 
     /* Lite */
-    if (item->tval == TV_LITE)
+    if (item->tval == TV_LIGHT)
     {
         /* Torches -- radius one */
-        if (item->sval == SV_LITE_TORCH) borg_skill[BI_CUR_LITE] = 1;
+        if (item->sval == SV_LIGHT_TORCH) borg_skill[BI_CUR_LITE] = 1;
 
         /* Lanterns -- radius two */
-        if (item->sval == SV_LITE_LANTERN) borg_skill[BI_CUR_LITE] = 2;
+        if (item->sval == SV_LIGHT_LANTERN) borg_skill[BI_CUR_LITE] = 2;
 
         /* No fuel means no radius */
-        if (!item->pval) borg_skill[BI_CUR_LITE] = 0;
+        if (!item->pval) borg_skill[BI_CUR_LIGHT] = 0;
 
         /* Artifact lites -- radius three */
         /* HACK assume non-torch/non lantern lite is artifact */
-        if ((item->sval != SV_LITE_TORCH) &&
-            (item->sval != SV_LITE_LANTERN))
+        if ((item->sval != SV_LIGHT_TORCH) &&
+            (item->sval != SV_LIGHT_LANTERN))
         {
-            borg_skill[BI_CUR_LITE] = 3;
+            borg_skill[BI_CUR_LIGHT] = 3;
 
             /* Artifact lites -- assume glowing */
-            borg_skill[BI_LITE] = TRUE;
+            borg_skill[BI_LIGHT] = TRUE;
         }
     }
 }
@@ -1205,7 +1205,7 @@ static void borg_notice_aux2(void)
             case TV_FLASK:
 
             /* Use as fuel if we equip a lantern */
-            if (borg_skill[BI_CUR_LITE] == 2) borg_skill[BI_AFUEL] += item->iqty;
+            if (borg_skill[BI_CUR_LIGHT] == 2) borg_skill[BI_AFUEL] += item->iqty;
 
             /* Count as Missiles */
             if (borg_skill[BI_CLEVEL] < 15 ) borg_skill[BI_AMISSILES] += item->iqty;
@@ -1214,12 +1214,12 @@ static void borg_notice_aux2(void)
 
 
             /* Torches */
-            case TV_LITE:
+            case TV_LIGHT:
 
 
             /* Use as fuel if it is a torch and we carry a torch */
-            if ((item->sval == SV_LITE_TORCH) &&
-                (borg_skill[BI_CUR_LITE] <= 1) )
+            if ((item->sval == SV_LIGHT_TORCH) &&
+                (borg_skill[BI_CUR_LIGHT] <= 1) )
                 {
                     borg_skill[BI_AFUEL] += item->iqty;
                 }
@@ -1372,7 +1372,7 @@ static void borg_notice_aux2(void)
 
     /* Handle "magic mapping" */
     if (borg_prayer_legal(2, 6) ||
-    borg_equips_artifact(ART_ELENDIL, INVEN_LITE))
+    borg_equips_artifact(ART_ELENDIL, INVEN_LIGHT))
     {
         borg_skill[BI_ADETDOOR] += 1000;
         borg_skill[BI_ADETTRAP] += 1000;
@@ -1523,8 +1523,8 @@ static void borg_notice_aux2(void)
     /*** Process the Needs ***/
 
     /* No need for fuel */
-    if ((borg_items[INVEN_LITE].sval != SV_LITE_TORCH) &&
-        (borg_items[INVEN_LITE].sval != SV_LITE_LANTERN)) borg_skill[BI_AFUEL] += 1000;
+    if ((borg_items[INVEN_LIGHT].sval != SV_LITE_TORCH) &&
+        (borg_items[INVEN_LIGHT].sval != SV_LITE_LANTERN)) borg_skill[BI_AFUEL] += 1000;
 
     /* No need to *buy* stat increase potions */
     if (my_stat_cur[A_STR] >= (18+100) + 10 * adult_maximize *
@@ -1722,7 +1722,7 @@ void borg_notice_weapon_swap(void)
             if (item->flags3 & TR3_TELEPORT) weapon_swap_teleport = TRUE;
             if (item->flags3 & TR3_REGEN) weapon_swap_regenerate = TRUE;
             if (item->flags3 & TR3_TELEPATHY) weapon_swap_telepathy = TRUE;
-            /* if (item->flags3 & TR3_LITE) weapon_swap_lite = TRUE; */
+            /* if (item->flags3 & TR3_LIGHT) weapon_swap_lite = TRUE; */
             if (item->flags3 & TR3_SEE_INVIS) weapon_swap_see_invis = TRUE;
             if (item->flags3 & TR3_FEATHER) weapon_swap_ffall = TRUE;
             if (item->flags3 & TR3_FREE_ACT) weapon_swap_free_act = TRUE;
@@ -1759,7 +1759,7 @@ void borg_notice_weapon_swap(void)
             if (item->flags2 & TR2_RES_POIS) weapon_swap_resist_pois = TRUE;
             if (item->flags2 & TR2_RES_CONFU) weapon_swap_resist_conf = TRUE;
             if (item->flags2 & TR2_RES_SOUND) weapon_swap_resist_sound = TRUE;
-            if (item->flags2 & TR2_RES_LITE) weapon_swap_resist_lite = TRUE;
+            if (item->flags2 & TR2_RES_LIGHT) weapon_swap_resist_lite = TRUE;
             if (item->flags2 & TR2_RES_DARK) weapon_swap_resist_dark = TRUE;
             if (item->flags2 & TR2_RES_CHAOS) weapon_swap_resist_chaos = TRUE;
             if (item->flags2 & TR2_RES_DISEN) weapon_swap_resist_disen = TRUE;
@@ -1828,7 +1828,7 @@ void borg_notice_weapon_swap(void)
             if (decurse_weapon_swap != -1) v -= 5000L;
             if (!borg_skill[BI_REG] && weapon_swap_regenerate) v += 2000L;
             if (!borg_skill[BI_ESP] && weapon_swap_telepathy) v += 5000L;
-            if (!borg_skill[BI_LITE] && weapon_swap_lite) v += 2000L;
+            if (!borg_skill[BI_LIGHT] && weapon_swap_lite) v += 2000L;
             if (!borg_skill[BI_SINV] && weapon_swap_see_invis) v += 50000L;
             if (!borg_skill[BI_FEATH] && weapon_swap_ffall) v += 10L;
             if (!borg_skill[BI_FRACT] && weapon_swap_free_act) v += 10000L;
@@ -1849,7 +1849,7 @@ void borg_notice_weapon_swap(void)
             if (!borg_skill[BI_RPOIS] && weapon_swap_resist_pois) v += 20000L;
             if (!borg_skill[BI_RCONF] && weapon_swap_resist_conf) v += 5000L;
             if (!borg_skill[BI_RSND] && weapon_swap_resist_sound) v += 2000L;
-            if (!borg_skill[BI_RLITE] && weapon_swap_resist_lite) v += 800L;
+            if (!borg_skill[BI_RLIGHT] && weapon_swap_resist_lite) v += 800L;
             if (!borg_skill[BI_RDARK] && weapon_swap_resist_dark) v += 800L;
             if (!borg_skill[BI_RKAOS] && weapon_swap_resist_chaos) v += 8000L;
             if (!borg_skill[BI_RDIS] && weapon_swap_resist_disen) v += 5000L;
@@ -2022,7 +2022,7 @@ void borg_notice_weapon_swap(void)
     if (item->flags3 & TR3_TELEPORT) weapon_swap_teleport = TRUE;
     if (item->flags3 & TR3_REGEN) weapon_swap_regenerate = TRUE;
     if (item->flags3 & TR3_TELEPATHY) weapon_swap_telepathy = TRUE;
-    /* if (item->flags3 & TR3_LITE) weapon_swap_lite = TRUE; */
+    /* if (item->flags3 & TR3_LIGHT) weapon_swap_lite = TRUE; */
     if (item->flags3 & TR3_SEE_INVIS) weapon_swap_see_invis = TRUE;
     if (item->flags3 & TR3_FEATHER) weapon_swap_ffall = TRUE;
     if (item->flags3 & TR3_FREE_ACT) weapon_swap_free_act = TRUE;
@@ -2062,7 +2062,7 @@ void borg_notice_weapon_swap(void)
     if (item->flags2 & TR2_RES_POIS) weapon_swap_resist_pois = TRUE;
     if (item->flags2 & TR2_RES_CONFU) weapon_swap_resist_conf = TRUE;
     if (item->flags2 & TR2_RES_SOUND) weapon_swap_resist_sound = TRUE;
-    if (item->flags2 & TR2_RES_LITE) weapon_swap_resist_lite = TRUE;
+    if (item->flags2 & TR2_RES_LIGHT) weapon_swap_resist_lite = TRUE;
     if (item->flags2 & TR2_RES_DARK) weapon_swap_resist_dark = TRUE;
     if (item->flags2 & TR2_RES_CHAOS) weapon_swap_resist_chaos = TRUE;
     if (item->flags2 & TR2_RES_DISEN) weapon_swap_resist_disen = TRUE;
@@ -2217,7 +2217,7 @@ void borg_notice_armour_swap(void)
             if (item->flags3 & TR3_TELEPORT) armour_swap_teleport = TRUE;
             if (item->flags3 & TR3_REGEN) armour_swap_regenerate = TRUE;
             if (item->flags3 & TR3_TELEPATHY) armour_swap_telepathy = TRUE;
-            /* if (item->flags3 & TR3_LITE) armour_swap_lite = TRUE; */
+            /* if (item->flags3 & TR3_LIGHT) armour_swap_lite = TRUE; */
             if (item->flags3 & TR3_SEE_INVIS) armour_swap_see_invis = TRUE;
             if (item->flags3 & TR3_FEATHER) armour_swap_ffall = TRUE;
             if (item->flags3 & TR3_FREE_ACT) armour_swap_free_act = TRUE;
@@ -2254,7 +2254,7 @@ void borg_notice_armour_swap(void)
             if (item->flags2 & TR2_RES_POIS) armour_swap_resist_pois = TRUE;
             if (item->flags2 & TR2_RES_CONFU) armour_swap_resist_conf = TRUE;
             if (item->flags2 & TR2_RES_SOUND) armour_swap_resist_sound = TRUE;
-            if (item->flags2 & TR2_RES_LITE) armour_swap_resist_lite = TRUE;
+            if (item->flags2 & TR2_RES_LIGHT) armour_swap_resist_lite = TRUE;
             if (item->flags2 & TR2_RES_DARK) armour_swap_resist_dark = TRUE;
             if (item->flags2 & TR2_RES_CHAOS) armour_swap_resist_chaos = TRUE;
             if (item->flags2 & TR2_RES_DISEN) armour_swap_resist_disen = TRUE;
@@ -2314,7 +2314,7 @@ void borg_notice_armour_swap(void)
             if (decurse_armour_swap != -1) v -= 5000L;
             if (!borg_skill[BI_REG] && armour_swap_regenerate) v += 2000L;
             if (!borg_skill[BI_ESP] && armour_swap_telepathy) v += 5000L;
-            if (!borg_skill[BI_LITE] && armour_swap_lite) v += 2000L;
+            if (!borg_skill[BI_LIGHT] && armour_swap_lite) v += 2000L;
             if (!borg_skill[BI_SINV] && armour_swap_see_invis) v += 50000L;
             if (!borg_skill[BI_FEATH] && armour_swap_ffall) v += 10L;
             if (!borg_skill[BI_FRACT] && armour_swap_free_act) v += 10000L;
@@ -2335,7 +2335,7 @@ void borg_notice_armour_swap(void)
             if (!borg_skill[BI_RPOIS] && armour_swap_resist_pois) v += 20000L;
             if (!borg_skill[BI_RCONF] && armour_swap_resist_conf) v += 5000L;
             if (!borg_skill[BI_RSND] && armour_swap_resist_sound) v += 2000L;
-            if (!borg_skill[BI_RLITE] && armour_swap_resist_lite) v += 800L;
+            if (!borg_skill[BI_RLIGHT] && armour_swap_resist_lite) v += 800L;
             if (!borg_skill[BI_RDARK] && armour_swap_resist_dark) v += 800L;
             if (!borg_skill[BI_RKAOS] && armour_swap_resist_chaos) v += 8000L;
             if (!borg_skill[BI_RDIS] && armour_swap_resist_disen) v += 5000L;
@@ -2474,7 +2474,7 @@ void borg_notice_armour_swap(void)
             if (item->flags3 & TR3_TELEPORT) armour_swap_teleport = TRUE;
             if (item->flags3 & TR3_REGEN) armour_swap_regenerate = TRUE;
             if (item->flags3 & TR3_TELEPATHY) armour_swap_telepathy = TRUE;
-            /* if (item->flags3 & TR3_LITE) armour_swap_lite = TRUE; */
+            /* if (item->flags3 & TR3_LIGHT) armour_swap_lite = TRUE; */
             if (item->flags3 & TR3_SEE_INVIS) armour_swap_see_invis = TRUE;
             if (item->flags3 & TR3_FEATHER) armour_swap_ffall = TRUE;
             if (item->flags3 & TR3_FREE_ACT) armour_swap_free_act = TRUE;
@@ -2511,7 +2511,7 @@ void borg_notice_armour_swap(void)
             if (item->flags2 & TR2_RES_POIS) armour_swap_resist_pois = TRUE;
             if (item->flags2 & TR2_RES_CONFU) armour_swap_resist_conf = TRUE;
             if (item->flags2 & TR2_RES_SOUND) armour_swap_resist_sound = TRUE;
-            if (item->flags2 & TR2_RES_LITE) armour_swap_resist_lite = TRUE;
+            if (item->flags2 & TR2_RES_LIGHT) armour_swap_resist_lite = TRUE;
             if (item->flags2 & TR2_RES_DARK) armour_swap_resist_dark = TRUE;
             if (item->flags2 & TR2_RES_CHAOS) armour_swap_resist_chaos = TRUE;
             if (item->flags2 & TR2_RES_DISEN) armour_swap_resist_disen = TRUE;
@@ -2525,7 +2525,7 @@ void borg_notice_armour_swap(void)
         enchant_armour_swap_to_a = 0;
 
         /* dont look for enchantment on non armours */
-        if (item->tval >= TV_LITE) return;
+        if (item->tval >= TV_LIGHT) return;
 
         /* Hack -- enchant the swap equipment (armor) */
         /* Note need for enchantment */
@@ -2591,7 +2591,7 @@ void borg_notice(bool notice_swap)
     borg_skill[BI_SRFEAR] = borg_skill[BI_RFEAR]
                             || armour_swap_resist_fear
                             || weapon_swap_resist_fear;
-    borg_skill[BI_SRLITE] = borg_skill[BI_RLITE]
+    borg_skill[BI_SRLIGHT] = borg_skill[BI_RLITE]
                             || armour_swap_resist_lite
                             || weapon_swap_resist_lite;
     borg_skill[BI_SRDARK] = borg_skill[BI_RDARK]
@@ -2902,7 +2902,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
         if (item->flags2 & TR2_RES_COLD) num_resist_cold += item->iqty;
         if (item->flags2 & TR2_RES_POIS) num_resist_pois += item->iqty;
         if (item->flags2 & TR2_RES_SOUND) num_resist_sound += item->iqty;
-        if (item->flags2 & TR2_RES_LITE) num_resist_lite += item->iqty;
+        if (item->flags2 & TR2_RES_LIGHT) num_resist_lite += item->iqty;
         if (item->flags2 & TR2_RES_DARK) num_resist_dark += item->iqty;
         if (item->flags2 & TR2_RES_CHAOS) num_resist_chaos += item->iqty;
         if (item->flags2 & TR2_RES_CONFU) num_resist_conf += item->iqty;
@@ -3031,7 +3031,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
 
                 break;
 
-            case TV_LITE:
+            case TV_LIGHT:
                 if (item->name1)
                 {
                     num_lite += item->iqty;
@@ -3527,7 +3527,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
     /* Good flags */
     if (f3 & (TR3_SLOW_DIGEST)) num_slow_digest = TRUE;
     if (f3 & (TR3_FEATHER)) num_ffall = TRUE;
-    /* if (f3 & (TR3_LITE)) num_lite = TRUE; */
+    /* if (f3 & (TR3_LIGHT)) num_lite = TRUE; */
     if (f3 & (TR3_REGEN)) num_regenerate = TRUE;
     if (f3 & (TR3_TELEPATHY)) num_telepathy = TRUE;
     if (f3 & (TR3_SEE_INVIS)) num_see_inv = TRUE;
@@ -3550,7 +3550,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
     if (f2 & (TR2_RES_FIRE)) num_resist_fire = TRUE;
     if (f2 & (TR2_RES_COLD)) num_resist_cold = TRUE;
     if (f2 & (TR2_RES_POIS)) num_resist_pois = TRUE;
-    if (f2 & (TR2_RES_LITE)) num_resist_lite = TRUE;
+    if (f2 & (TR2_RES_LIGHT)) num_resist_lite = TRUE;
     if (f2 & (TR2_RES_DARK)) num_resist_dark = TRUE;
     if (f2 & (TR2_RES_BLIND)) num_resist_blind = TRUE;
     if (f2 & (TR2_RES_CONFU)) num_resist_conf = TRUE;
@@ -3854,7 +3854,7 @@ static s32b borg_power_aux2(void)
 
         /* Good to have one item with multiple high resists */
         multibonus = (((item->flags2 & TR2_RES_POIS) != 0) +
-               ((item->flags2 & TR2_RES_LITE)!= 0) +
+               ((item->flags2 & TR2_RES_LIGHT)!= 0) +
                ((item->flags2 & TR2_RES_DARK)!= 0) +
                ((item->flags2 & TR2_RES_BLIND)!= 0) +
                ((item->flags2 & TR2_RES_CONFU)!= 0) +
@@ -4324,7 +4324,7 @@ static s32b borg_power_aux3(void)
     /*** Reward various things ***/
 
     /* Hack -- Reward light radius */
-    value += (borg_skill[BI_CUR_LITE] * 1000000L);
+    value += (borg_skill[BI_CUR_LIGHT] * 1000000L);
 
 
     /* Hack -- Reward speed
@@ -4542,7 +4542,7 @@ static s32b borg_power_aux3(void)
     {
         if (borg_skill[BI_FEATH]) value     +=50;
     }
-    if (borg_skill[BI_LITE]) value         += 2000L;
+    if (borg_skill[BI_LIGHT]) value         += 2000L;
     if (borg_skill[BI_ESP])
     {
         if (borg_skill[BI_SINV]) value      += 500L;
@@ -4582,7 +4582,7 @@ static s32b borg_power_aux3(void)
         borg_skill[BI_RCOLD]) value +=  10000L;
     if (borg_skill[BI_RPOIS]) value  += 20000L;
     if (borg_skill[BI_RSND]) value += 3500L;
-    if (borg_skill[BI_RLITE]) value  += 800L;
+    if (borg_skill[BI_RLIGHT]) value  += 800L;
     if (borg_skill[BI_RDARK]) value  += 800L;
     if (borg_skill[BI_RKAOS]) value += 5000L;
 
@@ -4802,7 +4802,7 @@ static s32b borg_power_aux3(void)
 
         /* Good to have one item with multiple high resists */
         multibonus = (((item->flags2 & TR2_RES_POIS) != 0) +
-               ((item->flags2 & TR2_RES_LITE)!= 0) +
+               ((item->flags2 & TR2_RES_LIGHT)!= 0) +
                ((item->flags2 & TR2_RES_DARK)!= 0) +
                ((item->flags2 & TR2_RES_BLIND)!= 0) +
                ((item->flags2 & TR2_RES_CONFU)!= 0) +
@@ -6298,13 +6298,13 @@ static int borg_danger_aux1(int i)
                 z /= 2;
             break;
 
-            case RBE_EAT_LITE:
+            case RBE_EAT_LIGHT:
             z = (b_ptr->d_dice * b_ptr->d_side);
             power = 5;
             /* if invulnurable, no damage */
             if ((borg_goi) && !borg_attacking)
                 z = 0;
-            if (borg_skill[BI_CUR_LITE] == 0) break;
+            if (borg_skill[BI_CUR_LIGHT] == 0) break;
             if (borg_skill[BI_AFUEL] > 5) break;
             if (!borg_full_damage)
                 z += 20;
@@ -6895,13 +6895,13 @@ static int borg_danger_aux2(int i, int y, int x, bool average)
                 p += 125;
             break;
 
-            case 96+14:    /* RF4_BR_LITE */
+            case 96+14:    /* RF4_BR_LIGHT */
             z = (hp / 6);
             /* max damage */
             if (z > 400)
                 z = 400;
             if (borg_goi) {z /=25;}
-            if (borg_skill[BI_RLITE])
+            if (borg_skill[BI_RLIGHT])
             {
                 z = (z*2)/3;
                 break;
@@ -8384,7 +8384,7 @@ cptr borg_restock(int depth)
     /*** Level 1 ***/
 
     /* Must have some lite */
-    if (borg_skill[BI_CUR_LITE] < 1) return ("rs my_cur_lite");
+    if (borg_skill[BI_CUR_LIGHT] < 1) return ("rs my_cur_lite");
 
     /* Must have "fuel" */
     if (borg_skill[BI_AFUEL] < 1) return ("rs amt_fuel");
@@ -8398,7 +8398,7 @@ cptr borg_restock(int depth)
     /*** Level 2 and 3 ***/
 
     /* Must have good lite */
-    if (borg_skill[BI_CUR_LITE] < 2) return ("rs lite+1");
+    if (borg_skill[BI_CUR_LIGHT] < 2) return ("rs lite+1");
 
     /* Must have "fuel" */
     if (borg_skill[BI_AFUEL] < 3) return ("rs fuel+2");
@@ -8569,7 +8569,7 @@ static cptr borg_prepared_aux2(int depth)
     /*** Essential Items for Level 1 ***/
 
     /* Require lite (any) */
-    if (borg_skill[BI_CUR_LITE] < 1) return ("1 Lite");
+    if (borg_skill[BI_CUR_LIGHT] < 1) return ("1 Lite");
 
     /* Require food */
     if (borg_skill[BI_FOOD] < 5) return ("5 Food");
@@ -8581,7 +8581,7 @@ static cptr borg_prepared_aux2(int depth)
     /*** Essential Items for Level 2 ***/
 
     /* Require lite (radius two) */
-    if (borg_skill[BI_CUR_LITE] < 2) return ("2 Lite");
+    if (borg_skill[BI_CUR_LIGHT] < 2) return ("2 Lite");
 
     /* Require fuel */
     if (borg_skill[BI_AFUEL] < 5) return ("5 Fuel");

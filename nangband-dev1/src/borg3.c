@@ -670,7 +670,7 @@ int borg_wield_slot(borg_item *item)
 
                 if (item->tval == TV_AMULET) return (INVEN_NECK);
 
-                if (item->tval == TV_LITE) return (INVEN_LITE);
+                if (item->tval == TV_LIGHT) return (INVEN_LITE);
 
                 if (item->tval == TV_CLOAK) return (INVEN_OUTER);
 
@@ -702,7 +702,7 @@ int borg_wield_slot(borg_item *item)
 
                 if (item->tval == TV_AMULET) return (INVEN_NECK);
 
-                if (item->tval == TV_LITE) return (INVEN_LITE);
+                if (item->tval == TV_LIGHT) return (INVEN_LITE);
 
                 if (item->tval == TV_CLOAK) return (INVEN_OUTER);
 
@@ -734,7 +734,7 @@ int borg_wield_slot(borg_item *item)
 
                 if (item->tval == TV_AMULET) return (INVEN_NECK);
 
-                if (item->tval == TV_LITE) return (INVEN_LITE);
+                if (item->tval == TV_LIGHT) return (INVEN_LITE);
 
                 if (item->tval == TV_CLOAK) return (INVEN_OUTER);
 
@@ -766,7 +766,7 @@ int borg_wield_slot(borg_item *item)
 
                 if (item->tval == TV_AMULET) return (INVEN_NECK);
 
-                if (item->tval == TV_LITE) return (INVEN_LITE);
+                if (item->tval == TV_LIGHT) return (INVEN_LITE);
 
                 if (item->tval == TV_CLOAK) return (INVEN_OUTER);
 
@@ -798,7 +798,7 @@ int borg_wield_slot(borg_item *item)
 
                 if (item->tval == TV_AMULET) return (INVEN_NECK);
 
-                if (item->tval == TV_LITE) return (INVEN_LITE);
+                if (item->tval == TV_LIGHT) return (INVEN_LITE);
 
                 if (item->tval == TV_CLOAK) return (INVEN_OUTER);
 
@@ -830,7 +830,7 @@ int borg_wield_slot(borg_item *item)
 
                 if (item->tval == TV_AMULET) return (INVEN_NECK);
 
-                if (item->tval == TV_LITE) return (INVEN_LITE);
+                if (item->tval == TV_LIGHT) return (INVEN_LITE);
 
                 if (item->tval == TV_CLOAK) return (INVEN_OUTER);
 
@@ -1068,7 +1068,7 @@ bool borg_object_star_id_aux(borg_item *borg_item, object_type *real_item)
             /* It Glows! */
 /*            if (prefix(buf, "It provides permanent light."))
             {
-                f3 &= TR3_LITE;
+                f3 &= TR3_LIGHT;
                 continue;
             }
  */
@@ -1397,7 +1397,7 @@ static s32b borg_object_value_known(borg_item *item)
         case TV_SOFT_ARMOR:
         case TV_HARD_ARMOR:
         case TV_DRAG_ARMOR:
-        case TV_LITE:
+        case TV_LIGHT:
         case TV_AMULET:
         case TV_RING:
         {
@@ -1963,7 +1963,7 @@ void borg_item_analyze(borg_item *item, cptr desc)
         case TV_SOFT_ARMOR:
         case TV_HARD_ARMOR:
         case TV_DRAG_ARMOR:
-        case TV_LITE:
+        case TV_LIGHT:
         case TV_AMULET:
         case TV_RING:
         {
@@ -2039,7 +2039,7 @@ void borg_item_analyze(borg_item *item, cptr desc)
             }
 
             /* Hack -- handle Lite's */
-            if (item->tval == TV_LITE)
+            if (item->tval == TV_LIGHT)
             {
                 /* Hack -- Artifact Lite's */
                 if (item->name1)
@@ -2461,13 +2461,13 @@ bool borg_refuel_torch(void)
     int i;
 
     /* Look for a torch */
-    i = borg_slot(TV_LITE, SV_LITE_TORCH);
+    i = borg_slot(TV_LIGHT, SV_LITE_TORCH);
 
     /* None available */
     if (i < 0) return (FALSE);
 
     /* must first wield before one can refuel */
-    if (borg_items[INVEN_LITE].sval != SV_LITE_TORCH)
+    if (borg_items[INVEN_LIGHT].sval != SV_LITE_TORCH)
         {
             return (FALSE);
         }
@@ -2479,7 +2479,7 @@ bool borg_refuel_torch(void)
     }
 
     /* Cant refuel nothing */
-    if (borg_items[INVEN_LITE].iqty == 0)
+    if (borg_items[INVEN_LIGHT].iqty == 0)
     {
         return (FALSE);
     }
@@ -2510,7 +2510,7 @@ bool borg_refuel_lantern(void)
     if (i < 0) return (FALSE);
 
     /* Cant refuel a torch with oil */
-    if (borg_items[INVEN_LITE].sval != SV_LITE_LANTERN)
+    if (borg_items[INVEN_LIGHT].sval != SV_LITE_LANTERN)
     {
         return (FALSE);
     }
@@ -2689,7 +2689,7 @@ bool borg_read_unknown(void)
     if (n < 0) return (FALSE);
 
     /* Not when dark */
-    if (!(ag->info & BORG_GLOW) && !borg_skill[BI_CUR_LITE]) return (FALSE);
+    if (!(ag->info & BORG_GLOW) && !borg_skill[BI_CUR_LIGHT]) return (FALSE);
 
     /* Blind or Confused */
     if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED]) return (FALSE);
@@ -2796,7 +2796,7 @@ bool borg_read_scroll(int sval)
     borg_grid *ag = &borg_grids[c_y][c_x];
 
     /* Dark */
-    if (!(ag->info & BORG_GLOW) && !borg_skill[BI_CUR_LITE]) return (FALSE);
+    if (!(ag->info & BORG_GLOW) && !borg_skill[BI_CUR_LIGHT]) return (FALSE);
 
     /* Blind or Confused */
     if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED]) return (FALSE);
@@ -3108,7 +3108,7 @@ bool borg_activate_artifact(int name1, int location)
 		 * ART_GALADRIEL, ART_ELENDIL, or ATR_THRAIN. This was a hack.
 		 * --takkaria (13/02/2002)
          */
-        if  (adult_rand_artifacts && (item->tval != TV_LITE) &&
+        if  (adult_rand_artifacts && (item->tval != TV_LIGHT) &&
              (!item->fully_identified))
         {
             borg_note(format("# %s must be *ID*'d before activation.", item->desc));
@@ -3315,7 +3315,7 @@ bool borg_spell_okay(int book, int what)
     borg_grid *ag = &borg_grids[c_y][c_x];
 
     /* Dark */
-    if (!(ag->info & BORG_GLOW) && !borg_skill[BI_CUR_LITE]) return (FALSE);
+    if (!(ag->info & BORG_GLOW) && !borg_skill[BI_CUR_LIGHT]) return (FALSE);
 
     /* Define reserve_mana for each class */
     if (borg_class == CLASS_MAGE) reserve_mana = 6;
@@ -3496,7 +3496,7 @@ bool borg_prayer_okay(int book, int what)
     borg_grid *ag = &borg_grids[c_y][c_x];
 
     /* Dark */
-    if (!(ag->info & BORG_GLOW) && !borg_skill[BI_CUR_LITE]) return (FALSE);
+    if (!(ag->info & BORG_GLOW) && !borg_skill[BI_CUR_LIGHT]) return (FALSE);
 
 
     /* define reserve_mana */

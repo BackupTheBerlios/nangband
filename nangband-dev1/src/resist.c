@@ -1,7 +1,9 @@
 /*
  * File: resist.c
  *
- * Abstract: Code for the percentile resistance implementation.
+ * Abstract: Code for the percentile resistance implementation;
+ *           At the moment, this only includes player resists,
+ *           it will contain monster resists soon.
  * 
  * Authors: Andrew Sidwell (takkaria), Eytan Zweing (eytan).
  *
@@ -9,12 +11,8 @@
  */
 #include "angband.h"
 
-/*
- * This file provides helper functions for resistance code handling.
- *
- * Functions that are still needed for this file:
- *   - Decrease the % gain for timed resists as the time runs out.
- */
+/* A quick little macro for testing a resist index. */
+#define RES_VALIDIZE(t) if (!resist_check_valid(t)) t = 0;
 
 /*
  * Check that a given resist index is valid.
@@ -36,41 +34,37 @@ bool resist_check_valid(byte res_idx)
  */
 byte resist_player_current(byte res_idx)
 {
-	u16b x, y;
+	u16b x = 0;
 
 	/* Make sure the resist is valid */
-	if (!resist_check_valid(res_idx)) res_idx = 0;
+	RES_VALIDIZE(res_idx);
 
 	/* Grab the values, and calculate the timed resist */
-	x = p_ptr->resist_cur[res_idx];
-	y = (p_ptr->resist_timed[res_idx] ? 20 : 0);
+	x += p_ptr->resist_cur[res_idx];
+	x += (p_ptr->resist_timed[res_idx] ? 20 : 0);
 
-	/* [note to self - do the clever timed resist decrement stuff] */
-
-	return(x + y);
+	/* Return the total resistance */
+	return (x);
 }
 
 /*
- * Check a resist.
+ * Roll a 100-sided die and check th result agaainst
+ * a resist.
  */
 bool resist_check(byte res_idx)
 {
-	byte n = resist_player_current(res_idx);
+	u16b x;
 
-	if (randint(100) < n) return(FALSE);
+	/* Make sure the resist is valid */
+	RES_VALIDIZE(res_idx);
 
-	return (TRUE);
-}
+	/* Grab the value */
+	x = resist_player_current(res_idx);
 
-/*
- * Give a rough indication of a resist's power.
- */
-bool resist_is_decent(byte res_idx)
-{
-	byte type = resist_player_current(res_idx);
+	/* Roll the die */
+	if (rand_int(100) > n) return (FALSE);
 
-	if (type < 20) return (FALSE);
-
+	/* The check was successful */
 	return (TRUE);
 }
 
@@ -84,7 +78,7 @@ int resist_apply(int amount, int dam)
 	/* No effect */
 	if ((1 > dam) || !amount) return (dam);
 
-	/* Immunity */
+	/* Complete immunity */
 	if (amount >= 100) return (0);
 
 	/* Apply the resistance */
@@ -93,6 +87,7 @@ int resist_apply(int amount, int dam)
 	/* Resistances can't lower damage to 0 */
 	if (dam < 1) dam = 1;
 
+	/* Return the damage */
 	return (dam);
 }
 

@@ -89,6 +89,9 @@ void warding_glyph(void)
 
 	/* Create a glyph */
 	cave_set_feat(py, px, FEAT_GLYPH);
+
+	/* We are done. */
+	return;
 }
 
 
@@ -637,16 +640,16 @@ void set_recall(void)
 	/* Activate recall */
 	if (!p_ptr->word_recall)
 	{
-  	/* Reset recall depth */
-  	if ((p_ptr->depth > 0) && (p_ptr->depth != p_ptr->max_depth))
-  	{
-  		/*
-  		 * ToDo: Add a new player_type field "recall_depth"
-  		 * ToDo: Poll: Always reset recall depth?
-  		 */
-  		if (get_check("Reset recall depth? "))
-  			p_ptr->max_depth = p_ptr->depth;
-  	}
+		/* Reset recall depth */
+		if ((p_ptr->depth > 0) && (p_ptr->depth != p_ptr->max_depth))
+		{
+			/*
+			 * ToDo: Add a new player_type field "recall_depth"
+			 * ToDo: Poll: Always reset recall depth?
+			 */
+			if (get_check("Reset recall depth? "))
+				p_ptr->max_depth = p_ptr->depth;
+		}
 
 		p_ptr->word_recall = rand_int(20) + 15;
 		msg_print("The air about you becomes charged...");
@@ -1334,6 +1337,7 @@ static bool item_tester_hook_armour(const object_type *o_ptr)
 		case TV_HELM:
 		case TV_BOOTS:
 		case TV_GLOVES:
+		case TV_BELT:
 		{
 			return (TRUE);
 		}
@@ -1387,7 +1391,6 @@ bool enchant(object_type *o_ptr, int n, int eflag)
 	/* Extract the flags */
 	object_flags(o_ptr, &f1, &f2, &f3);
 
-
 	/* Large piles resist enchantment */
 	prob = o_ptr->number * 100;
 
@@ -1400,7 +1403,7 @@ bool enchant(object_type *o_ptr, int n, int eflag)
 	}
 
 	/* Try "n" times */
-	for (i=0; i<n; i++)
+	for (i = 0; i < n; i++)
 	{
 		/* Hack -- Roll for pile resistance */
 		if ((prob > 100) && (rand_int(prob) >= 100)) continue;
@@ -1744,14 +1747,17 @@ bool identify_fully(void)
  */
 static bool item_tester_hook_recharge(const object_type *o_ptr)
 {
-	/* Recharge staffs */
-	if (o_ptr->tval == TV_STAFF) return (TRUE);
-
-	/* Recharge wands */
-	if (o_ptr->tval == TV_WAND) return (TRUE);
-
-	/* Hack -- Recharge rods */
-	if (o_ptr->tval == TV_ROD) return (TRUE);
+	/* Check type */
+	switch (o_ptr->tval)
+	{
+		case TV_STAFF:
+		case TV_WAND:
+		case TV_ROD:
+		{
+			/* Can be recharged */
+			return (TRUE);
+		}
+	}
 
 	/* Nope */
 	return (FALSE);
@@ -2232,7 +2238,6 @@ void destroy_area(int y1, int x1, int r, bool full)
 	int y, x, k, t;
 
 	bool flag = FALSE;
-
 
 	/* Unused parameter */
 	(void)full;

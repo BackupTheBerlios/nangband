@@ -89,7 +89,7 @@ cptr prefix_pref[] =
     "_SDEX",
     "_SCON",
     "_SCHR",
-    "_LITE",
+    "_LIGHT",
     "_CURHP",
     "_MAXHP",
     "_ADJHP",
@@ -132,7 +132,7 @@ cptr prefix_pref[] =
     "_RACID",
     "_RPOIS",
     "_RFEAR",
-    "_RLITE",
+    "_RLIGHT",
     "_RDARK",
     "_RBLIND",
     "_RCONF",
@@ -150,7 +150,7 @@ cptr prefix_pref[] =
     "_SRACID",
     "_SRPOIS",
     "_SRFEAR",
-    "_SRLITE",
+    "_SRLIGHT",
     "_SRDARK",
     "_SRBLIND",
     "_SRCONF",
@@ -917,13 +917,13 @@ borg_grid *borg_grids[AUTO_MAX_Y];  /* The grids */
 
 
 /*
- * Maintain a set of grids marked as "BORG_LITE"
+ * Maintain a set of grids marked as "BORG_LIGHT"
  */
 
 s16b borg_lite_n = 0;
 
-byte borg_lite_x[AUTO_LITE_MAX];
-byte borg_lite_y[AUTO_LITE_MAX];
+byte borg_lite_x[AUTO_LIGHT_MAX];
+byte borg_lite_y[AUTO_LIGHT_MAX];
 
 /*
  * Maintain a set of grids marked as "BORG_GLOW"
@@ -931,8 +931,8 @@ byte borg_lite_y[AUTO_LITE_MAX];
 
 s16b borg_glow_n = 0;
 
-byte borg_glow_x[AUTO_LITE_MAX];
-byte borg_glow_y[AUTO_LITE_MAX];
+byte borg_glow_x[AUTO_LIGHT_MAX];
+byte borg_glow_y[AUTO_LIGHT_MAX];
 
 
 /*

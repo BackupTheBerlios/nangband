@@ -29,11 +29,11 @@
  *
  * To create a version which can be used on 68000 machines, or on machines
  * which are not running System 7 or Color Quickdraw, simply activate the
- * "ANGBAND_LITE_MAC" compilation flag in the proper header file.  This
+ * "ANGBAND_LIGHT_MAC" compilation flag in the proper header file.  This
  * will disable all "modern" features used in this file, including support
  * for multiple sub-windows, color, graphics, and sound.
  *
- * When compiling with the "ANGBAND_LITE_MAC" flag, the "ANGBAND_LITE"
+ * When compiling with the "ANGBAND_LIGHT_MAC" flag, the "ANGBAND_LITE"
  * flag will be automatically defined, which will disable many of the
  * advanced features of the game itself, reducing the total memory usage.
  *
@@ -171,21 +171,21 @@
 #if defined(powerc) || defined(__powerc)
 
 /*
- * Disable "LITE" version
+ * Disable "LIGHT" version
  */
-# undef ANGBAND_LITE_MAC
+# undef ANGBAND_LIGHT_MAC
 
 #endif
 
 
-#ifndef ANGBAND_LITE_MAC
+#ifndef ANGBAND_LIGHT_MAC
 
 /*
  * Activate some special code
  */
 # define USE_SFL_CODE
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 
 
@@ -201,20 +201,20 @@
 #endif
 
 
-#ifdef ANGBAND_LITE_MAC
+#ifdef ANGBAND_LIGHT_MAC
 
 /*
  * Everything in drawn as white on black
  */
 
-#else /* ANGBAND_LITE_MAC */
+#else /* ANGBAND_LIGHT_MAC */
 
 /*
  * Information about each of the 256 available colors
  */
 static RGBColor color_info[256];
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 
 /*
@@ -233,11 +233,11 @@ struct term_data
 
 	WindowPtr w;
 
-#ifdef ANGBAND_LITE_MAC
+#ifdef ANGBAND_LIGHT_MAC
 
 	/* Nothing */
 
-#else /* ANGBAND_LITE_MAC */
+#else /* ANGBAND_LIGHT_MAC */
 
 	short padding;
 
@@ -249,7 +249,7 @@ struct term_data
 
 	GDHandle mainSWGDH;
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 	Str15 title;
 
@@ -610,14 +610,14 @@ static void mac_warning(cptr warning)
 /*** Some generic functions ***/
 
 
-#ifdef ANGBAND_LITE_MAC
+#ifdef ANGBAND_LIGHT_MAC
 
 /*
  * Hack -- activate a color (0 to 255)
  */
 #define term_data_color(TD,A) /* Nothing */
 
-#else /* ANGBAND_LITE_MAC */
+#else /* ANGBAND_LIGHT_MAC */
 
 /*
  * Hack -- activate a color (0 to 255)
@@ -635,7 +635,7 @@ static void term_data_color(term_data *td, int a)
 	}
 }
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 
 /*
@@ -755,11 +755,11 @@ static void term_data_check_size(term_data *td)
 	/* Assume no graphics */
 	td->t->always_pict = FALSE;
 
-#ifdef ANGBAND_LITE_MAC
+#ifdef ANGBAND_LIGHT_MAC
 
 	/* No graphics */
 
-#else /* ANGBAND_LITE_MAC */
+#else /* ANGBAND_LIGHT_MAC */
 
 	/* Handle graphics */
 	if (use_graphics && ((td == &data[0]) || (td == &data[6])))
@@ -767,7 +767,7 @@ static void term_data_check_size(term_data *td)
 		td->t->always_pict = TRUE;
 	}
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 	/* Fake mono-space */
 	if (!td->font_mono ||
@@ -821,11 +821,11 @@ static void term_data_redraw(term_data *td)
 
 
 
-#ifdef ANGBAND_LITE_MAC
+#ifdef ANGBAND_LIGHT_MAC
 
 /* No graphics */
 
-#else /* ANGBAND_LITE_MAC */
+#else /* ANGBAND_LIGHT_MAC */
 
 
 /*
@@ -1182,7 +1182,7 @@ static errr globe_nuke(void)
 }
 
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 
 
@@ -1204,17 +1204,17 @@ static void Term_init_mac(term *t)
 	static RGBColor black = {0x0000,0x0000,0x0000};
 	static RGBColor white = {0xFFFF,0xFFFF,0xFFFF};
 
-#ifdef ANGBAND_LITE_MAC
+#ifdef ANGBAND_LIGHT_MAC
 
 	/* Make the window */
 	td->w = NewWindow(0, &td->r, td->title, 0, noGrowDocProc, (WindowPtr)-1, 1, 0L);
 
-#else /* ANGBAND_LITE_MAC */
+#else /* ANGBAND_LIGHT_MAC */
 
 	/* Make the window */
 	td->w = NewCWindow(0, &td->r, td->title, 0, documentProc, (WindowPtr)-1, 1, 0L);
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 	/* Activate the window */
 	activate(td->w);
@@ -1229,13 +1229,13 @@ static void Term_init_mac(term *t)
 	/* Resize the window */
 	term_data_resize(td);
 
-#ifdef ANGBAND_LITE_MAC
+#ifdef ANGBAND_LIGHT_MAC
 
 	/* Prepare the colors (base colors) */
 	BackColor(blackColor);
 	ForeColor(whiteColor);
 
-#else /* ANGBAND_LITE_MAC */
+#else /* ANGBAND_LIGHT_MAC */
 
 	/* Prepare the colors (real colors) */
 	RGBBackColor(&black);
@@ -1280,7 +1280,7 @@ static void Term_init_mac(term *t)
 		td->mainSWGDH = mainGDH;
 	}
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 	/* Clip to the window */
 	ClipRect(&td->w->portRect);
@@ -1340,11 +1340,11 @@ static errr Term_xtra_mac_react(void)
 	int i;
 
 
-#ifdef ANGBAND_LITE_MAC
+#ifdef ANGBAND_LIGHT_MAC
 
 	/* Nothing */
 
-#else /* ANGBAND_LITE_MAC */
+#else /* ANGBAND_LIGHT_MAC */
 
 	/* Reset color */
 	td->last = -1;
@@ -1424,7 +1424,7 @@ static errr Term_xtra_mac_react(void)
 		reset_visuals(TRUE);
 	}
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 	/* Success */
 	return (0);
@@ -1453,11 +1453,11 @@ static errr Term_xtra_mac(int n, int v)
 			return (0);
 		}
 
-#ifdef ANGBAND_LITE_MAC
+#ifdef ANGBAND_LIGHT_MAC
 
 		/* Nothing */
 
-#else /* ANGBAND_LITE_MAC */
+#else /* ANGBAND_LIGHT_MAC */
 
 		/* Make a sound */
 		case TERM_XTRA_SOUND:
@@ -1546,7 +1546,7 @@ static errr Term_xtra_mac(int n, int v)
 			return (0);
 		}
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 		/* Process random events */
 		case TERM_XTRA_BORED:
@@ -1758,11 +1758,11 @@ static errr Term_pict_mac(int x, int y, int n, const byte *ap, const char *cp,
 		byte ta = tap[i];
 		char tc = tcp[i];
 
-#ifdef ANGBAND_LITE_MAC
+#ifdef ANGBAND_LIGHT_MAC
 
 		/* Nothing */
 
-#else /* ANGBAND_LITE_MAC */
+#else /* ANGBAND_LIGHT_MAC */
 
 		/* Graphics -- if Available and Needed */
 		if (use_graphics && ((td == &data[0]) || (td == &data[6])) &&
@@ -1818,7 +1818,7 @@ static errr Term_pict_mac(int x, int y, int n, const byte *ap, const char *cp,
 			done = TRUE;
 		}
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 		/* Normal */
 		if (!done)
@@ -4472,11 +4472,11 @@ int main(void)
 	(void)EventAvail(everyEvent, &tempEvent);
 
 
-#ifdef ANGBAND_LITE_MAC
+#ifdef ANGBAND_LIGHT_MAC
 
 	/* Nothing */
 
-#else /* ANGBAND_LITE_MAC */
+#else /* ANGBAND_LIGHT_MAC */
 
 # if defined(powerc) || defined(__powerc)
 
@@ -4528,7 +4528,7 @@ int main(void)
 
 # endif
 
-#endif /* ANGBAND_LITE_MAC */
+#endif /* ANGBAND_LIGHT_MAC */
 
 
 #ifdef USE_SFL_CODE

@@ -1197,7 +1197,7 @@ function activate_object(object)
 		elseif artifact.activation == ACT_ELEMENTS then
 			msg_print(format("Your %s glows brilliant white...", o_name))
 			success, dir = get_aim_dir()
-			if not sucess then return FALSE, FALSE end
+			if not success then return FALSE, FALSE end
 			fire_ball(GF_MISSILE, dir, 400, 3)
                 elseif artifact.activation == ACT_SAT_HUNGER then
                         msg_print(format("Your %s blazes with a satisfying light", o_name))
@@ -1437,7 +1437,8 @@ function describe_item_activation_hook(object)
 			"starlight (10d8)",
 			"mana bolt (12d8)",
 			"berserk rage (50+d50 turns)",
-			"the elements (400)"}
+			"the elements (400)",
+			"satisfy hunger"}
 
 		local artifact = a_info[object.name1 + 1]
 

@@ -17,6 +17,8 @@
  *   Sample Application Files which are modified.
  */
 
+#include "angband.h"
+
 #ifdef WINDOWS
 
 #include <windows.h>

@@ -16,3 +16,4 @@ Nangband Website changelog
   Silly, but never mind. (takkaria)
 - Removed a comment in the changelog page about the RISC OS port being
   completely broken. (takkaria)
+- Made cookies expire a few years after setting. (takkaria)

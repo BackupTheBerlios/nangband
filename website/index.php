@@ -20,7 +20,10 @@ if ((($page != 'main') &&
 if (($newstyle == 'sidebar') ||
     ($newstyle == 'clean'))
 {
-	setcookie("style", $newstyle);
+	// Set a cookie for a few years
+	setcookie("style", $newstyle, time()+172800000);
+
+	// Set the current style
 	$style = $newstyle;
 }
 

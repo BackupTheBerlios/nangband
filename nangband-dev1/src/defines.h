@@ -2503,6 +2503,27 @@
 	(0L)
 
 
+/*
+ * Breath attacks
+ */
+#define RF4_INDIRECT_MASK \
+	(RF4_BR_ACID | RF4_BR_ELEC | RF4_BR_FIRE | RF4_BR_COLD | RF4_BR_POIS | \
+	 RF4_BR_NETH | RF4_BR_LITE | RF4_BR_DARK | RF4_BR_CONF | RF4_BR_SOUN | \
+	 RF4_BR_CHAO | RF4_BR_DISE | RF4_BR_NEXU | RF4_BR_TIME | RF4_BR_INER | \
+	 RF4_BR_GRAV | RF4_BR_SHAR | RF4_BR_PLAS | RF4_BR_WALL | RF4_BR_MANA)
+
+#define RF5_INDIRECT_MASK \
+	(RF5_BA_ACID | RF5_BA_ELEC | RF5_BA_FIRE | RF5_BA_COLD | RF5_BA_POIS | \
+	 RF5_BA_NETH | RF5_BA_WATE | RF5_BA_MANA | RF5_BA_DARK)
+
+#define RF6_INDIRECT_MASK \
+	(0L)
+
+/* 
+ * Monsters that come in groups
+ */
+#define RF1_GROUP_MASK \
+	(RF1_ESCORT | RF1_ESCORTS | RF1_FRIEND | RF1_FRIENDS)
 
 /*** Option Definitions ***/
 
@@ -2824,9 +2845,10 @@
 
 /*
  * Artifacts use the "name1" field
+ * Randarts use the "name3" field
  */
 #define artifact_p(T) \
-	((T)->name1 ? TRUE : FALSE)
+	(((T)->name1 || (T)->name3) ? TRUE : FALSE)
 
 /*
  * Ego-Items use the "name2" field

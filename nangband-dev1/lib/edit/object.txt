@@ -267,10 +267,15 @@ I:80:39:1000
 W:0:0:10:2
 F:EASY_KNOW
 
+N:28:& Tin~ of Luxury Caviar
+G:,:W
+I:80:40:2000
+W:10:0:3:50
+A:10/1:20/1:30/1
+P:0:1d1:0:0:0
+F:EASY_KNOW
 
-## XXX 28 XXX ##
-
-## XXX 29 XXX ##
+# XXX 29 XXX
 
 
 ##### Edged Weapons #####

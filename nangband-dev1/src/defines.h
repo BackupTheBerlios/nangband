@@ -1541,6 +1541,7 @@
 #define SV_FOOD_WAYBREAD		37
 #define SV_FOOD_PINT_OF_ALE		38
 #define SV_FOOD_PINT_OF_WINE	39
+#define SV_FOOD_CAVIAR			40
 
 
 /*
@@ -3189,8 +3190,9 @@ extern int PlayerUID;
 #define ACT_MANA_BOLT           48
 #define ACT_BERSERKER           49
 #define ACT_ELEMENTS		50
+#define ACT_SAT_HUNGER          51
 
-#define ACT_MAX                 51
+#define ACT_MAX                 52
 
 /*
  * HACK - define if the source contains the cleanup_angband() function.

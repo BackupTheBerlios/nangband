@@ -529,7 +529,8 @@ static cptr a_info_act[ACT_MAX] =
 	"STARLIGHT",
 	"MANA_BOLT",
 	"BERSERKER",
-	"ELEMENTS"
+	"ELEMENTS",
+        "SAT_HUNGER"
 };
 
 

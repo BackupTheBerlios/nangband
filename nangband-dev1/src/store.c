@@ -1430,6 +1430,19 @@ static void display_inventory(void)
 		/* Show "more" reminder (after the last object) */
 		c_prt(TERM_L_BLUE, "more >>", 6 + k, 3);
 	}
+
+	/* Tell the player if there are more items */
+	if (top_item + k < st_ptr->stock_num)
+	{
+		if (top_item > 0) c_prt(TERM_L_BLUE, "<< more >>", 6 + k, 3);
+		else c_prt(TERM_L_BLUE, "more >>", 6 + k, 3);
+	}
+	else if (top_item > 0)
+	{
+		c_prt(TERM_L_BLUE, "<< more", 6 + k, 3);
+	}
+
+	return;
 }
 
 
@@ -2872,7 +2885,7 @@ static void store_process_command(void)
 		{
 			top_item++;
 
-			if (top_item > st_ptr->stock_num)
+			if (top_item > st_ptr->stock_num - 1)
 			{
 				top_item = 0;
 			}

@@ -872,11 +872,16 @@ static errr Term_text_ibm(int x, int y, int n, byte a, const char *cp)
  *
  * The given parameters are "valid".
  */
-static errr Term_pict_ibm(int x, int y, int n, const byte *ap, const char *cp)
+static errr Term_pict_ibm(int x, int y, int n, const byte *ap, const char *cp,
+                          const byte *tap, const char *tcp)
 {
 	register int i;
 	register byte attr;
 	register byte *dest;
+
+	/* Unused parameters */
+	(void)tap;
+	(void)tcp;
 
 #ifdef USE_CONIO
 

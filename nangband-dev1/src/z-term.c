@@ -188,7 +188,6 @@
  *   Term->wipe_hook = Draw some blank spaces
  *   Term->text_hook = Draw some text in the window
  *   Term->pict_hook = Draw some attr/chars in the window
- *   Term->pict_tranps_hook = Draw some attr/chars with transparency
  *
  * The "Term->user_hook" hook provides a simple hook to an implementation
  * defined function, with application defined semantics.  It is available
@@ -229,14 +228,11 @@
  * a byte "a" and a char "c" to taking a length "n", an array of bytes
  * "ap" and an array of chars "cp".  Old implementations of this hook
  * should now iterate over all "n" attr/char pairs.
- *
- * The "Term->pict_transp_hook" hook is similar to the "Term->pict_hook"
- * with the additional feature of supporting transparency.
- * The function assigned to the hook is called after "Term->pict_hook".
- * In addition to the parameters of "Term->pict_hook" two new arrays
- * "tap" and "tcp" are available, containing attr/char pairs to be
- * "overlayed" to the values in the "ap" and "cp" arrays.
- * This hook is optional.
+ * The two new arrays "tap" and "tcp" can contain the attr/char pairs
+ * of the terrain below the values in "ap" and "cp".  These values can
+ * be used to implement transparency when using graphics by drawing
+ * the terrain values as a background and the "ap", "cp" values in
+ * the foreground.
  *
  * The game "Angband" uses a set of files called "main-xxx.c", for
  * various "xxx" suffixes.  Most of these contain a function called
@@ -466,20 +462,7 @@ static errr Term_text_hack(int x, int y, int n, byte a, const char *cp)
 /*
  * Hack -- fake hook for "Term_pict()" (see above)
  */
-static errr Term_pict_hack(int x, int y, int n, const byte *ap, const char *cp)
-{
-	/* Compiler silliness */
-	if (x || y || n || ap || cp) return (-2);
-
-	/* Oops */
-	return (-1);
-}
-
-
-/*
- * Hack -- fake hook for "Term_pict_transp()" (see above)
- */
-static errr Term_pict_transp_hack(int x, int y, int n, const byte *ap, const char *cp, const byte *tap, const char *tcp)
+static errr Term_pict_hack(int x, int y, int n, const byte *ap, const char *cp, const byte *tap, const char *tcp)
 {
 	/* Compiler silliness */
 	if (x || y || n || ap || cp || tap || tcp) return (-2);
@@ -487,7 +470,6 @@ static errr Term_pict_transp_hack(int x, int y, int n, const byte *ap, const cha
 	/* Oops */
 	return (-1);
 }
-
 
 
 /*** Efficient routines ***/
@@ -658,11 +640,9 @@ static void Term_fresh_row_pict(int y, int x1, int x2)
 			/* Flush */
 			if (fn)
 			{
-				(void)((*Term->pict_hook)(fx, y, fn, &scr_aa[fx], &scr_cc[fx]));
-
 				/* Draw pending attr/char pairs */
-				(void)((*Term->pict_transp_hook)(fx, y, fn,
-				       &scr_aa[fx], &scr_cc[fx],&scr_taa[fx], &scr_tcc[fx]));
+				(void)((*Term->pict_hook)(fx, y, fn, &scr_aa[fx], &scr_cc[fx],
+				                          &scr_taa[fx], &scr_tcc[fx]));
 
 				/* Forget */
 				fn = 0;
@@ -686,11 +666,9 @@ static void Term_fresh_row_pict(int y, int x1, int x2)
 	/* Flush */
 	if (fn)
 	{
-		(void)((*Term->pict_hook)(fx, y, fn, &scr_aa[fx], &scr_cc[fx]));
-
 		/* Draw pending attr/char pairs */
-		(void)((*Term->pict_transp_hook)(fx, y, fn,
-			&scr_aa[fx], &scr_cc[fx], &scr_taa[fx], &scr_tcc[fx]));
+		(void)((*Term->pict_hook)(fx, y, fn, &scr_aa[fx], &scr_cc[fx],
+		                          &scr_taa[fx], &scr_tcc[fx]));
 	}
 }
 
@@ -811,9 +789,7 @@ static void Term_fresh_row_both(int y, int x1, int x2)
 			}
 
 			/* Hack -- Draw the special attr/char pair */
-			(void)((*Term->pict_hook)(x, y, 1, &na, &nc));
-
-			(void)((*Term->pict_transp_hook)(x, y, 1, &na, &nc, &nta, &ntc));
+			(void)((*Term->pict_hook)(x, y, 1, &na, &nc, &nta, &ntc));
 
 			/* Skip */
 			continue;
@@ -1141,8 +1117,6 @@ errr Term_fresh(void)
 	if (!Term->wipe_hook) Term->wipe_hook = Term_wipe_hack;
 	if (!Term->text_hook) Term->text_hook = Term_text_hack;
 	if (!Term->pict_hook) Term->pict_hook = Term_pict_hack;
-	if (!Term->pict_transp_hook)
-		Term->pict_transp_hook = Term_pict_transp_hack;
 
 
 	/* Handle "total erase" */
@@ -1217,17 +1191,13 @@ errr Term_fresh(void)
 			/* Hack -- use "Term_pict()" always */
 			if (Term->always_pict)
 			{
-				(void)((*Term->pict_hook)(tx, ty, 1, &oa, &oc));
-
-				(void)((*Term->pict_transp_hook)(tx, ty, 1, &oa, &oc, &ota, &otc));
+				(void)((*Term->pict_hook)(tx, ty, 1, &oa, &oc, &ota, &otc));
 			}
 
 			/* Hack -- use "Term_pict()" sometimes */
 			else if (Term->higher_pict && (oa & 0x80) && (oc & 0x80))
 			{
-				(void)((*Term->pict_hook)(tx, ty, 1, &oa, &oc));
-
-				(void)((*Term->pict_transp_hook)(tx, ty, 1, &oa, &oc, &ota, &otc));
+				(void)((*Term->pict_hook)(tx, ty, 1, &oa, &oc, &ota, &otc));
 			}
 
 			/* Hack -- restore the actual character */

@@ -1893,7 +1893,7 @@ static void term_data_link(int i)
 	td->t->wipe_hook = Term_wipe_mac;
 	td->t->curs_hook = Term_curs_mac;
 	td->t->text_hook = Term_text_mac;
-	td->t->pict_transp_hook = Term_pict_mac;
+	td->t->pict_hook = Term_pict_mac;
 
 	/* Link the local structure */
 	td->t->data = (vptr)(td);

@@ -2444,7 +2444,7 @@ errr init_x11(int argc, char **argv)
 			term *t = &td->t;
 
 			/* Graphics hook */
-			t->pict_transp_hook = Term_pict_x11;
+			t->pict_hook = Term_pict_x11;
 
 			/* Use graphics sometimes */
 			t->higher_pict = TRUE;

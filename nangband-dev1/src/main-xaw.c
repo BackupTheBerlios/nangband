@@ -1775,7 +1775,7 @@ errr init_xaw(int argc, char **argv)
 
 			term *t = &td->t;
 
-			t->pict_transp_hook = Term_pict_xaw;
+			t->pict_hook = Term_pict_xaw;
 
 			t->higher_pict = TRUE;
 

@@ -2595,7 +2595,7 @@ static void term_data_link(term_data *td)
 	t->curs_hook = Term_curs_win;
 	t->wipe_hook = Term_wipe_win;
 	t->text_hook = Term_text_win;
-	t->pict_transp_hook = Term_pict_win;
+	t->pict_hook = Term_pict_win;
 
 	/* Remember where we came from */
 	t->data = (vptr)(td);

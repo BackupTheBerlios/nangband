@@ -3361,7 +3361,7 @@ errr init_xpj(int argc, char **argv)
 		if (i == 0)
 		{
 			/* Graphics hook */
-			t->pict_transp_hook = Term_skew_xpj;
+			t->pict_hook = Term_skew_xpj;
 
 			/* Always use graphics */
 			t->always_pict = TRUE;
@@ -3375,7 +3375,7 @@ errr init_xpj(int argc, char **argv)
 		else
 		{
 			/* Graphics hook */
-			t->pict_transp_hook = Term_pict_xpj;
+			t->pict_hook = Term_pict_xpj;
 
 			/* Resize tiles */
 			td->tiles =

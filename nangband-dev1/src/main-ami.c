@@ -1726,7 +1726,7 @@ static void link_term( int i )
 	t->init_hook = amiga_open;
 	t->nuke_hook = amiga_nuke;
 	t->text_hook = amiga_text;
-	t->pict_transp_hook = amiga_pict;
+	t->pict_hook = amiga_pict;
 	t->wipe_hook = amiga_wipe;
 	t->curs_hook = amiga_curs;
 	t->xtra_hook = amiga_xtra;

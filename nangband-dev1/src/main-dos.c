@@ -1327,7 +1327,7 @@ static void term_data_link(term_data *td)
 #ifdef USE_GRAPHICS
 
 	/* Prepare the graphics hook */
-	t->pict_transp_hook = Term_pict_dos;
+	t->pict_hook = Term_pict_dos;
 
 	/* Use "Term_pict" for "graphic" data */
 	t->higher_pict = TRUE;

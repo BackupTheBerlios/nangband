@@ -17,6 +17,8 @@
  *   Sample Application Files which are modified.
  */
 
+#ifdef WINDOWS
+
 #include <windows.h>
 
 #include "readdib.h"
@@ -339,3 +341,5 @@ ErrExit2:
 	_lclose(fh);
 	return (result);
 }
+
+#endif

@@ -1910,24 +1910,12 @@ errr rd_savefile(void)
 bool load_player(void)
 {
 	int fd = -1;
-
 	errr err = 0;
-
-	byte vvv[4];
-
-#ifdef VERIFY_TIMESTAMP
-	struct stat	statbuf;
-#endif /* VERIFY_TIMESTAMP */
-
 	cptr what = "generic";
-
 
 	/* Paranoia */
 	turn = 0;
-
-	/* Paranoia */
 	p_ptr->is_dead = FALSE;
-
 
 	/* Allow empty savefile name */
 	if (!savefile[0]) return (TRUE);
@@ -1954,7 +1942,6 @@ bool load_player(void)
 
 	/* Close the file */
 	fd_close(fd);
-
 
 #ifdef VERIFY_SAVEFILE
 
@@ -2010,7 +1997,6 @@ bool load_player(void)
 
 #endif /* VERIFY_SAVEFILE */
 
-
 	/* Okay */
 	if (!err)
 	{
@@ -2033,47 +2019,52 @@ bool load_player(void)
 	/* Process file */
 	if (!err)
 	{
+		vptr header;
+		byte *header_pos = NULL;
 
-#ifdef VERIFY_TIMESTAMP
+		/* Allocate memory */
+		C_MAKE(header, 6, byte);
 
-		/* Grab permissions */
-		safe_setuid_grab();
+		/* Point to the block */
+		header_pos = (byte *) header_pos;
 
-		/* Get the timestamp */
-		(void)fstat(fd, &statbuf);
-
-		/* Drop permissions */
-		safe_setuid_drop();
-
-#endif /* VERIFY_TIMESTAMP */
-
-		/* Read the first four bytes */
-		if (fd_read(fd, (char*)(vvv), sizeof(vvv))) err = -1;
+		/* Read in the data */
+		if (fd_read(fd, (char *) header, 6)) err = -1;
 
 		/* What */
 		if (err) what = "Cannot read savefile";
 
 		/* Close the file */
 		fd_close(fd);
-	}
 
-	/* Process file */
-	if (!err)
-	{
-		/* Extract version */
-		sf_major = vvv[0];
-		sf_minor = vvv[1];
-		sf_patch = vvv[2];
-		sf_extra = vvv[3];
+		/* Don't do stuff */
+		if (!err)
+		{
+			/* Clear the screen */
+			Term_clear();
 
-		/* Clear screen */
-		Term_clear();
+			/* Check versions */
+			if (!err && (*header_pos++ == 65) &&
+				(*header_pos++ == 110) &&
+				(*header_pos++ == 103) &&
+				(*header_pos++ == 4))
+			{
+				/* We have a correct version */
+				err = (errr) rd_savefile();
+			}
+			else if (!err)
+			{
+				/* Read the old type of savefile */
+				err = (errr) rd_savefile();
+			}
 
-		/* Attempt to load */
-		err = rd_savefile();
+			/* Error! */
+			if (err) what = "Cannot parse savefile";
+		}
 
-		/* Message (below) */
-		if (err) what = "Cannot parse savefile";
+		/* Free the memory for the header */
+		KILL(header);
+		header_pos = NULL;
 	}
 
 	/* Paranoia */
@@ -2085,24 +2076,6 @@ bool load_player(void)
 		/* Message (below) */
 		if (err) what = "Broken savefile";
 	}
-
-#ifdef VERIFY_TIMESTAMP
-	/* Verify timestamp */
-	if (!err && !arg_wizard)
-	{
-		/* Hack -- Verify the timestamp */
-		if (sf_when > (statbuf.st_ctime + 100) ||
-		    sf_when < (statbuf.st_ctime - 100))
-		{
-			/* Message */
-			what = "Invalid timestamp";
-
-			/* Oops */
-			err = -1;
-		}
-	}
-#endif /* VERIFY_TIMESTAMP */
-
 
 	/* Okay */
 	if (!err)
@@ -2161,7 +2134,7 @@ bool load_player(void)
 
 #ifdef VERIFY_SAVEFILE
 
-	/* Verify savefile usage */
+	/* XXX */
 	if (TRUE)
 	{
 		char temp[1024];

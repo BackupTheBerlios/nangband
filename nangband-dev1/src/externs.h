@@ -533,7 +533,8 @@ extern void print_spells(const byte *spells, int num, int y, int x);
 extern void display_koff(int k_idx);
 
 /* save.c */
-extern bool save_player(void);
+extern bool save_game(void);
+extern bool panic_save_gane(void);
 
 /* spells1.c */
 extern s16b poly_r_idx(int r_idx);

@@ -4814,13 +4814,6 @@ static void init_stuff(void)
 	validate_dir(ANGBAND_DIR_USER);
 	validate_dir(ANGBAND_DIR_XTRA);
 
-	/* Build the filename */
-	path_build(path, 1024, ANGBAND_DIR_FILE, "news.txt");
-
-	/* Hack -- Validate the "news.txt" file */
-	validate_file(path);
-
-
 	/* Build the "font" path */
 	path_build(path, 1024, ANGBAND_DIR_XTRA, "font");
 

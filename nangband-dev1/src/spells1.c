@@ -3355,12 +3355,11 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ)
 		/* Nether -- drain experience */
 		case GF_NETHER:
 		{
+			resist_apply(resist_player_current(RES_NETHER), dam);
+
 			if (fuzzy) msg_print("You are hit by something strange!");
-			if (p_ptr->resist_nethr)
-			{
-				dam *= 6; dam /= (randint(6) + 6);
-			}
-			else
+
+			if (!resist_check(RES_NETHER))
 			{
 				if (p_ptr->hold_life && (rand_int(100) < 75))
 				{

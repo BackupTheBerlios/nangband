@@ -1970,8 +1970,8 @@
 #define TR2_XXX13           0x02000000L /* (reserved) */
 #define TR2_XXX14           0x04000000L /* (reserved) */
 #define TR2_XXX15           0x08000000L /* (reserved) */
-#define TR2_XXX16       0x10000000L /* Resist nexus */
-#define TR2_RES_NETHR       0x20000000L /* Resist nether */
+#define TR2_XXX16           0x10000000L /* (reserved) */
+#define TR2_XXX17           0x20000000L /* (reserved) */
 #define TR2_RES_CHAOS       0x40000000L /* Resist chaos */
 #define TR2_RES_DISEN       0x80000000L /* Resist disenchant */
 

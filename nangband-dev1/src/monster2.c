@@ -2390,21 +2390,23 @@ void update_smart_learn(int m_idx, int what)
 
 		case DRS_RES_NEXUS:
 		{
-			if (p_ptr->resist_cur[RES_NEXUS] || p_ptr->resist_timed[RES_NEXUS])
-				m_ptr->smart |= (SM_RES_NEXUS);
 
 			break;
 		}
 
 		case DRS_RES_NETHR:
 		{
-			if (p_ptr->resist_nethr) m_ptr->smart |= (SM_RES_NETHR);
+			if (p_ptr->resist_cur[RES_NETHER] || p_ptr->resist_timed[RES_NETHER])
+				m_ptr->smart |= (SM_RES_NETHR);
+
 			break;
 		}
 
 		case DRS_RES_CHAOS:
 		{
-			if (p_ptr->resist_chaos) m_ptr->smart |= (SM_RES_CHAOS);
+			if (p_ptr->resist_cur[RES_CHAOS] || p_ptr->resist_timed[RES_CHAOS])
+				m_ptr->smart |= (SM_RES_CHAOS);
+
 			break;
 		}
 

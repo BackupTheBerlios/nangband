@@ -1114,7 +1114,7 @@ static bool player_birth_aux_2(void)
  */
 static bool player_birth_aux_3(void)
 {
-	int i, j, m, v;
+	int i, v;
 
 	bool flag;
 	bool prev_rolled = FALSE;
@@ -1143,10 +1143,7 @@ static bool player_birth_aux_3(void)
 	/* Initialize */
 	if (adult_auto_roller)
 	{
-		int mval[A_MAX];
-
 		char inp[80];
-
 
 		/* Extra info */
 		Term_putstr(5, 10, -1, TERM_WHITE,
@@ -1182,8 +1179,6 @@ static bool player_birth_aux_3(void)
 			/* Get a minimum stat */
 			while (TRUE)
 			{
-				char *s;
-
 				/* Move the cursor */
 				put_str("", 16 + i, 10);
 
@@ -1261,8 +1256,6 @@ static bool player_birth_aux_3(void)
 			/* Auto-roll */
 			while (1)
 			{
-				bool accept = TRUE;
-
 				/* Get a new character */
 				get_stats();
 

@@ -20,24 +20,6 @@
 static lua_State* L = NULL;
 
 
-static int xxx_msg_print(lua_State *L)
-{
-	cptr text = lua_tostring(L, 1);
-	if (text) msg_print(text);
-	lua_pop(L, 1);
-
-	return 0;
-}
-
-
-static int xxx_msg_flush(lua_State *L)
-{
-	message_flush();
-
-	return 0;
-}
-
-
 static int xxx_build_script_path(lua_State *L)
 {
 	char buf[1024];
@@ -51,34 +33,6 @@ static int xxx_build_script_path(lua_State *L)
 	path_build(buf, 1024, ANGBAND_DIR_SCRIPT, filename);
 
 	tolua_pushstring(L, buf);
-
-	return 1;
-}
-
-
-static int xxx_get_aim_dir(lua_State *L)
-{
-	int dir;
-	bool success;
-
-	success = get_aim_dir(&dir);
-	tolua_pushbool(L, success);
-	lua_pushnumber(L, dir);
-
-	return 2;
-}
-
-
-static int xxx_fire_beam(lua_State *L)
-{
-	int typ, dir, dam;
-	bool result;
-
-	typ = (int)luaL_check_number(L, 1);
-	dir = (int)luaL_check_number(L, 2);
-	dam = (int)luaL_check_number(L, 3);
-	result = fire_beam(typ, dir, dam);
-	tolua_pushbool(L, result);
 
 	return 1;
 }
@@ -114,46 +68,62 @@ static int xxx_object_desc(lua_State *L)
 
 static const struct luaL_reg anglib[] =
 {
-	{"msg_print", xxx_msg_print},
-	{"msg_flush", xxx_msg_flush},
-	{"get_aim_dir", xxx_get_aim_dir},
-	{"fire_beam", xxx_fire_beam},
 	{"build_script_path", xxx_build_script_path},
 	{"object_desc", xxx_object_desc},
 };
 
 
-#define DYADIC(name, op) \
-    static int name(lua_State* L) { \
-        lua_pushnumber(L, luaL_check_int(L, 1) op luaL_check_int(L, 2)); \
+#define luaL_check_bit(L, n)  ((long)luaL_check_number(L, n))
+#define luaL_check_ubit(L, n) ((unsigned long)luaL_check_bit(L, n))
+
+#define TDYADIC(name, op, t1, t2) \
+	static int int_ ## name(lua_State* L) \
+	{ \
+		lua_pushnumber(L, \
+		luaL_check_ ## t1 ## bit(L, 1) op luaL_check_ ## t2 ## bit(L, 2)); \
 		return 1; \
-    }
+	}
+
+#define DYADIC(name, op) \
+	TDYADIC(name, op, , )
 
 #define MONADIC(name, op) \
-    static int name(lua_State* L) { \
-        lua_pushnumber(L, op luaL_check_int(L, 1)); \
+	static int int_ ## name(lua_State* L) \
+	{ \
+		lua_pushnumber(L, op luaL_check_bit(L, 1)); \
 		return 1; \
-    }
+	}
 
+#define VARIADIC(name, op) \
+	static int int_ ## name(lua_State *L) \
+	{ \
+		int n = lua_gettop(L), i; \
+		long w = luaL_check_bit(L, 1); \
+		for (i = 2; i <= n; i++) \
+			w op ## = luaL_check_bit(L, i); \
+		lua_pushnumber(L, w); \
+		return 1; \
+	}
 
-DYADIC(intMod,      % )
-DYADIC(intAnd,      & )
-DYADIC(intOr,       | )
-DYADIC(intXor,      ^ )
-DYADIC(intShiftl,   <<)
-DYADIC(intShiftr,   >>)
-MONADIC(intBitNot,  ~ )
+MONADIC(not,     ~)
+DYADIC(mod,      %)
+VARIADIC(and,    &)
+VARIADIC(or,     |)
+VARIADIC(xor,    ^)
+TDYADIC(lshift,  <<, , u)
+TDYADIC(rshift,  >>, u, u)
+TDYADIC(arshift, >>, , u)
 
-
-static const struct luaL_reg intMathLib[] =
+static const struct luaL_reg bitlib[] =
 {
-    {"mod",    intMod    },
-    {"bAnd",   intAnd    },
-    {"bOr",    intOr     },
-    {"bXor",   intXor    },
-    {"bNot",   intBitNot },
-    {"shiftl", intShiftl },
-    {"shiftr", intShiftr },
+	{"bNot",    int_not},
+	{"iMod",    int_mod},  /* "mod" already in Lua math library */
+	{"bAnd",    int_and},
+	{"bOr",     int_or},
+	{"bXor",    int_xor},
+	{"lshift",  int_lshift},
+	{"rshift",  int_rshift},
+	{"arshift", int_arshift},
 };
 
 #ifdef ALLOW_BORG
@@ -558,7 +528,7 @@ errr script_init(void)
 	lua_dblibopen(L);
 
 	/* Register library with binary functions */
-	luaL_openl(L, intMathLib);
+	luaL_openl(L, bitlib);
 
 	/* Register the Angband base library */
 	luaL_openl(L, anglib);

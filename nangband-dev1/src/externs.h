@@ -492,6 +492,8 @@ extern void delete_object(int y, int x);
 extern void compact_objects(int size);
 extern void wipe_o_list(void);
 extern s16b o_pop(void);
+extern object_type* get_first_object(int y, int x);
+extern object_type* get_next_object(object_type *o_ptr);
 extern errr get_obj_num_prep(void);
 extern s16b get_obj_num(int level);
 extern void object_known(object_type *o_ptr);
@@ -629,7 +631,9 @@ extern bool destroy_doors_touch(void);
 extern bool sleep_monsters_touch(void);
 extern bool curse_armor(void);
 extern bool curse_weapon(void);
+extern void brand_object(object_type *o_ptr, byte brand_type);
 extern void brand_weapon(void);
+extern bool brand_ammo(void);
 extern bool brand_bolts(void);
 extern void ring_of_power(int dir);
 

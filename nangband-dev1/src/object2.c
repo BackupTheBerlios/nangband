@@ -173,24 +173,15 @@ void delete_object_idx(int o_idx)
  */
 void delete_object(int y, int x)
 {
-	s16b this_o_idx, next_o_idx = 0;
+	object_type *o_ptr;
 
 
 	/* Paranoia */
 	if (!in_bounds(y, x)) return;
 
-
 	/* Scan all objects in the grid */
-	for (this_o_idx = cave_o_idx[y][x]; this_o_idx; this_o_idx = next_o_idx)
+	for (o_ptr = get_first_object(y, x); o_ptr; o_ptr = get_next_object(o_ptr))
 	{
-		object_type *o_ptr;
-
-		/* Get the object */
-		o_ptr = &o_list[this_o_idx];
-
-		/* Get the next object */
-		next_o_idx = o_ptr->next_o_idx;
-
 		/* Wipe the object */
 		object_wipe(o_ptr);
 
@@ -528,6 +519,34 @@ s16b o_pop(void)
 
 	/* Oops */
 	return (0);
+}
+
+
+/*
+ * Get the first object at a dungeon location
+ * or NULL if there isn't one.
+ */
+object_type* get_first_object(int y, int x)
+{
+	s16b o_idx = cave_o_idx[y][x];
+
+	if (o_idx) return (&o_list[o_idx]);
+
+	/* No object */
+	return (NULL);
+}
+
+
+/*
+ * Get the next object in a stack or
+ * NULL if there isn't one.
+ */
+object_type* get_next_object(object_type *o_ptr)
+{
+	if (o_ptr->next_o_idx) return (&o_list[o_ptr->next_o_idx]);
+
+	/* No more objects */
+	return (NULL);
 }
 
 
@@ -3124,7 +3143,7 @@ void drop_near(object_type *j_ptr, int chance, int y, int x)
 	int dy, dx;
 	int ty, tx;
 
-	s16b this_o_idx, next_o_idx = 0;
+	object_type *o_ptr;
 
 	char o_name[80];
 
@@ -3196,16 +3215,8 @@ void drop_near(object_type *j_ptr, int chance, int y, int x)
 			k = 0;
 
 			/* Scan objects in that grid */
-			for (this_o_idx = cave_o_idx[ty][tx]; this_o_idx; this_o_idx = next_o_idx)
+			for (o_ptr = get_first_object(ty, tx); o_ptr; o_ptr = get_next_object(o_ptr))
 			{
-				object_type *o_ptr;
-
-				/* Get the object */
-				o_ptr = &o_list[this_o_idx];
-
-				/* Get the next object */
-				next_o_idx = o_ptr->next_o_idx;
-
 				/* Check for possible combination */
 				if (object_similar(o_ptr, j_ptr)) comb = TRUE;
 

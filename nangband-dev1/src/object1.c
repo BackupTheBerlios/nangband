@@ -2304,7 +2304,7 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		(!(o_ptr->ident & IDENT_MENTAL)) &&
 	    ((o_ptr->xtra1) || artifact_p(o_ptr)))
 	{
-		text_out("It might have hidden powers.\n");
+		text_out("   It might have hidden powers.\n");
 		known = TRUE;
 	}
 

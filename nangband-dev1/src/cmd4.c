@@ -2749,19 +2749,11 @@ static void do_cmd_knowledge_artifacts(void)
 	{
 		for (x = 0; x < DUNGEON_WID; x++)
 		{
-			s16b this_o_idx, next_o_idx = 0;
+			object_type *o_ptr;
 
 			/* Scan all objects in the grid */
-			for (this_o_idx = cave_o_idx[y][x]; this_o_idx; this_o_idx = next_o_idx)
+			for (o_ptr = get_first_object(y, x); o_ptr; o_ptr = get_next_object(o_ptr))
 			{
-				object_type *o_ptr;
-
-				/* Get the object */
-				o_ptr = &o_list[this_o_idx];
-
-				/* Get the next object */
-				next_o_idx = o_ptr->next_o_idx;
-
 				/* Ignore non-artifacts */
 				if (!artifact_p(o_ptr)) continue;
 

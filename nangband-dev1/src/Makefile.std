@@ -259,8 +259,8 @@ install:
 
 # Clean up object files
 clean:
-	\rm -f *.o angband
-	\rm -f ./lua/*.o ./lua/tolua
+	-rm -f *.o angband
+	-rm -f ./lua/*.o ./lua/tolua
 
 # Lua stuff
 lua/tolua: $(TOLUAOBJS)

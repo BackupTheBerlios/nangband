@@ -1011,19 +1011,35 @@ static errr rd_extra(void)
 		rd_s16b(&p_ptr->player_hp[i]);
 	}
 
-
-	/* Read spell info */
-	rd_u32b(&p_ptr->spell_learned1);
-	rd_u32b(&p_ptr->spell_learned2);
-	rd_u32b(&p_ptr->spell_worked1);
-	rd_u32b(&p_ptr->spell_worked2);
-	rd_u32b(&p_ptr->spell_forgotten1);
-	rd_u32b(&p_ptr->spell_forgotten2);
-
-	for (i = 0; i < PY_MAX_SPELLS; i++)
+	/* The magic spells were changed drastically in Angband 2.9.7 */
+	if (older_than(2, 9, 7) &&
+	    (c_info[p_ptr->pclass].spell_book == TV_MAGIC_BOOK))
 	{
-		rd_byte(&p_ptr->spell_order[i]);
+		/* Discard old spell info */
+		strip_bytes(24);
+
+		/* Discard old spell order */
+		strip_bytes(PY_MAX_SPELLS);
+
+		/* None of the spells have been learned yet */
+		for (i = 0; i < PY_MAX_SPELLS; i++)
+			p_ptr->spell_order[i] = 99;
 	}
+	else
+	{
+	 	/* Read spell info */
+ 		rd_u32b(&p_ptr->spell_learned1);
+	 	rd_u32b(&p_ptr->spell_learned2);
+ 		rd_u32b(&p_ptr->spell_worked1);
+	 	rd_u32b(&p_ptr->spell_worked2);
+ 		rd_u32b(&p_ptr->spell_forgotten1);
+	 	rd_u32b(&p_ptr->spell_forgotten2);
+
+ 		for (i = 0; i < PY_MAX_SPELLS; i++)
+	 	{
+ 			rd_byte(&p_ptr->spell_order[i]);
+	 	}
+	 }
 
 	return (0);
 }

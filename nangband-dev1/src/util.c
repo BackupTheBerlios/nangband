@@ -2957,6 +2957,7 @@ void text_out_to_screen(byte a, cptr str)
  */
 void text_out_to_file(byte attr, cptr str)
 {
+	int i;
 	cptr r;
 
 	/* Line buffer */
@@ -2968,15 +2969,28 @@ void text_out_to_file(byte attr, cptr str)
 	/* Last space saved into roff_buf */
 	static char *roff_s = NULL;
 
+	/* Indentation */
+	static int indent = 0;
 
 	/* Unused */
 	(void)attr;
+
+	/* Remember the indentation when starting a new line */
+	if (!roff_buf[0])
+	{
+		/* Count the leading spaces */
+		for (indent = 0; str[indent] == ' '; indent++)
+			; /* Do nothing */
+	}
 
 	/* Scan the given string, character at a time */
 	for (; *str; str++)
 	{
 		char ch = *str;
 		bool wrap = (ch == '\n');
+
+		/* Reset indentation after explicit wrap */
+		if (wrap) indent = 0;
 
 		if (!isprint(ch)) ch = ' ';
 
@@ -3006,6 +3020,13 @@ void text_out_to_file(byte attr, cptr str)
 			roff_s = NULL;
 			roff_p = roff_buf;
 			roff_buf[0] = '\0';
+
+			/* Indent the following line */
+			if (indent)
+			{
+				for (i = indent; i > 0; i--)
+					*roff_p++ = ' ';
+			}
 
 			/* Copy the remaining line into the buffer */
 			while (*r) *roff_p++ = *r++;

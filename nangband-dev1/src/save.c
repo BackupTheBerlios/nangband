@@ -542,16 +542,16 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	/* Inscription? */
 	if (temp)
 	{
-		char buffer[128];
+		cptr note = NULL;
 
 		/* Get the note */
-		if (type == PUT) sprintf(buffer, "%s", (char *) quark_str(o_ptr->note));
+		if (type == PUT) note = quark_str(o_ptr->note);
 
 		/* Get the inscription */
-		savefile_do_string((char *) &buffer, type);
+		savefile_do_string((char *) note, type);
 
 		/* Add the note */
-		if (type == GET) o_ptr->note = quark_add(buffer);
+		if (type == GET) o_ptr->note = quark_add(note);
 	}
 
 	/* We might be done. */
@@ -1187,30 +1187,24 @@ static void savefile_do_block_messages(bool type, int ver)
 	/* Dump the messages, oldest first */
 	for (i = num - 1; i >= 0; i--)
 	{
-		char buffer[512];
+
+		/* Write the type */
+		cptr message = NULL;
 		u16b mess_type = 0;
 
-		/* Do some special stuff */
+		/* Obtain values on saving */
 		if (type == PUT)
 		{
-			cptr temp;
-
-			/* XXX */
-			temp = message_str((s16b) i);
-			strcpy(buffer, temp);
-
-			/* Get the message type */
+			message = message_str((s16b) i);
 			mess_type = message_type((s16b) i);
 		}
 
-		/* Write the string */
-		savefile_do_string((char *) &buffer, type);
-
-		/* Write the type */
+		/* Do the message and it's type */
+		savefile_do_string((char *) message, type);
 		savefile_do_u16b(&mess_type, type);
 
 		/* Save to message to the buffer */
-		if (type == GET) message_add((char *) &buffer, mess_type);
+		if (type == GET) message_add(message, mess_type);
 	}
 
 	/* We are done. */

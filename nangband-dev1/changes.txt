@@ -6,6 +6,11 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
 - Added support for ABSORB_LIGHT, using three queues to avoid the calls for
   ang_sort. They uses about 18K of additional memory... (pelpel)
 - Changed all occurences of 'lite' to 'light' in object.lua. (pelpel)
+- Altered the standard makefile to allow other compilers to be
+  intergrated into it more easily. (takkaria)
+- Got all (non-lua) code compiling with TCC 0.9.8 - 0.9.9 segfaults on
+  randart.c, but 0.9.8 has parsing problems with the lua header files.
+  Hopefully 1.0.0 will compile Angband completely cleanly. (takkaria)
 
 2002-07-28
 ----------

@@ -2684,7 +2684,7 @@
 #define OPT_smart_packs				73
 #define OPT_view_player_colour			74
 #define OPT_view_equippy_chars			75
-/* xxx */
+#define OPT_view_monster_light                  76
 /* xxx */
 /* xxx */
 /* xxx */
@@ -2808,7 +2808,7 @@
 #define smart_packs                    op_ptr->opt[OPT_smart_packs]
 #define view_player_colour             op_ptr->opt[OPT_view_player_colour]
 #define view_equippy_chars             op_ptr->opt[OPT_view_equippy_chars]
-/* xxx */
+#define view_monster_light             op_ptr->opt[OPT_view_monster_light]
 /* xxx */
 /* xxx */
 /* xxx */

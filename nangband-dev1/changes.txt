@@ -1,6 +1,12 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-07-23
+----------
+- Tweaked some stuff at start.  Astral characters don't start with torches
+  any more, but instead start with ((random number from 15 to 17) * 5)
+  identify scrolls.  They also have slight bonuses to their weapons. (takkaria) 
+
 2002-07-22
 ----------
 - New option: "pseudo_light". Pseudo-ID type is no longer based on class.

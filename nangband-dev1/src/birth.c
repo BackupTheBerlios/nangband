@@ -548,22 +548,40 @@ static void player_outfit(void)
 
 	/* Hack -- Give the player some food */
 	object_prep(i_ptr, lookup_kind(TV_FOOD, SV_FOOD_RATION));
-	i_ptr->number = (byte)rand_range(3, 7);
+	i_ptr->number = (byte)rand_range(4, 9);
+	if (adult_astral) i_ptr->number = 15;
 	object_aware(i_ptr);
 	object_known(i_ptr);
 	(void)inven_carry(i_ptr);
 
+	/* Astral players don't need lights */
+	if (!adult_astral)
+	{
+		/* Get local object */
+		i_ptr = &object_type_body;
 
-	/* Get local object */
-	i_ptr = &object_type_body;
+		/* Give the player some torches */
+		object_prep(i_ptr, lookup_kind(TV_LIGHT, SV_LIGHT_TORCH));
+		i_ptr->number = (byte)rand_range(3, 7);
+		i_ptr->pval = (int)rand_range(3, 7) * 500;
+		object_aware(i_ptr);
+		object_known(i_ptr);
+		(void)inven_carry(i_ptr);
+	}
 
-	/* Hack -- Give the player some torches */
-	object_prep(i_ptr, lookup_kind(TV_LIGHT, SV_LIGHT_TORCH));
-	i_ptr->number = (byte)rand_range(3, 7);
-	i_ptr->pval = (int)rand_range(3, 7) * 500;
-	object_aware(i_ptr);
-	object_known(i_ptr);
-	(void)inven_carry(i_ptr);
+	/* ... but do need identify scrolls */
+	if (adult_astral)
+	{
+		/* Get local object */
+		i_ptr = &object_type_body;
+
+		/* Get identify scrolls */
+		object_prep(i_ptr, lookup_kind(TV_SCROLL, SV_SCROLL_IDENTIFY));
+		i_ptr->number = (rand_range(15, 17) * 5);
+		object_aware(i_ptr);
+		object_known(i_ptr);
+		(void)inven_carry(i_ptr);
+	}
 
 	/* Hack -- Give the player his equipment */
 	for (i = 0; i < MAX_START_ITEMS; i++)
@@ -586,6 +604,15 @@ static void player_outfit(void)
 			/* Prepare the item */
 			object_prep(i_ptr, k_idx);
 			i_ptr->number = (byte)rand_range(e_ptr->min, e_ptr->max);
+
+			/* Astral characters get a slight edge */
+			if (adult_astral &&
+			   ((e_ptr->tval == TV_HAFTED) || (e_ptr->tval == TV_POLEARM) ||
+			    (e_ptr->tval == TV_BOW) || (e_ptr->tval == TV_SWORD)))
+			{
+				i_ptr->to_h += rand_range(1, 5);
+				i_ptr->to_d += rand_range(2, 4);
+			}
 
 			object_aware(i_ptr);
 			object_known(i_ptr);

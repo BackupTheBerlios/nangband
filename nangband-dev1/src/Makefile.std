@@ -76,6 +76,9 @@ ANGOBJS = \
 # Comment out the following line if you do not have mkstemp()
 HAVE_MKSTEMP = -DHAVE_MKSTEMP
 
+# Uncomment this line to allow the borg
+ALLOW_BORG = -DALLOW_BORG
+
 # This is your compiler
 CC = gcc
 WARNINGS = -Wall
@@ -106,7 +109,7 @@ gcc-3.0: CC = gcc-3.0
 # including "USE_GETCH" and "USE_CURS_SET".  Note that "config.h" will
 # attempt to "guess" at many of these flags based on your system.
 #
-CFLAGS = -O1 -pipe -g -DUSE_X11 -DUSE_GCU $(HAVE_MKSTEMP) $(WARNINGS)
+CFLAGS = -O1 -pipe -g -DUSE_X11 -DUSE_GCU
 LIBS = -lX11 -lcurses -ltermcap -L/usr/X11R6/lib
 
 
@@ -250,6 +253,9 @@ LIBS = -lX11 -lcurses -ltermcap -L/usr/X11R6/lib
 #CFLAGS = -Wall -O2 -fno-strength-reduce -D"USE_SLA" -I/usr/include/slang
 #LIBS = -lslang
 
+# Add stuff
+CFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
+
 
 # Build the binary
 nangband: $(ANGOBJS) $(BORGOBJS)
@@ -265,6 +271,7 @@ cygwin: CC := gcc
 	LUALIBS := -s -mno-cygwin
 	LIBS := -s -mno-cygwin -mwindows -e _mainCRTStartup -lwinmm
 	CFLAGS := -Wall -pedantic -mno-cygwin -O2 -fno-strength-reduce -DWINDOWS
+	ANGOBJS += angband.res
 cygwin: nangband
 
 # Set up other stuff

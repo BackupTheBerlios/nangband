@@ -1,0 +1,24 @@
+Developer Notes
+===============
+
+This is a place designed for developer discussion.  Comment at
+appropriate places.
+
+
+Behaviour of new monster lighting
+---------------------------------
+ABSORB_LIGHT monsters will absorb nearby light, reducing the practical
+radius of the light to 0.
+
+EMANATE_LIGHT monsters emit light; radius should be 2 or 3, depending on
+level.
+
+CARRY_LIGHT monsters are theoretically "carrying" light sources, which
+should be radius 1 or 2, depending on level; probably, the transition
+shouldn't occur much later than dungeon level 15.
+
+
+If an ABSORB_LIGHT monster is in the vicinity of a [CARRY|EMANATE]_LIGHT
+monster, the priority of effects is EMANATE_LIGHT, ABSORB_LIGHT and then
+CARRY_LIGHT.  CARRY_LIGHT monsters may be scared by the absence of
+light, and may try to get away.

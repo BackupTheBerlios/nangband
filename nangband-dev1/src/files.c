@@ -2744,17 +2744,11 @@ bool show_file(cptr name, cptr what, int line, int mode)
  * Peruse the On-Line-Help
  */
 void do_cmd_help(void)
-{
-	/* Save screen */
-	screen_save();
+{        
+	open_help(NULL);
 
-	/* Peruse the main help file */
-	(void)show_file("help.hlp", NULL, 0, 0);
-
-	/* Load screen */
-	screen_load();
+	return;
 }
-
 
 
 /*

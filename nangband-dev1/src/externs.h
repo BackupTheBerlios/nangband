@@ -752,6 +752,14 @@ extern bool get_rep_dir(int *dp);
 extern bool confuse_dir(int *dp);
 
 
+/* xmlbulp.c */
+extern int bulp_stricmp(char *s1, char *s2);
+
+/* help.c */
+extern u32b open_help(char *file);
+extern u32b render_xml_file(char *file, bool clear, bool help_text, bool persist);
+
+
 /*
  * Hack -- conditional (or "bizarre") externs
  */

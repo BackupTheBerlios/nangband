@@ -1759,61 +1759,7 @@ void init_angband(void)
 
 	char buf[1024];
 
-
-	/*** Verify the "news" file ***/
-
-	/* Build the filename */
-	path_build(buf, 1024, ANGBAND_DIR_FILE, "news.txt");
-
-	/* Attempt to open the file */
-	fd = fd_open(buf, O_RDONLY);
-
-	/* Failure */
-	if (fd < 0)
-	{
-		char why[1024];
-
-		/* Message */
-		sprintf(why, "Cannot access the '%s' file!", buf);
-
-		/* Crash and burn */
-		init_angband_aux(why);
-	}
-
-	/* Close it */
-	fd_close(fd);
-
-
-	/*** Display the "news" file ***/
-
-	/* Clear screen */
-	Term_clear();
-
-	/* Build the filename */
-	path_build(buf, 1024, ANGBAND_DIR_FILE, "news.txt");
-
-	/* Open the News file */
-	fp = my_fopen(buf, "r");
-
-	/* Dump */
-	if (fp)
-	{
-		int i = 0;
-
-		/* Dump the file to the screen */
-		while (0 == my_fgets(fp, buf, sizeof(buf)))
-		{
-			/* Display and advance */
-			Term_putstr(0, i++, -1, TERM_WHITE, buf);
-		}
-
-		/* Close */
-		my_fclose(fp);
-	}
-
-	/* Flush it */
-	Term_fresh();
-
+	render_xml_file("/file/news.xml",FALSE,FALSE,FALSE);
 
 	/*** Verify (or create) the "high score" file ***/
 

@@ -573,8 +573,8 @@ static void do_cmd_options_aux(int page, cptr info)
 
 			case '?':
 			{
-				sprintf(buf, "option.txt#%s", option_text[opt[k]]);
-				show_file(buf, NULL, 0, 0);
+				sprintf(buf, "/help/options.xml#%s", option_text[opt[k]]);
+				open_help(buf);
 				Term_clear();
 				break;
 			}
@@ -609,7 +609,6 @@ static void do_cmd_options_win(void)
 	{
 		old_flag[j] = op_ptr->window_flag[j];
 	}
-
 
 	/* Clear screen */
 	Term_clear();

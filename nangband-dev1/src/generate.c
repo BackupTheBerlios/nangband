@@ -3289,18 +3289,6 @@ static void town_gen(void)
 
 	make_town_from_file();
 
-	/* Apply illumination */
-	town_illuminate(daytime);
-
-	/* Make some residents */
-	for (i = 0; i < residents; i++)
-	{
-		/* Make a resident */
-		(void)alloc_monster(3, TRUE);
-	}
-
-	return;
-
 	/* Day time */
 	if ((turn % (10L * TOWN_DAWN)) < ((10L * TOWN_DAWN) / 2))
 	{
@@ -3320,6 +3308,20 @@ static void town_gen(void)
 		/* Number of residents */
 		residents = MIN_M_ALLOC_TN;
 	}
+
+	/* Make some residents */
+	for (i = 0; i < residents; i++)
+	{
+		/* Make a resident */
+		(void)alloc_monster(3, TRUE);
+	}
+
+	/* Apply illumination */
+	town_illuminate(daytime);
+
+	return;
+
+
 
 	/* Start with solid walls */
 	for (y = 0; y < DUNGEON_HGT; y++)

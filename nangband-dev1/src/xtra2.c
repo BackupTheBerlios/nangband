@@ -2103,23 +2103,17 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
  * Modify the current panel to the given coordinates, adjusting only to
  * ensure the coordinates are legal, and return TRUE if anything done.
  *
- * Hack -- The town should never be scrolled around.
- *
  * Note that monsters are no longer affected in any way by panel changes.
- *
- * As a total hack, whenever the current panel changes, we assume that
- * the "overhead view" window should be updated.
+ * If any changes are made, we also update the overhead view window.
  */
 bool modify_panel(int wy, int wx)
 {
 	/* Verify wy, adjust if needed */
-	if (p_ptr->depth == 0) wy = 0;
-	else if (wy > DUNGEON_HGT - SCREEN_HGT) wy = DUNGEON_HGT - SCREEN_HGT;
+	if (wy > dungeon_hgt - SCREEN_HGT) wy = dungeon_hgt - SCREEN_HGT;
 	else if (wy < 0) wy = 0;
 
 	/* Verify wx, adjust if needed */
-	if (p_ptr->depth == 0) wx = 0;
-	else if (wx > DUNGEON_WID - SCREEN_WID) wx = DUNGEON_WID - SCREEN_WID;
+	if (wx > dungeon_wid - SCREEN_WID) wx = dungeon_wid - SCREEN_WID;
 	else if (wx < 0) wx = 0;
 
 	/* React to changes */
@@ -3599,11 +3593,11 @@ bool target_set_interactive(int mode)
 				if (scroll_target)
 				{
 					/* Slide into legality */
-					if (x >= DUNGEON_WID - 1) x--;
+					if (x >= dungeon_wid - 1) x--;
 					else if (x <= 0) x++;
 
 					/* Slide into legality */
-					if (y >= DUNGEON_HGT - 1) y--;
+					if (y >= dungeon_hgt - 1) y--;
 					else if (y <= 0) y++;
 
 					/* Adjust panel if needed */

@@ -1327,22 +1327,15 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 	}
 
 	/* Set the height, if applicable */
-	if (type == PUT) ymax = DUNGEON_HGT;
+	if (type == PUT) ymax = dungeon_hgt;
 	savefile_do_u16b(&ymax, type);
+	if (type == GET) dungeon_hgt = ymax;
 
 	/* Set the width, if applicable */
-	if (type == PUT) xmax = DUNGEON_WID;
+	if (type == PUT) xmax = dungeon_wid;
 	savefile_do_u16b(&xmax, type);
+	if (type == GET) dungeon_wid = xmax;
 
-	/* Perform paranoia */
-	if ((ymax != DUNGEON_HGT) || (xmax != DUNGEON_WID))
-	{
-		/* Warn the user */
-		note(format("Invalid dungeon size - %dx%d!", ymax, xmax), type);
-
-		/* Fatal error */
-		return (0);
-	}
 
 	/*** Simple "Run-Length-Encoding" of cave ***/
 
@@ -1353,9 +1346,9 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 	if (type == PUT)
 	{
 		/* Dump the cave_info[][] flags to the file */
-		for (y = 0; y < DUNGEON_HGT; y++)
+		for (y = 0; y < dungeon_hgt; y++)
 		{
-			for (x = 0; x < DUNGEON_WID; x++)
+			for (x = 0; x < dungeon_wid; x++)
 			{
 				/* Extract the important flags into cave[1|2] */
 				cave = (cave_info[y][x] & (IMPORTANT_FLAGS));
@@ -1387,9 +1380,9 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		prev_char = count = 0;
 
 		/* Dump the cave_info2[][] flags to the file */
-		for (y = 0; y < DUNGEON_HGT; y++)
+		for (y = 0; y < dungeon_hgt; y++)
 		{
-			for (x = 0; x < DUNGEON_WID; x++)
+			for (x = 0; x < dungeon_wid; x++)
 			{
 				/*
 				 * If the run is broken, or full, flush it; otherwise,
@@ -1420,7 +1413,7 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		prev_char = cave = 0;
 
 		/* Load the dungeon data */
-		for (x = y = 0; y < DUNGEON_HGT; )
+		for (x = y = 0; y < dungeon_hgt; )
 		{
 			/* Extract the count and char info */
 			savefile_do_byte(&count, type);
@@ -1439,7 +1432,7 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 					x = 0;
 
 					/* Advance/Wrap */
-					if (++y >= DUNGEON_HGT) break;
+					if (++y >= dungeon_hgt) break;
 				}
 			}
 		}
@@ -1448,7 +1441,7 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 		prev_char = cave = 0;
 
 		/* Load the dungeon data */
-		for (x = y = 0; y < DUNGEON_HGT; )
+		for (x = y = 0; y < dungeon_hgt; )
 		{
 			/* Extract the count and char info */
 			savefile_do_byte(&count, type);
@@ -1461,13 +1454,13 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 				cave_info2[y][x] = cave;
 
 				/* Advance/Wrap */
-				if (++x >= DUNGEON_WID)
+				if (++x >= dungeon_wid)
 				{
 					/* Wrap */
 					x = 0;
 
 					/* Advance/Wrap */
-					if (++y >= DUNGEON_HGT) break;
+					if (++y >= dungeon_hgt) break;
 				}
 			}
 		}
@@ -1482,9 +1475,9 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 	if (type == PUT)
 	{
 		/* Dump the cave */
-		for (y = 0; y < DUNGEON_HGT; y++)
+		for (y = 0; y < dungeon_hgt; y++)
 		{
-			for (x = 0; x < DUNGEON_WID; x++)
+			for (x = 0; x < dungeon_wid; x++)
 			{
 				/* Extract a byte */
 				cave = cave_feat[y][x];
@@ -1516,7 +1509,7 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 	else
 	{
 		/* Load the dungeon data */
-		for (x = y = 0; y < DUNGEON_HGT; )
+		for (x = y = 0; y < dungeon_hgt; )
 		{
 			/* Grab RLE info */
 			savefile_do_byte(&count, type);
@@ -1529,13 +1522,13 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 				cave_set_feat(y, x, cave);
 
 				/* Advance/Wrap */
-				if (++x >= DUNGEON_WID)
+				if (++x >= dungeon_wid)
 				{
 					/* Wrap */
 					x = 0;
 
 					/* Advance/Wrap */
-					if (++y >= DUNGEON_HGT) break;
+					if (++y >= dungeon_hgt) break;
 				}
 			}
 		}

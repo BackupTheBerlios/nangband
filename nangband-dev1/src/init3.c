@@ -18,7 +18,7 @@ void make_town_from_file(void)
 	for (x = 0; x < z_info->f_max; x++)
 	{
 		if (f_info[x].t_char)
-			char_to_feat[f_info[x].t_char] = x;
+			char_to_feat[(int) f_info[x].t_char] = x;
 	}
 
 	FILE_TYPE(FILE_TYPE_DATA);
@@ -34,7 +34,7 @@ void make_town_from_file(void)
 		for (x = 0; x < t; x++)
 		{
 			if (buf[x] == '@') player_place(y, x);
-			else cave_feat[y][x] = char_to_feat[buf[x]];
+			else cave_feat[y][x] = char_to_feat[(int) buf[x]];
 		}
 
 		if (t > dungeon_wid) dungeon_wid = t;

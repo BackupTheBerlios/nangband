@@ -2424,7 +2424,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	/* Describe */
 	if (vn)
 	{
-		bonus_data stat[A_MAX]; 	
+		bonus_data stat[A_MAX];
 		int current_stat = 0;
 		int n = 0, iter = 0;
 
@@ -2466,11 +2466,11 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 			for (iter = 0; iter < no_the_same; iter ++)
 			{
 				/* Stat name */
-				text_out(stat[iter].name);
+				text_out(stat[current_stat + iter].name);
 
 				/* Connectives */
-				if (no_the_same == 1) text_out(" ");
-                else if (iter == (no_the_same - 1)) text_out(" and ");
+				if (no_the_same == 1) text_out(" "); 
+                else if (iter == (no_the_same - 2)) text_out(" and ");
                 else text_out(", ");
 			}
 
@@ -2486,9 +2486,9 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 			{                
 				text_out(", and ");
 				/* Output this only on a change of sign */
-				if ((stat[current_stat].bonus < 0) && (stat[current_stat - no_the_same].bonus > 0))
+				if ((stat[current_stat].bonus > 0)  && (stat[current_stat - no_the_same].bonus < 0))
 				{
-					text_out_c(TERM_ORANGE, "decreases");
+					text_out_c(TERM_L_GREEN, "increases");
 				}
 			}
 		}

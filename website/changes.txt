@@ -10,6 +10,8 @@ Nangband Website changelog
 - Got the entire site valid to HTML 4.01 standards; this includes
   *both* stylesheets and all content.  I have too much free time!
   (takkaria)
+- Started working on a "content lister".  Unfinished and broken.
+  (takkaria)
 
 30-06-02
 --------

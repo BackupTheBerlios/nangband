@@ -14,7 +14,7 @@ href="https://lists.berlios.de/mailman/listinfo/nangband-discussion">nangband-di
 href="https://lists.berlios.de/mailman/listinfo/nangband-developer">nangband-developer</a>: Nangband developer's list.</li>
 </ul>
 
-<p>The CVS can be checked out using the following command:</p>
-<pre>cvs -z3 -:d:pserver:anonymous@cvs.nangband.berlios.de:/cvsroot/nangband co nangband</pre>
-<p>Replace 'co nangband' with 'co nang-web' if you want to check out this website instead.</p>
+<p>The CVS can be checked out using the following command:<br>
+<tt>cvs -z3 -d:pserver:anonymous@cvs.nangband.berlios.de:/cvsroot/nangband co nangband</tt><br>
+Replace 'co nangband' with 'co nang-web' if you want to check out this website instead.</p>
 

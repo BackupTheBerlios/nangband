@@ -1,2 +1,83 @@
 <p>In the short time Nangband has been in development (<?=rtime(time()-1013454487);?>), it has made some 
-interesting changes.</p>
+interesting changes.  Here is a condensed list of many of them, as they were on the 19th of July, 2002.</p>
+
+<b>Gameplay</b>
+<ul>
+	<li>Areas of detection and magic mapping are now circular in effect.  "DTrap" status has been added to 
+the bottom of the screen to show the player when (s)he's in s trap-detected area; disturb_panel has been changed 
+to disturb_detect.  It now disturbs the player when when (s)he is about to leave a trap detected area.</li>
+	<li>Removed the Angband autoroller in favour of the Antiband one; you can change the defaults by editing 
+the appropriate lines in p_class.txt.
+	<li>Added evil mode.  It makes lots of stuff very OoD.  Try and survive!  (Tread lightly)</li>
+	<li>Added astral mode.  This makes the player start at the bottom of the dungeon; some monsters can only 
+be encountered in astral mode.</li>
+	<li>Added randarts which add to the original set, not replace them.  Basic code form Antiband.</li>
+	<li>Added some more vaults.</li>
+	<li>Added the hunger effect; it vastly increases the amount of food required by the player.  It's 
+basically the reverse of slow digestion.</li>
+	<li>Added a new resist system, based somewhat on the system from EyAngband.  (It's percentage-based.)  
+Some code has been borrowed, and credited to Eytan for this.  Along the way, some elements have been removed; 
+light is one.  The game is probably left quite unbalanced after this.  I've also added code so that the 
+percentage bonus afforded by timed resistances decreases over time; it starts off at 50% and goes down towards 
+20%; when it hits that, it zooms down.</li>
+	<li>Added Nexus, Chaos and Nether brands; they all do bizzare things.</li>
+	<li>Some of the artifacts have been twiddled with; they are now more "logical".  Also, some artifacts 
+from other variants have been imported.</li>
+	<li>New item type: Orbs.  These go in the light slot and provide permanent light and nice resists and 
+abilities.</li>
+	<li>Belt slot and some belts; there are ego-belts and artifact belts.</li>
+	<li>Instead of being capped at 1600, many monster breaths are now capped at their dungeon level * 
+10.</li>
+	<li>The player can now have weak hits; this is experimental.</li>
+	<li>Objects can now give different bonuses to each individual stat; this means you can get +1 str, +2 con 
+and +5 chr from the same object.</li>
+</ul>
+
+<b>User Interface</b>
+<ul>
+	<li>Added the new XML help system from Antony Sidwell; the "splash" screen uses this to be nice and 
+colourful.</li>
+	<li>Started something like object recall; it looks quite nasty at the moment and isn't quite as polished 
+as I'd like it.  This will be replaced soon by something else, I hope.</li>
+	<li>Bigscreen support in the stores.  Pressing space moves a screenful down, and the up/down movement 
+keys move by one item.</li>
+	<li>Swapped aspects of the birthscreen round to make it look nicer.  Future revisions will happen.</li>
+	<li>Added the view_player_colour option from Zangband CVS; this changes the colour of your '@' depending 
+on how much HP you have left.  This is broken, though.</li>
+	<li>"lite" is now "light".  Finally, speling (sic) in Angband is being sorted out.</li>
+	<li>There is new, experimental, running code in Nangband.  Any reports on weirdness are first priority 
+for me.</li>
+	<li>Basic monster kill count.</li>
+</ul>
+
+<b>Coding changes (invisible to the user)</b>
+<ul>
+	<li>There is new, "block-based" savefile code in Nangband.  Many people have helped with coding this and 
+giving advice; Steven Fuerst, RML and "Fufie" from #angband are three people to whom I am hugely indebted.  Look 
+at save.c for all details; it handles both loading and saving.  There are some underlying messes, like 
+"save_game()" and "load_player()" (should be "load_game()").</li>
+	<li>For the new trap detection code (the "DTrap" status indicator), cave_info[][] had to have one more 
+flag available.  First, I changed cave_info to a u16b array from a byte array, but then I changed my mind and 
+decided that, for efficiency, I should make cave_info2.  So now, we have the original cave_info[][], and 
+(basically) a clone of it so we can have one more flag.  I have plans for the new flags available, though; such 
+as a clean implementation of "exposed" gold in veins.</li>
+</ul>
+
+<b>Todo list items</b><br>
+<i>(this is because I'm too lazy for my own good)</i>
+<ul>
+	<li>Add Livingstones, Phase Reavers and The Iron Lady.</li>
+</ul>
+
+<b>Known bugs</b>
+<ul>
+	<li>Wrecked character information screen.</li>
+	<li>Some weirdness may occur with regards to terrain features.  It's because I've not put the appropriate 
+flags on some features.</li>
+	<li>Ego-item's resists are not quite working; they're a bit bizzare.</li>
+</ul>
+
+<b>Bugfixes</b>
+<ul>
+	<li>Equippy chars are now an option.</li>
+</ul>

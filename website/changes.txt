@@ -13,6 +13,7 @@ I'm not going to bother.
 - Changed the behaviour of the "showimage" so that images/"page".desc is
   shown; this should make the "changing-style-looses-image" bug I found.
 - Added quick hack to perform the above.
+- Added some content to content/changes; the changelist is there, now.
 
 18-07-02
 --------

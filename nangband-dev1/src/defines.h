@@ -398,12 +398,12 @@
 /*
  * Indeces used for various "equipment" slots (hard-coded).
  */
-#define INVEN_WIELD		24
+#define INVEN_WIELD   	24
 #define INVEN_BOW       25
 #define INVEN_LEFT      26
 #define INVEN_RIGHT     27
 #define INVEN_NECK      28
-#define INVEN_LITE      29
+#define INVEN_LIGHT     29
 #define INVEN_BODY      30
 #define INVEN_OUTER     31
 #define INVEN_WAIST     32
@@ -563,7 +563,7 @@
 #define GF_MISSILE      3
 #define GF_MANA         4
 #define GF_HOLY_ORB     5
-#define GF_LITE_WEAK	6
+#define GF_LIGHT_WEAK	6
 #define GF_DARK_WEAK	7
 #define GF_WATER        8
 #define GF_PLASMA       9
@@ -579,7 +579,7 @@
 #define GF_COLD         19
 #define GF_POIS         20
 #define GF_XXX2			21
-#define GF_LITE         22
+#define GF_LIGHT         22
 #define GF_DARK         23
 #define GF_XXX3			24
 #define GF_CONFUSION    25
@@ -632,7 +632,7 @@
 #define DRS_RES_COLD	19
 #define DRS_RES_POIS	20
 #define DRS_RES_FEAR	21
-#define DRS_RES_LITE	22
+#define DRS_RES_LIGHT	22
 #define DRS_RES_DARK	23
 #define DRS_RES_BLIND	24
 #define DRS_RES_CONFU	25
@@ -712,7 +712,7 @@
 
 /*** Artifact indeces (see "lib/edit/artifact.txt") ***/
 
-/* Lites */
+/* Lights */
 #define ART_GALADRIEL           1
 #define ART_ELENDIL                     2
 #define ART_THRAIN                      3
@@ -906,7 +906,7 @@
 #define EGO_LORDLINESS		29
 #define EGO_SEEING			30
 #define EGO_INFRAVISION		31
-#define EGO_LITE			32
+#define EGO_LIGHT			32
 #define EGO_TELEPATHY		33
 #define EGO_REGENERATION	34
 #define EGO_TELEPORTATION	35
@@ -1058,7 +1058,7 @@
 #define TV_SOFT_ARMOR   36	/* Soft Armor */
 #define TV_HARD_ARMOR   37	/* Hard Armor */
 #define TV_DRAG_ARMOR	38	/* Dragon Scale Mail */
-#define TV_LITE         39	/* Lites (including Specials) */
+#define TV_LIGHT        39	/* Lights (including Specials) */
 #define TV_AMULET       40	/* Amulets (including Specials) */
 #define TV_RING         45	/* Rings (including Specials) */
 #define TV_STAFF        55
@@ -1229,13 +1229,13 @@
 #define SV_DRAGON_BALANCE		20
 #define SV_DRAGON_POWER			30
 
-/* The sval codes for TV_LITE */
-#define SV_LITE_TORCH		0
-#define SV_LITE_LANTERN		1
-#define SV_LITE_GALADRIEL	4
-#define SV_LITE_ELENDIL		5
-#define SV_LITE_THRAIN		6
-#define SV_LITE_PALANTIR	7
+/* The sval codes for TV_LIGHT */
+#define SV_LIGHT_TORCH		0
+#define SV_LIGHT_LANTERN		1
+#define SV_LIGHT_GALADRIEL	4
+#define SV_LIGHT_ELENDIL		5
+#define SV_LIGHT_THRAIN		6
+#define SV_LIGHT_PALANTIR	7
 
 /* The "sval" codes for TV_AMULET */
 #define SV_AMULET_DOOM			0
@@ -1313,8 +1313,8 @@
 #define SV_STAFF_TELEPORTATION	4
 #define SV_STAFF_IDENTIFY		5
 #define SV_STAFF_REMOVE_CURSE	6
-#define SV_STAFF_STARLITE		7
-#define SV_STAFF_LITE			8
+#define SV_STAFF_STARLIGHT		7
+#define SV_STAFF_LIGHT			8
 #define SV_STAFF_MAPPING		9
 #define SV_STAFF_DETECT_GOLD	10
 #define SV_STAFF_DETECT_ITEM	11
@@ -1346,7 +1346,7 @@
 #define SV_WAND_DISARMING		4
 #define SV_WAND_TRAP_DOOR_DEST	5
 #define SV_WAND_STONE_TO_MUD	6
-#define SV_WAND_LITE			7
+#define SV_WAND_LIGHT			7
 #define SV_WAND_SLEEP_MONSTER	8
 #define SV_WAND_SLOW_MONSTER	9
 #define SV_WAND_CONFUSE_MONSTER	10
@@ -1385,7 +1385,7 @@
 /* xxx (aimed) */
 #define SV_ROD_TELEPORT_AWAY	13
 #define SV_ROD_DISARMING		14
-#define SV_ROD_LITE				15
+#define SV_ROD_LIGHT				15
 #define SV_ROD_SLEEP_MONSTER	16
 #define SV_ROD_SLOW_MONSTER		17
 #define SV_ROD_DRAIN_LIFE		18
@@ -1616,7 +1616,7 @@
 #define RBE_EAT_GOLD	5
 #define RBE_EAT_ITEM	6
 #define RBE_EAT_FOOD	7
-#define RBE_EAT_LITE	8
+#define RBE_EAT_LIGHT	8
 #define RBE_ACID		9
 #define RBE_ELEC		10
 #define RBE_FIRE		11
@@ -1888,7 +1888,7 @@
 #define SM_RES_COLD		0x00080000
 #define SM_RES_POIS		0x00100000
 #define SM_RES_FEAR		0x00200000
-#define SM_RES_LITE		0x00400000
+#define SM_RES_LIGHT		0x00400000
 #define SM_RES_DARK		0x00800000
 #define SM_RES_BLIND	0x01000000
 #define SM_RES_CONFU	0x02000000
@@ -1957,10 +1957,10 @@
 #define TR2_SUST_DEX        0x00000008L /* Sustain DEX */
 #define TR2_SUST_CON        0x00000010L /* Sustain CON */
 #define TR2_SUST_CHR        0x00000020L /* Sustain CHR */
-#define TR2_LITE1           0x00000040L /* Provides light rad1 */
-#define TR2_LITE2           0x00000080L /* Provides light rad2 */
-#define TR2_LITE3           0x00000100L /* Provides light rad3 */
-#define TR2_LITE4           0x00000200L /* Provides light rad4 */
+#define TR2_LIGHT1           0x00000040L /* Provides light rad1 */
+#define TR2_LIGHT2           0x00000080L /* Provides light rad2 */
+#define TR2_LIGHT3           0x00000100L /* Provides light rad3 */
+#define TR2_LIGHT4           0x00000200L /* Provides light rad4 */
 #define TR2_NEEDS_FUEL      0x00000400L /* Light source needs fuel */
 #define TR2_XXX1            0x00000800L /* (reserved) */
 #define TR2_NO_DISENCHANT   0x00001000L /* Item cannot be disenchanted */
@@ -1986,7 +1986,7 @@
 
 #define TR3_SLOW_DIGEST     0x00000001L /* Slow digest */
 #define TR3_FEATHER         0x00000002L /* Feather Falling */
-#define TR3_XXX1            0x00000004L /* Perma-Lite */
+#define TR3_XXX1            0x00000004L /* Perma-Light */
 #define TR3_REGEN           0x00000008L /* Regeneration */
 #define TR3_TELEPATHY       0x00000010L /* Telepathy */
 #define TR3_SEE_INVIS       0x00000020L /* See Invis */
@@ -2200,7 +2200,7 @@
 #define RF3_XXX2			0x00000200	/* (?) */
 #define RF3_XXX3			0x00000400	/* Non-Vocal (?) */
 #define RF3_XXX4			0x00000800	/* Non-Living (?) */
-#define RF3_HURT_LITE		0x00001000	/* Hurt by lite */
+#define RF3_HURT_LIGHT		0x00001000	/* Hurt by light */
 #define RF3_HURT_ROCK		0x00002000	/* Hurt by rock remover */
 #define RF3_HURT_FIRE		0x00004000	/* Hurt badly by fire */
 #define RF3_HURT_COLD		0x00008000	/* Hurt badly by cold */
@@ -2238,7 +2238,7 @@
 #define RF4_BR_COLD         0x00000800 /* Breathe Cold */
 #define RF4_BR_POIS         0x00001000 /* Breathe Poison */
 #define RF4_BR_NETH         0x00002000 /* Breathe Nether */
-#define RF4_BR_LITE         0x00004000 /* Breathe Lite */
+#define RF4_BR_LIGHT        0x00004000 /* Breathe Light */
 #define RF4_BR_DARK         0x00008000 /* Breathe Dark */
 #define RF4_BR_CONF         0x00010000 /* Breathe Confusion */
 #define RF4_BR_SOUN         0x00020000 /* Breathe Sound */
@@ -2403,7 +2403,7 @@
 #define RF4_ATTACK_MASK \
 	(RF4_ARROW_1 | RF4_ARROW_2 | RF4_ARROW_3 | RF4_ARROW_4 | RF4_BOULDER | \
 	 RF4_BR_ACID | RF4_BR_ELEC | RF4_BR_FIRE | RF4_BR_COLD | RF4_BR_POIS | \
-	 RF4_BR_NETH | RF4_BR_LITE | RF4_BR_DARK | RF4_BR_CONF | RF4_BR_SOUN | \
+	 RF4_BR_NETH | RF4_BR_LIGHT | RF4_BR_DARK | RF4_BR_CONF | RF4_BR_SOUN | \
 	 RF4_BR_CHAO | RF4_BR_DISE | RF4_BR_NEXU | RF4_BR_TIME | RF4_BR_INER | \
 	 RF4_BR_GRAV | RF4_BR_SHAR | RF4_BR_PLAS | RF4_BR_WALL | RF4_BR_MANA)
 
@@ -2494,7 +2494,7 @@
 #define RF4_INNATE_MASK \
 	(RF4_SHRIEK | RF4_ARROW_1 | RF4_ARROW_2 | RF4_ARROW_3 | RF4_ARROW_4 | \
 	 RF4_BR_ACID | RF4_BR_ELEC | RF4_BR_FIRE | RF4_BR_COLD | RF4_BR_POIS | \
-	 RF4_BR_NETH | RF4_BR_LITE | RF4_BR_DARK | RF4_BR_CONF | RF4_BR_SOUN | \
+	 RF4_BR_NETH | RF4_BR_LIGHT | RF4_BR_DARK | RF4_BR_CONF | RF4_BR_SOUN | \
 	 RF4_BR_CHAO | RF4_BR_DISE | RF4_BR_NEXU | RF4_BR_TIME | RF4_BR_INER | \
 	 RF4_BR_GRAV | RF4_BR_SHAR | RF4_BR_PLAS | RF4_BR_WALL | RF4_BR_MANA | \
 	 RF4_BOULDER)
@@ -2574,7 +2574,7 @@
 /* xxx track_target */
 #define OPT_smart_learn				46
 /* xxx smart_cheat */
-#define OPT_view_reduce_lite		48
+#define OPT_view_reduce_light		48
 #define OPT_hidden_player			49
 #define OPT_avoid_abort				50
 #define OPT_avoid_other				51
@@ -2585,11 +2585,11 @@
 #define OPT_fresh_after				56
 /* xxx */
 #define OPT_compress_savefile			58
-#define OPT_hilite_player			59
-#define OPT_view_yellow_lite			60
-#define OPT_view_bright_lite			61
-#define OPT_view_granite_lite			62
-#define OPT_view_special_lite			63
+#define OPT_highlight_player			59
+#define OPT_view_yellow_light			60
+#define OPT_view_bright_light			61
+#define OPT_view_granite_light			62
+#define OPT_view_special_light			63
 #define OPT_easy_open 				64
 #define OPT_easy_alter 				65
 #define OPT_easy_floor 				66
@@ -2693,7 +2693,7 @@
 /* xxx track_target */
 #define smart_learn				op_ptr->opt[OPT_smart_learn]
 /* xxx smart_cheat */
-#define view_reduce_lite		op_ptr->opt[OPT_view_reduce_lite]
+#define view_reduce_light		op_ptr->opt[OPT_view_reduce_light]
 #define hidden_player			op_ptr->opt[OPT_hidden_player]
 #define avoid_abort				op_ptr->opt[OPT_avoid_abort]
 #define avoid_other				op_ptr->opt[OPT_avoid_other]
@@ -2704,11 +2704,11 @@
 #define fresh_after				op_ptr->opt[OPT_fresh_after]
 /* xxx */
 #define compress_savefile              op_ptr->opt[OPT_compress_savefile]
-#define hilite_player                  op_ptr->opt[OPT_hilite_player]
-#define view_yellow_lite               op_ptr->opt[OPT_view_yellow_lite]
-#define view_bright_lite               op_ptr->opt[OPT_view_bright_lite]
-#define view_granite_lite              op_ptr->opt[OPT_view_granite_lite]
-#define view_special_lite              op_ptr->opt[OPT_view_special_lite]
+#define highlight_player                  op_ptr->opt[OPT_highlight_player]
+#define view_yellow_light               op_ptr->opt[OPT_view_yellow_light]
+#define view_bright_light               op_ptr->opt[OPT_view_bright_light]
+#define view_granite_light              op_ptr->opt[OPT_view_granite_light]
+#define view_special_light              op_ptr->opt[OPT_view_special_light]
 #define easy_open                      op_ptr->opt[OPT_easy_open]
 #define easy_alter                     op_ptr->opt[OPT_easy_alter]
 #define easy_floor                     op_ptr->opt[OPT_easy_floor]
@@ -3115,7 +3115,7 @@ extern int PlayerUID;
 /*
  * Hack -- attempt to reduce various values
  */
-#ifdef ANGBAND_LITE
+#ifdef ANGBAND_LIGHT
 # undef MACRO_MAX
 # define MACRO_MAX	128
 # undef QUARK_MAX

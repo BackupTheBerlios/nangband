@@ -78,7 +78,7 @@ void delete_monster_idx(int i)
 
 
 	/* Visual update */
-	lite_spot(y, x);
+	light_spot(y, x);
 }
 
 
@@ -1018,7 +1018,7 @@ void update_mon(int m_idx, bool full)
 			m_ptr->ml = TRUE;
 
 			/* Draw the monster */
-			lite_spot(fy, fx);
+			light_spot(fy, fx);
 
 			/* Update health bar as needed */
 			if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
@@ -1041,7 +1041,7 @@ void update_mon(int m_idx, bool full)
 			m_ptr->ml = FALSE;
 
 			/* Erase the monster */
-			lite_spot(fy, fx);
+			light_spot(fy, fx);
 
 			/* Update health bar as needed */
 			if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
@@ -1265,8 +1265,8 @@ void monster_swap(int y1, int x1, int y2, int x2)
 
 
 	/* Redraw */
-	lite_spot(y1, x1);
-	lite_spot(y2, x2);
+	light_spot(y1, x1);
+	light_spot(y2, x2);
 }
 
 

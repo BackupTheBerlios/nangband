@@ -196,7 +196,7 @@ void do_cmd_message_one(void)
  * displayed using "infinite" length, with a special sub-command to
  * "slide" the virtual display to the left or right.
  *
- * Attempt to only hilite the matching portions of the string.
+ * Attempt to only highlight the matching portions of the string.
  */
 void do_cmd_messages(void)
 {
@@ -249,7 +249,7 @@ void do_cmd_messages(void)
 			/* Dump the messages, bottom to top */
 			Term_putstr(0, hgt - 3 - j, -1, attr, msg);
 
-			/* Hilite "shower" */
+			/* Highlight "shower" */
 			if (shower[0])
 			{
 				cptr str = msg;
@@ -510,7 +510,7 @@ static void do_cmd_options_aux(int page, cptr info)
 			c_prt(a, buf, i + 2, 0);
 		}
 
-		/* Hilite current option */
+		/* Highlight current option */
 		move_cursor(k + 2, 50);
 
 		/* Get a key */

@@ -45,7 +45,7 @@ typedef int errr;
 #define RBE_EAT_GOLD	5
 #define RBE_EAT_ITEM	6
 #define RBE_EAT_FOOD	7
-#define RBE_EAT_LITE	8
+#define RBE_EAT_LIGHT	8
 #define RBE_ACID		9
 #define RBE_ELEC		10
 #define RBE_FIRE		11
@@ -95,7 +95,7 @@ typedef int errr;
 #define SM_RES_COLD		0x00080000
 #define SM_RES_POIS		0x00100000
 #define SM_RES_FEAR		0x00200000
-#define SM_RES_LITE		0x00400000
+#define SM_RES_LIGHT		0x00400000
 #define SM_RES_DARK		0x00800000
 #define SM_RES_BLIND	0x01000000
 #define SM_RES_CONFU	0x02000000
@@ -205,7 +205,7 @@ typedef int errr;
 #define RF3_XXX2			0x00000200	/* (?) */
 #define RF3_XXX3			0x00000400	/* Non-Vocal (?) */
 #define RF3_XXX4			0x00000800	/* Non-Living (?) */
-#define RF3_HURT_LITE		0x00001000	/* Hurt by lite */
+#define RF3_HURT_LIGHT		0x00001000	/* Hurt by light */
 #define RF3_HURT_ROCK		0x00002000	/* Hurt by rock remover */
 #define RF3_HURT_FIRE		0x00004000	/* Hurt badly by fire */
 #define RF3_HURT_COLD		0x00008000	/* Hurt badly by cold */
@@ -243,7 +243,7 @@ typedef int errr;
 #define RF4_BR_COLD			0x00000800	/* Breathe Cold */
 #define RF4_BR_POIS			0x00001000	/* Breathe Poison */
 #define RF4_BR_NETH			0x00002000	/* Breathe Nether */
-#define RF4_BR_LITE			0x00004000	/* Breathe Lite */
+#define RF4_BR_LIGHT			0x00004000	/* Breathe Light */
 #define RF4_BR_DARK			0x00008000	/* Breathe Dark */
 #define RF4_BR_CONF			0x00010000	/* Breathe Confusion */
 #define RF4_BR_SOUN			0x00020000	/* Breathe Sound */

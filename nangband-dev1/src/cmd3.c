@@ -228,7 +228,7 @@ void do_cmd_wield(void)
 	{
 		act = "You are shooting with";
 	}
-	else if (slot == INVEN_LITE)
+	else if (slot == INVEN_LIGHT)
 	{
 		act = "Your light source is";
 	}
@@ -664,8 +664,8 @@ static bool item_tester_refill_lantern(const object_type *o_ptr)
 	if (o_ptr->tval == TV_FLASK) return (TRUE);
 
 	/* Non-empty lanterns are okay */
-	if ((o_ptr->tval == TV_LITE) &&
-	    (o_ptr->sval == SV_LITE_LANTERN) &&
+	if ((o_ptr->tval == TV_LIGHT) &&
+	    (o_ptr->sval == SV_LIGHT_LANTERN) &&
 	    (o_ptr->pval > 0))
 	{
 		return (TRUE);
@@ -714,7 +714,7 @@ static void do_cmd_refill_lamp(void)
 	p_ptr->energy_use = 50;
 
 	/* Get the lantern */
-	j_ptr = &inventory[INVEN_LITE];
+	j_ptr = &inventory[INVEN_LIGHT];
 
 	/* Refuel */
 	j_ptr->pval += o_ptr->pval;
@@ -730,7 +730,7 @@ static void do_cmd_refill_lamp(void)
 	}
 
 	/* Use fuel from a lantern */
-	if (o_ptr->sval == SV_LITE_LANTERN)
+	if (o_ptr->sval == SV_LIGHT_LANTERN)
 	{
 		/* No more fuel */
 		o_ptr->pval = 0;
@@ -773,8 +773,8 @@ static void do_cmd_refill_lamp(void)
 static bool item_tester_refill_torch(const object_type *o_ptr)
 {
 	/* Torches are okay */
-	if ((o_ptr->tval == TV_LITE) &&
-	    (o_ptr->sval == SV_LITE_TORCH)) return (TRUE);
+	if ((o_ptr->tval == TV_LIGHT) &&
+	    (o_ptr->sval == SV_LIGHT_TORCH)) return (TRUE);
 
 	/* Assume not okay */
 	return (FALSE);
@@ -819,7 +819,7 @@ static void do_cmd_refill_torch(void)
 	p_ptr->energy_use = 50;
 
 	/* Get the primary torch */
-	j_ptr = &inventory[INVEN_LITE];
+	j_ptr = &inventory[INVEN_LIGHT];
 
 	/* Refuel */
 	j_ptr->pval += o_ptr->pval + 5;
@@ -874,22 +874,22 @@ void do_cmd_refill(void)
 	object_type *o_ptr;
 
 	/* Get the light */
-	o_ptr = &inventory[INVEN_LITE];
+	o_ptr = &inventory[INVEN_LIGHT];
 
 	/* It is nothing */
-	if (o_ptr->tval != TV_LITE)
+	if (o_ptr->tval != TV_LIGHT)
 	{
 		msg_print("You are not wielding a light.");
 	}
 
 	/* It's a lamp */
-	else if (o_ptr->sval == SV_LITE_LANTERN)
+	else if (o_ptr->sval == SV_LIGHT_LANTERN)
 	{
 		do_cmd_refill_lamp();
 	}
 
 	/* It's a torch */
-	else if (o_ptr->sval == SV_LITE_TORCH)
+	else if (o_ptr->sval == SV_LIGHT_TORCH)
 	{
 		do_cmd_refill_torch();
 	}

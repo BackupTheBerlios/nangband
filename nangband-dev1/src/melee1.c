@@ -204,7 +204,7 @@ bool make_attack_normal(int m_idx)
 			case RBE_EAT_GOLD:  power =  5; break;
 			case RBE_EAT_ITEM:  power =  5; break;
 			case RBE_EAT_FOOD:  power =  5; break;
-			case RBE_EAT_LITE:  power =  5; break;
+			case RBE_EAT_LIGHT:  power =  5; break;
 			case RBE_ACID:      power =  0; break;
 			case RBE_ELEC:      power = 10; break;
 			case RBE_FIRE:      power = 10; break;
@@ -727,13 +727,13 @@ bool make_attack_normal(int m_idx)
 					break;
 				}
 
-				case RBE_EAT_LITE:
+				case RBE_EAT_LIGHT:
 				{
 					/* Take damage */
 					take_hit(damage, ddesc);
 
-					/* Get the lite */
-					o_ptr = &inventory[INVEN_LITE];
+					/* Get the light */
+					o_ptr = &inventory[INVEN_LIGHT];
 
 					/* Drain fuel */
 					if ((o_ptr->pval > 0) && (!artifact_p(o_ptr)))

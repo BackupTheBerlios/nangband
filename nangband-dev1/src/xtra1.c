@@ -344,7 +344,7 @@ static void prt_hp(void)
 		r_ptr->x_attr = color;
 
 		/* Show the change */
-		if (character_dungeon) lite_spot(p_ptr->px, p_ptr->py);
+		if (character_dungeon) light_spot(p_ptr->px, p_ptr->py);
 	}
 
 	return;
@@ -1666,7 +1666,7 @@ static void calc_hitpoints(void)
 
 
 /*
- * Extract and set the current "lite radius"
+ * Extract and set the current "light radius"
  */
 static void calc_torch(void)
 {
@@ -1674,10 +1674,10 @@ static void calc_torch(void)
 	object_type *o_ptr;
 	u32b f1, f2, f3;
 
-	s16b old_lite = p_ptr->cur_lite;
+	s16b old_light = p_ptr->cur_light;
 
 	/* Assume no light */
-	p_ptr->cur_lite = 0;
+	p_ptr->cur_light = 0;
 
 	/* Loop through all wielded items */
 	for (i = INVEN_WIELD; i < INVEN_TOTAL; i++)
@@ -1697,24 +1697,24 @@ static void calc_torch(void)
 		} 
 
 		/* Does the item emit light? */
-		if (f2 & (TR2_LITE1)) p_ptr->cur_lite += 1;
-		if (f2 & (TR2_LITE2)) p_ptr->cur_lite += 2;
-		if (f2 & (TR2_LITE3)) p_ptr->cur_lite += 3;
-		if (f2 & (TR2_LITE4)) p_ptr->cur_lite += 4;
+		if (f2 & (TR2_LIGHT1)) p_ptr->cur_light += 1;
+		if (f2 & (TR2_LIGHT2)) p_ptr->cur_light += 2;
+		if (f2 & (TR2_LIGHT3)) p_ptr->cur_light += 3;
+		if (f2 & (TR2_LIGHT4)) p_ptr->cur_light += 4;
 	}
 
 	/* Make sure we're not exessive */
-	if (p_ptr->cur_lite > 5) p_ptr->cur_lite = 5;
+	if (p_ptr->cur_light > 5) p_ptr->cur_light = 5;
 
-	/* Reduce lite when running if requested */
-	if (p_ptr->running && view_reduce_lite)
+	/* Reduce light when running if requested */
+	if (p_ptr->running && view_reduce_light)
 	{
-		/* Reduce the lite radius if needed */
-		if (p_ptr->cur_lite > 1) p_ptr->cur_lite = 1;
+		/* Reduce the light radius if needed */
+		if (p_ptr->cur_light > 1) p_ptr->cur_light = 1;
 	}
 
-	/* Notice changes in the "lite radius" */
-	if (old_lite != p_ptr->cur_lite)
+	/* Notice changes in the "light radius" */
+	if (old_light != p_ptr->cur_light)
 	{
 		/* Update the visuals */
 		p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
@@ -1862,7 +1862,7 @@ static void calc_bonuses(void)
 	p_ptr->ffall = FALSE;
 	p_ptr->hold_life = FALSE;
 	p_ptr->telepathy = FALSE;
-	p_ptr->lite = FALSE;
+	p_ptr->light = FALSE;
 	p_ptr->sustain_str = FALSE;
 	p_ptr->sustain_int = FALSE;
 	p_ptr->sustain_wis = FALSE;

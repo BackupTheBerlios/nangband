@@ -494,7 +494,7 @@ void search(void)
 	chance = p_ptr->skill_srh;
 
 	/* Penalize various conditions */
-	if (p_ptr->blind || no_lite()) chance = chance / 10;
+	if (p_ptr->blind || no_light()) chance = chance / 10;
 	if (p_ptr->confused || p_ptr->image) chance = chance / 10;
 
 	/* Search the nearby grids, which are always in bounds */
@@ -1477,7 +1477,7 @@ void move_player(int dir, int jumping)
 			{
 				message(MSG_HITWALL, 0, "You feel a pile of rubble blocking your way.");
 				cave_info[y][x] |= (CAVE_MARK);
-				lite_spot(y, x);
+				light_spot(y, x);
 			}
 
 			/* Closed door */
@@ -1485,7 +1485,7 @@ void move_player(int dir, int jumping)
 			{
 				message(MSG_HITWALL, 0, "You feel a door blocking your way.");
 				cave_info[y][x] |= (CAVE_MARK);
-				lite_spot(y, x);
+				light_spot(y, x);
 			}
 
 			/* Wall (or secret door) */
@@ -1493,7 +1493,7 @@ void move_player(int dir, int jumping)
 			{
 				message(MSG_HITWALL, 0, "You feel a wall blocking your way.");
 				cave_info[y][x] |= (CAVE_MARK);
-				lite_spot(y, x);
+				light_spot(y, x);
 			}
 		}
 

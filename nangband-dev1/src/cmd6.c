@@ -250,7 +250,7 @@ void do_cmd_read_scroll(void)
 		msg_print("You can't see anything.");
 		return;
 	}
-	if (no_lite())
+	if (no_light())
 	{
 		msg_print("You have no light to read by.");
 		return;

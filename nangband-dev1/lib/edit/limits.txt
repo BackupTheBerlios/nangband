@@ -21,7 +21,7 @@ M:F:64
 M:K:539
 
 # Maximum number of artifacts
-M:A:138
+M:A:143
 
 # Maximum number of ego-item types
 M:E:128

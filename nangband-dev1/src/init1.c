@@ -96,7 +96,7 @@ static cptr r_info_blow_effect[] =
 	"EAT_GOLD",
 	"EAT_ITEM",
 	"EAT_FOOD",
-	"EAT_LITE",
+	"EAT_LIGHT",
 	"ACID",
 	"ELEC",
 	"FIRE",
@@ -217,7 +217,7 @@ static cptr r_info_flags3[] =
 	"XXX2X3",
 	"XXX3X3",
 	"XXX4X3",
-	"HURT_LITE",
+	"HURT_LIGHT",
 	"HURT_ROCK",
 	"HURT_FIRE",
 	"HURT_COLD",
@@ -258,7 +258,7 @@ static cptr r_info_flags4[] =
 	"BR_COLD",
 	"BR_POIS",
 	"BR_NETH",
-	"BR_LITE",
+	"BR_LIGHT",
 	"BR_DARK",
 	"BR_CONF",
 	"BR_SOUN",
@@ -406,10 +406,10 @@ static cptr k_info_flags2[] =
 	"SUST_DEX",
 	"SUST_CON",
 	"SUST_CHR",
-	"LITE1",
-	"LITE2",
-	"LITE3",
-	"LITE4",
+	"LIGHT1",
+	"LIGHT2",
+	"LIGHT3",
+	"LIGHT4",
 	"NEEDS_FUEL",
 	"XXX1",
 	"NO_DISENCHANT",
@@ -1232,7 +1232,7 @@ static errr grab_one_resist(byte *resists, cptr what)
 		return (0);
 	}
 
-	if (prefix(what, "RES_LITE") || prefix(what, "RES_DOOM"))
+	if (prefix(what, "RES_LIGHT") || prefix(what, "RES_DOOM"))
 	{
 		s = what + 8;
 		resists[RES_DOOM] = atoi(s);

@@ -157,7 +157,7 @@ void delete_object_idx(int o_idx)
 		x = j_ptr->ix;
 
 		/* Visual update */
-		lite_spot(y, x);
+		light_spot(y, x);
 	}
 
 	/* Wipe the object */
@@ -193,7 +193,7 @@ void delete_object(int y, int x)
 	cave_o_idx[y][x] = 0;
 
 	/* Visual update */
-	lite_spot(y, x);
+	light_spot(y, x);
 }
 
 
@@ -920,7 +920,7 @@ static s32b object_value_real(const object_type *o_ptr)
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR:
 		case TV_DRAG_ARMOR:
-		case TV_LITE:
+		case TV_LIGHT:
 		case TV_AMULET:
 		case TV_RING:
 		{
@@ -1206,10 +1206,10 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 			/* Fall through */
 		}
 
-		/* Rings, Amulets, Lites */
+		/* Rings, Amulets, Lights */
 		case TV_RING:
 		case TV_AMULET:
-		case TV_LITE:
+		case TV_LIGHT:
 		{
 			/* Require full knowledge of both items */
 			if (!object_known_p(o_ptr) || !object_known_p(j_ptr)) return (0);
@@ -1830,7 +1830,7 @@ static void charge_wand(object_type *o_ptr)
 		case SV_WAND_DISARMING:			o_ptr->pval = randint(5)  + 4; break;
 		case SV_WAND_TRAP_DOOR_DEST:	o_ptr->pval = randint(8)  + 6; break;
 		case SV_WAND_STONE_TO_MUD:		o_ptr->pval = randint(4)  + 3; break;
-		case SV_WAND_LITE:				o_ptr->pval = randint(10) + 6; break;
+		case SV_WAND_LIGHT:				o_ptr->pval = randint(10) + 6; break;
 		case SV_WAND_SLEEP_MONSTER:		o_ptr->pval = randint(15) + 8; break;
 		case SV_WAND_SLOW_MONSTER:		o_ptr->pval = randint(10) + 6; break;
 		case SV_WAND_CONFUSE_MONSTER:	o_ptr->pval = randint(12) + 6; break;
@@ -1871,8 +1871,8 @@ static void charge_staff(object_type *o_ptr)
 		case SV_STAFF_TELEPORTATION:	o_ptr->pval = randint(4)  + 5; break;
 		case SV_STAFF_IDENTIFY:			o_ptr->pval = randint(15) + 5; break;
 		case SV_STAFF_REMOVE_CURSE:		o_ptr->pval = randint(3)  + 4; break;
-		case SV_STAFF_STARLITE:			o_ptr->pval = randint(5)  + 6; break;
-		case SV_STAFF_LITE:				o_ptr->pval = randint(20) + 8; break;
+		case SV_STAFF_STARLIGHT:			o_ptr->pval = randint(5)  + 6; break;
+		case SV_STAFF_LIGHT:				o_ptr->pval = randint(20) + 8; break;
 		case SV_STAFF_MAPPING:			o_ptr->pval = randint(5)  + 5; break;
 		case SV_STAFF_DETECT_GOLD:		o_ptr->pval = randint(20) + 8; break;
 		case SV_STAFF_DETECT_ITEM:		o_ptr->pval = randint(15) + 6; break;
@@ -2478,16 +2478,16 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power)
 	/* Apply magic (good or bad) according to type */
 	switch (o_ptr->tval)
 	{
-		case TV_LITE:
+		case TV_LIGHT:
 		{
 			/* Hack -- Torches -- random fuel */
-			if (o_ptr->sval == SV_LITE_TORCH)
+			if (o_ptr->sval == SV_LIGHT_TORCH)
 			{
 				if (o_ptr->pval > 0) o_ptr->pval = randint(o_ptr->pval);
 			}
 
 			/* Hack -- Lanterns -- random fuel */
-			else if (o_ptr->sval == SV_LITE_LANTERN)
+			else if (o_ptr->sval == SV_LIGHT_LANTERN)
 			{
 				if (o_ptr->pval > 0) o_ptr->pval = randint(o_ptr->pval);
 			}
@@ -2534,7 +2534,7 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power)
  *
  * This includes not only rolling for random bonuses, but also putting the
  * finishing touches on ego-items and artifacts, giving charges to wands and
- * staffs, giving fuel to lites, and placing traps on chests.
+ * staffs, giving fuel to lights, and placing traps on chests.
  *
  * In particular, note that "Instant Artifacts", if "created" by an external
  * routine, must pass through this function to complete the actual creation.
@@ -3127,7 +3127,7 @@ s16b floor_carry(int y, int x, object_type *j_ptr)
 		note_spot(y, x);
 
 		/* Redraw */
-		lite_spot(y, x);
+		light_spot(y, x);
 	}
 
 	/* Result */
@@ -3962,8 +3962,8 @@ s16b inven_carry(object_type *o_ptr)
 				if (o_ptr->pval < j_ptr->pval) continue;
 			}
 
-			/* Lites sort by decreasing fuel */
-			if (o_ptr->tval == TV_LITE)
+			/* Lights sort by decreasing fuel */
+			if (o_ptr->tval == TV_LIGHT)
 			{
 				if (o_ptr->pval > j_ptr->pval) break;
 				if (o_ptr->pval < j_ptr->pval) continue;
@@ -4088,7 +4088,7 @@ s16b inven_takeoff(int item, int amt)
 	}
 
 	/* Took off light */
-	else if (item == INVEN_LITE)
+	else if (item == INVEN_LIGHT)
 	{
 		act = "You were holding";
 	}
@@ -4329,8 +4329,8 @@ void reorder_pack(void)
 				if (o_ptr->pval < j_ptr->pval) continue;
 			}
 
-			/* Lites sort by decreasing fuel */
-			if (o_ptr->tval == TV_LITE)
+			/* Lights sort by decreasing fuel */
+			if (o_ptr->tval == TV_LIGHT)
 			{
 				if (o_ptr->pval > j_ptr->pval) break;
 				if (o_ptr->pval < j_ptr->pval) continue;

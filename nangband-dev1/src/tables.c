@@ -1452,7 +1452,7 @@ cptr option_text[OPT_MAX] =
 	NULL,						/* xxx track_target */
 	"smart_learn",				/* OPT_smart_learn */
 	NULL,						/* xxx smart_cheat */
-	"view_reduce_lite",			/* OPT_view_reduce_lite */
+	"view_reduce_light",			/* OPT_view_reduce_light */
 	"hidden_player",			/* OPT_hidden_player */
 	"avoid_abort",				/* OPT_avoid_abort */
 	"avoid_other",				/* OPT_avoid_other */
@@ -1463,11 +1463,11 @@ cptr option_text[OPT_MAX] =
 	"fresh_after",				/* OPT_fresh_after */
 	NULL,						/* xxx fresh_message */
 	"compress_savefile",		/* OPT_compress_savefile */
-	"hilite_player",			/* OPT_hilite_player */
-	"view_yellow_lite",			/* OPT_view_yellow_lite */
-	"view_bright_lite",			/* OPT_view_bright_lite */
-	"view_granite_lite",		/* OPT_view_granite_lite */
-	"view_special_lite",		/* OPT_view_special_lite */
+	"highlight_player",			/* OPT_highlight_player */
+	"view_yellow_light",			/* OPT_view_yellow_light */
+	"view_bright_light",			/* OPT_view_bright_light */
+	"view_granite_light",		/* OPT_view_granite_light */
+	"view_special_light",		/* OPT_view_special_light */
 	"easy_open",				/* OPT_easy_open */
 	"easy_alter",				/* OPT_easy_alter */
 	"easy_floor",				/* OPT_easy_floor */
@@ -1716,7 +1716,7 @@ cptr option_desc[OPT_MAX] =
 	NULL,										/* xxx track_target */
 	"Monsters learn from their mistakes",		/* OPT_smart_learn */
 	NULL,										/* xxx smart_cheat */
-	"Reduce lite-radius when running",			/* OPT_view_reduce_lite */
+	"Reduce light-radius when running",			/* OPT_view_reduce_light */
 	"Hide player symbol when running",			/* OPT_hidden_player */
 	"Avoid checking for user abort",			/* OPT_avoid_abort */
 	"Avoid processing special colors",			/* OPT_avoid_other */
@@ -1727,11 +1727,11 @@ cptr option_desc[OPT_MAX] =
 	"Flush output after various things",		/* OPT_fresh_after */
 	NULL,										/* xxx */
 	"Compress messages in savefiles",			/* OPT_compress_savefile */
-	"Hilite the player with the cursor",		/* OPT_hilite_player */
-	"Use special colors for torch lite",		/* OPT_view_yellow_lite */
-	"Use special colors for field of view",		/* OPT_view_bright_lite */
-	"Use special colors for wall grids",		/* OPT_view_granite_lite */
-	"Use special colors for floor grids",		/* OPT_view_special_lite */
+	"Highlight the player with the cursor",		/* OPT_highlight_player */
+	"Use special colors for torch light",		/* OPT_view_yellow_light */
+	"Use special colors for field of view",		/* OPT_view_bright_light */
+	"Use special colors for wall grids",		/* OPT_view_granite_light */
+	"Use special colors for floor grids",		/* OPT_view_special_light */
 	"Open/Disarm/Close without direction",		/* OPT_easy_open */
 	"Open/Disarm doors/traps on movement",		/* OPT_easy_alter */
 	"Display floor stacks in a list",   		/* OPT_easy_floor */
@@ -1980,7 +1980,7 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* xxx track_target */
 	FALSE,		/* OPT_smart_learn */
 	FALSE,		/* OPT_smart_cheat */
-	FALSE,		/* OPT_view_reduce_lite */
+	FALSE,		/* OPT_view_reduce_light */
 	FALSE,		/* OPT_hidden_player */
 	FALSE,		/* OPT_avoid_abort */
 	FALSE,		/* OPT_avoid_other */
@@ -1991,11 +1991,11 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* OPT_fresh_after */
 	FALSE,		/* xxx */
 	TRUE,		/* OPT_compress_savefile */
-	FALSE,		/* OPT_hilite_player */
-	FALSE,		/* OPT_view_yellow_lite */
-	FALSE,		/* OPT_view_bright_lite */
-	FALSE,		/* OPT_view_granite_lite */
-	FALSE,		/* OPT_view_special_lite */
+	FALSE,		/* OPT_highlight_player */
+	FALSE,		/* OPT_view_yellow_light */
+	FALSE,		/* OPT_view_bright_light */
+	FALSE,		/* OPT_view_granite_light */
+	FALSE,		/* OPT_view_special_light */
 	TRUE,		/* OPT_easy_open */
 	TRUE,		/* OPT_easy_alter */
 	TRUE,		/* OPT_easy_floor */
@@ -2275,7 +2275,7 @@ const byte option_page[OPT_PAGE_MAX][OPT_PAGE_PER] =
 	/*** Efficiency ***/
 
 	{
-		OPT_view_reduce_lite,
+		OPT_view_reduce_light,
 		OPT_hidden_player,
 		OPT_avoid_abort,
 		OPT_avoid_other,
@@ -2306,11 +2306,11 @@ const byte option_page[OPT_PAGE_MAX][OPT_PAGE_PER] =
 		OPT_show_choices,
 		OPT_show_details,
 		OPT_show_flavors,
-		OPT_hilite_player,
-		OPT_view_yellow_lite,
-		OPT_view_bright_lite,
-		OPT_view_granite_lite,
-		OPT_view_special_lite,
+		OPT_highlight_player,
+		OPT_view_yellow_light,
+		OPT_view_bright_light,
+		OPT_view_granite_light,
+		OPT_view_special_light,
 		OPT_view_player_colour,
 		OPT_view_equippy_chars,
  		OPT_center_player,

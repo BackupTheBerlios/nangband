@@ -355,7 +355,7 @@ static bool do_cmd_open_chest(int y, int x, s16b o_idx)
 		i = p_ptr->skill_dis;
 
 		/* Penalize some conditions */
-		if (p_ptr->blind || no_lite()) i = i / 10;
+		if (p_ptr->blind || no_light()) i = i / 10;
 		if (p_ptr->confused || p_ptr->image) i = i / 10;
 
 		/* Extract the difficulty */
@@ -417,7 +417,7 @@ static bool do_cmd_disarm_chest(int y, int x, s16b o_idx)
 	i = p_ptr->skill_dis;
 
 	/* Penalize some conditions */
-	if (p_ptr->blind || no_lite()) i = i / 10;
+	if (p_ptr->blind || no_light()) i = i / 10;
 	if (p_ptr->confused || p_ptr->image) i = i / 10;
 
 	/* Extract the difficulty */
@@ -671,7 +671,7 @@ static bool do_cmd_open_aux(int y, int x)
 		i = p_ptr->skill_dis;
 
 		/* Penalize some conditions */
-		if (p_ptr->blind || no_lite()) i = i / 10;
+		if (p_ptr->blind || no_light()) i = i / 10;
 		if (p_ptr->confused || p_ptr->image) i = i / 10;
 
 		/* Extract the lock power */
@@ -1378,7 +1378,7 @@ static bool do_cmd_disarm_aux(int y, int x)
 	i = p_ptr->skill_dis;
 
 	/* Penalize some conditions */
-	if (p_ptr->blind || no_lite()) i = i / 10;
+	if (p_ptr->blind || no_light()) i = i / 10;
 	if (p_ptr->confused || p_ptr->image) i = i / 10;
 
 	/* XXX XXX XXX Variable power? */
@@ -2328,7 +2328,7 @@ static int breakage_chance(const object_type *o_ptr)
 		}
 
 		/* Often break */
-		case TV_LITE:
+		case TV_LIGHT:
 		case TV_SCROLL:
 		case TV_SKELETON:
 		{
@@ -2550,7 +2550,7 @@ void do_cmd_fire(void)
 			move_cursor_relative(y, x);
 			if (fresh_before) Term_fresh();
 			Term_xtra(TERM_XTRA_DELAY, msec);
-			lite_spot(y, x);
+			light_spot(y, x);
 			if (fresh_before) Term_fresh();
 		}
 
@@ -2828,7 +2828,7 @@ void do_cmd_throw(void)
 			move_cursor_relative(y, x);
 			if (fresh_before) Term_fresh();
 			Term_xtra(TERM_XTRA_DELAY, msec);
-			lite_spot(y, x);
+			light_spot(y, x);
 			if (fresh_before) Term_fresh();
 		}
 

@@ -222,7 +222,7 @@ static void describe_monster_spells(int r_idx, const monster_lore *l_ptr)
 	if (l_ptr->flags4 & RF4_BR_COLD)		vp[vn++] = "frost";
 	if (l_ptr->flags4 & RF4_BR_POIS)		vp[vn++] = "poison";
 	if (l_ptr->flags4 & RF4_BR_NETH)		vp[vn++] = "nether";
-	if (l_ptr->flags4 & RF4_BR_LITE)		vp[vn++] = "light";
+	if (l_ptr->flags4 & RF4_BR_LIGHT)		vp[vn++] = "light";
 	if (l_ptr->flags4 & RF4_BR_DARK)		vp[vn++] = "darkness";
 	if (l_ptr->flags4 & RF4_BR_CONF)		vp[vn++] = "confusion";
 	if (l_ptr->flags4 & RF4_BR_SOUN)		vp[vn++] = "sound";
@@ -585,7 +585,7 @@ static void describe_monster_attack(int r_idx, const monster_lore *l_ptr)
 			case RBE_EAT_GOLD:  q = "steal gold"; break;
 			case RBE_EAT_ITEM:  q = "steal items"; break;
 			case RBE_EAT_FOOD:  q = "eat your food"; break;
-			case RBE_EAT_LITE:  q = "absorb light"; break;
+			case RBE_EAT_LIGHT:  q = "absorb light"; break;
 			case RBE_ACID:      q = "shoot acid"; break;
 			case RBE_ELEC:      q = "electrify"; break;
 			case RBE_FIRE:      q = "burn"; break;
@@ -753,7 +753,7 @@ static void describe_monster_abilities(int r_idx, const monster_lore *l_ptr)
 	/* Collect susceptibilities */
 	vn = 0;
 	if (l_ptr->flags3 & RF3_HURT_ROCK) vp[vn++] = "rock remover";
-	if (l_ptr->flags3 & RF3_HURT_LITE) vp[vn++] = "bright light";
+	if (l_ptr->flags3 & RF3_HURT_LIGHT) vp[vn++] = "bright light";
 	if (l_ptr->flags3 & RF3_HURT_FIRE) vp[vn++] = "fire";
 	if (l_ptr->flags3 & RF3_HURT_COLD) vp[vn++] = "cold";
 

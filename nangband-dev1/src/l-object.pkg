@@ -110,7 +110,7 @@ typedef int sint;
 #define TV_SOFT_ARMOR   36	/* Soft Armor */
 #define TV_HARD_ARMOR   37	/* Hard Armor */
 #define TV_DRAG_ARMOR	38	/* Dragon Scale Mail */
-#define TV_LITE         39	/* Lites (including Specials) */
+#define TV_LIGHT         39	/* Lights (including Specials) */
 #define TV_AMULET       40	/* Amulets (including Specials) */
 #define TV_RING         45	/* Rings (including Specials) */
 #define TV_STAFF        55
@@ -279,13 +279,13 @@ typedef int sint;
 #define SV_DRAGON_BALANCE		20
 #define SV_DRAGON_POWER			30
 
-/* The sval codes for TV_LITE */
-#define SV_LITE_TORCH		0
-#define SV_LITE_LANTERN		1
-#define SV_LITE_GALADRIEL	4
-#define SV_LITE_ELENDIL		5
-#define SV_LITE_THRAIN		6
-#define SV_LITE_PALANTIR	7
+/* The sval codes for TV_LIGHT */
+#define SV_LIGHT_TORCH		0
+#define SV_LIGHT_LANTERN		1
+#define SV_LIGHT_GALADRIEL	4
+#define SV_LIGHT_ELENDIL		5
+#define SV_LIGHT_THRAIN		6
+#define SV_LIGHT_PALANTIR	7
 
 /* The "sval" codes for TV_AMULET */
 #define SV_AMULET_DOOM			0
@@ -361,8 +361,8 @@ typedef int sint;
 #define SV_STAFF_TELEPORTATION	4
 #define SV_STAFF_IDENTIFY		5
 #define SV_STAFF_REMOVE_CURSE	6
-#define SV_STAFF_STARLITE		7
-#define SV_STAFF_LITE			8
+#define SV_STAFF_STARLIGHT		7
+#define SV_STAFF_LIGHT			8
 #define SV_STAFF_MAPPING		9
 #define SV_STAFF_DETECT_GOLD	10
 #define SV_STAFF_DETECT_ITEM	11
@@ -394,7 +394,7 @@ typedef int sint;
 #define SV_WAND_DISARMING		4
 #define SV_WAND_TRAP_DOOR_DEST	5
 #define SV_WAND_STONE_TO_MUD	6
-#define SV_WAND_LITE			7
+#define SV_WAND_LIGHT			7
 #define SV_WAND_SLEEP_MONSTER	8
 #define SV_WAND_SLOW_MONSTER	9
 #define SV_WAND_CONFUSE_MONSTER	10
@@ -433,7 +433,7 @@ typedef int sint;
 /* xxx (aimed) */
 #define SV_ROD_TELEPORT_AWAY	13
 #define SV_ROD_DISARMING		14
-#define SV_ROD_LITE				15
+#define SV_ROD_LIGHT				15
 #define SV_ROD_SLEEP_MONSTER	16
 #define SV_ROD_SLOW_MONSTER		17
 #define SV_ROD_DRAIN_LIFE		18

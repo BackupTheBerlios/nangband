@@ -999,7 +999,7 @@ static s32b artifact_power(int a_idx)
 				p += (k_ptr->weight - a_ptr->weight) / 30;
 			break;
 		}
-		case TV_LITE:
+		case TV_LIGHT:
 		{
 			p += 10;
 			break;
@@ -1076,10 +1076,10 @@ static s32b artifact_power(int a_idx)
 	if (a_ptr->flags2 & TR2_NO_DISENCHANT) p += 12;
 	if (a_ptr->flags3 & TR3_FREE_ACT) p += 8;
 	if (a_ptr->flags3 & TR3_HOLD_LIFE) p += 10;
-	if (a_ptr->flags2 & TR2_LITE1) p += 2;
-	if (a_ptr->flags2 & TR2_LITE2) p += 5;
-	if (a_ptr->flags2 & TR2_LITE3) p += 10;
-	if (a_ptr->flags2 & TR2_LITE4) p += 14;
+	if (a_ptr->flags2 & TR2_LIGHT1) p += 2;
+	if (a_ptr->flags2 & TR2_LIGHT2) p += 5;
+	if (a_ptr->flags2 & TR2_LIGHT3) p += 10;
+	if (a_ptr->flags2 & TR2_LIGHT4) p += 14;
 
 	if (a_ptr->flags3 & TR3_FEATHER) p += 2;
 	if (a_ptr->flags3 & TR3_SEE_INVIS) p += 8;
@@ -1814,7 +1814,7 @@ static void add_ability(artifact_type *a_ptr)
 					a_ptr->flags2 |= TR2_NO_DISENCHANT;
 				break;
 			case 37: a_ptr->flags3 |= TR3_FEATHER; break;
-			case 38: a_ptr->flags2 |= TR2_LITE1; break;
+			case 38: a_ptr->flags2 |= TR2_LIGHT1; break;
 			case 39: a_ptr->flags3 |= TR3_SEE_INVIS; break;
 			case 40:
 				if (rand_int(3) == 0)

@@ -1596,7 +1596,7 @@ static cptr display_player_flag_names[4][8] =
 		" Cold:",	/* TR2_RES_COLD */
 		" Pois:",	/* TR2_RES_POIS */
 		" Fear:",	/* TR2_RES_FEAR */
-		" Lite:",	/* TR2_RES_LITE */
+		" Light:",	/* TR2_RES_LIGHT */
 		" Dark:"	/* TR2_RES_DARK */
 	},
 
@@ -1614,7 +1614,7 @@ static cptr display_player_flag_names[4][8] =
 	{
 		"S.Dig:",	/* TR3_SLOW_DIGEST */
 		"Feath:",	/* TR3_FEATHER */
-		"PLite:",	/* TR3_LITE */
+		"PLight:",	/* TR3_LIGHT */
 		"Regen:",	/* TR3_REGEN */
 		"Telep:",	/* TR3_TELEPATHY */
 		"Invis:",	/* TR3_SEE_INVIS */
@@ -2552,7 +2552,7 @@ bool show_file(cptr name, cptr what, int line, int mode)
 			/* Dump the line */
 			Term_putstr(0, i+2, -1, TERM_WHITE, buf);
 
-			/* Hilite "shower" */
+			/* Highlight shower" */
 			if (shower[0])
 			{
 				cptr str = lc_buf;

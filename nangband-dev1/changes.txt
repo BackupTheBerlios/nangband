@@ -6,6 +6,7 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
 - Fixed up lots of the save code, thanks pelpel. (takkaria)
 - Added pelpel's equippy chars patch; they are now an option. (takkaria)
 - Applied pelpel's main-xaw.c patch. (takkaria)
+- Changed referances to 'lite' to 'light'. (parody)
 
 2002-04-29
 ----------
@@ -17,6 +18,7 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
   messed up. (takkaria)
 - Twiddled with object recall.  Not quite perfect in relation to the
   new stat code. (takkaria)
+- Added a basic monster kill count. (parody)
 
 2002-04-27
 ----------

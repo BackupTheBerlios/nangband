@@ -538,8 +538,8 @@ void do_cmd_browse(void)
 
 #if 0
 
-	/* No lite */
-	if (p_ptr->blind || no_lite())
+	/* No light */
+	if (p_ptr->blind || no_light())
 	{
 		msg_print("You cannot see!");
 		return;
@@ -603,7 +603,7 @@ void do_cmd_study(void)
 		return;
 	}
 
-	if (p_ptr->blind || no_lite())
+	if (p_ptr->blind || no_light())
 	{
 		msg_print("You cannot see!");
 		return;
@@ -768,8 +768,8 @@ void do_cmd_cast(void)
 		return;
 	}
 
-	/* Require lite */
-	if (p_ptr->blind || no_lite())
+	/* Require light */
+	if (p_ptr->blind || no_light())
 	{
 		msg_print("You cannot see!");
 		return;
@@ -947,8 +947,8 @@ void do_cmd_pray(void)
 		return;
 	}
 
-	/* Must have lite */
-	if (p_ptr->blind || no_lite())
+	/* Must have light */
+	if (p_ptr->blind || no_light())
 	{
 		msg_print("You cannot see!");
 		return;

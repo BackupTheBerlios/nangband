@@ -210,9 +210,9 @@ static void remove_bad_spells(int m_idx, u32b *f4p, u32b *f5p, u32b *f6p)
 		if (int_outof(r_ptr, 100)) f5 &= ~(RF5_SCARE);
 	}
 
-	if (smart & (SM_RES_LITE))
+	if (smart & (SM_RES_LIGHT))
 	{
-		if (int_outof(r_ptr, 50)) f4 &= ~(RF4_BR_LITE);
+		if (int_outof(r_ptr, 50)) f4 &= ~(RF4_BR_LIGHT);
 	}
 
 	if (smart & (SM_RES_DARK))
@@ -1010,7 +1010,7 @@ bool make_attack_spell(int m_idx)
 			break;
 		}
 
-		/* RF4_BR_LITE */
+		/* RF4_BR_LIGHT */
 		case RF4_OFFSET+14:
 		{
 			/* XXX XXX XXX Removed - remove XXX XXX XXX */
@@ -1960,7 +1960,7 @@ bool make_attack_spell(int m_idx)
 			disturb(1, 0);
 			if (blind) msg_format("%^s mumbles.", m_name);
 			else msg_format("%^s gestures in shadow.", m_name);
-			(void)unlite_area(0, 3);
+			(void)unlight_area(0, 3);
 			break;
 		}
 
@@ -4166,7 +4166,7 @@ static void process_monster(int m_idx)
  * When the player is resting, virtually 90% of the processor time is spent
  * in this function, and its children, "process_monster()" and "make_move()".
  *
- * Most of the rest of the time is spent in "update_view()" and "lite_spot()",
+ * Most of the rest of the time is spent in "update_view()" and "light_spot()",
  * especially when the player is running.
  *
  * Note the special "MFLAG_BORN" flag, which prevents monsters from doing

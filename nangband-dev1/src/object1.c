@@ -818,11 +818,11 @@ void object_stat_bonuses_known(const object_type *o_ptr, s16b *mods)
  * the item is also an artifact, which should never happen.
  *
  * Note that all artifacts (when known) append an "Artifact Name", so we
- * have special processing for "Specials" (artifact Lites, Rings, Amulets).
+ * have special processing for "Specials" (artifact Lights, Rings, Amulets).
  * The "Specials" never use "modifiers" if they are "known", since they
  * have special "descriptions", such as "The Necklace of the Dwarves".
  *
- * Special Lite's use the "k_info" base-name (Phial, Star, or Arkenstone),
+ * Special Light's use the "k_info" base-name (Phial, Star, or Arkenstone),
  * plus the artifact name, just like any other artifact, if known.
  *
  * Special Ring's and Amulet's, if not "aware", use the same code as normal
@@ -831,7 +831,7 @@ void object_stat_bonuses_known(const object_type *o_ptr, s16b *mods)
  * they will append the artifact name, just like any artifact, if known.
  *
  * None of the Special Rings/Amulets are "EASY_KNOW", though they could be,
- * at least, those which have no "pluses", such as the three artifact lites.
+ * at least, those which have no "pluses", such as the three artifact lights.
  *
  * The "pluralization" rules are extremely hackish, in fact, for efficiency,
  * we only handle things like "torch"/"torches" and "cutlass"/"cutlasses",
@@ -968,8 +968,8 @@ void object_desc(char *buf, const object_type *o_ptr, int pref, int mode)
 			break;
 		}
 
-		/* Lites (including a few "Specials") */
-		case TV_LITE:
+		/* Lights (including a few "Specials") */
+		case TV_LIGHT:
 		{
 			break;
 		}
@@ -1519,9 +1519,9 @@ flavor_info[k_ptr->flavor].text; */
 	}
 
 	/* Hack -- Process Lanterns/Torches */
-	else if ((o_ptr->tval == TV_LITE) && (!artifact_p(o_ptr)))
+	else if ((o_ptr->tval == TV_LIGHT) && (!artifact_p(o_ptr)))
 	{
-		/* Hack -- Turns of light for normal lites */
+		/* Hack -- Turns of light for normal lights */
 		object_desc_str_macro(t, " (with ");
 		object_desc_num_macro(t, o_ptr->pval);
 		object_desc_str_macro(t, " turns of light)");
@@ -1987,7 +1987,7 @@ static void item_info_brief(const object_type *o_ptr, int mode)
 	}
 
 	/* Describe lights */
-	if (f2 & ((TR2_LITE1) | (TR2_LITE2) | (TR2_LITE3) | (TR2_LITE4)))
+	if (f2 & ((TR2_LIGHT1) | (TR2_LIGHT2) | (TR2_LIGHT3) | (TR2_LIGHT4)))
 	{
 		/* Describe */
 		if (f2 & (TR2_NEEDS_FUEL)) text_out("Provides fuelled");
@@ -1996,10 +1996,10 @@ static void item_info_brief(const object_type *o_ptr, int mode)
 		text_out("Light ");
 
 		/* Show the radius */
-		if (f2 & (TR2_LITE1)) text_out("(radius 1)");
-		else if (f2 & (TR2_LITE2)) text_out("(radius 2)");
-		else if (f2 & (TR2_LITE3)) text_out("(radius 3)");
-		else if (f2 & (TR2_LITE4)) text_out("(radius 4)");
+		if (f2 & (TR2_LIGHT1)) text_out("(radius 1)");
+		else if (f2 & (TR2_LIGHT2)) text_out("(radius 2)");
+		else if (f2 & (TR2_LIGHT3)) text_out("(radius 3)");
+		else if (f2 & (TR2_LIGHT4)) text_out("(radius 4)");
 
 		/* Complete the sentence */
 		text_out("\n");
@@ -2388,16 +2388,16 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	}
 
 	/* Describe lights */
-	if (f2 & ((TR2_LITE1) | (TR2_LITE2) | (TR2_LITE3) | (TR2_LITE4)))
+	if (f2 & ((TR2_LIGHT1) | (TR2_LIGHT2) | (TR2_LIGHT3) | (TR2_LIGHT4)))
 	{
 		/* Describe */
 		text_out("It provides ");
 
 		/* Show the radius */
-		if (f2 & (TR2_LITE1)) text_out("radius 1");
-		else if (f2 & (TR2_LITE2)) text_out("radius 2");
-		else if (f2 & (TR2_LITE3)) text_out("radius 3");
-		else if (f2 & (TR2_LITE4)) text_out("radius 4");
+		if (f2 & (TR2_LIGHT1)) text_out("radius 1");
+		else if (f2 & (TR2_LIGHT2)) text_out("radius 2");
+		else if (f2 & (TR2_LIGHT3)) text_out("radius 3");
+		else if (f2 & (TR2_LIGHT4)) text_out("radius 4");
 
 		/* Complete the sentence */
 		text_out(" light ");
@@ -2939,9 +2939,9 @@ s16b wield_slot(const object_type *o_ptr)
 		}
 
 		case TV_ORB:
-		case TV_LITE:
+		case TV_LIGHT:
 		{
-			return (INVEN_LITE);
+			return (INVEN_LIGHT);
 		}
 
 		case TV_DRAG_ARMOR:
@@ -3003,7 +3003,7 @@ cptr mention_use(int i)
 		case INVEN_LEFT:  p = "On left hand"; break;
 		case INVEN_RIGHT: p = "On right hand"; break;
 		case INVEN_NECK:  p = "Around neck"; break;
-		case INVEN_LITE:  p = "Light source"; break;
+		case INVEN_LIGHT:  p = "Light source"; break;
 		case INVEN_BODY:  p = "On body"; break;
 		case INVEN_OUTER: p = "About body"; break;
 		case INVEN_WAIST: p = "Around waist"; break;
@@ -3056,7 +3056,7 @@ cptr describe_use(int i)
 		case INVEN_LEFT:  p = "wearing on your left hand"; break;
 		case INVEN_RIGHT: p = "wearing on your right hand"; break;
 		case INVEN_NECK:  p = "wearing around your neck"; break;
-		case INVEN_LITE:  p = "using to light the way"; break;
+		case INVEN_LIGHT:  p = "using to light the way"; break;
 		case INVEN_BODY:  p = "wearing on your body"; break;
 		case INVEN_OUTER: p = "wearing on your back"; break;
 		case INVEN_WAIST: p = "wearing around your waist"; break;

@@ -35,7 +35,7 @@ typedef int errr;
 #define GF_MISSILE      3
 #define GF_MANA         4
 #define GF_HOLY_ORB     5
-#define GF_LITE_WEAK	6
+#define GF_LIGHT_WEAK	6
 #define GF_DARK_WEAK	7
 #define GF_WATER        8
 #define GF_PLASMA       9
@@ -51,7 +51,7 @@ typedef int errr;
 #define GF_COLD         19
 #define GF_POIS         20
 #define GF_XXX2			21
-#define GF_LITE         22
+#define GF_LIGHT         22
 #define GF_DARK         23
 #define GF_XXX3			24
 #define GF_CONFUSION    25
@@ -155,16 +155,16 @@ extern bool mass_genocide(void);
 extern bool probing(void);
 extern void destroy_area(int y1, int x1, int r, bool full);
 extern void earthquake(int cy, int cx, int r);
-extern void lite_room(int y1, int x1);
-extern void unlite_room(int y1, int x1);
-extern bool lite_area(int dam, int rad);
-extern bool unlite_area(int dam, int rad);
+extern void light_room(int y1, int x1);
+extern void unlight_room(int y1, int x1);
+extern bool light_area(int dam, int rad);
+extern bool unlight_area(int dam, int rad);
 extern bool fire_ball(int typ, int dir, int dam, int rad);
 extern bool fire_swarm(int num, int typ, int dir, int dam, int rad);
 extern bool fire_bolt(int typ, int dir, int dam);
 extern bool fire_beam(int typ, int dir, int dam);
 extern bool fire_bolt_or_beam(int prob, int typ, int dir, int dam);
-extern bool lite_line(int dir);
+extern bool light_line(int dir);
 extern bool drain_life(int dir, int dam);
 extern bool wall_to_mud(int dir);
 extern bool destroy_door(int dir);
@@ -191,5 +191,5 @@ extern bool brand_bolts(void);
 extern void ring_of_power(int dir);
 
 extern void map_area(void);
-extern void wiz_lite(void);
+extern void wiz_light(void);
 extern void wiz_dark(void);

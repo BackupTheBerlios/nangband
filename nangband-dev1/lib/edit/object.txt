@@ -2637,7 +2637,7 @@ I:39:0:4000
 W:1:0:30:2
 A:1/1
 P:0:1d1:0:0:0
-F:EASY_KNOW | LITE1 | NEEDS_FUEL
+F:EASY_KNOW | LIGHT1 | NEEDS_FUEL
 
 N:347:& Brass Lantern~
 G:~:U
@@ -2645,7 +2645,7 @@ I:39:1:7500
 W:3:0:50:35
 A:3/1
 P:0:1d1:0:0:0
-F:EASY_KNOW | IGNORE_FIRE | LITE2 | NEEDS_FUEL
+F:EASY_KNOW | IGNORE_FIRE | LIGHT2 | NEEDS_FUEL
 
 N:348:& Flask~ of oil
 G:!:y
@@ -3135,7 +3135,7 @@ I:38:10:0
 W:65:0:200:60000
 A:65/16
 P:30:2d4:-2:0:10
-F:RES_LITE | RES_DARK |
+F:RES_LIGHT | RES_DARK |
 F:ACTIVATE | IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 N:407:Law Dragon Scale Mail~
@@ -3191,7 +3191,7 @@ A:100/64
 P:40:2d4:-3:0:15
 F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS |
 F:RES_CONFU | NO_DISENCHANT | RES_SOUND | RES_SHARDS | NO_BLIND | 
-F:RES_LITE | RES_DARK | RES_NEXUS | RES_NETHER | RES_CHAOS |
+F:RES_LIGHT | RES_DARK | RES_NEXUS | RES_NETHER | RES_CHAOS |
 F:ACTIVATE | IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 ## XXX 413 - 414 XXX ##
@@ -3299,8 +3299,8 @@ G:":d
 I:40:18:0
 W:70:0:3:30000
 A:70/8
-F:WIS | CHR | SUST_WIS | SUST_CHR | LITE1 | 
-F:RES_DARK | RES_LITE | RES_FIRE | HOLD_LIFE | 
+F:WIS | CHR | SUST_WIS | SUST_CHR | LIGHT1 | 
+F:RES_DARK | RES_LIGHT | RES_FIRE | HOLD_LIFE | 
 F:HIDE_TYPE
 
 N:427:Weaponmastery
@@ -3493,23 +3493,23 @@ F:INSTA_ART
 # is added in "obj-desc.c" based on the artifact index ("i_ptr->name1").
 #
 # These objects do specify a "base name", which is used when the object
-# is "aware" (always true for lites)
-#
-# The Lites (and the One Ring) specify "physical colors", which
-# over-ride the "flavor" colors, if any.  Note that the "One Ring"
-# also has a specific check for "unknown" in which it changes its
-# name to "a plain gold ring".  See "obj-desc.c"
-#
-# Note that ALL artifacts are given "IGNORE_ACID/ELEC/FIRE/COLD",
-# so we do not need to specify that here.
-#
+# is "aware" (always true for lights) 
+# 
+# The Lites (and the One Ring)  specify "physical colors", which  
+# over-ride the "flavor" colors, if any.  Note that the "One Ring" 
+# also has a specific check for "unknown" in which it changes its 
+# name to "a plain gold ring".  See "obj-desc.c" 
+# 
+# Note that ALL artifacts are given "IGNORE_ACID/ELEC/FIRE/COLD", 
+# so we do not need to specify that here. 
+# 
 # Note that the "INSTA_ART" flag is used to prevent these objects from
-# being created without also turning them into artifacts.  This flag
-# must be specified both here and in the artifact template.
-#
-# The reason for having six different "ring" templates and three
-# different "amulet" templates is to allow each "special artifact" to
-# have a different "color" and "flavor", and also to allow the use of
+# being created without also turning them into artifacts.  This flag 
+# must be specified both here and in the artifact template. 
+# 
+# The reason for having six different "ring" templates and three 
+# different "amulet" templates is to allow each "special artifact" to 
+# have a different "color" and "flavor", and also to allow the use of 
 # special "base names" (such as "Necklace").
 
 
@@ -3656,28 +3656,34 @@ W:5:10:15:25
 P:3:1d1:0:0:0
 D:A stout leather belt.
 
-N:517:& Gold-Plated Belt~
-G:(:y
+N:517:& Sash~
+G:(:s
 I:29:20:0
-W:15:15:30:250
-P:5:1d3:0:0:0
+W:10:10:5:50
+P:1:1d4:0:0:0
+D:A stylish sash.
+
+N:518:& Gold-Plated Belt~
+G:(:y
+I:29:25:0 
+W:15:15:30:250 
+P:5:1d3:0:0:0 
 D:A thick belt with gold links along it's length.
 
-N:518:& Leather Girdle~
+N:519:& Leather Girdle~
 G:(:D
-I:29:25:0
+I:29:30:0
 W:17:20:30:300
 P:6:1d3:0:0:0
 D:A thick and sturdy leather girdle.
 
-N:519:& Steel-Reinforced Girdle~
+N:520:& Steel-Reinforced Girdle~
 G:(:W
-I:29:26:0
+I:29:31:0
 W:25:10:50:500
 P:8:1d4:0:0:0
 D:A thick leather girdle with steel plates riveted to it.
 
-# XXX 520 - unused, maybe for another belt? --takkaria XXX
 
 N:521:Flames
 G:*:r
@@ -3685,11 +3691,11 @@ I:8:0:2
 W:0:100:5:50000
 S:0:0:0:0:3:0
 P:0:2d8:0:0:0
-F:IGNORE_FIRE | RES_FIRE20 | LITE3 |
+F:IGNORE_FIRE | RES_FIRE20 | LIGHT3 | 
 F:RES_ACID10 | ACTIVATE
 D:Inside a thin sheet of glass, a burning furnace glows, although
-D: it's heat does not touch your skin.  The light it emits is strong,
-D: but it does not blind you.
+D:it's heat does not touch your skin.  The light it emits is strong,
+D:but it does not blind you.
 
 N:522:Burning
 G:*:o
@@ -3697,7 +3703,7 @@ I:8:1:0
 W:0:100:5:50000
 S:0:0:0:0:1:0
 P:0:2d4:0:0:0
-F:IGNORE_FIRE | RES_FIRE10 | LITE2
+F:IGNORE_FIRE | RES_FIRE10 | LIGHT2
 D:This orb is a globe of lava enclosed in a magical sphere, made
 D: to convert it's heat to light.
 
@@ -3707,7 +3713,7 @@ I:8:2:0
 W:0:100:5:50000
 S:0:0:0:3:0:0
 P:0:2d8:0:0:0
-F:IGNORE_COLD | RES_COLD20 | LITE3 |
+F:IGNORE_COLD | RES_COLD20 | LIGHT3 |
 F:FREE_ACT | ACTIVATE
 D:A frozen ball, full of images of frozen lakes, cold winters,
 D: freezing temperatures.  Although it gives out no chill, each
@@ -3720,7 +3726,7 @@ I:8:3:0
 W:0:100:5:50000
 S:0:0:0:1:0:0
 P:0:2d4:0:0:0
-F:IGNORE_COLD | RES_COLD20 | LITE2
+F:IGNORE_COLD | RES_COLD20 | LIGHT2
 D:A ball of carved ice that glows a dark blue, it reminds you
 D: of long gone cold winters.  It glows with a deep blue.
 
@@ -3741,7 +3747,7 @@ I:45:42:0
 S:0:4:0:3:0:4
 W:60:0:2:15000
 A:60/2
-F:SEE_INVIS | RES_LITE |
+F:SEE_INVIS | RES_LIGHT |
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 N:538:Dwarrowkind

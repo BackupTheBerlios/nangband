@@ -171,7 +171,7 @@ static bool wearable_p(const object_type *o_ptr)
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR:
 		case TV_DRAG_ARMOR:
-		case TV_LITE:
+		case TV_LIGHT:
 		case TV_ORB:
 		case TV_AMULET:
 		case TV_RING:

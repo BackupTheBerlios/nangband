@@ -236,7 +236,7 @@ struct player_type
 	bool heavy_shoot;	/* Heavy shooter */
 	bool icky_wield;	/* Icky weapon */
 
-	s16b cur_lite;		/* Radius of lite (if any) */
+	s16b cur_light;		/* Radius of light (if any) */
 
 	u32b notice;		/* Special Updates (bit flags) */
 	u32b update;		/* Pending Updates (bit flags) */
@@ -262,7 +262,7 @@ struct player_type
 
 	bool slow_digest;	/* Slower digestion */
 	bool ffall;			/* Feather falling */
-	bool lite;			/* Permanent light */
+	bool light;			/* Permanent light */
 	bool regenerate;	/* Regeneration */
 	bool telepathy;		/* Telepathy */
 	bool see_inv;		/* See invisible */

@@ -339,7 +339,7 @@ static void wiz_display_item(const object_type *o_ptr)
 	prt_binary(f1, 16, j);
 
 	prt("+------------FLAGS2------------+", 17, j);
-	prt("SUST..LITE..XTRA...........BRAND", 18, j);
+	prt("SUST..LIGHT..XTRA..........BRAND", 18, j);
 	prt("                                ", 19, j);
 	prt("SiWdCcllllf nn          fceapncn", 20, j);
 	prt("TnIeOhtttte db          rllcieht", 21, j);
@@ -392,7 +392,7 @@ static const tval_desc tvals[] =
 	{ TV_SOFT_ARMOR,        "Soft Armor"           },
 	{ TV_RING,              "Ring"                 },
 	{ TV_AMULET,            "Amulet"               },
-	{ TV_LITE,              "Lite"                 },
+	{ TV_LIGHT,             "Light"                 },
 	{ TV_POTION,            "Potion"               },
 	{ TV_SCROLL,            "Scroll"               },
 	{ TV_WAND,              "Wand"                 },
@@ -1678,7 +1678,7 @@ void do_cmd_debug(void)
 		/* Wizard Light the Level */
 		case 'w':
 		{
-			wiz_lite();
+			wiz_light();
 			break;
 		}
 

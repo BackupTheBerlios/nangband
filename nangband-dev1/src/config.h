@@ -511,23 +511,23 @@
 /*
  * Hack -- Special "ancient machine" versions
  */
-#if defined(USE_286) || defined(ANGBAND_LITE_MAC)
-# ifndef ANGBAND_LITE
-#  define ANGBAND_LITE
+#if defined(USE_286) || defined(ANGBAND_LIGHT_MAC)
+# ifndef ANGBAND_LIGHT
+#  define ANGBAND_LIGHT
 # endif
 #endif
 
 /*
  * OPTION: Attempt to minimize the size of the game
  */
-#ifndef ANGBAND_LITE
-/* #define ANGBAND_LITE */
+#ifndef ANGBAND_LIGHT
+/* #define ANGBAND_LIGHT */
 #endif
 
 /*
- * Hack -- React to the "ANGBAND_LITE" flag
+ * Hack -- React to the "ANGBAND_LIGHT" flag
  */
-#ifdef ANGBAND_LITE
+#ifdef ANGBAND_LIGHT
 # undef ALLOW_COLORS
 # undef ALLOW_VISUALS
 # undef ALLOW_MACROS

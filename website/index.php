@@ -70,7 +70,7 @@ else
 	page_header($title, $page, $pagestyle);
 
 	// Include the data
-	include($page);
+	include('content/'.$page);
 
 	// Output the footer
 	page_footer();

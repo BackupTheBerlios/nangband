@@ -1407,10 +1407,9 @@ void move_player(int dir, int jumping)
 
 	int y = 0, x = 0;
 
-	bool pass_walls = p_ptr->pass_walls;
+	bool pass_walls = (p_ptr->pass_walls ? TRUE : FALSE);
 
 	bool old_dtrap, new_dtrap;
-
 
 	/* Find the result of moving */
 	y = py + ddy[dir];
@@ -1419,7 +1418,7 @@ void move_player(int dir, int jumping)
 	/* Make sure the player can't move out of bounds */
 	if ((cave_feat[y][x] >= FEAT_PERM_EXTRA) &&
 	    (cave_feat[y][x] <= FEAT_PERM_SOLID) &&
-	    (in_bounds_xy(x, y)))
+	    (!in_bounds_xy(x, y)))
 	{
 		pass_walls = FALSE;
 	}
@@ -1465,7 +1464,7 @@ void move_player(int dir, int jumping)
 #endif /* ALLOW_EASY_ALTER */
 
 	/* Player can not walk through "walls" */
-	else if (!cave_floor_bold(y, x) && !pass_walls)
+	else if ((cave_info[y][x] & (CAVE_WALL)) && (pass_walls == FALSE))
 	{
 		/* Disturb the player */
 		disturb(0, 0);

@@ -1,6 +1,7 @@
 Todo list for Nangband
 ======================
 
+- Remove Lua from the game.
 - Remove haggling.
 - (Suggested by Zach Levi) Add inscriptions that exclude items from the
   using list.

@@ -2328,10 +2328,6 @@ if test "$CYGWIN" = "yes"; then
 #define WINDOWS 1
 EOF
 
-  cat >>confdefs.h <<\EOF
-#define USE_TRANSPARENCY 1
-EOF
-
   LIBS="$LIBS -lwinmm"
   LDFLAGS="$LDFLAGS -s -mno-cygwin -mwindows -e _mainCRTStartup"
   CFLAGS="$CFLAGS -mno-cygwin"

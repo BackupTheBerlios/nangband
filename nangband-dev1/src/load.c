@@ -493,8 +493,9 @@ static void rd_monster(monster_type *m_ptr)
  */
 static void rd_lore(int r_idx)
 {
+	int i;
 	byte tmp8u;
-
+	
 	monster_race *r_ptr = &r_info[r_idx];
 	monster_lore *l_ptr = &l_list[r_idx];
 
@@ -522,10 +523,8 @@ static void rd_lore(int r_idx)
 	rd_byte(&l_ptr->cast_spell);
 
 	/* Count blows of each type */
-	rd_byte(&l_ptr->blows[0]);
-	rd_byte(&l_ptr->blows[1]);
-	rd_byte(&l_ptr->blows[2]);
-	rd_byte(&l_ptr->blows[3]);
+	for (i = 0; i < MONSTER_BLOW_MAX; i++)
+		rd_byte(&l_ptr->blows[i]);
 
 	/* Memorize flags */
 	rd_u32b(&l_ptr->flags1);

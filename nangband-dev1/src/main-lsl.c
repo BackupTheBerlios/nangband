@@ -627,11 +627,7 @@ errr term_text_svgalib(int x, int y, int n, unsigned char a, cptr s)
  * Low-level graphics routine (assumes valid input)
  * Draw n chars at location (x,y) with value s and attribute a
  ***************************************************************************/
-#ifdef USE_TRANSPARENCY
-errr term_pict_svgalib(int x, int y, int n, const byte *ap, const char *cp, const byte *tap, const char *tcp)
-#else /* USE_TRANSPARENCY */
 errr term_pict_svgalib(int x, int y, int n, const byte *ap, const char *cp)
-#endif /* USE_TRANSPARENCY */
 {
 	int i;
 	int x2, y2;

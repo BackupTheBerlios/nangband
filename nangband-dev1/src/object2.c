@@ -3026,6 +3026,8 @@ bool make_gold(object_type *j_ptr)
  */
 s16b floor_carry(int y, int x, object_type *j_ptr)
 {
+	int n = 0;
+
 	s16b o_idx;
 
 	s16b this_o_idx, next_o_idx = 0;
@@ -3051,8 +3053,13 @@ s16b floor_carry(int y, int x, object_type *j_ptr)
 			/* Result */
 			return (this_o_idx);
 		}
+
+		/* Count objects */
+		n++;
 	}
 
+	/* Option -- disallow stacking */
+	if (birth_no_stacking && n) return (0);
 
 	/* Make an object */
 	o_idx = o_pop();
@@ -3210,6 +3217,9 @@ void drop_near(object_type *j_ptr, int chance, int y, int x)
 			/* Add new object */
 			if (!comb) k++;
 
+			/* Option -- disallow stacking */
+			if (birth_no_stacking && (k > 1)) continue;
+			
 			/* Paranoia */
 			if (k > 99) continue;
 
@@ -3689,6 +3699,8 @@ void inven_item_optimize(int item)
 
 		/* Window stuff */
 		p_ptr->window |= (PW_EQUIP | PW_PLAYER_0 | PW_PLAYER_1);
+
+		p_ptr->redraw |= (PR_EQUIPPY);
 	}
 }
 

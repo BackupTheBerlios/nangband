@@ -163,8 +163,8 @@ bool make_attack_normal(int m_idx)
 	/* Assume no blink */
 	blinked = FALSE;
 
-	/* Scan through all four blows */
-	for (ap_cnt = 0; ap_cnt < 4; ap_cnt++)
+	/* Scan through all blows */
+	for (ap_cnt = 0; ap_cnt < MONSTER_BLOW_MAX; ap_cnt++)
 	{
 		bool visible = FALSE;
 		bool obvious = FALSE;

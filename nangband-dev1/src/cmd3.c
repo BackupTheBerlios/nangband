@@ -270,6 +270,8 @@ void do_cmd_wield(void)
 
 	/* Window stuff */
 	p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER_0 | PW_PLAYER_1);
+
+	p_ptr->redraw |= (PR_EQUIPPY);
 }
 
 
@@ -462,6 +464,8 @@ void do_cmd_destroy(void)
 
 		/* Window stuff */
 		p_ptr->window |= (PW_INVEN | PW_EQUIP);
+
+		p_ptr->redraw |= (PR_EQUIPPY);
 
 		/* Done */
 		return;

@@ -43,10 +43,6 @@
 #error Must have USE_GRAPHICS compile-time flag on.
 #endif
 
-#ifndef USE_TRANSPARENCY
-#error Must have USE_TRANSPARENCY compile-time flag on.
-#endif
-
 /*
  * The tile size to use.  (Configure this if you want.)
  *
@@ -3365,7 +3361,7 @@ errr init_xpj(int argc, char **argv)
 		if (i == 0)
 		{
 			/* Graphics hook */
-			t->pict_hook = Term_skew_xpj;
+			t->pict_transp_hook = Term_skew_xpj;
 
 			/* Always use graphics */
 			t->always_pict = TRUE;
@@ -3379,7 +3375,7 @@ errr init_xpj(int argc, char **argv)
 		else
 		{
 			/* Graphics hook */
-			t->pict_hook = Term_pict_xpj;
+			t->pict_transp_hook = Term_pict_xpj;
 
 			/* Resize tiles */
 			td->tiles =

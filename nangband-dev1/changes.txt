@@ -1,4 +1,12 @@
-Changed in Nangband 2.9.7:
+Nangband ChangeLog
+==================
+
+2002-02-19
+----------
+- Prepared Nangband for release.
+
+Previous
+--------
 - Added Orbs. These are permanent, non-artifact light sources.
   Very few exist at the moment. (takkaria)
 - Added a belt slot and some belts to wear in those. There are also

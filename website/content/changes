@@ -1,16 +1,10 @@
-<p>The next daily compile will happen in <b><?php
+<p><b>Nangband development was restarted <?=rtime(time()-1040470288)?> ago.</b><br />
+The codebase was reset to Vanilla 3.0.2, and the previous changes were moved to the module nangband-dev1.</p>
 
-$realtime = time()+28800;
-$t = localtime($realtime);
-$aimtime = mktime(5, 0, 0, $t['tm_mon'], $t['tm_yday'], $t['tm_year']);
-echo rtime($aimtime);
+<p>Because of this, very few changes have been made.  More info will come halfway through the first development 
+cycle.</p>
 
-?></b>.</p>
-
-<p>In the short time Nangband has been in development (<?=rtime(time()-1013454487);?>), it has made some 
-interesting changes.  Here is a condensed list of many of them, as they were on the 19th of July, 2002.</p>
-
-<b>Gameplay</b>
+<!--<b>Gameplay</b>
 <ul>
 	<li>Areas of detection and magic mapping are now circular in effect.  "DTrap" status has been added to 
 the bottom of the screen to show the player when (s)he's in s trap-detected area; disturb_panel has been changed 
@@ -90,3 +84,4 @@ flags on some features.</li>
 <ul>
 	<li>Equippy chars are now an option.</li>
 </ul>
+-->

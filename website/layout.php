@@ -73,12 +73,13 @@ function page_header($title, $type)
 	global $style, $site_description, $site_name;
 
 	// Echo the page header
-	echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
 	echo '<html>';
 	echo '<head>';
 	echo '<title>'.$site_name.' - ' . $title . '</title>';
-	echo '<link rel="stylesheet" rev="content" type="text/css" href="styles/'.$style.'.css">';
-	echo '<meta name="description" content="'.$site_description.'">';
+	echo '<link rel="stylesheet" rev="content" type="text/css" href="styles/'.$style.'.css" />';
+	echo '<meta name="description" content="'.$site_description.'" />';
 	echo '</head>';
 
 	// Include the style header (if it exists)

@@ -1,5 +1,5 @@
-<body bgcolor="#ffffff" background="images/compass.gif">
+<body>
 <h1>nangband: <?=$title?></h1>
 <div align="right"><?php do_links(true); ?></div>
-<hr align="right" width="50%">
+<hr align="right" width="50%" />
 

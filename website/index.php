@@ -12,19 +12,21 @@ include('layout.php');
 
 // Ensure we always have a page, and style
 if (!$page) $page = 'main';
-if (!$cstyle) $style = $default_style;
-         else $style = $cstyle;
+//if (!$cstyle) $style = $default_style;
+//         else $style = $cstyle;
 
 // Check on the setting styles
-if (($newstyle == 'normal') ||
-    ($newstyle == 'plain'))
-{
-	// Set a cookie for a few years
-	setcookie("cstyle", $newstyle, time()+172800000);
+//if (($newstyle == 'normal') ||
+//    ($newstyle == 'plain'))
+//{
+//	// Set a cookie for a few years
+//	setcookie("cstyle", $newstyle, time()+172800000);
 
-	// Set the current style
-	$style = $newstyle;
-}
+//	// Set the current style
+//	$style = $newstyle;
+//}
+
+$style = 'plain';
 
 // Include stuff from 'extras'
 if ($dir = @opendir('extras/'))

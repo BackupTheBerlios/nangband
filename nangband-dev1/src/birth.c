@@ -1117,7 +1117,7 @@ static bool player_birth_aux_3(void)
 	int i, j, m, v;
 
 	bool flag;
-	bool prev = FALSE;
+	bool prev_rolled = FALSE;
 
 	char ch;
 
@@ -1129,13 +1129,13 @@ static bool player_birth_aux_3(void)
 
 #ifdef ALLOW_AUTOROLLER
 
-	s16b stat_limit[A_MAX];
+	s16b stat_weight[A_MAX];
+	s16b stat_save[A_MAX];
 
 	s32b stat_match[A_MAX];
 
 	s32b auto_round = 0L;
-
-	s32b last_round;
+	s32b last_round = 0L;
 
 
 	/*** Autoroll ***/
@@ -1150,16 +1150,16 @@ static bool player_birth_aux_3(void)
 
 		/* Extra info */
 		Term_putstr(5, 10, -1, TERM_WHITE,
-		            "The auto-roller will automatically ignore characters which do");
+		            "The auto-roller will generate 500 characters and try to pick");
 		Term_putstr(5, 11, -1, TERM_WHITE,
-		            "not meet the minimum values for any stats specified below.");
+		            "the one with the best stats, according to the weightings you");
 		Term_putstr(5, 12, -1, TERM_WHITE,
-		            "Note that stats are not independant, so it is not possible to");
+		            "choose below. Enter a value from 1-100 for each stat.");
 		Term_putstr(5, 13, -1, TERM_WHITE,
-		            "get perfect (or even high) values for all your stats.");
+		            "Pressing escape when prompted for a stat will accept the default.");
 
 		/* Prompt for the minimum stats */
-		put_str("Enter minimum value for: ", 15, 2);
+		put_str("Enter weighting for: ", 15, 2);
 
 		/* Output the maximum stats */
 		for (i = 0; i < A_MAX; i++)
@@ -1167,32 +1167,8 @@ static bool player_birth_aux_3(void)
 			/* Reset the "success" counter */
 			stat_match[i] = 0;
 
-			/* Race/Class bonus */
-			j = rp_ptr->r_adj[i] + cp_ptr->c_adj[i];
-
-			/* Obtain the "maximal" stat */
-			m = adjust_stat(17, j, TRUE);
-
-			/* Save the maximum */
-			mval[i] = m;
-
-			/* Extract a textual format */
-			/* cnv_stat(m, inp); */
-
-			/* Above 18 */
-			if (m > 18)
-			{
-				sprintf(inp, "(Max of 18/%02d):", (m - 18));
-			}
-
-			/* From 3 to 18 */
-			else
-			{
-				sprintf(inp, "(Max of %2d):", m);
-			}
-
 			/* Prepare a prompt */
-			sprintf(buf, "%-5s%-20s", stat_names[i], inp);
+			sprintf(buf, "%-5s ", stat_names[i]);
 
 			/* Dump the prompt */
 			put_str(buf, 16 + i, 5);
@@ -1201,38 +1177,31 @@ static bool player_birth_aux_3(void)
 		/* Input the minimum stats */
 		for (i = 0; i < A_MAX; i++)
 		{
+			int def_weight = cp_ptr->auto_weight[p_ptr->pclass][i];
+
 			/* Get a minimum stat */
 			while (TRUE)
 			{
 				char *s;
 
 				/* Move the cursor */
-				put_str("", 16 + i, 30);
+				put_str("", 16 + i, 10);
 
 				/* Default */
-				strcpy(inp, "");
+				sprintf(inp, "%i", def_weight);
 
 				/* Get a response (or escape) */
 				if (!askfor_aux(inp, 9)) inp[0] = '\0';
 
-				/* Hack -- add a fake slash */
-				strcat(inp, "/");
-
-				/* Hack -- look for the "slash" */
-				s = strchr(inp, '/');
-
-				/* Hack -- Nuke the slash */
-				*s++ = '\0';
-
-				/* Hack -- Extract an input */
-				v = atoi(inp) + atoi(s);
+				/* Extract the input */
+				v = atoi(inp);
 
 				/* Break on valid input */
-				if (v <= mval[i]) break;
+				if (v <= 100) break;
 			}
 
 			/* Save the minimum stat */
-			stat_limit[i] = (v > 0) ? v : 0;
+			stat_weight[i] = (v > 0) ? v : def_weight;
 		}
 	}
 
@@ -1252,25 +1221,24 @@ static bool player_birth_aux_3(void)
 		/* Feedback */
 		if (adult_auto_roller)
 		{
+			s32b best_score, cur_score;
+
 			Term_clear();
 
 			/* Label */
-			put_str(" Limit", 2, col+5);
+			put_str(" Weight", 2, col+5);
 
 			/* Label */
-			put_str("  Freq", 2, col+13);
+			put_str("  Roll", 2, col+14);
 
-			/* Label */
-			put_str("  Roll", 2, col+24);
-
-			/* Put the minimal stats */
+			/* Put the stat weights */
 			for (i = 0; i < A_MAX; i++)
 			{
 				/* Label stats */
 				put_str(stat_names[i], 3+i, col);
 
 				/* Put the stat */
-				cnv_stat(stat_limit[i], buf);
+				sprintf(buf, "%6i", stat_weight[i]);
 				c_put_str(TERM_L_BLUE, buf, 3+i, col+5);
 			}
 
@@ -1281,7 +1249,14 @@ static bool player_birth_aux_3(void)
 			put_str("Round:", 10, col+13);
 
 			/* Indicate the state */
-			put_str("(Hit ESC to stop)", 12, col+13);
+			put_str("(Hit ESC to stop)", 12, col+14);
+
+			best_score = -1;
+
+			for (i = 0; i < A_MAX; i++)
+			{
+				stat_save[i] = 3;
+			}
 
 			/* Auto-roll */
 			while (1)
@@ -1295,26 +1270,35 @@ static bool player_birth_aux_3(void)
 				auto_round++;
 
 				/* Hack -- Prevent overflow */
-				if (auto_round >= 1000000L) break;
+				if (auto_round >= 1000000L) auto_round = 0L;
 
-				/* Check and count acceptable stats */
+				/* Reset cur_score */
+				cur_score = 0;
+
+				/* Calculate a score for the rolled stats */
 				for (i = 0; i < A_MAX; i++)
 				{
-					/* This stat is okay */
-					if (stat_use[i] >= stat_limit[i])
+					if (p_ptr->stat_cur[i] <= 18)
 					{
-						stat_match[i]++;
+						cur_score += p_ptr->stat_cur[i] * stat_weight[i] * 10;
 					}
 
-					/* This stat is not okay */
-					else
+					cur_score += (p_ptr->stat_cur[i] - 18 + 180) * stat_weight[i];
+				}
+
+				/* Compare current stats against saved stats */
+				if (cur_score > best_score)
+				{
+					best_score = cur_score;
+
+					for (i = 0; i < A_MAXl i++)
 					{
-						accept = FALSE;
+						stat_save[i] = p_ptr->stat_cur[i];
 					}
 				}
 
-				/* Break if "happy" */
-				if (accept) break;
+				/* Break after 500 rolls */
+				if (auto_round >= last_round + 500) break;
 
 				/* Take note every 25 rolls */
 				flag = (!(auto_round % 25L));
@@ -1351,8 +1335,10 @@ static bool player_birth_aux_3(void)
 					/* Make sure they see everything */
 					Term_fresh();
 
+#ifndef SLOW_AUTOROLLER
 					/* Delay 1/10 second */
 					if (flag) Term_xtra(TERM_XTRA_DELAY, 100);
+#endif
 
 					/* Do not wait for a key */
 					inkey_scan = TRUE;
@@ -1360,6 +1346,12 @@ static bool player_birth_aux_3(void)
 					/* Check for a keypress */
 					if (inkey()) break;
 				}
+			}
+
+			for (i = 0; i < A_MAX; i++)
+			{
+				p_ptr->stat_cur[i] = p_ptr->stat_max[i] = stat_save[i];
+				p_ptr->stat_lim[i] = stat_limit(stat_save[i]);
 			}
 		}
 
@@ -1410,7 +1402,7 @@ static bool player_birth_aux_3(void)
 			Term_gotoxy(2, 23);
 			Term_addch(TERM_WHITE, b1);
 			Term_addstr(-1, TERM_WHITE, "'r' to reroll");
-			if (prev) Term_addstr(-1, TERM_WHITE, ", 'p' for prev");
+			if (prev_rolled) Term_addstr(-1, TERM_WHITE, ", 'p' for prev");
 			Term_addstr(-1, TERM_WHITE, ", or 'Enter' to accept");
 			Term_addch(TERM_WHITE, b2);
 
@@ -1430,7 +1422,7 @@ static bool player_birth_aux_3(void)
 			if ((ch == ' ') || (ch == 'r')) break;
 
 			/* Previous character */
-			if (prev && (ch == 'p'))
+			if (prev_rolled && (ch == 'p'))
 			{
 				load_prev_data();
 				continue;
@@ -1454,7 +1446,7 @@ static bool player_birth_aux_3(void)
 		save_prev_data();
 
 		/* Note that a previous roll exists */
-		prev = TRUE;
+		prev_rolled = TRUE;
 	}
 
 	/* Clear prompt */

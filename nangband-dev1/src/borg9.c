@@ -3357,7 +3357,11 @@ static void player_outfit_borg(void)
 extern void borg_forget_messages(void);
 #endif /* borg_tk */
 
-/* Allow the borg to play continously.  Reset all values, */
+/*
+ * Allow the borg to play continously.  Reset all values.
+ * HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK!
+ * XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
+ */
 void resurrect_borg(void)
 {
     int i,j;
@@ -3494,7 +3498,7 @@ void resurrect_borg(void)
         if (r_ptr->flags1 & (RF1_UNIQUE)) r_ptr->max_num = 1;
 
         /* Clear player kills */
-        l_ptr->r_pkills = 0;
+        l_ptr->pkills = 0;
     }
 
     /* Hack -- no ghosts */
@@ -5363,8 +5367,8 @@ void borg_init_9(void)
     Term_fresh();
 
     /* Mega-Hack -- verify memory */
-    C_MAKE(test, 400 * 1024L, byte);
-    C_KILL(test, 400 * 1024L, byte);
+    C_MAKE(test, 400L * 1024L, byte);
+    KILL(test);
 
 
     /*** Hack -- initialize some stuff ***/
@@ -5437,9 +5441,6 @@ void borg_init_9(void)
 
     /* Efficiency */
     avoid_abort = TRUE;
-
-    /* Efficiency */
-    alert_hitpoint = 0;
 
     /* Hack -- notice "command" mode */
     hilite_player = FALSE;
@@ -6084,7 +6085,7 @@ void borg_write_map(bool ask)
     }
 
     /* Free the "okay" array */
-    C_KILL(okay, z_info->a_max, bool);
+    KILL(okay);
     fprintf(borg_map_file, "\n\n");
 
  /* Display known uniques
@@ -6134,7 +6135,7 @@ void borg_write_map(bool ask)
     }
 
     /* Free the "who" array */
-    C_KILL(who, z_info->r_max, u16b);
+    KILL(who);
 
 #endif
 
@@ -6678,14 +6679,16 @@ void do_cmd_borg(void)
             borg_note("Reloading the Borg rules... (borg.txt)");
             for (i = 0; i < z_info->c_max; i++)
             {
-                C_KILL(borg_required_item[i], 400, req_item); /* externalize the 400 later */
-                C_KILL(borg_power_item[i], 400, power_item); /* externalize the 400 later */
+                KILL(borg_required_item[i]);
+                KILL(borg_power_item[i]);
             }
-            C_KILL(borg_has, size_obj, int);
+
+            KILL(borg_has);
+
             for (i = 0; i < 1000; i++)
             {
                 if (formula[i])
-                    C_KILL(formula[i], MAX_FORMULA_ELEMENTS, int);
+                    KILL(formula[i]);
             }
             init_borg_txt_file();
             borg_note("# Ready...");

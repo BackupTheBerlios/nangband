@@ -259,7 +259,8 @@ static void borg_notice_aux1(void)
         if (item->flags3 & TR3_TELEPORT) borg_skill[BI_CRSTELE] = TRUE;
         if (item->flags3 & TR3_REGEN) borg_skill[BI_REG] = TRUE;
         if (item->flags3 & TR3_TELEPATHY) borg_skill[BI_ESP] = TRUE;
-        if (item->flags3 & TR3_LITE) borg_skill[BI_LITE] = TRUE;
+		/* [fixme] */
+        /* if (item->flags3 & TR3_LITE) borg_skill[BI_LITE] = TRUE; */
         if (item->flags3 & TR3_SEE_INVIS) borg_skill[BI_SINV] = TRUE;
         if (item->flags3 & TR3_FEATHER) borg_skill[BI_FEATH] = TRUE;
         if (item->flags3 & TR3_FREE_ACT) borg_skill[BI_FRACT] = TRUE;
@@ -318,7 +319,8 @@ static void borg_notice_aux1(void)
         if (item->flags2 & TR2_SUST_CHR) borg_skill[BI_SCHR] = TRUE;
 
 
-        /* Hack -- The borg will miss read acid damaged items such as
+        /*
+		 * Hack -- The borg will miss read acid damaged items such as
          * Leather Gloves [2,-2] and falsely assume they help his power.
          * this hack rewrites the bonus to an extremely negative value
          * thus encouraging him to remove the non-helpful-non-harmful but
@@ -1272,8 +1274,9 @@ static void borg_notice_aux2(void)
                 my_need_brand_weapon +=10L;
               }
 
-            /* if we have shit loads of cash (as we will at level 35),  */
-            /* enchant missiles */
+            /*
+             * If the borg has lots of cash, enchant missiles.
+             */
             if (borg_skill[BI_CLEVEL] > 35)
             {
                 if (borg_prayer_okay_fail(7, 3, 40) && item->iqty >= 5)
@@ -1720,7 +1723,7 @@ void borg_notice_weapon_swap(void)
             if (item->flags3 & TR3_TELEPORT) weapon_swap_teleport = TRUE;
             if (item->flags3 & TR3_REGEN) weapon_swap_regenerate = TRUE;
             if (item->flags3 & TR3_TELEPATHY) weapon_swap_telepathy = TRUE;
-            if (item->flags3 & TR3_LITE) weapon_swap_lite = TRUE;
+            /* if (item->flags3 & TR3_LITE) weapon_swap_lite = TRUE; */
             if (item->flags3 & TR3_SEE_INVIS) weapon_swap_see_invis = TRUE;
             if (item->flags3 & TR3_FEATHER) weapon_swap_ffall = TRUE;
             if (item->flags3 & TR3_FREE_ACT) weapon_swap_free_act = TRUE;
@@ -2020,14 +2023,17 @@ void borg_notice_weapon_swap(void)
     if (item->flags3 & TR3_TELEPORT) weapon_swap_teleport = TRUE;
     if (item->flags3 & TR3_REGEN) weapon_swap_regenerate = TRUE;
     if (item->flags3 & TR3_TELEPATHY) weapon_swap_telepathy = TRUE;
-    if (item->flags3 & TR3_LITE) weapon_swap_lite = TRUE;
+    /* if (item->flags3 & TR3_LITE) weapon_swap_lite = TRUE; */
     if (item->flags3 & TR3_SEE_INVIS) weapon_swap_see_invis = TRUE;
     if (item->flags3 & TR3_FEATHER) weapon_swap_ffall = TRUE;
     if (item->flags3 & TR3_FREE_ACT) weapon_swap_free_act = TRUE;
     if (item->flags3 & TR3_HOLD_LIFE) weapon_swap_hold_life = TRUE;
 
-    /* Immunity flags */
-    /* if you are immune you automaticly resist */
+	/*
+	 * Immunity flags
+	 * If you are immune, you automatically resist.
+	 * XXX XXX XXX
+	 */
     if (item->flags2 & TR2_IM_FIRE)
     {
         weapon_swap_immune_fire = TRUE;
@@ -2212,7 +2218,7 @@ void borg_notice_armour_swap(void)
             if (item->flags3 & TR3_TELEPORT) armour_swap_teleport = TRUE;
             if (item->flags3 & TR3_REGEN) armour_swap_regenerate = TRUE;
             if (item->flags3 & TR3_TELEPATHY) armour_swap_telepathy = TRUE;
-            if (item->flags3 & TR3_LITE) armour_swap_lite = TRUE;
+            /* if (item->flags3 & TR3_LITE) armour_swap_lite = TRUE; */
             if (item->flags3 & TR3_SEE_INVIS) armour_swap_see_invis = TRUE;
             if (item->flags3 & TR3_FEATHER) armour_swap_ffall = TRUE;
             if (item->flags3 & TR3_FREE_ACT) armour_swap_free_act = TRUE;
@@ -2469,7 +2475,7 @@ void borg_notice_armour_swap(void)
             if (item->flags3 & TR3_TELEPORT) armour_swap_teleport = TRUE;
             if (item->flags3 & TR3_REGEN) armour_swap_regenerate = TRUE;
             if (item->flags3 & TR3_TELEPATHY) armour_swap_telepathy = TRUE;
-            if (item->flags3 & TR3_LITE) armour_swap_lite = TRUE;
+            /* if (item->flags3 & TR3_LITE) armour_swap_lite = TRUE; */
             if (item->flags3 & TR3_SEE_INVIS) armour_swap_see_invis = TRUE;
             if (item->flags3 & TR3_FEATHER) armour_swap_ffall = TRUE;
             if (item->flags3 & TR3_FREE_ACT) armour_swap_free_act = TRUE;
@@ -3522,7 +3528,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
     /* Good flags */
     if (f3 & (TR3_SLOW_DIGEST)) num_slow_digest = TRUE;
     if (f3 & (TR3_FEATHER)) num_ffall = TRUE;
-    if (f3 & (TR3_LITE)) num_lite = TRUE;
+    /* if (f3 & (TR3_LITE)) num_lite = TRUE; */
     if (f3 & (TR3_REGEN)) num_regenerate = TRUE;
     if (f3 & (TR3_TELEPATHY)) num_telepathy = TRUE;
     if (f3 & (TR3_SEE_INVIS)) num_see_inv = TRUE;
@@ -8120,7 +8126,7 @@ int borg_danger_aux(int y, int x, int c, int i, bool average)
     /** Ranged Attacks **/
 
    /* Never cast spells */
-    if (!r_ptr->freq_inate && !r_ptr->freq_spell)
+    if (!r_ptr->freq_innate && !r_ptr->freq_spell)
     {
         v2 = 0;
     }
@@ -8238,7 +8244,7 @@ int borg_danger_aux(int y, int x, int c, int i, bool average)
         if (!borg_full_damage)
         {
             /* reduce for frequency. */
-            chance = (r_ptr->freq_inate + r_ptr->freq_spell)/2;
+            chance = (r_ptr->freq_innate + r_ptr->freq_spell)/2;
             if (chance < 11)
                 v2 = ((v2 * 4) / 10);
             else

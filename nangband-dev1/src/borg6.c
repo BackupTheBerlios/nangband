@@ -1220,7 +1220,7 @@ static void borg_near_monster_type(int dist)
          (r_ptr->flags6 & RF6_S_HI_DEMON) ||
          (r_ptr->flags6 & RF6_S_MONSTER) ||
          (r_ptr->flags6 & RF6_S_MONSTERS) ||
-         (r_ptr->flags6 & RF6_S_ANT) ||
+         (r_ptr->flags6 & RF6_S_ANIMAL) ||
          (r_ptr->flags6 & RF6_S_SPIDER) ||
          (r_ptr->flags6 & RF6_S_HOUND) ||
          (r_ptr->flags6 & RF6_S_HYDRA) ||
@@ -3836,7 +3836,7 @@ static int borg_thrust_damage_one(int i)
          (r_ptr->flags6 & RF6_S_HI_DEMON) ||
          (r_ptr->flags6 & RF6_S_MONSTER) ||
          (r_ptr->flags6 & RF6_S_MONSTERS) ||
-         (r_ptr->flags6 & RF6_S_ANT) ||
+         (r_ptr->flags6 & RF6_S_ANIMAL) ||
          (r_ptr->flags6 & RF6_S_SPIDER) ||
          (r_ptr->flags6 & RF6_S_HOUND) ||
          (r_ptr->flags6 & RF6_S_HYDRA) ||
@@ -4593,7 +4593,7 @@ int borg_launch_damage_one(int i, int dam, int typ)
          (r_ptr->flags6 & RF6_S_HI_DEMON) ||
          (r_ptr->flags6 & RF6_S_MONSTER) ||
          (r_ptr->flags6 & RF6_S_MONSTERS) ||
-         (r_ptr->flags6 & RF6_S_ANT) ||
+         (r_ptr->flags6 & RF6_S_ANIMAL) ||
          (r_ptr->flags6 & RF6_S_SPIDER) ||
          (r_ptr->flags6 & RF6_S_HOUND) ||
          (r_ptr->flags6 & RF6_S_HYDRA) ||

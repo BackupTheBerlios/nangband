@@ -622,6 +622,22 @@ static cptr *borg_artego_text;      /* Textual prefixes for "artegos" */
 static cptr *borg_sv_art_text;      /* Save textual prefixes for "artifacts" (in kind order) */
 
 
+#ifndef BORG_SCRIPTING
+int get_spellbook_index(int tval)
+{
+	if (tval == TV_MAGIC_BOOK)
+	{
+		return (0);
+	}
+	else if (tval == TV_PRAYER_BOOK)
+	{
+		return (1);
+	}
+
+	return(2);
+}
+#endif
+
 /*
  * Return the slot that items of the given type are wielded into
  *
@@ -4351,7 +4367,7 @@ static void prepare_book_info(int book)
     /* Can we use spells/prayers? */
     if (!cp_ptr->spell_book) return;
 
-    n = script_borg_get_spellbook_index(cp_ptr->spell_book);
+    n = get_spellbook_index(cp_ptr->spell_book);
 
     /* Extract spells */
 /*    for (i = 0; i < 64; i++)
@@ -4473,19 +4489,19 @@ static void ang_sort_swap_hook(vptr u, vptr v, int a, int b)
 
 void borg_clear_3(void)
 {
-    C_KILL(borg_items, INVEN_TOTAL);
-    C_KILL(borg_shops, 9);
-    C_KILL(safe_items, INVEN_TOTAL);
-    C_KILL(safe_home,  STORE_INVEN_MAX);
-    C_KILL(safe_shops, 8);
-    C_KILL(borg_plural_text, borg_plural_size);
-    C_KILL(borg_sv_plural_text, borg_plural_size);
-    C_KILL(borg_plural_what, borg_plural_size);
-    C_KILL(borg_single_text, borg_single_size);
-    C_KILL(borg_single_what, borg_single_size);
-    C_KILL(borg_artego_text, borg_artego_size);
-    C_KILL(borg_sv_art_text, borg_artego_size);
-    C_KILL(borg_artego_what, borg_artego_size);
+    KILL(borg_items);
+    KILL(borg_shops);
+    KILL(safe_items);
+    KILL(safe_home);
+    KILL(safe_shops);
+    KILL(borg_plural_text);
+    KILL(borg_sv_plural_text);
+    KILL(borg_plural_what);
+    KILL(borg_single_text);
+    KILL(borg_single_what);
+    KILL(borg_artego_text);
+    KILL(borg_sv_art_text);
+    KILL(borg_artego_what);
 }
 
 /*

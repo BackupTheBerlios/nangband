@@ -1127,10 +1127,7 @@ static errr savefile_do_block_player(bool type, int ver)
 	savefile_do_s16b(&p_ptr->tim_infra, type);
 
 	/* Timed resistances */
-	for (i = 0; i < RES_MAX; i++)
-	{
-		savefile_do_byte(&p_ptr->resist_timed[i], type);
-	}
+	for (i = 0; i < RES_MAX; i++) savefile_do_byte(&p_ptr->resist_timed[i], type);
 
 	savefile_do_byte(&p_ptr->confusing, type);
 	savefile_do_byte(&p_ptr->searching, type);
@@ -2125,6 +2122,8 @@ static bool write_savefile(int fd)
  * --------------------------------------------------------------------- */
 static errr read_savefile(int fd)
 {
+	byte *savefile_head;
+
 	while (TRUE)
 	{
 		byte i;
@@ -2495,25 +2494,19 @@ bool load_player(void)
 			/* Clear the screen */
 			Term_clear();
 
-			/* Check versions */
-			if (!err && (header[pos++] == 83) &&
-				(header[pos++] == 97) &&
-				(header[pos++] == 118) &&
-				(header[pos++] == 101))
-			{
-				/* We have a correct version */
+            /* Check savefile versions */
+            if (header[pos++] != 83) { what = "Invalid savefile"; err = 1; }
+            else if (header[pos++] != 97) { what = "Invalid savefile"; err = 1; }
+            else if (header[pos++] != 118) { what = "Invalid savefile"; err = 1; }
+            else if (header[pos++] != 101) { what = "Invalid savefile"; err = 1; }
+            else
+            {                
+                /* Read the savefile */
 				err = (errr) read_savefile(fd);
-			}
-#if 0
-			else if (!err)
-			{
-				/* Read the old type of savefile */
-				err = (errr) read_savefile();
-			}
-#endif
 
-			/* Error! */
-			if (err) what = "Cannot parse savefile";
+                /* Error! */
+                if (err) what = "Cannot parse savefile";
+            }
 
 			fd_close(fd);
 		}

@@ -308,6 +308,7 @@ static int store_num = 7;
  */
 static int store_top = 0;
 
+
 /*
  * We store the current "store pointer" here so everyone can access it
  */
@@ -2922,6 +2923,15 @@ static void store_process_command(void)
 			{
 				/* Page 2 */
 				store_top = 12;
+
+				/* Redisplay wares */
+				display_inventory();
+			}
+
+			else if (store_top == 12)
+			{
+				/* Page 3 */
+				store_top = 24;
 
 				/* Redisplay wares */
 				display_inventory();

@@ -3647,7 +3647,7 @@ G:(:y
 I:29:20:0
 W:15:15:30:250
 P:5:1d3:0:0:0
-D:A thick belt with gold links along the length of it.
+D:A thick belt with gold links along it's length.
 
 N:518:& Leather Girdle~
 G:(:D
@@ -3672,13 +3672,16 @@ W:0:100:5:50000
 P:0:2d8:0:0:0
 F:IGNORE_FIRE | RES_FIRE20 | LITE3 |
 F:RES_ACID | CON | ACTIVATE
-D:A glowing red orb, it's flame lights your path.
+D:Inside a thin sheet of glass, a burning furnace glows, although
+D: it's heat does not touch your skin.  The light it emits is strong,
+D: but it does not blind you.
 
 N:522:Burning
 G:*:o
 I:8:1:1
 W:0:100:5:50000
 P:0:2d4:0:0:0
-F:IGNORE_FIRE | RES_FIRE10 | LITE3 |
+F:IGNORE_FIRE | RES_FIRE10 | LITE2 |
 F:CON
-D:A glass orb, with an everlasting furnace inside.
+D:This orb is a globe of lava enclosed in a magical sphere, made
+D: to convert it's heat to light.

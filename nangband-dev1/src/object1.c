@@ -1627,7 +1627,7 @@ void object_desc_store(char *buf, const object_type *o_ptr, int pref, int mode)
 void obj_info_resists(byte *resists)
 {
 	/* Texts */
-	int vn;
+ 	int vn;
 	cptr text[32];
 
 	/* Colours */
@@ -1693,9 +1693,8 @@ void obj_info_resists(byte *resists)
 			text_out_c(colours[n], text[n]);
 
 			/* Connectives */
-			if (n == 0) text_out(" your ");
-			else if (n < (vn - 1)) text_out(", ");
-			else if (n == vn) text_out(".  ");
+			if (n < (vn - 1)) text_out(", ");
+			else if (n == (vn - 1)) text_out(".  ");
 			else text_out(" and ");
 		}
 	}
@@ -1711,6 +1710,7 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	bool known = FALSE;
 	bool needs_fuel = FALSE;
 	bool stat_boost = FALSE;
+	bool id = FALSE;
 
 	object_kind *k_ptr;
 
@@ -1728,12 +1728,15 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	/* Prepare the object base kind */
 	k_ptr = &k_info[o_ptr->k_idx];
 
+	/* Check if it is id'd */
+	if (object_known_p(o_ptr)) id = TRUE;
+
 	/* Describe activation */
 	if (f3 & TR3_ACTIVATE)
 	{
 		text_out("It can be activated for ");
 		describe_item_activation(o_ptr);
-		text_out(" if it is being worn.\n");
+		text_out(" if it is being worn.  ");
 		known = TRUE;
 	}
 
@@ -1758,7 +1761,7 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		else text_out("permanently");
 
 		/* Finish */
-		text_out(".  \n");
+		text_out(".  ");
 	}
 
 	/* Count the stats affected */
@@ -2017,7 +2020,10 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	}
 
 	/* Describe the resists/immunities */
-	obj_info_resists(k_ptr->resists);
+	if (id)
+	{
+		obj_info_resists(k_ptr->resists);
+	}
 
 	if (f2 & (TR2_RES_POIS))
 	{

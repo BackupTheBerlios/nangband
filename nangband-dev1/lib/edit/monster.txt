@@ -244,7 +244,7 @@ B:HIT:HURT:1d10
 F:MALE
 F:RAND_50 | DROP_90
 F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR
-F:EVIL
+F:EVIL | ALLOW_DUNGEON
 D:No job is too low for him.
 
 N:14:Battle-scarred veteran
@@ -254,7 +254,7 @@ W:0:1:0:0
 B:HIT:HURT:2d6
 F:MALE
 F:RAND_50 | DROP_90
-F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR
+F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR | ALLOW_DUNGEON
 D:He doesn't take to strangers kindly.
 
 

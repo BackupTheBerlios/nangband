@@ -1217,6 +1217,9 @@ void monster_swap(int y1, int x1, int y2, int x2)
 		p_ptr->py = y2;
 		p_ptr->px = x2;
 
+		/* Update the trap detection status */
+		p_ptr->redraw |= (PR_DTRAP);
+
 		/* Update the panel */
 		p_ptr->update |= (PU_PANEL);
 
@@ -1249,6 +1252,9 @@ void monster_swap(int y1, int x1, int y2, int x2)
 		/* Move player */
 		p_ptr->py = y1;
 		p_ptr->px = x1;
+
+		/* Update the trap detection status */
+		p_ptr->redraw |= (PR_DTRAP);
 
 		/* Update the panel */
 		p_ptr->update |= (PU_PANEL);

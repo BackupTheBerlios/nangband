@@ -2229,12 +2229,21 @@ void verify_panel(void)
 	}
 
 
+#if 1
+
+	/* Scroll if needed */
+	(void)modify_panel(wy, wx);
+
+#else
+
 	/* Scroll if needed */
 	if (modify_panel(wy, wx))
 	{
 		/* Optional disturb on "panel change" */
 		if (disturb_panel && !center_player) disturb(0, 0);
 	}
+
+#endif
 }
 
 

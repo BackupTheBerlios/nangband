@@ -642,6 +642,31 @@ static void prt_state(void)
 
 
 /*
+ * Prints trap detection status
+ *
+ * One could use another p_ptr flag to divorce this function from
+ * cave_info[][], with codes to update it properly in some places.
+ * I can't decide which is better. -- pelpel
+ */
+static void prt_dtrap(void)
+{
+	u16b info = cave_info[p_ptr->py][p_ptr->px];
+
+	/* The player is in a trap-detected grid */
+	if (info & (CAVE_TRAP_DETECT))
+	{
+		c_put_str(TERM_GREEN, "DTrap", ROW_DTRAP, COL_DTRAP);
+	}
+
+	/* Not in a trap-detected grid */
+	else
+	{
+		put_str("     ", ROW_DTRAP, COL_DTRAP);
+	}
+}
+
+
+/*
  * Prints the speed of a character.			-CJS-
  */
 static void prt_speed(void)
@@ -669,7 +694,7 @@ static void prt_speed(void)
 	}
 
 	/* Display the speed */
-	c_put_str(attr, format("%-14s", buf), ROW_SPEED, COL_SPEED);
+	c_put_str(attr, format("%-10s", buf), ROW_SPEED, COL_SPEED);
 }
 
 
@@ -904,6 +929,9 @@ static void prt_frame_extra(void)
 
 	/* State */
 	prt_state();
+
+	/* Trap detection */
+	prt_dtrap();
 
 	/* Speed */
 	prt_speed();
@@ -2900,6 +2928,12 @@ void redraw_stuff(void)
 	{
 		p_ptr->redraw &= ~(PR_STATE);
 		prt_state();
+	}
+
+	if (p_ptr->redraw & (PR_DTRAP))
+	{
+		p_ptr->redraw &= ~(PR_DTRAP);
+		prt_dtrap();
 	}
 
 	if (p_ptr->redraw & (PR_SPEED))

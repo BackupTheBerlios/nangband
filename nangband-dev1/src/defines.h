@@ -529,14 +529,17 @@
 #define ROW_STATE		(Term->hgt - 1)
 #define COL_STATE		38	/* <state> */
 
+#define ROW_DTRAP		(Term->hgt - 1)
+#define COL_DTRAP		49	/* "DTrap" */
+
 #define ROW_SPEED		(Term->hgt - 1)
-#define COL_SPEED		49	/* "Slow (-NN)" or "Fast (+NN)" */
+#define COL_SPEED		55	/* "Slow (-NN)" or "Fast (+NN)" */
 
 #define ROW_STUDY		(Term->hgt - 1)
-#define COL_STUDY		64	/* "Study" */
+#define COL_STUDY		66	/* "Study" */
 
 #define ROW_DEPTH		(Term->hgt - 1)
-#define COL_DEPTH		70	/* "Lev NNN" / "NNNN ft" */
+#define COL_DEPTH		72	/* "Lev NNN" / "NNNN ft" */
 
 
 /*** General index values ***/
@@ -1778,9 +1781,9 @@
 #define PR_AFRAID		0x00040000L	/* Display Extra (Afraid) */
 #define PR_POISONED		0x00080000L	/* Display Extra (Poisoned) */
 #define PR_STATE		0x00100000L	/* Display Extra (State) */
-#define PR_SPEED		0x00200000L	/* Display Extra (Speed) */
-#define PR_STUDY		0x00400000L	/* Display Extra (Study) */
-/* xxx */
+#define PR_DTRAP		0x00200000L	/* Display Extra (Trap detection) */
+#define PR_SPEED		0x00400000L	/* Display Extra (Speed) */
+#define PR_STUDY		0x00800000L	/* Display Extra (Study) */
 #define PR_EXTRA		0x01000000L	/* Display Extra Info */
 #define PR_BASIC		0x02000000L	/* Display Basic Info */
 /* xxx */
@@ -1814,14 +1817,15 @@
 /*
  * Special cave grid flags
  */
-#define CAVE_MARK		0x01 	/* memorized feature */
-#define CAVE_GLOW		0x02 	/* self-illuminating */
-#define CAVE_ICKY		0x04 	/* part of a vault */
-#define CAVE_ROOM		0x08 	/* part of a room */
-#define CAVE_SEEN		0x10 	/* seen flag */
-#define CAVE_VIEW		0x20 	/* view flag */
-#define CAVE_TEMP		0x40 	/* temp flag */
-#define CAVE_WALL		0x80 	/* wall flag */
+#define CAVE_MARK		0x0001 	/* memorized feature */
+#define CAVE_GLOW		0x0002 	/* self-illuminating */
+#define CAVE_ICKY		0x0004 	/* part of a vault */
+#define CAVE_ROOM		0x0008 	/* part of a room */
+#define CAVE_SEEN		0x1000 	/* seen flag */
+#define CAVE_VIEW		0x2000 	/* view flag */
+#define CAVE_TEMP		0x4000 	/* temp flag */
+#define CAVE_WALL		0x8000 	/* wall flag */
+#define CAVE_TRAP_DETECT 0x0100	/* trap detection flag */
 
 
 
@@ -2582,7 +2586,7 @@
 #define OPT_run_use_corners			19
 #define OPT_disturb_move			20
 #define OPT_disturb_near			21
-#define OPT_disturb_panel			22
+#define OPT_disturb_detect			22
 #define OPT_disturb_state			23
 #define OPT_disturb_minor			24
 /* xxx OPT_disturb_other */
@@ -2704,7 +2708,7 @@
 #define run_use_corners			op_ptr->opt[OPT_run_use_corners]
 #define disturb_move			op_ptr->opt[OPT_disturb_move]
 #define disturb_near			op_ptr->opt[OPT_disturb_near]
-#define disturb_panel			op_ptr->opt[OPT_disturb_panel]
+#define disturb_detect			op_ptr->opt[OPT_disturb_detect]
 #define disturb_state			op_ptr->opt[OPT_disturb_state]
 #define disturb_minor			op_ptr->opt[OPT_disturb_minor]
 /* xxx disturb_other */

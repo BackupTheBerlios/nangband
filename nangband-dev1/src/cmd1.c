@@ -1409,6 +1409,9 @@ void move_player(int dir, int jumping)
 
 	bool pass_walls = p_ptr->pass_walls;
 
+	bool old_dtrap, new_dtrap;
+
+
 	/* Find the result of moving */
 	y = py + ddy[dir];
 	x = px + ddx[dir];
@@ -1507,6 +1510,23 @@ void move_player(int dir, int jumping)
 	/* Normal movement */
 	else
 	{
+		/* See if trap detection status will change */
+		old_dtrap = ((cave_info[py][px] & (CAVE_TRAP_DETECT)) != 0);
+		new_dtrap = ((cave_info[y][x] & (CAVE_TRAP_DETECT)) != 0);
+
+		/* Note the change in the detect status */
+		if (old_dtrap != new_dtrap) p_ptr->redraw |= (PR_DTRAP);
+
+		/* Disturb player if the player is about to leave the detect area XXX */
+		if (disturb_detect && p_ptr->running && old_dtrap && !new_dtrap)
+		{
+			/* Disturb the player */
+			disturb(0, 0);
+
+			/* Done XXX */
+			return;
+		}
+
 		/* Move player */
 		monster_swap(py, px, y, x);
 

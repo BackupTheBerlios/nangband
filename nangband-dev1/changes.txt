@@ -1,6 +1,16 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-07-01
+----------
+- Renamed the disturb_panel option to disturb_detect. It disturbs the player
+  when s/he is about to leave trap detected area. (pelpel)
+- Added the trap detection status indicator. (pelpel)
+- Slightly shortened the speed field and moved the depth field to fit the trap
+  detection field in. All the available columns are used now. Please note that
+  the last column on the last line cannot be used safely on character display
+  terminals. (pelpel)
+
 2002-06-30
 ----------
 - Fixed a big that allowed astral players to use word of recall to

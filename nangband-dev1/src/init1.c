@@ -356,7 +356,6 @@ static cptr r_info_flags6[] =
 	"S_UNIQUE"
 };
 
-
 /*
  * Object flags
  */
@@ -1139,12 +1138,33 @@ static errr grab_one_flag(u32b *flags, cptr names[], cptr what)
 	return (-1);
 }
 
+/*
+ * Grab one resist for a object_kind. XXX XXX
+ */
+static err grab_one_resist(object_kind *k_ptr, cptr what)
+{
+	cptr s;
+
+	if (prefix(what, "RES_ACID"))
+	{
+		s = what + 8;
+		k_ptr->resists[RES_ACID] = atoi(s);
+		return (-1);
+	}
+
+	/* [note to self - finish adding these] */
+
+	/* Whoops */
+	return (0);
+}
 
 /*
  * Grab one flag in an object_kind from a textual string
  */
 static errr grab_one_kind_flag(object_kind *k_ptr, cptr what)
 {
+
+	/* Grab item flags */
 	if (grab_one_flag(&k_ptr->flags1, k_info_flags1, what) == 0)
 		return (0);
 
@@ -1152,6 +1172,10 @@ static errr grab_one_kind_flag(object_kind *k_ptr, cptr what)
 		return (0);
 
 	if (grab_one_flag(&k_ptr->flags3, k_info_flags3, what) == 0)
+		return (0);
+
+	/* Grab the resists stuff */
+	if (grab_one_resist(k_ptr, what) == 0)
 		return (0);
 
 	/* Oops */

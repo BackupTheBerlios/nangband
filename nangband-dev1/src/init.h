@@ -112,6 +112,8 @@ extern errr parse_h_info(char *buf, header *head);
 extern errr parse_b_info(char *buf, header *head);
 extern errr parse_g_info(char *buf, header *head);
 extern errr parse_flavor_info(char *buf, header *head);
+extern errr parse_book_info(char *buf, header *head);
+extern errr parse_spell_info(char *buf, header *head);
 
 /*
  * Error tracking
@@ -137,5 +139,7 @@ extern header h_head;
 extern header b_head;
 extern header g_head;
 extern header flavor_head;
+extern header book_head;
+extern header spell_head;
 
 #endif /* INCLUDED_INIT_H */

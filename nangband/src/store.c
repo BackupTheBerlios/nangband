@@ -12,6 +12,11 @@
 #include "script.h"
 
 
+/*
+ * Messages on a normal purchase.
+ */
+#define say_comment_1() message(MSG_STORE, 0, comment_1[rand_int(N_ELEMENTS(comment_1))]);
+
 static cptr comment_1[] =
 {
         "Okay.",
@@ -22,13 +27,6 @@ static cptr comment_1[] =
         "Taken!"
 };
 
-/*
- * Successful purchase.
- */
-static void say_comment_1(void)
-{
-        message(MSG_STORE, 0, comment_1[rand_int(N_ELEMENTS(comment_1))]);
-}
 
 /*
  * Messages for reacting to purchase prices.
@@ -998,14 +996,15 @@ static void display_entry(int item)
 			put_str(out_val, y, 61);
 		}
 
-		/* Display cost */
-		/* Extract the "minimum" price */
+		/* Determine price for one */
 		x = price_item(o_ptr, ot_ptr->inflate, FALSE);
 
-		/* Actually draw the price */
+		/* Format the price to a string */
 		sprintf(out_val, "%9ld", (long)x);
-		put_str(out_val, y, 68);
-		
+
+		/* Show the price */
+		if (x > p_ptr->au) c_put_str(TERM_L_DARK, out_val, y, 68);
+		else  put_str(out_val, y, 68);
 	}
 }
 

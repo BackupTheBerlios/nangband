@@ -17,8 +17,10 @@
 	WWW			: http://www.angband.pwp.blueyonder.co.uk
 */
 
+#include "angband.h"
+
 /* Variant name and version */
-#define VARIANT "Angband 3.0.1"
+#define VARIANT "Nangband " VERSION_STRING
 
 /* Main 'assign' needed. Kick2.0+ systems usually don't need it anyway */
 #define VERPATH "Angband:"
@@ -26,8 +28,6 @@
 #define CGXSUPPORT		/* Define for RTG support. Leave on */
 
 #ifndef __CEXTRACT__
-#include "angband.h"
-
 #include "main.h"
 
 #include "vers.h"

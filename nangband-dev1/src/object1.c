@@ -2440,7 +2440,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 		/* Intro */
 		text_out("It ");
-		  
+
 		/* Value */
 		if (stat[current_stat].bonus > 0) text_out_c(TERM_L_GREEN, "increases");
 		else if (stat[current_stat].bonus < 0) text_out_c(TERM_ORANGE, "decreases");
@@ -2466,7 +2466,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 			for (iter = 0; iter < no_the_same; iter ++)
 			{
 				/* Stat name */
-				text_out(stat[current_stat].name);
+				text_out(stat[iter].name);
 
 				/* Connectives */
 				if (no_the_same == 1) text_out(" ");

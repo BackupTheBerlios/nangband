@@ -246,7 +246,7 @@ typedef struct {
 
 bool parse_body(BULP *bptr,char **display, char **links, int *link_no, int *block_no, bool block_change, int *table_info, list_blk *list_info, char *err_message);
 bool history_add(history_blk *stack, char *file, int line_no);
-bool go_to_link(link_blk *link_dat,char *filename,char *mark, history_blk *history, u32b *passback);
+bool go_to_link(link_blk *link_dat,char *filename,int filename_len, char *mark, history_blk *history, u32b *passback);
 history_blk *history_loop(history_blk *stack,int direction);
 
 #endif /* INCLUDED_HELP_H */

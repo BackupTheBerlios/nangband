@@ -13,7 +13,7 @@
 #include "angband.h"
 #include "xmlbulp.h"
 #include "help.h"
-                   
+
 /* Compile-time options */
 
 /*
@@ -72,7 +72,7 @@ static char help_help[80] =
 static char link_help[80] = "[Press the key for the link you require]";
 
 /* Quick and dirty prototype */
-char *help_path_build(char *buffer, const char *file, const char *lastfile, history_blk *stack);
+char *help_path_build(char *buffer, int buff_size, const char *file, const char *lastfile, history_blk *stack);
 
 /* -------------------------------------------------------- takkaria ---
  * Converts a string to a terminal colour byte.
@@ -325,7 +325,7 @@ static int link_point_block(char *links, char *id)
  * Pretty much as you'd expect, it links to a file (with reference to a
  * mark point, or not).  Straightforward.
  * --------------------------------------------------------------------- */
-static void link_to_file(char *link_file, char *filename, char *mark, history_blk *history)
+static void link_to_file(char *link_file, char *filename, int filename_len, char *mark, history_blk *history)
 {
 	/* This is used to sotre the position of the mark id within the link */
 	char *markpt=NULL;
@@ -355,7 +355,7 @@ static void link_to_file(char *link_file, char *filename, char *mark, history_bl
 	if (strlen(link_file) != 0)
 	{
 		/* Builds path the to file, and stores it in the history stack. */
-		help_path_build(filename, link_file, (char *)(history[0].file), history);
+		help_path_build(filename, filename_len, link_file, (char *)(history[0].file), history);
 	}             
 	else
 	{
@@ -377,7 +377,7 @@ static void link_to_file(char *link_file, char *filename, char *mark, history_bl
  * selected - load a new file, move back or forward through the history,
  * or exit the help system with or without a return value.
  * --------------------------------------------------------------------- */
-bool go_to_link(link_blk *linkptr, char *filename, char *mark, history_blk *history, u32b *passback)
+bool go_to_link(link_blk *linkptr, char *filename, int filename_len, char *mark, history_blk *history, u32b *passback)
 {
 	/* This isn't really a link */
 	if (linkptr == NULL) return (TRUE);
@@ -391,7 +391,7 @@ bool go_to_link(link_blk *linkptr, char *filename, char *mark, history_blk *hist
 			 * This is a standard link to a file, or a mark point
 			 * within that file or the current file.
 			 */
-			link_to_file(LINK_TEXT(linkptr), filename, mark, history);
+			link_to_file(LINK_TEXT(linkptr), filename, filename_len, mark, history);
 			break;
 		}
 
@@ -407,7 +407,7 @@ bool go_to_link(link_blk *linkptr, char *filename, char *mark, history_blk *hist
 			/*
 			 * Get the canonical path to the file at the top of the stack.
 			 */
-			help_path_build(filename, (char *)(history[0].file), "", NULL);
+			help_path_build(filename, filename_len, (char *)(history[0].file), "", NULL);
 			break;
 		}
 
@@ -422,7 +422,7 @@ bool go_to_link(link_blk *linkptr, char *filename, char *mark, history_blk *hist
 			/*
 			 * Get the canonical path to the file at the top of the stack.
 			 */
-			help_path_build(filename, (char *)(history[0].file), "", NULL);
+			help_path_build(filename, filename_len, (char *)(history[0].file), "", NULL);
 			break;
 		}
 
@@ -1562,7 +1562,7 @@ int plot_helpfile_block(int x_pos, int y_pos, int width, int height, char **redr
 			}
 
 			/* If there is no word break, we character break instead. */
-			if (line_length == 0 && ptr[0] != '\n' && ptr[0] != '\r')
+			if (line_length == 0 && ptr[0] != '\n' && ptr[0] != '\r' && ptr[0] != '\0')
 			{
 				/* Set the line width to fill the width */
 				line_length = width;
@@ -4984,12 +4984,12 @@ bool history_add(history_blk *stack, char *file, int line)
 /* ------------------------------------------------------------ ajps ---
  * Takes a file link (in file) and builds the appropriate path in buffer
  * --------------------------------------------------------------------- */
-char *help_path_build(char *buffer, const char *file, const char *lastfile, history_blk *stack)
+char *help_path_build(char *buffer, int buff_size, const char *file, const char *lastfile, history_blk *stack)
 {
 	char *file_ptr = NULL;
 
 	/* Fill the buffer with the path to the "lib" directory */
-	strncpy(buffer,ANGBAND_DIR,1024);
+	strncpy(buffer,ANGBAND_DIR, buff_size);
 
 	/* This will give the path without the ANGBAND_DIR bit */
 	file_ptr = buffer + strlen(buffer);
@@ -5000,11 +5000,11 @@ char *help_path_build(char *buffer, const char *file, const char *lastfile, hist
 		if (file[0] == '/')
 		{
 			/* Snip the preceding '/' */
-			strncat(buffer, file + 1, 1024 - strlen(buffer));
+			strncat(buffer, file + 1, buff_size - strlen(buffer));
 		}
 		else
 		{
-			strncat(buffer, file, 1024 - strlen(buffer));
+			strncat(buffer, file, buff_size - strlen(buffer));
 		}
 	}
 	/* Path relative to previous file */
@@ -5025,7 +5025,7 @@ char *help_path_build(char *buffer, const char *file, const char *lastfile, hist
 		/* There should always have been a directory there - try from root */
 		if (ptr == NULL)
 		{
-			strncat(buffer, file, 1024 - strlen(buffer));
+			strncat(buffer, file, buff_size - strlen(buffer));
 		}
 		else
 		{
@@ -5052,13 +5052,13 @@ char *help_path_build(char *buffer, const char *file, const char *lastfile, hist
 			}
 
 			/* Append the path to the buffer */
-            strncat(buffer, temp_path, 1024 - strlen(buffer));
+            strncat(buffer, temp_path, buff_size - strlen(buffer));
 
 			/* Append a directory separator */ 
-            strncat(buffer, "/", 1024 - strlen(buffer));
+            strncat(buffer, "/", buff_size - strlen(buffer));
 
 			/* Append the file to the buffer */
-            strncat(buffer, file_start, 1024 - strlen(buffer));
+            strncat(buffer, file_start, buff_size - strlen(buffer));
 
 			/* We don't need this anymore */
 			string_free(temp_path);
@@ -5238,7 +5238,7 @@ bool init_history_stack(history_blk *history)
  * Load and parse the helpfile, ready for display on a screen of width
  * width.
  * --------------------------------------------------------------------- */
-bool load_helpfile(char *filename, helpfile_blk *help_file, int width, history_blk *history, char *err_message)
+bool load_helpfile(char *filename, int filename_length, helpfile_blk *help_file, int width, history_blk *history, char *err_message)
 {
 	char *display, *links;
 	BULP *bptr;
@@ -5253,7 +5253,7 @@ bool load_helpfile(char *filename, helpfile_blk *help_file, int width, history_b
 		sprintf(err_message, "%s", history[0].file);
 
 		/* Build a path to the notfound error file */   
-		path_build(filename, 1024, ANGBAND_DIR_HELP, "err/notfound.xml");
+		path_build(filename, filename_length, ANGBAND_DIR_HELP, "err/notfound.xml");
 
 		/* Return that we couldn't open the file */
 		return (FALSE);
@@ -5268,7 +5268,7 @@ bool load_helpfile(char *filename, helpfile_blk *help_file, int width, history_b
 		bulp_close(bptr);
 
 		/* Build a path to the notparsed error file */                 
-		path_build(filename, 1024, ANGBAND_DIR_HELP, "err/notparsed.xml");
+		path_build(filename, filename_length, ANGBAND_DIR_HELP, "err/notparsed.xml");
 
 		return(FALSE);
 	}
@@ -5306,9 +5306,9 @@ bool load_helpfile(char *filename, helpfile_blk *help_file, int width, history_b
 	{
 		/* The information collecting failed - free memory */
 		free_file_memory(help_file);
-
+		
 		/* Build a path to the notparsed error file */                 
-		path_build(filename, 1024, ANGBAND_DIR_HELP, "err/notparsed.xml");
+		path_build(filename, filename_length, ANGBAND_DIR_HELP, "err/notparsed.xml");
 
 		/* And return an error */
 		return (FALSE);
@@ -5471,7 +5471,7 @@ u32b process_help_keypress(char keypress, char mode)
  * If persist is TRUE, the system will wait for keypresses and act on
  * them, otherwise not.
  * --------------------------------------------------------------------- */
-bool show_helpfile(char *filename, char *mark, helpfile_blk *help_file, history_blk *history, int x, int y, int width, int height, char
+bool show_helpfile(char *filename, int filename_length, char *mark, helpfile_blk *help_file, history_blk *history, int x, int y, int width, int height, char
 *err_message, u32b *passback, bool persist, bool dht, char *entry_file)
 {
 #ifdef HELP_DEBUG_FILEDUMP
@@ -5526,10 +5526,10 @@ bool show_helpfile(char *filename, char *mark, helpfile_blk *help_file, history_
 	 */
 	if (strcmp(filename, "") != 0)
 	{
-		if (load_helpfile(filename, help_file, width - PAGE_BORDER * 2,
+		if (load_helpfile(filename, filename_length, help_file, width - PAGE_BORDER * 2,
 						  history, err_message) == FALSE)
 		{
-			if (load_helpfile(filename, help_file, width - PAGE_BORDER * 2,
+			if (load_helpfile(filename, filename_length, help_file, width - PAGE_BORDER * 2,
 							  history, err_message) == FALSE)
 			{
 				/*
@@ -5840,7 +5840,7 @@ bool show_helpfile(char *filename, char *mark, helpfile_blk *help_file, history_
 				history_loop(history, -1);
 
 				/* Finds the full path for it */
-				help_path_build(filename, (char *)(history[0].file), "", NULL);
+				help_path_build(filename, filename_length, (char *)(history[0].file), "", NULL);
 
 				/* Escape from the redraw/keypres loop */
 				keypress = CHAR_QUIT;
@@ -5852,7 +5852,7 @@ bool show_helpfile(char *filename, char *mark, helpfile_blk *help_file, history_
 			case ACTION_FORWARD:
 			{
 				history_loop(history, +1);
-				help_path_build(filename, (char *)(history[0].file), "", NULL);
+				help_path_build(filename, filename_length, (char *)(history[0].file), "", NULL);
 				keypress = CHAR_QUIT;
 				break;
 			}
@@ -5885,7 +5885,7 @@ bool show_helpfile(char *filename, char *mark, helpfile_blk *help_file, history_
 				if (linkptr != NULL)
 				{
 					/* will return if the help system is wanted or not */
-					helping = go_to_link(linkptr, filename, mark,
+					helping = go_to_link(linkptr, filename, filename_length, mark,
 										 history, passback);
 
 					/* Breaks out of the redraw/keypress loop */
@@ -5912,7 +5912,7 @@ bool show_helpfile(char *filename, char *mark, helpfile_blk *help_file, history_
 				if (linkptr != NULL)
 				{
 					/* Returns whether the help system is still wanted */
-					helping = go_to_link(linkptr, filename, mark,
+					helping = go_to_link(linkptr, filename, filename_length, mark,
 										 history, passback);
 
 					/* Jump out of this keypress/redraw loop */
@@ -6003,19 +6003,19 @@ u32b render_xml_file(char *file, bool clear, bool help_text, bool persist)
 	if ( file != NULL )
 	{
 		/* Use the link function to extract a mark point */
-		link_to_file(file, filename, mark, history);
+		link_to_file(file, filename, 1024, mark, history);
 
 		/* No file was specified, use index */
 		if (strcmp(filename,"") == 0)
 		{
 			/* Find full path, and store in the history */
-			help_path_build(filename,"help/index.xml", "", history);
+			help_path_build(filename, 1024, "help/index.xml", "", history);
 		}
 	}
 	else
 	{        
 		/* Find full path, and store in the history */
-		help_path_build(filename,"help/index.xml", "", history);
+		help_path_build(filename, 1024, "help/index.xml", "", history);
 	}
                                     
 	/* history[0] contains the path to the entry file, so keep a record */
@@ -6033,11 +6033,11 @@ u32b render_xml_file(char *file, bool clear, bool help_text, bool persist)
 	/* While we still want the help system running */
 	while (cont)
 	{
-		cont = show_helpfile(filename, mark, &help_file, history, 0, 0,
+		cont = show_helpfile(filename, 1024, mark, &help_file, history, 0, 0,
 							  term_width, term_height, err_message, &passback, persist, help_text, (char *)entry_file);
 
 		/* If we are moving to a new file */
-		if ( strcmp(filename,"") != 0 )
+		if (strcmp(filename,"") != 0)
 		{                                
 			/* free any memory that has been used for the last file */
 			free_file_memory(&help_file);

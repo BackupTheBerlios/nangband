@@ -1149,13 +1149,13 @@ static errr grab_one_resist(object_kind *k_ptr, cptr what)
 	{
 		s = what + 8;
 		k_ptr->resists[RES_ACID] = atoi(s);
-		return (-1);
+		return (0);
 	}
 
 	/* [note to self - finish adding these] */
 
 	/* Whoops */
-	return (0);
+	return (-1);
 }
 
 /*

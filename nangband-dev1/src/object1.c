@@ -1634,14 +1634,12 @@ void obj_info_resists(const object_type *o_ptr)
 	int cn;
 	int colours[32];
 
-	/* XXX */
-	bool si_acid = FALSE, si_elec = FALSE, si_fire = FALSE, si_cold = FALSE;
+	/* Percentages */
+	int pc;
+	int percentages[32];
 
-	/* Collect the immunities */
-	vn = cn = 0;
-
-/*	if (f2 & ((TR2_IM_ACID) | (TR2_IM_ELEC) | (TR2_IM_FIRE) | (TR2_IM_COLD)))
-	{ */
+	/* Collect the resists */
+	vn = cn = pc = 0;
 
 /*		if (f2 & (TR2_IM_ACID))
 		{
@@ -1672,55 +1670,29 @@ void obj_info_resists(const object_type *o_ptr)
 		} */
 	
 		/* Describe */
-/*		if (vn)
+		if (vn)
 		{
 			int n;
-	*/
+
 			/* Intro */
-		/*	text_out("It grants you immunity");
-*/
+			text_out("It grants you ");
+
 			/* List the resists */
-		/*	for (n = 0; n < vn; n++)
-			{ */
+			for (n = 0; n < vn; n++)
+			{
+				/* Print the percentage */
+				text_out(format("%i", percentages[n]));
+				text_out("% resistance to ");
+				text_out_c(colours[n], text[n]);
+
 				/* Intro */
-		/*		if (n == 0) text_out(" to ");
-				else text_out(", ");
-	*/
-				/* Dump it */
-		/*		text_out_c(vc[n], vp[n]);
+				if (n < (vn - 1)) text_out(", ");
+				else text_out(" and ");
 			}
+
+			/* End the sentence */
+			text_out(".  ");
 		}
-	*/
-	/* Collect the resists */
-/*	vn = cn = 0;
-
-	if (f2 & (TR2_IM_ACID))
-	{
-		vp[vn++] = "acid";
-		vc[cn++] = TERM_L_GREEN;
-		sr_acid = TRUE;
-	}
-
-	if (f2 & (TR2_RES_ELEC))
-	{
-		vp[vn++] = "electricity";
-		vc[cn++] = TERM_BLUE;
-		sr_elec = TRUE;
-	}
-
-	if (f2 & (TR2_RES_FIRE))
-	{
-		vp[vn++] = "fire";
-		vc[cn++] = TERM_RED;
-		sr_fire = TRUE;
-	}
-
-	if (f2 & (TR2_RES_COLD))
-	{
-		vp[vn++] = "cold";
-		vc[cn++] = TERM_L_BLUE;
-		sr_cold = TRUE;
-	} */
 
 	return;
 }

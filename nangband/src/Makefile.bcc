@@ -1,29 +1,15 @@
-###################################################################
-#
-#  Makefile.bcc - Angband makefile for Borland C++ 5.5 (Win32)
-#
-###################################################################
+# Makefile.bcc - Angband makefile for Borland C++ 5.5 (Win32)
 
-
-###################################################################
-#
-#       Borland specific directives ---
-#
+# Autodepend
 .AUTODEPEND
 
-###################################################################
-#
-# Set tool and version names:
+# Tools used
+CC = bcc32
+LINKER = ilink32
+RC = brc32
 
-CC         = bcc32
-LINKER     = ilink32
-RC         = brc32
-
-###################################################################
-#
-# Name of the *.exe-file
-
-EXE_FILE = angband.exe
+# Target executable
+EXE_FILE = nangband.exe
 
 
 ###################################################################
@@ -37,8 +23,7 @@ EXE_FILE = angband.exe
 #
 # Set any compiler options
 
-CCOPTS = -Hc -tW -lGn -e$(EXE_FILE) -w- \
-	-D_WIN32_WINNT=0x0400 -DWINVER=0x0400
+CCOPTS = -Hc -tW -lGn -e$(EXE_FILE) -w- -D_WIN32_WINNT=0x0400 -DWINVER=0x0400
 
 # Compile flags:
 CCFLAGS= $(CCOPTS) $(DBGOPT)
@@ -128,7 +113,7 @@ l-spell.c: lua\tolua.exe l-spell.pkg
 
 ########################### Implicit Rules ########################
 .c.obj:
-	$(CC) $(CCFLAGS) -c {$? }
+	$(CC) $(CCFLAGS) -c -o$@ $<
 
 .obj.exe:
 	$(CC) $(CCFLAGS) $<

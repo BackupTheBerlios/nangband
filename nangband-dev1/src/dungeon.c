@@ -658,12 +658,14 @@ static void process_world(void)
 	if (p_ptr->stun) regen_amount = 0;
 	if (p_ptr->cut) regen_amount = 0;
 
+	/* Nether brand is bad for you */
+	if (p_ptr->nethr_brand) regen_amount /= 3;
+
 	/* Regenerate Hit Points if needed */
 	if (p_ptr->chp < p_ptr->mhp)
 	{
 		regenhp(regen_amount);
 	}
-
 
 	/*** Timeout Various Things ***/
 
@@ -2616,30 +2618,8 @@ void play_game(bool new_game)
 		/* Hack -- seed for town layout */
 		seed_town = rand_int(0x10000000);
 
-#ifdef GJW_RANDART
-
-		/* Hack -- seed for random artifacts */
-		seed_randart = rand_int(0x10000000);
-
-#endif /* GJW_RANDART */
-
 		/* Roll up a new character */
 		player_birth();
-
-#ifdef GJW_RANDART
-
-		/* Randomize the artifacts */
-		if (adult_rand_artifacts)
-		{
-			do_randart(seed_randart, TRUE);
-		}
-
-#else /* GJW_RANDART */
-
-		/* Make sure random artifacts are turned off if not available */
-		adult_rand_artifacts = FALSE;
-
-#endif /* GJW_RANDART */
 
 		/* Hack -- enter the world */
 		turn = 1;
@@ -2772,7 +2752,7 @@ void play_game(bool new_game)
 				p_ptr->age++;
 
 				/* Mark savefile */
-				p_ptr->noscore |= 0x0001;
+				if (!p_ptr->noscore & 0x00F0) p_ptr->noscore |= 0x0001;
 
 				/* Message */
 				msg_print("You invoke wizard mode and cheat death.");

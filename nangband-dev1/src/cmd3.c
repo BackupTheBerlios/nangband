@@ -1138,16 +1138,24 @@ bool ang_sort_comp_hook(vptr u, vptr v, int a, int b)
 {
 	u16b *who = (u16b*)(u);
 
-	u16b *why = (u16b*)(v);
+	u16b why = *(u16b*)(v);
 
 	int w1 = who[a];
 	int w2 = who[b];
 
 	int z1, z2;
 
+	if (why & 16)
+	{
+		int t;
+		t = w1;
+		w1 = w2;
+		w2 = t;
+		why &= ~16;
+	}
 
 	/* Sort by player kills */
-	if (*why >= 4)
+	if (why >= 4)
 	{
 		/* Extract player kills */
 		z1 = l_list[w1].pkills;
@@ -1160,7 +1168,7 @@ bool ang_sort_comp_hook(vptr u, vptr v, int a, int b)
 
 
 	/* Sort by total kills */
-	if (*why >= 3)
+	if (why >= 3)
 	{
 		/* Extract total kills */
 		z1 = l_list[w1].tkills;
@@ -1173,7 +1181,7 @@ bool ang_sort_comp_hook(vptr u, vptr v, int a, int b)
 
 
 	/* Sort by monster level */
-	if (*why >= 2)
+	if (why >= 2)
 	{
 		/* Extract levels */
 		z1 = r_info[w1].level;
@@ -1186,7 +1194,7 @@ bool ang_sort_comp_hook(vptr u, vptr v, int a, int b)
 
 
 	/* Sort by monster experience */
-	if (*why >= 1)
+	if (why >= 1)
 	{
 		/* Extract experience */
 		z1 = r_info[w1].mexp;
@@ -1294,6 +1302,7 @@ void do_cmd_query_symbol(void)
 	bool all = FALSE;
 	bool uniq = FALSE;
 	bool norm = FALSE;
+	bool kill = TRUE;
 
 	bool recall = FALSE;
 
@@ -1326,6 +1335,11 @@ void do_cmd_query_symbol(void)
 		all = norm = TRUE;
 		strcpy(buf, "Non-unique monster list.");
 	}
+	else if (sym == KTRL('K'))
+	{
+		all = kill = TRUE;
+		strcpy(buf, "Killed monster list.");
+	}
 	else if (ident_info[i])
 	{
 		sprintf(buf, "%c - %s.", sym, ident_info[i] + 2);
@@ -1351,11 +1365,17 @@ void do_cmd_query_symbol(void)
 		/* Nothing to recall */
 		if (!cheat_know && !l_ptr->sights) continue;
 
+		/* Skip unused monsters */
+		if (!(r_ptr->hdice)) continue;
+
 		/* Require non-unique monsters if needed */
 		if (norm && (r_ptr->flags1 & (RF1_UNIQUE))) continue;
 
 		/* Require unique monsters if needed */
 		if (uniq && !(r_ptr->flags1 & (RF1_UNIQUE))) continue;
+
+		/* Require killed if needed */
+		if (kill && !(l_ptr->pkills)) continue;
 
 		/* Collect "appropriate" monsters */
 		if (all || (r_ptr->d_char == sym)) who[n++] = i;
@@ -1372,7 +1392,7 @@ void do_cmd_query_symbol(void)
 
 
 	/* Prompt */
-	put_str("Recall details? (k/p/y/n): ", 0, 40);
+	put_str("Recall details? (k/K/p/P/a/A/y/n): ", 0, 40);
 
 	/* Query */
 	query = inkey();
@@ -1387,13 +1407,36 @@ void do_cmd_query_symbol(void)
 		why = 4;
 		query = 'y';
 	}
+	if (query == 'K')
+	{
+		why = 4+16;
+		query = 'y';
+	}
 
-	/* Sort by level */
+	/* Sort by total kills (and level) */
+	if (query == 'a')
+	{
+		why = 3;
+		query = 'y';
+	}
+	if (query == 'A')
+	{
+		why = 3+16;
+		query = 'y';
+	}
+
+	/* Sort by level (and experience) */
 	if (query == 'p')
 	{
 		why = 2;
 		query = 'y';
 	}
+	if (query == 'P')
+	{
+		why = 2+16;
+		query = 'y';
+	}
+
 
 	/* Catch "escape" */
 	if (query != 'y')

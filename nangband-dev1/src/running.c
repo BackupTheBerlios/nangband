@@ -8,6 +8,7 @@
  * Licence: The GNU GPL, version 2 or any later version.
  */
 #include "angband.h"
+#include <stdarg.h>
 
 static byte run_dir;
 
@@ -21,6 +22,56 @@ static const byte xy_to_abs[3][3] =
 {{5, 6, 7},
  {3, 8, 4},
  {0, 1, 2}};
+
+/* Flexible debugging system */
+void (*debug_out_hook)(const char *) = NULL;
+int debug_level = 0;
+
+void debug_out_to_stderr(const char *out)
+{
+	/* Output to stderr */
+	fprintf(stderr, out);
+
+	/* Return */
+	return;
+}
+
+#define debug_resetlevel() debug_level = 0
+#define debug_downlevel()  ++debug_level
+#define debug_uplevel() --debug_level
+
+void debug_out(const char *format, ...)
+{
+	va_list vp;
+	char buffer[1024] = "";
+	char *p = buffer;
+
+	/* If the hook hasn't been set, don't output */
+	if (!debug_out_hook) return;
+
+	/* Prepare the buffer */
+	if (debug_level)
+	{
+		int i;
+		for (i = 0; i < debug_level; i++) strcat(buffer, "  ");
+		strcat(buffer, "- ");
+		i = strlen(buffer);
+		p += i;
+	}
+
+	/* Now, just make the string */
+	va_start(vp, format);
+	vsprintf(p, format, vp);
+	va_end(vp);
+
+	strcat(buffer, "\n");
+
+	/* Output to the debug hook */
+	debug_out_hook(buffer);
+
+	/* We are done */
+	return;
+}
 
 /*
  * Running helper function: is_walkable(x, y).
@@ -158,17 +209,21 @@ static bool run_start(int dir)
 	/* Set the direction (for reference) */
 	run_dir = dir;
 
-	fprintf(stderr, "  - run_start(%d) called.\n", dir);
+	debug_out("run_start(%d) called.", dir);
 
 	/* Move if the grid is walkable */
 	if (is_walkable((p_ptr->px + x_mod[dir]), (p_ptr->py + y_mod[dir])))
 	{
-		fprintf(stderr, "    - returning TRUE, dir (%d) is walkable.\n", dir);
+		debug_downlevel();
+		debug_out("returning TRUE, dir (%d) is walkable.", dir);
+		debug_uplevel();
 		return (TRUE);
 	}
 
 	/* Otherwise, don't. */
-	fprintf(stderr, "    - returning FALSE, dir (%d) is not walkable.\n", dir);
+	debug_downlevel();
+	debug_out("returning FALSE, dir (%d) is not walkable.", dir);
+	debug_uplevel();
 	return (FALSE);
 }
 
@@ -179,7 +234,11 @@ void run_step(int dir)
 {
 	bool act;
 
-	fprintf(stderr, "run_step(%d) called.\n", dir);
+	/* Set up the debugging stuff*/
+	debug_out_hook = debug_out_to_stderr;
+	debug_resetlevel();
+
+	debug_out("run_step(%d) called.", dir);
 
 	/* Start Run */
 	if (dir)
@@ -187,46 +246,74 @@ void run_step(int dir)
 		/* Set the counter */
 		p_ptr->running = (p_ptr->command_arg ? p_ptr->command_arg : 100);
 
-		fprintf(stderr, "  - starting run:\n");
-		fprintf(stderr, "    - p_ptr->running has been set to %d\n", p_ptr->running);
-		fprintf(stderr, "    - p_ptr->command_arg is %d\n", p_ptr->command_arg);
-		fprintf(stderr, "  - calling run_start(%d).\n", dir);
+		debug_downlevel();
+		debug_out("starting run:\n");
+
+		debug_downlevel();
+		debug_out("p_ptr->running set to %d", p_ptr->running);
+		debug_out("p_ptr->command_arg is %d", p_ptr->command_arg);
+		debug_out("calling run_start(%d).", dir);
 
 		/* Run */
+		debug_downlevel();
 		act = run_start(dir);
+		debug_uplevel();
 
-		fprintf(stderr, "    - run_start(%d) returned %d.\n", dir, act);
+		debug_out("run_start(%d) returned %d.", dir, act);
+		debug_uplevel();
+		debug_uplevel();
 	}
 	else
 	{
 		/* Run */
-		fprintf(stderr, "  - continuing run:\n");
+		debug_downlevel();
+		debug_out("continuing run:");
+		debug_downlevel();
 
+		debug_downlevel();
 		act = run_continue();
+		debug_uplevel();
 
-		fprintf(stderr, "    - run_continue() returned %d.\n", act);
+		debug_out("run_continue() returned %d.", act);
+		debug_uplevel();
+		debug_uplevel();
 	}
 
 	/* If we should act, then do so */
 	if (act)
 	{
+		debug_downlevel();
+
 		/* Decrease running counter */
+		debug_out("acting:");
+		debug_downlevel();
+
 		p_ptr->running--;
+		debug_out("decreased p_ptr->running (%d)", p_ptr->running);
 
 		/* Take time */
 		p_ptr->energy_use = 100;
+		debug_out("energy use set to 100");
 
 		/* Move the player */
 		move_player(run_dir, FALSE);
+		debug_out("moved player in direction run_dir (%d)", run_dir);
+
+		debug_uplevel();
+		debug_uplevel();
 	}
 	else
 	{
-		fprintf(stderr, "  - not acting:\n");
-		fprintf(stderr, "    - resetting p_ptr->running (%d)\n", p_ptr->running);
+		debug_downlevel();
 
+		debug_out("not acting:");
+		debug_downlevel();
+		
 		p_ptr->running = 0;
+		debug_out("reset p_ptr->running (%d)\n", p_ptr->running);
 
-		fprintf(stderr, "    - reset p_ptr->running (%d)\n", p_ptr->running);
+		debug_uplevel();
+		debug_uplevel();
 	}
 
 	return;

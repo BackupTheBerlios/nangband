@@ -70,9 +70,13 @@ static term_data data[MAX_TERM_DATA];
 static bool game_in_progress = FALSE;
 
 /*
- * Number of active terms
+ * Number of active terms (ifdefs and second definition by takkaria)
  */
+#ifdef START_MAX_TERMS
 static int num_term = MAX_TERM_DATA;
+#else /* START_MAX_TERMS */
+static int num_term = 1;
+#endif /* START_MAX_TERMS */
 
 
 /*
@@ -272,11 +276,7 @@ static void save_game_gtk(void)
 		msg_flag = FALSE;
 
 		/* Save the game */
-#ifdef ZANGBAND
-		do_cmd_save_game(FALSE);
-#else /* ZANGBAND */
 		do_cmd_save_game();
-#endif /* ZANGBAND */
 	}
 }
 

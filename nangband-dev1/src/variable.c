@@ -1,13 +1,11 @@
-/* File: variable.c */
-
 /*
- * Copyright (c) 1997 Ben Harrison, James E. Wilson, Robert A. Koeneke
+ * File: variable.c
  *
- * This software may be copied and distributed for educational, research,
- * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * Abstract: Global variables for the Angband game.  Contains some
+ *           string constants.
+ *
+ * For licencing terms, please see angband.h.
  */
-
 #include "angband.h"
 
 
@@ -263,6 +261,12 @@ byte *temp_x;
  */
 sint light_n = 0;
 u16b *light_g;
+
+/*
+ * Size of dungeon (used for map stuff).
+ */
+int dungeon_wid = DUNGEON_WID;
+int dungeon_hgt = DUNGEON_HGT;
 
 
 /*

@@ -127,6 +127,8 @@ extern byte *temp_y;
 extern byte *temp_x;
 extern sint light_n;
 extern u16b *light_g;
+extern int dungeon_wid;
+extern int dungeon_hgt;
 extern byte (*cave_info)[256];
 extern byte (*cave_info2)[256];
 extern byte (*cave_feat)[DUNGEON_WID];

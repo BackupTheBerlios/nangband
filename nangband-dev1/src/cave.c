@@ -1337,13 +1337,6 @@ static byte priority(byte a, char c)
 
 
 /*
- * Maximum size of map.
- */
-#define MAP_HGT (DUNGEON_HGT / 3)
-#define MAP_WID (DUNGEON_WID / 3)
-
-
-/*
  * Display a "small-scale" map of the dungeon in the active Term.
  *
  * Note that this function must "disable" the special lighting effects so
@@ -1364,7 +1357,6 @@ void display_map(int *cy, int *cx)
 	int px = p_ptr->px;
 
 	int map_hgt, map_wid;
-	int dungeon_hgt, dungeon_wid;
 	int row, col;
 
 	int x, y;
@@ -1386,9 +1378,6 @@ void display_map(int *cy, int *cx)
 	/* Desired map height */
 	map_hgt = Term->hgt - 2;
 	map_wid = Term->wid - 2;
-
-	dungeon_hgt = (p_ptr->depth == 0) ? TOWN_HGT : DUNGEON_HGT;
-	dungeon_wid = (p_ptr->depth == 0) ? TOWN_WID : DUNGEON_WID;
 
 	/* Prevent accidents */
 	if (map_hgt > dungeon_hgt) map_hgt = dungeon_hgt;
@@ -4002,9 +3991,9 @@ void town_illuminate(bool daytime)
 
 
 	/* Apply light or darkness */
-	for (y = 0; y < TOWN_HGT; y++)
+	for (y = 0; y < DUNGEON_HGT; y++)
 	{
-		for (x = 0; x < TOWN_WID; x++)
+		for (x = 0; x < DUNGEON_WID; x++)
 		{
 			/* Non-boring grids */
 			if (!(f_info[cave_feat[y][x]].f1 & (FF1_BORING)))
@@ -4046,9 +4035,9 @@ void town_illuminate(bool daytime)
 
 
 	/* Handle shop doorways */
-	for (y = 0; y < TOWN_HGT; y++)
+	for (y = 0; y < DUNGEON_HGT; y++)
 	{
-		for (x = 0; x < TOWN_WID; x++)
+		for (x = 0; x < DUNGEON_WID; x++)
 		{
 			/* Track shop doorways */
 			if (f_info[cave_feat[y][x]].f1 & (FF1_STORE))

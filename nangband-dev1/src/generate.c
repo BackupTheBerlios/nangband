@@ -3287,6 +3287,19 @@ static void town_gen(void)
 	int residents;
 	bool daytime;
 
+	make_town_from_file();
+
+	/* Apply illumination */
+	town_illuminate(daytime);
+
+	/* Make some residents */
+	for (i = 0; i < residents; i++)
+	{
+		/* Make a resident */
+		(void)alloc_monster(3, TRUE);
+	}
+
+	return;
 
 	/* Day time */
 	if ((turn % (10L * TOWN_DAWN)) < ((10L * TOWN_DAWN) / 2))
@@ -3330,16 +3343,6 @@ static void town_gen(void)
 
 	/* Build stuff */
 	town_gen_hack();
-
-	/* Apply illumination */
-	town_illuminate(daytime);
-
-	/* Make some residents */
-	for (i = 0; i < residents; i++)
-	{
-		/* Make a resident */
-		(void)alloc_monster(3, TRUE);
-	}
 }
 
 

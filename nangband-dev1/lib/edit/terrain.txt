@@ -442,6 +442,7 @@ F:BLOCKING | WALL
 
 N:63:permanent wall
 G:#:w
+X:X
 M:60
 F:BLOCKING | WALL
 

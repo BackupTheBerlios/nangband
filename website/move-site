@@ -7,6 +7,8 @@
 # Where "username" is your berlios.de account name.
 
 cd ../
-scp nang-web/* $1@shell.berlios.de:/home/groups/nangband/htdocs/
+
+scp -r nang-web/* $1@shell.berlios.de:/home/groups/nangband/htdocs/ \
+       nang-web/styles/ $1@shell.berlios.de:/home/groups/nangband/htdocs/styles/
 
 # EOF

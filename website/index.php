@@ -43,10 +43,16 @@ include('files.php');
 
 // Check for a filename's validity
 if ($titles[$page]) $title = $titles[$page];
-$okay = (file_exists('content/'.$page) && !is_dir('content/'.$page));
+
+// Extract some information
+$dpage = $page;
+if ($showimage) { $incdir = 'images/'; $dpage .= '.desc'; $title = 'image'; }
+else $incdir = 'content/';
+
+// Check for existance
+$okay = (file_exists($incdir.$dpage) && !is_dir($incdir.$dpage)); 
 if (!$okay) $title = 'page not found';
 if ($source) $title = 'source';
-if ($showimage) $title = 'image';
 
 // Output the header
 page_header($title, $page, $style);
@@ -72,20 +78,12 @@ if ($source)
 
 	show_source($source);
 }
-else if ($showimage)
-{
-	$okay = (!is_dir('images/'.$showimage.'.desc') && file_exists('images/'.$showimage.'.desc'));
-	if (!$okay)
-	{
-		echo '<p><b>Sorry, that image cannot be found.</b></p>';
-	}
-	else include('images/'.$showimage.'.desc');
-}
 else if ($okay)
 {
-	include('content/'.$page);
+	// Include the data
+	include($incdir.$dpage);
 }
-else
+else 
 {
 	echo '<p><b>Sorry, that page was not found.</b></p>';
 	echo '<p>You may be looking for a page which does not exist any more; please follow the links on the sidebar.</p>';

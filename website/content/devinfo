@@ -1,7 +1,7 @@
 <p>Here is documentation on Nangband's development; it is similar in motives to mozilla.org's <a 
 href="http://www.mozilla.org/roadmap.html" title="Mozilla.org Roadmap">roadmap</a>.</p>
 
-<p><a href="?showimage=devplan.gif">The development plan</a> (GIF image) shows the development cycle of 
+<p><a href="?page=devplan&amp;showimage=1">The development plan</a> (GIF image) shows the development cycle of 
 Nangband.  It is a 6-4-3 cycle; Destabilizing development is carried out in the first 6 weeks, then 
 stabilizing development is done for the next 4, and in the last 3, the tree is frozen - only bugfixes 
 are made.  Most development will go on in the first six weeks; major changes will be made then.  

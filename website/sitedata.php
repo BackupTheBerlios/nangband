@@ -23,6 +23,14 @@ $pages[4] = 'links';
 // Number of pages
 $no_pages = 5;
 
+// List of styles
+$styles[0] = 'sidebar';
+$styles[1] = 'clean';
+$styles[2] = 'plain';
+
+// Number of styles
+$no_styles = 3;
+
 // Redirect to the "real" source lister if we're not included
 if (!$included[1]) header('Location: /?source=files');
 ?>

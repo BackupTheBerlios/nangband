@@ -13,13 +13,13 @@ function page_header($title, $type)
 	echo '<head>';
 	echo '<title>Nangband - ' . $title . '</title>';
 	echo '<link rel="stylesheet" rev="content" type="text/css" href="style.css">
-	echo '<meta name="description" content="A site about Nangband, an Angband variant.">
+	echo '<meta name="description" content="A site about Nangband, an Angband variant.">';
 	echo '</head>';
 	echo '<body bgcolor="#000000" text="#ffffff" link="#d090ff" alink="#00ffff" vlink="#77ff44">';
 <!--
 	echo '<h1 align="center">' . $title . '</h1>';
 -->
-	echo '<img src="images/nangband.gif">'
+	echo '<img src="images/nangband.gif">';
 	echo '<div align="center">';
 
 	echo '[ <a href="index.php">Main Page</a> | ';

@@ -1291,7 +1291,7 @@ static bool player_birth_aux_3(void)
 				{
 					best_score = cur_score;
 
-					for (i = 0; i < A_MAXl i++)
+					for (i = 0; i < A_MAX; i++)
 					{
 						stat_save[i] = p_ptr->stat_cur[i];
 					}

@@ -367,6 +367,8 @@ extern void do_cmd_activate(void);
 /* resist.c */
 extern bool resist_check_valid(byte *res_idx);
 extern int resist_player_current(byte res_idx);
+extern int resist_apply(int amount, int dam);
+extern bool resist_is_decent(byte res_idx);
 
 /* dungeon.c */
 extern void play_game(bool new_game);

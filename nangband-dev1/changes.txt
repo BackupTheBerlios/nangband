@@ -1,6 +1,9 @@
 Nangband ChangeLog
 ==================
 
+CVS ENTERS UNPLAYABLE STATE: 2002-03-08
+=======================================
+
 2002-03-08
 ----------
 - Added RES_POIS20 to weapons of venom and also made them a little rarer.
@@ -8,6 +11,10 @@ Nangband ChangeLog
 - Added Runescrye's new artifact file to the cvs. (takkaria)
 - Made areas of detection circlular. Taken the rough way of doing it from ToME.
   (takkaria)
+- Completely ruined the character info screen. (takkaria)
+- Removed the 'smart_cheat' option. (takkaria)
+- Comverted a few more things to the resist code. (takkaria)
+- Removed the light element from the game. (takkaria)
 
 2002-03-03
 ----------

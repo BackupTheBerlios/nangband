@@ -1211,10 +1211,10 @@ static errr grab_one_resist(byte *resists, cptr what)
 		return (0);
 	}
 
-	if (prefix(what, "RES_LITE"))
+	if (prefix(what, "RES_LITE") || prefix(what, "RES_DOOM"))
 	{
 		s = what + 8;
-		resists[RES_LITE] = atoi(s);
+		resists[RES_DOOM] = atoi(s);
 		return (0);
 	}
 

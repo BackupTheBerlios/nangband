@@ -252,8 +252,6 @@ struct player_type
 	s16b stat_ind[A_MAX];	/* Indexes into stat tables */
 
 	bool resist_fear;	/* Resist fear */
-	bool resist_lite;	/* Resist light */
-	bool resist_dark;	/* Resist darkness */
 	bool resist_blind;	/* Resist blindness */
 	bool resist_confu;	/* Resist confusion */
 	bool resist_sound;	/* Resist sound */

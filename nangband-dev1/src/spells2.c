@@ -556,14 +556,6 @@ void self_knowledge(void)
 		info[i++] = "You are completely fearless.";
 	}
 
-	if (p_ptr->resist_lite)
-	{
-		info[i++] = "You are resistant to bright light.";
-	}
-	if (p_ptr->resist_dark)
-	{
-		info[i++] = "You are resistant to darkness.";
-	}
 	if (p_ptr->resist_blind)
 	{
 		info[i++] = "Your eyes are resistant to blindness.";
@@ -2564,7 +2556,7 @@ void destroy_area(int y1, int x1, int r, bool full)
 		msg_print("There is a searing blast of light!");
 
 		/* Blind the player */
-		if (!p_ptr->resist_blind && !p_ptr->resist_lite)
+		if (!p_ptr->resist_blind)
 		{
 			/* Become blind */
 			(void)set_blind(p_ptr->blind + 10 + randint(10));

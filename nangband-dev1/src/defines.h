@@ -238,7 +238,7 @@
 #define RES_COLD		3
 #define RES_POIS		4
 #define RES_FEAR		5
-#define RES_LITE		6
+#define RES_DOOM		6
 #define RES_DARK		7
 #define RES_CONF		8
 #define RES_SOUND		9
@@ -1953,20 +1953,20 @@
 #define TR2_LITE3           0x00000100L /* Provides light rad3 */
 #define TR2_LITE4           0x00000200L /* Provides light rad4 */
 #define TR2_NEEDS_FUEL      0x00000400L /* Light source needs fuel */
-#define TR2_XXX6            0x00000800L /* (reserved) */
-#define TR2_XXX7            0x00001000L /* (reserved) */
-#define TR2_XXX8            0x00002000L /* (reserved) */
-#define TR2_XXX9            0x00004000L /* (reserved) */
-#define TR2_XXX10           0x00008000L /* (reserved) */
-#define TR2_XXX11           0x00010000L /* (reserved) */
-#define TR2_XXX12           0x00020000L /* (reserved) */
-#define TR2_XXX13           0x00040000L /* (reserved) */
-#define TR2_XXX14           0x00080000L /* (reserved) */
-#define TR2_XXX15           0x00100000L /* (reserved) */
+#define TR2_XXX1            0x00000800L /* (reserved) */
+#define TR2_NO_DISENCHANT   0x00001000L /* Item cannot be disenchanted */
+#define TR2_NO_BLIND        0x00002000L /* Item grants immunity to blindness */
+#define TR2_XXX4            0x00004000L /* (reserved) */
+#define TR2_XXX5            0x00008000L /* (reserved) */
+#define TR2_XXX6            0x00010000L /* (reserved) */
+#define TR2_XXX7            0x00020000L /* (reserved) */
+#define TR2_XXX8            0x00040000L /* (reserved) */
+#define TR2_XXX9            0x00080000L /* (reserved) */
+#define TR2_XXX10           0x00100000L /* (reserved) */
 #define TR2_RES_FEAR        0x00200000L /* Resist fear */
-#define TR2_RES_LITE        0x00400000L /* Resist lite */
-#define TR2_RES_DARK        0x00800000L /* Resist dark */
-#define TR2_RES_BLIND       0x01000000L /* Resist blind */
+#define TR2_XXX11           0x00400000L /* Resist lite */
+#define TR2_XXX12           0x00800000L /* Resist dark */
+#define TR2_XXX13           0x01000000L /* Resist blind */
 #define TR2_RES_CONFU       0x02000000L /* Resist confusion */
 #define TR2_RES_SOUND       0x04000000L /* Resist sound */
 #define TR2_RES_SHARD       0x08000000L /* Resist shards */
@@ -2566,7 +2566,7 @@
 /* xxx track_follow */
 /* xxx track_target */
 #define OPT_smart_learn				46
-#define OPT_smart_cheat				47
+/* xxx smart_cheat */
 #define OPT_view_reduce_lite		48
 #define OPT_hidden_player			49
 #define OPT_avoid_abort				50
@@ -2685,7 +2685,7 @@
 /* xxx track_follow */
 /* xxx track_target */
 #define smart_learn				op_ptr->opt[OPT_smart_learn]
-#define smart_cheat				op_ptr->opt[OPT_smart_cheat]
+/* xxx smart_cheat */
 #define view_reduce_lite		op_ptr->opt[OPT_view_reduce_lite]
 #define hidden_player			op_ptr->opt[OPT_hidden_player]
 #define avoid_abort				op_ptr->opt[OPT_avoid_abort]

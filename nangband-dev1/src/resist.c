@@ -49,20 +49,34 @@ int resist_player_current(byte res_idx)
 }
 
 /*
+ * Give a rough indication of a resist's power.
+ */
+bool resist_is_decent(byte res_idx)
+{
+	int type;
+
+	type = resist_player_current(res_idx);
+
+	if (type > 20) return (FALSE);
+
+	return (TRUE);
+}
+
+/*
  * Apply a resistance.
  *
  * Mostly Eytan's code from EyAngband.
  */
-int resist_apply(byte res_amnt, int dam)
+int resist_apply(int amount, int dam)
 {
 	/* No effect */
-	if ((1 > dam) || !res_amnt) return (dam);
+	if ((1 > dam) || !amount) return (dam);
 
 	/* Immunity */
-	if (res_amnt >= 100) return (0);
+	if (amount >= 100) return (0);
 
 	/* Apply the resistance */
-	dam = (dam * (100 - res_amnt)) / 100;
+	dam = (dam * (100 - amount)) / 100;
 
 	/* Resistances can't lower damage to 0 */
 	if (dam < 1) dam = 1;

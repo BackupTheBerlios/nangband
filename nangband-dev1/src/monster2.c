@@ -2348,15 +2348,11 @@ void update_smart_learn(int m_idx, int what)
 			break;
 		}
 
-		case DRS_RES_LITE:
-		{
-			if (p_ptr->resist_lite) m_ptr->smart |= (SM_RES_LITE);
-			break;
-		}
-
 		case DRS_RES_DARK:
 		{
-			if (p_ptr->resist_dark) m_ptr->smart |= (SM_RES_DARK);
+			if (p_ptr->resist_cur[RES_DARK] || p_ptr->resist_timed[RES_DARK])
+				m_ptr->smart |= (SM_RES_DARK);
+
 			break;
 		}
 

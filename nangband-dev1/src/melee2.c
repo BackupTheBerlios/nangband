@@ -81,8 +81,8 @@ static void remove_bad_spells(int m_idx, u32b *f4p, u32b *f5p, u32b *f6p)
 	if (r_ptr->flags2 & (RF2_STUPID)) return;
 
 
-	/* Must be cheating or learning */
-	if (!smart_cheat && !smart_learn) return;
+	/* Must be learning */
+	if (!smart_learn) return;
 
 
 	/* Update acquired knowledge */
@@ -95,50 +95,8 @@ static void remove_bad_spells(int m_idx, u32b *f4p, u32b *f5p, u32b *f6p)
 		smart = m_ptr->smart;
 	}
 
-
-	/* Cheat if requested */
-	if (smart_cheat)
-	{
-		/* Know weirdness */
-		if (p_ptr->free_act) smart |= (SM_IMM_FREE);
-		if (!p_ptr->msp) smart |= (SM_IMM_MANA);
-
-		/* Know immunities */
-/*		if (p_ptr->immune_acid) smart |= (SM_IMM_ACID);
-		if (p_ptr->immune_elec) smart |= (SM_IMM_ELEC);
-		if (p_ptr->immune_fire) smart |= (SM_IMM_FIRE);
-		if (p_ptr->immune_cold) smart |= (SM_IMM_COLD); */
-
-		/* Know oppositions */
-/*		if (p_ptr->oppose_acid) smart |= (SM_OPP_ACID);
-		if (p_ptr->oppose_elec) smart |= (SM_OPP_ELEC);
-		if (p_ptr->oppose_fire) smart |= (SM_OPP_FIRE);
-		if (p_ptr->oppose_cold) smart |= (SM_OPP_COLD);
-		if (p_ptr->oppose_pois) smart |= (SM_OPP_POIS); */
-
-		/* Know resistances */
-/*		if (p_ptr->resist_acid) smart |= (SM_RES_ACID);
-		if (p_ptr->resist_elec) smart |= (SM_RES_ELEC);
-		if (p_ptr->resist_fire) smart |= (SM_RES_FIRE);
-		if (p_ptr->resist_cold) smart |= (SM_RES_COLD);
-		if (p_ptr->resist_pois) smart |= (SM_RES_POIS); */
-		if (p_ptr->resist_fear) smart |= (SM_RES_FEAR);
-		if (p_ptr->resist_lite) smart |= (SM_RES_LITE);
-		if (p_ptr->resist_dark) smart |= (SM_RES_DARK);
-		if (p_ptr->resist_blind) smart |= (SM_RES_BLIND);
-		if (p_ptr->resist_confu) smart |= (SM_RES_CONFU);
-		if (p_ptr->resist_sound) smart |= (SM_RES_SOUND);
-		if (p_ptr->resist_shard) smart |= (SM_RES_SHARD);
-		if (p_ptr->resist_nexus) smart |= (SM_RES_NEXUS);
-		if (p_ptr->resist_nethr) smart |= (SM_RES_NETHR);
-		if (p_ptr->resist_chaos) smart |= (SM_RES_CHAOS);
-		if (p_ptr->resist_disen) smart |= (SM_RES_DISEN);
-	}
-
-
 	/* Nothing known */
 	if (!smart) return;
-
 
 	if (smart & (SM_IMM_ACID))
 	{

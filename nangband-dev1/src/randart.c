@@ -1051,11 +1051,12 @@ static s32b artifact_power(int a_idx)
 	else if (a_ptr->resists[RES_COLD] >= 50) p += 12;
 	else if (a_ptr->resists[RES_COLD] >= 10) p += 4;
 
+	if (a_ptr->resists[RES_DARK] >= 100) p += 16;
+	else if (a_ptr->resists[RES_DARK] >= 50) p += 8;
+
 	if (a_ptr->flags3 & TR3_FREE_ACT) p += 8;
 	if (a_ptr->flags3 & TR3_HOLD_LIFE) p += 10;
-	if (a_ptr->flags2 & TR2_RES_LITE) p += 8;
-	if (a_ptr->flags2 & TR2_RES_DARK) p += 10;
-	if (a_ptr->flags2 & TR2_RES_BLIND) p += 10;
+	if (a_ptr->flags2 & TR2_NO_BLIND) p += 10;
 	if (a_ptr->flags2 & TR2_RES_CONFU) p += 8;
 	if (a_ptr->flags2 & TR2_RES_SOUND) p += 10;
 	if (a_ptr->flags2 & TR2_RES_SHARD) p += 8;
@@ -1063,7 +1064,7 @@ static s32b artifact_power(int a_idx)
 	if (a_ptr->flags2 & TR2_RES_NEXUS) p += 10;
 	if (a_ptr->flags2 & TR2_RES_CHAOS) p += 12;
 	if (a_ptr->flags2 & TR2_RES_DISEN) p += 12;
-        if (a_ptr->flags2 & TR2_LITE1) p += 2;
+	if (a_ptr->flags2 & TR2_LITE1) p += 2;
 	if (a_ptr->flags2 & TR2_LITE2) p += 3;
 	if (a_ptr->flags2 & TR2_LITE3) p += 4;
 
@@ -1608,7 +1609,7 @@ static void add_ability(artifact_type *a_ptr)
 			case TV_HELM:
 			case TV_CROWN:
 			{
-				if (r < 20) a_ptr->flags2 |= TR2_RES_BLIND;
+				if (r < 20) a_ptr->flags2 |= TR2_NO_BLIND;
 				else if (r < 45) a_ptr->flags3 |= TR3_TELEPATHY;
 				else if (r < 65) a_ptr->flags3 |= TR3_SEE_INVIS;
 				else if (r < 75)
@@ -1809,9 +1810,9 @@ static void add_ability(artifact_type *a_ptr)
 			case 25: a_ptr->resists[RES_COLD] += 20; break;
 
 			case 26: a_ptr->resists[RES_POIS] += 20; break;
-			case 27: a_ptr->flags2 |= TR2_RES_LITE; break;
-			case 28: a_ptr->flags2 |= TR2_RES_DARK; break;
-			case 29: a_ptr->flags2 |= TR2_RES_BLIND; break;
+			case 27:
+			case 28: a_ptr->resists[RES_DARK] += 20; break;
+			case 29: a_ptr->flags2 |= TR2_NO_BLIND; break;
 			case 30: a_ptr->flags2 |= TR2_RES_CONFU; break;
 			case 31: a_ptr->flags2 |= TR2_RES_SOUND; break;
 			case 32: a_ptr->flags2 |= TR2_RES_SHARD; break;

@@ -3534,35 +3534,34 @@ static bool project_p(int who, int r, int y, int x, int dam, int typ)
 			break;
 		}
 
-		/* Lite -- blinding */
+		/* Lite -- deprecated */
 		case GF_LITE:
 		{
-			if (fuzzy) msg_print("You are hit by something!");
-			if (p_ptr->resist_lite)
-			{
-				dam *= 4; dam /= (randint(6) + 6);
-			}
-			else if (!blind && !p_ptr->resist_blind)
-			{
-				(void)set_blind(p_ptr->blind + randint(5) + 2);
-			}
-			take_hit(dam, killer);
 			break;
 		}
 
 		/* Dark -- blinding */
 		case GF_DARK:
 		{
-			if (fuzzy) msg_print("You are hit by something!");
-			if (p_ptr->resist_dark)
-			{
-				dam *= 4; dam /= (randint(6) + 6);
-			}
-			else if (!blind && !p_ptr->resist_blind)
+			int resist_percent;
+
+			/* Apply the resistance */
+			resist_percent = resist_player_current(RES_DARK);
+			dam = resist_apply(resist_percent, dam);
+
+			/* Print a message */
+			if (fuzzy) msg_print("You feel dark forces rush over you!");
+
+			/* Take the hit */
+			take_hit(dam, killer);
+
+			/* Get poisoned if not resistant */
+			if (blind) msg_print("You feel the veil that covers your vision getting stronger.");
+			if (!p_ptr->resist_blind)
 			{
 				(void)set_blind(p_ptr->blind + randint(5) + 2);
 			}
-			take_hit(dam, killer);
+
 			break;
 		}
 

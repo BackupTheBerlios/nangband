@@ -1443,7 +1443,7 @@ cptr option_text[OPT_MAX] =
 	NULL,						/* xxx track_follow */
 	NULL,						/* xxx track_target */
 	"smart_learn",				/* OPT_smart_learn */
-	"smart_cheat",				/* OPT_smart_cheat */
+	NULL,						/* xxx smart_cheat */
 	"view_reduce_lite",			/* OPT_view_reduce_lite */
 	"hidden_player",			/* OPT_hidden_player */
 	"avoid_abort",				/* OPT_avoid_abort */
@@ -1707,7 +1707,7 @@ cptr option_desc[OPT_MAX] =
 	NULL,										/* xxx track_follow */
 	NULL,										/* xxx track_target */
 	"Monsters learn from their mistakes",		/* OPT_smart_learn */
-	"Monsters exploit players weaknesses",		/* OPT_smart_cheat */
+	NULL,										/* xxx smart_cheat */
 	"Reduce lite-radius when running",			/* OPT_view_reduce_lite */
 	"Hide player symbol when running",			/* OPT_hidden_player */
 	"Avoid checking for user abort",			/* OPT_avoid_abort */
@@ -2256,7 +2256,7 @@ const byte option_page[OPT_PAGE_MAX][OPT_PAGE_PER] =
 		OPT_smart_monsters,
 		OPT_smart_packs,
 		OPT_smart_learn,
-		OPT_smart_cheat,
+		255,
 		255,
 		255,
 		255,

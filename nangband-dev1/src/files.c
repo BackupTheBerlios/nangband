@@ -1581,8 +1581,9 @@ static const byte display_player_flag_set[4] =
 static const u32b display_player_flag_head[4] =
 {
 /*	TR2_RES_ACID, */
-	TR2_RES_BLIND,
-	TR2_RES_BLIND,
+/*	TR2_RES_BLIND, */
+	TR3_SLOW_DIGEST,
+	TR3_SLOW_DIGEST,
 	TR3_SLOW_DIGEST,
 	TR1_STEALTH
 };
@@ -2046,10 +2047,6 @@ void display_player(int mode)
 	/* Special */
 	if (mode)
 	{
-		/* Hack -- Level */
-		put_str("Level", 9, 1);
-		c_put_str(TERM_L_BLUE, format("%d", p_ptr->lev), 9, 8);
-
 		/* Stat/Sustain flags */
 		display_player_sust_info();
 

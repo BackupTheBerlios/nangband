@@ -1746,6 +1746,20 @@ void obj_info_resists(byte *resists)
 		percentages[pc++] = resists[RES_POIS];
 	}
 
+	if (resists[RES_DARK])
+	{
+		text[vn++] = "dark";
+		colours[cn++] = TERM_L_DARK;
+		percentages[pc++] = resists[RES_DARK];
+	}
+
+	if (resists[RES_DOOM])
+	{
+		text[vn++] = "the pressures of doom";
+		colours[cn++] = TERM_WHITE;
+		percentages[pc++] = resists[RES_DOOM];
+	}
+
 	/* Describe */
 	if (vn)
 	{
@@ -2105,21 +2119,9 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		known = TRUE;
 	}
 
-	if (f2 & (TR2_RES_LITE))
+	if (f2 & (TR2_NO_BLIND))
 	{
-		text_out("It provides resistance to light.\n");
-		known = TRUE;
-	}
-
-	if (f2 & (TR2_RES_DARK))
-	{
-		text_out("It provides resistance to dark.\n");
-		known = TRUE;
-	}
-
-	if (f2 & (TR2_RES_BLIND))
-	{
-		text_out("It provides resistance to blindness.\n");
+		text_out("It grants you immunity to blindness.  ");
 		known = TRUE;
 	}
 

@@ -1074,8 +1074,8 @@
 /* The "sval" codes for TV_ORB */
 #define SV_ORB_FLAMES		0
 #define SV_ORB_BURNIN		1
-#define SV_ORB_FROZWIN		2
-#define SV_ORB_COLD			3
+#define SV_ORB_FROST		2
+#define SV_ORB_ICE		3
 
 
 /* The "sval" codes for TV_SHOT/TV_ARROW/TV_BOLT */

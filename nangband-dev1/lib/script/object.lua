@@ -1307,6 +1307,11 @@ function activate_object(object)
 			object.timeout = rand_int(30) + 30
 		end
 
+		if object.sval == SV_ORB_FROST then
+			fire_bolt(GF_COLD, dir, 100)
+			object.timeout = rand_int(30) + 35
+		end
+
 		return FALSE, FALSE
 	end
 
@@ -1474,7 +1479,9 @@ function describe_item_activation_hook(object)
 	-- Orbs
 	if object.tval == TV_ORB then
 		local activations = {
-			[SV_ORB_FLAMES] = "a fire bolt (80) every 30+d30 turns"}
+			[SV_ORB_FLAMES] = "a fire bolt (80) every 30+d30 turns",
+			[SV_ORB_FROST] = "a frost bolt (100) every 30+d35 turns"
+		}
 
 		return activations[object.sval]
 	end

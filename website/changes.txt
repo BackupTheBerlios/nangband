@@ -1,45 +1,55 @@
 Nangband Website changelog
 ==========================
 
+I'm bored of adding "(takkaria)" to the end of every changelog entry.  
+It's not like anyone else even changes the code here.  So, from now on, 
+I'm not going to bother.
+
+19-07-02
+-------- (takkaria)
+- Added a nice directory lister in place of the default page in content/.
+- "Externalized" the style headers and footers.
+- Added styles as an array to files.php.
+- Changed the behaviour of the "showimage" so that images/"page".desc is
+  shown; this should make the "changing-style-looses-image" bug I found.
+- Added quick hack to perform the above.
+
 18-07-02
 --------
-- Changed the clean style completely.  It looks good with all
-  browsers (Dillo included!) and better with Gecko.  It is, of
-  course, text-browser compliant.  (takkaria)
-- Loadsa fiddling.  Removed some CSS warnings.  Did other neat
-  stuff, I'm sure.  (takkaria)
-- Added the "plain" style.  Looks better in text-based browsers
-  than the others. (takkaria)
-- Added image showing facility to the main page.  I'm thinking
-  I might start another rewrite soon! (takkaria)
+- Changed the clean style completely.  It looks good with all browsers
+  (Dillo included!) and better with Gecko.  It is, of course,
+  text-browser compliant.  (takkaria)
+- Loadsa fiddling.  Removed some CSS warnings.  Did other neat stuff, I'm
+  sure.  (takkaria)
+- Added the "plain" style.  Looks better in text-based browsers than the 
+  others. (takkaria)
+- Added image showing facility to the main page.  I'm thinking I might 
+  start another rewrite soon! (takkaria)
 
 07-07-02
 --------
-- Made the site much more flexible and added references to a few
-  pages which don't exist.  (takkaria)
+- Made the site much more flexible and added references to a few pages 
+which don't exist.  (takkaria)
 
 05-07-02
 --------
-- Added a timing counter to the Nangband changes page for fun.  It
-  needs gmtime.inc which is now in the content/ directory.
+- Added a timing counter to the Nangband changes page for fun.  It needs 
+  gmtime.inc which is now in the content/ directory. (takkaria)
+- Removed the "content lister" - I've chosen a different approach now. 
   (takkaria)
-- Removed the "content lister" - I've chosen a different approach
-  now. (takkaria)
-- Really got the site valid, and added links to the validators at
-  the bottom of the page. (takkaria)
-- Reorganized stuff; now there are extras in "extras/"; this directory
-  is scanned and all files are included from there.  (takkaria)
+- Really got the site valid, and added links to the validators at the 
+  bottom of the page. (takkaria)
+- Reorganized stuff; now there are extras in "extras/"; this directory is 
+  scanned and all files are included from there.  (takkaria)
 
 01-07-02
 --------
-- Cleaned up some code in layout.php - the links code is now much
-  nicer; it'll get cleaned up even more when I have the time.
-  (takkaria)
+- Cleaned up some code in layout.php - the links code is now much nicer; 
+  it'll get cleaned up even more when I have the time. (takkaria)
 - Forgot to add the main page to CVS! (takkaria)
-- Got the entire site valid to HTML 4.01 standards; this includes
-  *both* stylesheets and all content.  I have too much free time!
-  (takkaria)
-- Started working on a "content lister".  Unfinished and broken.
+- Got the entire site valid to HTML 4.01 standards; this includes *both* 
+  stylesheets and all content.  I have too much free time! (takkaria)
+- Started working on a "content lister".  Unfinished and broken. 
   (takkaria)
 
 30-06-02

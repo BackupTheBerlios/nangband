@@ -2941,32 +2941,34 @@ void forget_monster_light(void)
 
 
 /*
- * Hold light-affecting monsters, sorted by light priority,
- * i.e. EMANATE_LIGHT > ABSORB_LIGHT > CARRY_LIGHT.
+ * Temporary data used by update_monster_light
  */
+
+/* Light priorities */
+#define PRIO_MAX			3		/* Number of priorities */
+#define PRIO_EMANATE_LIGHT	2		/* RF2_EMANATE_LIGHT */
+#define PRIO_ABSORB_LIGHT	1		/* RF2_ABSORB_LIGHT */
+#define PRIO_CARRY_LIGHT	0		/* RF2_CARRY_LIGHT */
 
 typedef struct lighting_info lighting_info;
 
-#define PRIO_EMANATE_LIGHT	2
-#define PRIO_ABSORB_LIGHT	1
-#define PRIO_CARRY_LIGHT	0
-
 struct lighting_info
 {
-	byte prio;	/* Priority -- not used */
-	byte rad;	/* Radius 1 -- 3 */
-	byte fy, fx; /* m_ptr->fy and m_ptr->fx */
+	byte rad;				/* Radius 1 -- 3 */
+	byte fy, fx; 			/* m_ptr->fy and m_ptr->fx */
+	byte prio;				/* Priority -- not used */
+	lighting_info *next;	/* Pointer to the next entry */
 };
 
 
 /*
  * XXX XXX Personally don't like to have global variables outside of
  * variable.c...
- * If sorting severely affects performance, use three queues, one for
- * each priority, instead.
- * Grids (== max number of monsters) in radius MAX_SIGHT + 3 == 1505
+ * Pool of entries for the light priority lists. Should be larger than
+ * the number of grids (== max number of monsters) in radius MAX_SIGHT + 3,
+ * which is 1505.
  */
-static lighting_info mqueue[3][VIEW_MAX];
+static lighting_info lighting_temp[VIEW_MAX];
 
 
 /*
@@ -3030,9 +3032,9 @@ static int monster_light_priority(monster_race *r_ptr)
  * Update monster light
  * Code taken from Steven Fuerst's work for ZAngband.
  *
- * The CAVE_TEMP flag is used to store the state during the updating.
- * Only squares in view of the player, whose state changes are drawn via
- * light_spot().
+ * The CAVE_TEMP and CAVE2_TEMP flags are used to store the state during
+ * the updating. Only squares in view of the player, whose state changes
+ * are drawn via light_spot().
  */
 void update_monster_light(void)
 {
@@ -3051,7 +3053,8 @@ void update_monster_light(void)
 	u16b *fast_temp_g = temp_g;
 
 	int prio;
-	int mqueue_n[3];
+	int lighting_temp_idx;
+	lighting_info *priority_list[PRIO_MAX];
 
 	byte *fast_cave_info = &cave_info[0][0];
 	byte *fast_cave_info2 = &cave_info2[0][0];
@@ -3081,7 +3084,7 @@ void update_monster_light(void)
 	}
 
 
-	/***  Step 1 -- remember and clear all the monster-lit grids ***/
+	/***  Step 1 -- remember and clear all the monster-affected grids ***/
 	for (i = 0; i < fast_light_n; i++)
 	{
 		/* Access grid */
@@ -3132,12 +3135,15 @@ void update_monster_light(void)
 	}
 
 
-	/*** Step 2 -- build list of newly lit grids ***/
+	/*** Step 2 -- build prioritised lists of light-affecting monsters ***/
 
-	/* Clear the monster queues */
-	mqueue_n[0] = mqueue_n[1] = mqueue_n[2] = 0;
+	/* Reset free lighting_temp index */
+	lighting_temp_idx = 0;
 
-	/* Loop through monsters, adding newly lit grids to the temp queues */
+	/* Clear the priority lists */
+	for (i = 0; i < PRIO_MAX; i++) priority_list[i] = NULL;
+
+	/* Loop through monsters, adding light affecting monsters to the lists */
 	for (i = 1; i < m_max; i++)
 	{
 		monster_type *m_ptr = &m_list[i];
@@ -3158,29 +3164,36 @@ void update_monster_light(void)
 		/* Skip monsters not carrying light sources */
 		if (rad <= 0) continue;
 
-		/* Get light priority... C doesn't have VALUES... */
+		/* Get light priority */
 		prio = monster_light_priority(r_ptr);
 
-		/* Current queue slot */
-		l_ptr = &mqueue[prio][mqueue_n[prio]++];
+		/* Access free lighting_info entry */
+		l_ptr = &lighting_temp[lighting_temp_idx++];
 
-		/* Enqueue the monster */
-		/* l_ptr->prio = prio; */
+		/* Store radius and location */
 		l_ptr->rad = rad;
 		l_ptr->fy = m_ptr->fy;
 		l_ptr->fx = m_ptr->fx;
+
+		/* Add the entry to the list */
+		l_ptr->next = priority_list[prio];
+		priority_list[prio] = l_ptr;
 	}
 
+
+	/*** Step 3 -- build list of newly affected grids ***/
 
 	/* Clear the temp list */
 	fast_temp_n = 0;
 
-	/* Process queued monsters */
-	for (prio = PRIO_EMANATE_LIGHT; prio >= PRIO_CARRY_LIGHT; prio--)
+	/* Process monsters in the priority lists, highest ones first */
+	for (prio = PRIO_MAX - 1; prio >= PRIO_CARRY_LIGHT; prio--)
 	{
-		for (i = 0; i < mqueue_n[prio]; i++)
+		lighting_info *l_ptr;
+
+		/* Process all the monsters with the current priority */
+		for (l_ptr = priority_list[prio]; l_ptr; l_ptr = l_ptr->next)
 		{
-			lighting_info *l_ptr;
 			int rad;
 			int fy, fx;
 
@@ -3189,10 +3202,7 @@ void update_monster_light(void)
 			byte queue_x[40];
 			int queue_n, q;
 
-			/* Retrieve monster light information */
-			l_ptr = &mqueue[prio][i];
-
-			/* prio = l_ptr->prio; */
+			/* Retrieve monster lighting information */
 			rad = l_ptr->rad;
 			fy = l_ptr->fy;
 			fx = l_ptr->fx;

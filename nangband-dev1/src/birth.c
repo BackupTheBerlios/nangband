@@ -709,7 +709,7 @@ static bool player_birth_aux_1(void)
 	/*** Player sex ***/
 
 	/* Extra info */
-	Term_putstr(5, 15, -1, TERM_WHITE,
+	Term_putstr(7, 10, -1, TERM_WHITE,
 		"Your 'sex' does not have any significant gameplay effects.");
 
 	/* Prompt for "Sex" */
@@ -722,7 +722,7 @@ static bool player_birth_aux_1(void)
 
 		/* Display */
 		sprintf(buf, "%c%c %s", I2A(n), p2, str);
-		put_str(buf, 21 + (n/5), 2 + 15 * (n%5));
+		put_str(buf, 17 + (n/5), 2 + 15 * (n%5));
 	}
 
 	/* Choose */
@@ -730,7 +730,7 @@ static bool player_birth_aux_1(void)
 	{
 		sprintf(buf, "Choose a sex (%c-%c, or * for random): ",
 		        I2A(0), I2A(n-1));
-		put_str(buf, 20, 2);
+		put_str(buf, 16, 2);
 		ch = inkey();
 		if (ch == 'Q') quit(NULL);
 		if (ch == 'S') return (FALSE);
@@ -751,13 +751,13 @@ static bool player_birth_aux_1(void)
 	c_put_str(TERM_L_BLUE, sp_ptr->title, 3, 8);
 
 	/* Clean up */
-	clear_from(15);
+	clear_from(9);
 
 
 	/*** Player race ***/
 
 	/* Extra info */
-	Term_putstr(5, 15, -1, TERM_WHITE,
+	Term_putstr(5, 10, -1, TERM_WHITE,
 	            "Your 'race' determines various intrinsic factors and bonuses.");
 
 	/* Dump races */
@@ -770,7 +770,7 @@ static bool player_birth_aux_1(void)
 
 		/* Display */
 		sprintf(buf, "%c%c %s", I2A(n), p2, str);
-		put_str(buf, 21 + (n/5), 2 + 15 * (n%5));
+		put_str(buf, 17 + (n/5), 2 + 15 * (n%5));
 	}
 
 	/* Choose */
@@ -778,7 +778,7 @@ static bool player_birth_aux_1(void)
 	{
 		sprintf(buf, "Choose a race (%c-%c, or * for random): ",
 		        I2A(0), I2A(n-1));
-		put_str(buf, 20, 2);
+		put_str(buf, 16, 2);
 		ch = inkey();
 		if (ch == 'Q') quit(NULL);
 		if (ch == 'S') return (FALSE);
@@ -799,15 +799,15 @@ static bool player_birth_aux_1(void)
 	c_put_str(TERM_L_BLUE, p_name + rp_ptr->name, 4, 8);
 
 	/* Clean up */
-	clear_from(15);
+	clear_from(9);
 
 
 	/*** Player class ***/
 
 	/* Extra info */
-	Term_putstr(5, 15, -1, TERM_WHITE,
+	Term_putstr(5, 10, -1, TERM_WHITE,
 	            "Your 'class' determines various intrinsic abilities and bonuses.");
-	Term_putstr(5, 16, -1, TERM_WHITE,
+	Term_putstr(5, 11, -1, TERM_WHITE,
 	            "Any entries with a (*) should only be used by advanced players.");
 
 	/* Dump classes */
@@ -826,7 +826,7 @@ static bool player_birth_aux_1(void)
 
 		/* Display */
 		sprintf(buf, "%c%c %s%s", I2A(n), p2, str, mod);
-		put_str(buf, 21 + (n/3), 2 + 20 * (n%3));
+		put_str(buf, 17 + (n/3), 2 + 20 * (n%3));
 	}
 
 	/* Get a class */
@@ -834,7 +834,7 @@ static bool player_birth_aux_1(void)
 	{
 		sprintf(buf, "Choose a class (%c-%c, or * for random): ",
 		        I2A(0), I2A(n-1));
-		put_str(buf, 20, 2);
+		put_str(buf, 16, 2);
 		ch = inkey();
 		if (ch == 'Q') quit(NULL);
 		if (ch == 'S') return (FALSE);
@@ -866,8 +866,10 @@ static bool player_birth_aux_1(void)
 	put_str("Class", 5, 1);
 	c_put_str(TERM_L_BLUE, c_name + cp_ptr->name, 5, 8);
 
+#if 0
 	/* Clean up */
-	clear_from(15);
+	clear_from(9);
+#endif
 
 
 	/*** Birth options ***/

@@ -52,7 +52,7 @@ map_grid_t **map_alloc(int width, int height)
 /* Free up memory for a map */
 void map_free(map_grid_t **dungeon)
 {
-	/* [note to self - free all the dungeon up */
+	/* [note to self - free all the dungeon up] */
 	
 	/* Free the space up */
 	rnfree((vptr) *dungeon);
@@ -112,7 +112,6 @@ static void generate_dungeon(map_grid_t **dungeon, int width, int height, int le
 		}
 	}
 
-#ifdef DEBUG
 	{
 		int sy0, sx0, sy1, sx1, rx, ry;
 		
@@ -134,7 +133,6 @@ static void generate_dungeon(map_grid_t **dungeon, int width, int height, int le
 		
 		gen_rect_room(dungeon, sx0, sx1, sy0, sy1, 0, 0);
 	}
-#endif /* DEBUG */
 	
 	/* Return control */
 	return;
@@ -168,7 +166,7 @@ int main(int argc, char **argv)
 				}
 				case TERRAIN_WALL_O:
 				{
-					printf("#");
+					printf("%");
 					break;
 				}
 				case TERRAIN_FLOOR:

@@ -532,7 +532,7 @@ function use_staff(object)
 			end
 			ident = TRUE
 		end
-	elseif object.sval == SV_STAFF_STARLITE then
+	elseif object.sval == SV_STAFF_STARLIGHT then
 		if player.blind == 0 then
 			msg_print("The end of the staff glows brightly...")
 		end
@@ -541,7 +541,7 @@ function use_staff(object)
 			lite_line(ddd[i])
 		end
 		ident = TRUE
-	elseif object.sval == SV_STAFF_LITE then
+	elseif object.sval == SV_STAFF_LIGHT then
 		if lite_area(damroll(2, 8), 2) then ident = TRUE end
 	elseif object.sval == SV_STAFF_MAPPING then
 		map_area()
@@ -700,7 +700,7 @@ function aim_wand(object)
 		if destroy_door(dir) then ident = TRUE end
 	elseif sval == SV_WAND_STONE_TO_MUD then
 		if wall_to_mud(dir) then ident = TRUE end
-	elseif sval == SV_WAND_LITE then
+	elseif sval == SV_WAND_LIGHT then
 		msg_print("A line of blue shimmering light appears.")
 		lite_line(dir)
 		ident = TRUE
@@ -898,7 +898,7 @@ function zap_rod(object)
 	elseif sval == SV_ROD_DISARMING then
 		if disarm_trap(dir) then ident = TRUE end
 		object.pval = 30
-	elseif sval == SV_ROD_LITE then
+	elseif sval == SV_ROD_LIGHT then
 		msg_print("A line of blue shimmering light appears.")
 		lite_line(dir)
 		ident = TRUE
@@ -1284,7 +1284,7 @@ function activate_object(object)
 		elseif object.sval == SV_DRAGON_SHINING then
 			local chance = randint(2)
 			local name = {"light", "darkness"}
-			local effect = {GF_LITE, GF_DARK}
+			local effect = {GF_LIGHT, GF_DARK}
 			msg_print(format("You breathe %s.", name[chance]))
 			fire_ball(effect[chance], dir, 200, 2)
 			object.timeout = rand_int(300) + 300

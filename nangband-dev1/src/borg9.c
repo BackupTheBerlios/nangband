@@ -493,11 +493,7 @@ static bool borg_think(void)
                 svSavefile2[i] = c;
             }
             svSavefile2[i]  = 0;
-#ifdef BORG_TK
-             path_build(savefile, 1024, BORG_DIR_DATA, svSavefile2);
-#else /* BORG_TK */
              path_build(savefile, 1024, ANGBAND_DIR_PREF, svSavefile2);
-#endif /* BORG_TK */
 
             justSaved = TRUE;
         }
@@ -510,8 +506,6 @@ static bool borg_think(void)
         justSaved = FALSE;
         return (TRUE);
     }
-
-#ifndef BORG_TK
 
     /* Parse "equip" mode */
     if ((0 == borg_what_text(0, 0, 10, &t_a, buf)) &&
@@ -568,7 +562,6 @@ static bool borg_think(void)
         /* Done */
         return (TRUE);
     }
-#endif /* not BORG_TK */
 
     /*** Find books ***/
 
@@ -623,7 +616,7 @@ static bool borg_think(void)
         /* Done */
         return (FALSE);
     }
-#ifndef BORG_TK
+
     /* Check for "browse" mode */
     if ((0 == borg_what_text(COL_SPELL, ROW_SPELL, -12, &t_a, buf)) &&
         (streq(buf, "Lv Mana Fail")))
@@ -665,7 +658,7 @@ static bool borg_think(void)
         /* Done */
         return (FALSE);
     }
-#endif /* not BORG_TK */
+
     /* check for anything that needs *ID* */
     if ( borg_do_star_id )
     {

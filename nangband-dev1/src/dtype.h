@@ -25,7 +25,8 @@
 #define TERRAIN_FLOOR	3
 #define TERRAIN_DOOR	4
 
-typedef unsigned short int feat_t;
+typedef unsigned char feat_t;
+typedef void *generate_hook(map_grid_t **dungeon, int x1, int x2, int y1, int y2, int power, int dlev);
 
 typedef struct {
 	feat_t	feature;
@@ -34,7 +35,7 @@ typedef struct {
 } map_grid_t;
 
 typedef struct {
-	void (*generate_hook)(map_grid_t **dungeon, int x1, int x2, int y1, int y2, int power, int dlev);
+	generate_hook function;
 	int min_power;
 	int max_power;
 } generate_types;

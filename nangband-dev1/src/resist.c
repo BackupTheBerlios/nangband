@@ -1,7 +1,9 @@
 /*
  * File: resist.c
- * Purpose: Resistance code handlers.
- * Authors: Andrew Sidwell (takkaria)
+ *
+ * Abstract: Code for the percentile resistance implementation.
+ * 
+ * Authors: Andrew Sidwell (takkaria), Eytan Zweing (eytan).
  *
  * This file is dual-licenced under both the Angband and GPL licences.
  */

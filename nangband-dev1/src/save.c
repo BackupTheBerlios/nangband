@@ -106,7 +106,7 @@
 #define BLOCK_VERSION_DUNGEON    1
 
 /* The smallest block we can have */
-#define BLOCK_INCREMENT         16
+#define BLOCK_INCREMENT         128
 
 /* The size of the header (in bytes) */
 #define BLOCK_HEAD_SIZE         11
@@ -202,6 +202,7 @@ static void savefile_add_string(char *str, bool record)
 	for (; *str; *str++) savefile_add_byte(*str);
 	savefile_add_byte(*str);
 
+	/* We are done. */
 	return;
 }
 
@@ -432,10 +433,10 @@ static void savefile_start(int fd)
 	header_pos = (byte *) savefile_head;
 
 	/* Start with the variant "stamp" */
-	*header_pos++ = 65;
-	*header_pos++ = 110;
-	*header_pos++ = 103;
-	*header_pos++ = 4;
+	*header_pos++ = 83;
+	*header_pos++ = 97;
+	*header_pos++ = 118;
+	*header_pos++ = 101;
 
 	/* Now, dump the versions */
 	*header_pos++ = SAVEFILE_VERSION_MAJOR;

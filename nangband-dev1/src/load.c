@@ -2044,10 +2044,10 @@ bool load_player(void)
 			Term_clear();
 
 			/* Check versions */
-			if (!err && (*header_pos++ == 65) &&
-				(*header_pos++ == 110) &&
-				(*header_pos++ == 103) &&
-				(*header_pos++ == 4))
+			if (!err && (*header_pos++ == 83) &&
+				(*header_pos++ == 97) &&
+				(*header_pos++ == 118) &&
+				(*header_pos++ == 101))
 			{
 				/* We have a correct version */
 				err = (errr) rd_savefile();

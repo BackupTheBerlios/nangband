@@ -23,6 +23,9 @@
 
 #include "readdib.h"
 
+#ifndef NEAR
+#define NEAR
+#endif /* NEAR */
 
 /*
  * Extract the "WIN32" flag from the compiler

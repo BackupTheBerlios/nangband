@@ -469,58 +469,17 @@ int main(int argc, char *argv[])
 		if (*arg++ != '-') goto usage;
 
 		/* Analyze option */
-		switch (*arg++)
+		switch (tolower(*arg++))
 		{
-			case 'N':
-			case 'n':
-			{
-				new_game = TRUE;
-				break;
-			}
+			case 'n': new_game = TRUE; break;
+			case 'f': arg_fiddle = TRUE; break;
+			case 'w': arg_wizard = TRUE; break;
+			case 'v': arg_sound = TRUE; break;
+			case 'g': arg_graphics = TRUE; break;
+			case 'x': arg_savefile_verbose = TRUE; break;
+			case 'r': arg_force_roguelike = TRUE; break;
+			case 'o': arg_force_original = TRUE; break;
 
-			case 'F':
-			case 'f':
-			{
-				arg_fiddle = TRUE;
-				break;
-			}
-
-			case 'W':
-			case 'w':
-			{
-				arg_wizard = TRUE;
-				break;
-			}
-
-			case 'V':
-			case 'v':
-			{
-				arg_sound = TRUE;
-				break;
-			}
-
-			case 'G':
-			case 'g':
-			{
-				arg_graphics = TRUE;
-				break;
-			}
-
-			case 'R':
-			case 'r':
-			{
-				arg_force_roguelike = TRUE;
-				break;
-			}
-
-			case 'O':
-			case 'o':
-			{
-				arg_force_original = TRUE;
-				break;
-			}
-
-			case 'S':
 			case 's':
 			{
 				show_score = atoi(arg);
@@ -529,7 +488,6 @@ int main(int argc, char *argv[])
 			}
 
 			case 'u':
-			case 'U':
 			{
 				if (!*arg) goto usage;
 
@@ -543,7 +501,6 @@ int main(int argc, char *argv[])
 			}
 
 			case 'm':
-			case 'M':
 			{
 				if (!*arg) goto usage;
 				mstr = arg;
@@ -551,7 +508,6 @@ int main(int argc, char *argv[])
 			}
 
 			case 'd':
-			case 'D':
 			{
 				change_path(arg);
 				continue;
@@ -576,6 +532,7 @@ int main(int argc, char *argv[])
 				puts("  -w       Request wizard mode");
 				puts("  -v       Request sound mode");
 				puts("  -g       Request graphics mode");
+				puts("  -x       Request verbose savefile loading/saving messages");
 				puts("  -o       Request original keyset (default)");
 				puts("  -r       Request rogue-like keyset");
 				puts("  -s<num>  Show <num> high scores (default: 10)");

@@ -1491,6 +1491,16 @@ errr parse_k_info(char *buf, header *head)
 			return (PARSE_ERROR_OUT_OF_MEMORY);
 	}
 
+	/* Process 'M' for "Meta-version" */
+	else if (buf[0] == 'M')
+	{
+		if (!buf[2]) return (PARSE_ERROR_GENERIC);
+		if (!isdigit(buf[2])) return (PARSE_ERROR_GENERIC);
+
+		if (1 != sscanf(buf+2, "%d", &z_info->obj_metaver))
+			return (PARSE_ERROR_GENERIC);
+	}
+
 	/* Process 'S' for "Stats" (one line only) */
 	else if (buf[0] == 'S')
 	{
@@ -2303,6 +2313,16 @@ errr parse_r_info(char *buf, header *head)
 		/* Store the name */
 		if (!(r_ptr->name = add_name(head, s)))
 			return (PARSE_ERROR_OUT_OF_MEMORY);
+	}
+
+	/* Process 'M' for "Meta-version" */
+	else if (buf[0] == 'M')
+	{
+		if (!buf[2]) return (PARSE_ERROR_GENERIC);
+		if (!isdigit(buf[2])) return (PARSE_ERROR_GENERIC);
+
+		if (1 != sscanf(buf+2, "%d", &z_info->mon_metaver))
+			return (PARSE_ERROR_GENERIC);
 	}
 
 	/* Process 'D' for "Description" */

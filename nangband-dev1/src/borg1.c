@@ -7,9 +7,10 @@
  *
  * Licence: Traditional Angband licence, see angband.h.
  */
+#include "angband.h"
+
 #ifdef ALLOW_BORG
 
-#include "angband.h"
 #include "borg1.h"
 
 /*
@@ -2408,11 +2409,4 @@ if (!borg_rand_local)
 }
 
 
-
-#else
-
-/* This throws up warnings.  Ignore them. */
-static char HACK = 0;
-
 #endif
-

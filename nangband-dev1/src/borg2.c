@@ -7,9 +7,10 @@
  *
  * Licences: GNU GPL version 2 or any later version.
  */
+#include "angband.h"
+
 #ifdef ALLOW_BORG
 
-#include "angband.h"
 #include "borg1.h"
 #include "borg2.h"
 
@@ -1201,10 +1202,4 @@ void borg_init_2(void)
 }
 
 
-
-#else
-
-static int HACK = 0;
-
 #endif
-

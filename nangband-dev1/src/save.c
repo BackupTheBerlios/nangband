@@ -77,6 +77,7 @@
 #define BLOCK_TYPE_STORES       11
 #define BLOCK_TYPE_DUNGEON      12
 #define BLOCK_TYPE_INVENTORY    13
+#define BLOCK_TYPE_METADATA     14
 
 /* Block versions */
 #define BLOCK_VERSION_ERROR      0
@@ -92,6 +93,7 @@
 #define BLOCK_VERSION_STORES     1
 #define BLOCK_VERSION_DUNGEON    3
 #define BLOCK_VERSION_INVENTORY  1
+#define BLOCK_VERSION_METADATA   1
 
 /* "Helper" functions - versions */
 #define HELPER_VERSION_OBJECT    2
@@ -121,6 +123,9 @@ static u32b savefile_blockused;  /* The amount of the block that has been used *
 
 /* Hack - Counter */
 int note_cur = 1;
+
+/* Some global variables needed - XXX */
+static bool reload_dungeon = FALSE;
 
 /*
  * Show information on the screen, one line at a time.
@@ -225,15 +230,15 @@ static byte savefile_do_byte(byte *v, bool type)
 	/* Increase the "used" counter */
 	savefile_blockused++;
 
-#if 0
 	if (savefile_blockused > savefile_blocksize)
 	{
-        printf("Ouch.  Out-of-bounds access.\n");
+		note("Fatal error while reading savefile: out-of-bounds access.  Aborting.", GET);
+		(void)inkey();
+		quit("savefile out-of-bounds access");
 	}
-	if (savefile_blockused == savefile_blocksize)
-	{
-        printf("Reached end of savefile block.\n");
-	}
+
+#if 0
+	if (savefile_blockused == savefile_blocksize) printf("Reached end of savefile block.\n");
 #endif
 
 	/* We are done */
@@ -368,6 +373,10 @@ static void savefile_write_block(int fd, byte type, byte version)
 {
 	int pos = 0;
 	byte *savefile_head;
+	byte t = 0;
+
+	/* XXX */
+	savefile_do_byte(&t, PUT);
 
 	/* Make the header */
 	C_MAKE(savefile_head, BLOCK_HEAD_SIZE, byte);
@@ -567,8 +576,6 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 		o_ptr->to_h = k_ptr->to_h;
 		o_ptr->to_d = k_ptr->to_d;
 		o_ptr->to_a = k_ptr->to_a;
-
-		/* Get the correct fields */
 		o_ptr->ac = k_ptr->ac;
 		o_ptr->dd = k_ptr->dd;
 		o_ptr->ds = k_ptr->ds;
@@ -1216,6 +1223,42 @@ static void savefile_do_block_messages(bool type, int ver)
  */
 #define IMPORTANT_FLAGS          (CAVE_MARK | CAVE_GLOW | CAVE_ICKY | CAVE_ROOM)
 
+/* -------------------------------------------- takkaria, 2002-07-28 ---
+ * Ask the user about dungeon regeneration.
+ * --------------------------------------------------------------------- */
+static int savefile_check_reload_dungeon(void)
+{
+	char ch;
+
+	/* Ask the user about it */
+	note("This savefile's dungeon data is unrecoverable in this version.  The dungeon", GET);
+	note("will be regenerated.  However, if you are in an important situation, it is ", GET);
+	note("recommended that you go back to the previous version and then come back to ", GET);
+	note("this version when you have \"finished\" the current dungeon level.", GET);
+	note(" ", GET);
+	note("Do you wish to abort loading? (y/n)", GET);
+
+	/* Get input */
+	do
+	{
+		ch = tolower(inkey());
+	} while ((ch != 'y') && (ch != 'n'));
+
+	if (ch == 'y')
+	{
+		note("Okay, aborting loading and quitting Angband.  Press any key to continue.", GET);
+		(void)inkey();
+		quit("aborting savefile loading by user request");
+	}
+	else
+	{
+		note("Okay, dungeon level will be regenerated.", GET);
+		character_dungeon = FALSE;
+	}
+
+	/* Regenerate the dungeon */
+	return (EXIT_SUCCESS);
+}
 
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Do the dungeon block.
@@ -1236,33 +1279,11 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 	     prev_char,
 	     cave = 0;
 
-	/* Check version */
-	if (ver < 3)
-	{
-		char ch;
-
-		/* Ask the user a question */
-		note("This savefile's dungeon data is unrecoverable.", type);
-		note("Do you want to regenerate this dungeon? (y/n)", type);
-
-		/* Get input */
-		do
-		{
-			ch = inkey();
-			ch = tolower((unsigned char) ch);
-		} while ((ch != 'y') && (ch != 'n'));
-
-		if (ch == 'n')
-		{
-			note("Okay, attempting to load a broken savefile!", type);
-		}
-		else
-		{
-			note("Okay, dungeon level will be regenerated.", type);
-			character_dungeon = FALSE;
-			return (0);
-		}
-	}
+	/* Check for reload-ey-ness */
+	if (ver < 3) reload_dungeon = TRUE;
+	if (reload_dungeon && arg_savefile_verbose)
+		printf("Reloading because of old version (%d).\n", ver);
+	if (reload_dungeon) return (0);
 
 	/* If the player's dead, forget it */
 	if (p_ptr->is_dead) return (0);
@@ -2042,6 +2063,37 @@ static errr savefile_do_block_inventory(bool type, int ver)
 	return (0);
 }
 
+/* -------------------------------------------- takkaria, 2002-04-21 ---
+ * Do the metadata.
+ * --------------------------------------------------------------------- */
+static errr savefile_do_block_metadata(bool type, int ver)
+{
+	u32b temp;
+
+	/* Unused ATM */
+	(void) ver;
+
+	/* Do the data. */
+	if (type == PUT)
+	{
+		temp = z_info->mon_metaver;
+		savefile_do_u32b(&temp, type);
+
+		temp = z_info->obj_metaver;
+		savefile_do_u32b(&temp, type);
+	}
+	else
+	{
+		savefile_do_u32b(&temp, type);
+		if (temp != z_info->mon_metaver) reload_dungeon = TRUE;
+
+		savefile_do_u32b(&temp, type);
+	}
+
+	/* We are done. */
+	return (0);
+}
+
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * The actual code to do the savefile.
  * --------------------------------------------------------------------- */
@@ -2054,6 +2106,11 @@ static bool write_savefile(int fd)
 	savefile_new_block();
 	savefile_do_block_header(PUT, BLOCK_VERSION_HEADER);
 	savefile_write_block(fd, BLOCK_TYPE_HEADER, BLOCK_VERSION_HEADER);
+
+	/* Do metadata */
+	savefile_new_block();
+	savefile_do_block_metadata(PUT, BLOCK_VERSION_METADATA);
+	savefile_write_block(fd, BLOCK_TYPE_METADATA, BLOCK_VERSION_METADATA);
 
 	/* Do the player options */
 	savefile_new_block();
@@ -2112,7 +2169,7 @@ static bool write_savefile(int fd)
 
     /* End the file */
     savefile_new_block();
-    savefile_do_string("Eric! Eric! Eric! This ends the file!", PUT);
+    savefile_do_string("Last block in file.", PUT);
     savefile_write_block(fd, BLOCK_TYPE_END, 0);
 
 #if 0
@@ -2170,6 +2227,9 @@ static errr read_savefile(int fd)
 		/* Read the data */
 		fd_read(fd, (char *) savefile_block, savefile_blocksize);
 
+		/* Be verbose */
+		if (arg_savefile_verbose) printf("Block %d loaded; version %d.\n", type, version);
+
 		/* Switch */
 		switch (type)
 		{
@@ -2209,6 +2269,9 @@ static errr read_savefile(int fd)
 			case BLOCK_TYPE_INVENTORY:
 				savefile_do_block_inventory(GET, version);
 				break;
+			case BLOCK_TYPE_METADATA:
+				savefile_do_block_metadata(GET, version);
+				break;
 			case BLOCK_TYPE_END:
 				finished = TRUE;
 				break;
@@ -2218,19 +2281,26 @@ static errr read_savefile(int fd)
 		KILL(savefile_block);
 	}
 
-	/* Important -- Initialize the sex */
-	sp_ptr = &sex_info[p_ptr->psex];
+	/* Check if we should regenerate the dungeon if neccessary */
+	if (reload_dungeon) (void)savefile_check_reload_dungeon();
 
-	/* Important -- Initialize the race/class */
-	rp_ptr = &p_info[p_ptr->prace];
-	cp_ptr = &c_info[p_ptr->pclass];
+	/* If the player isn't dead, initialise some things */
+	if (!p_ptr->is_dead)
+	{
+		/* Important -- Initialize the sex */
+		sp_ptr = &sex_info[p_ptr->psex];
 
-	/* Important -- Initialize the magic */
-	mp_ptr = &cp_ptr->spells;
+		/* Important -- Initialize the race/class */
+		rp_ptr = &p_info[p_ptr->prace];
+		cp_ptr = &c_info[p_ptr->pclass];
 
-	/* Calculate things */
-	p_ptr->update = (PU_BONUS | PU_TORCH | PU_HP | PU_MANA | PU_SPELLS);
-	update_stuff();
+		/* Important -- Initialize the magic */
+		mp_ptr = &cp_ptr->spells;
+
+		/* Calculate things */
+		p_ptr->update = (PU_BONUS | PU_TORCH | PU_HP | PU_MANA | PU_SPELLS);
+		update_stuff();
+	}
 
 	/* We are done */
 	return (0);

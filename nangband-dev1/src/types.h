@@ -100,6 +100,9 @@ typedef struct bonus_data bonus_data;
 /*
  * Information about maximal indices of certain arrays
  * Actually, these are not the maxima, but the maxima plus one
+ *
+ * Also, some metadata is kept here - maybe rename this struct to
+ * "metadata" or similar? XXX XXX
  */
 struct maxima
 {
@@ -116,12 +119,14 @@ struct maxima
 	u16b h_max;		/* Max size for "h_info[]" */
 	u16b b_max;		/* Max size per element of "b_info[]" */
 	u16b c_max;		/* Max size for "c_info[]" */
-
 	u16b flavor_max;        /* Max size for "flavor_info[]" */
 	u16b randart_max;       /* Max randarts */
 
 	u16b o_max;		/* Max size for "o_list[]" */
 	u16b m_max;		/* Max size for "m_list[]" */
+
+	int mon_metaver; /* Meta-version for monster data */
+	int obj_metaver; /* Meta-version for object data */
 };
 
 

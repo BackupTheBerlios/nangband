@@ -621,9 +621,10 @@ static void init_gtk_window(term_data *td, int i)
 
 	bool main_window = (i == 0) ? TRUE : FALSE;
 
-	GtkWidget *menu_bar, *file_item, *file_menu, *box;
-	GtkWidget *seperator_item, *file_exit_item, *file_new_item, *file_open_item;
-	GtkWidget *options_item, *options_menu, *options_font_item;
+	GtkWidget *menu_bar = NULL, *file_item = NULL, *file_menu = NULL, *box = NULL;
+	GtkWidget *seperator_item = NULL, *file_exit_item = NULL, *file_new_item = NULL;
+	GtkWidget *file_open_item = NULL, *options_item = NULL, *options_menu = NULL;
+	GtkWidget *options_font_item = NULL;
 
 	/* Get default font for this term */
 	font = get_default_font(i);

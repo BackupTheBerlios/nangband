@@ -110,20 +110,23 @@ only-gcu: CFLAGS = -Wall -O1 -pipe -g -D"USE_GCU"
 only-gcu: LIBS = -lcurses -ltermcap
 only-gcu: nangband
 
+# This version supports X11, GTK and GCU.
+#
+# You may have to replace "-lcurses" with "-lncurses" to use the
+# "new curses" library instead of the "old curses" library, and
+# you may have to add "-I/usr/include/ncurses" to the "CFLAGS".
+#
+# `gtk-config *` takes care of the GTK/X11 includes.
+#
+gtk: CFLAGS = -Wall -O `gtk-config --cflags` -g -DUSE_GTK -DUSE_GCU -DUSE_X11
+gtk: LIBS = `gtk-config --libs` -lcurses -ltermcap
+gtk: nangband
 
 ##
 ## Variation -- Use "main-xaw.c" instead of "main-x11.c"
 ##
 #CFLAGS = -Wall -O1 -pipe -g -D"USE_XAW" -D"USE_GCU"
 #LIBS = -lXaw -lXmu -lXt -lX11 -lcurses -ltermcap
-
-
-##
-## Variation -- Use "main-gtk.c" and "main-x11.c"
-## Note: gtk-config adds GTK and X11 includes and libraries as appropriate.
-##
-#CFLAGS = -Wall -O `gtk-config --cflags` -g -DUSE_GTK -DUSE_GCU -DUSE_X11
-#LIBS = `gtk-config --libs` -lcurses -ltermcap
 
 
 ##

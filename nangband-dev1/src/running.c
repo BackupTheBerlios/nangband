@@ -9,44 +9,13 @@
  */
 #include "angband.h"
 
-/* These should all be moved into running.h */
-typedef struct {
-	int base;
-	int left;
-	int right;
-} keypad_similar;
-
-keypad_similar run_lr[] =
-{
-	{1, 4, 2},
-	{2, 1, 3},
-	{3, 2, 6},
-	{6, 3, 9},
-	{9, 6, 8},
-	{8, 9, 7},
-	{7, 8, 4},
-	{4, 7, 1}
-};
-
-keypad_similar run_diag[] =
-{
-	{4, 2, 8},
-	{8, 6, 4},
-	{6, 2, 4},
-	{2, 4, 6}
-};
-
-bool place_okay[10] =
-{ FALSE, TRUE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, TRUE };
-
-static const int x_mod[] =
+static const int x_mod[9] =
 {0, -1, +0, +1, -1, +0, +1, -1, +0, +1};
 
-static const int y_mod[] =
+static const int y_mod[9] =
 {0, +1, +1, +1, +0, +0, +0, -1, -1, -1};
 
-int run_dir, no_paths;
-bool run_energy = TRUE;
+int run_dir;
 
 /*
  * Running helper function: is_walkable(x, y).
@@ -70,59 +39,13 @@ static bool is_walkable(int x, int y)
 }
 
 /*
- * Looks up a base number in run_lr[].
- */
-static keypad_similar *run_lookup_lr(int base_direction)
-{
-	int n;
-	keypad_similar *current_record;
-
-	for (n = 0; n < 9; n++)
-	{
-		current_record = &run_lr[n];
-
-		if (current_record->base == base_direction)
-		{
-			return(current_record);
-		}
-	}
-
-	return (NULL);
-}
-
-/*
- * Looks up a base number in run_diag[].
- */
-static keypad_similar *run_lookup_diag(int base_direction)
-{
-	int n;
-	keypad_similar *current_record;
-
-	for (n = 0; n < 4; n++)
-	{
-		current_record = &run_diag[n];
-
-		if (current_record->base == base_direction)
-		{
-			return(current_record);
-		}
-	}
-
-	return (NULL);
-}
-
-
-/*
  * Work out which grids are walkable and which are not.
  */
 static int run_set_grids(void)
 {
-	int x = 0,
-	    y = 0,
-	    n = 0,
-	    l = -1;
+	int x = 0, y = 0, n, l;
 
-	for (n = 1; n < 10; n++)
+	for (n = 1, l = 0; n < 10; n++)
 	{
 		x = p_ptr->px;
 		y = p_ptr->py;
@@ -141,17 +64,8 @@ static int run_set_grids(void)
 		}
 	}
 
-    /* Hacks */
-    if (run_dir == 1) place_okay[9] = FALSE;
-    else if (run_dir == 2) place_okay[8] = FALSE;
-    else if (run_dir == 3) place_okay[7] = FALSE;
-    else if (run_dir == 4) place_okay[6] = FALSE;
-    else if (run_dir == 6) place_okay[4] = FALSE;
-    else if (run_dir == 7) place_okay[3] = FALSE;
-    else if (run_dir == 8) place_okay[2] = FALSE;
-    else if (run_dir == 9) place_okay[1] = FALSE;
-
-	return(l);
+	/* Return the number of walkable paths */
+	return (l);
 }
 
 /*
@@ -159,57 +73,64 @@ static int run_set_grids(void)
  */
 static void run_continue(void)
 {
-	int n;
+	bool okay[10];
+	int i, d, x, y, p;
 
-	run_energy = TRUE;
+	/*** Step One - Build Flow Information and Map ***/
 
-	n = run_set_grids();
-
-	if (((n - no_paths) > 2) || ((n - no_paths) < -2))
+	/* Get the basic okayness. */
+	for (i = 0, d = 1, p = 0; i < 8; i++, d += ((i == 4) ? 2 : 1))
 	{
-		disturb(0, 0);
-		run_energy = FALSE;
-		return;
+		/* Set x & y for accessing possible player positions */
+		x = (p_ptr->px + x_mod[d]);
+		y = (p_ptr->py + y_mod[d]);
+
+		/* Check for okay-ness */
+		if (is_walkable(x, y)) okay[i] = TRUE;
+		else okay[i] = FALSE;
+
+		/* The previous direction isn't walkable - XXX */
+		if (d == (10 - run_dir)) okay[i] = FALSE;
+
+		/* Increase the number of known paths */
+		if (okay[i]) p++;
 	}
 
-	if (place_okay[run_dir] == FALSE)
+ 	/* If we have no known paths, then we can't go anywhere */
+	if (!p) return (FALSE);
+
+	/* Reiterate and gather more information */
+	for (i = 0, d = 1; i < 4; i++, d += ((d == 3) ? 4 : 2))
 	{
- 		if (n == 1 || n == 2)
- 		{
- 			if (place_okay[(run_lookup_lr(run_dir))->left])
- 			{
- 				run_dir = (run_lookup_lr(run_dir))->left;
- 			}
- 			else if (place_okay[(run_lookup_lr(run_dir))->right])
- 			{
- 				run_dir = (run_lookup_lr(run_dir))->right;
- 			}
-  			if (place_okay[(run_lookup_diag(run_dir))->left])
- 			{
- 				run_dir = (run_lookup_diag(run_dir))->left;
- 			}
- 			else if (place_okay[(run_lookup_diag(run_dir))->right])
- 			{
- 				run_dir = (run_lookup_diag(run_dir))->right;
- 			}
-			else
-			{
-				disturb(0, 0);
-				run_energy = FALSE;
-				return;
-			}
- 		}
- 		else
-	    {
-			disturb(0, 0);
-			run_energy = FALSE;
- 			return;
- 		}
+		int x1, y1, x2, y2, xm, ym;
+
+		/* (x, y) is the point of the current diagonal */
+		x = (p_ptr->px + x_mod[d]);
+		y = (p_ptr->py + y_mod[d]);
+
+#define vert(z)  ((z == 1 || z == 3) ? 3 : -3)
+#define horiz(z) ((z == 1 || z == 7) ? 1 : -1)
+
+		/*** Do (simple) optimization, Stage 1a. ***/
+		xm = vert(x);
+		x1 = (p_ptr->px + x_mod[x + xm]);
+		y1 = (p_ptr->py + y_mod[y2];
+
+		ym = horiz(y);
+		x2 = (p_ptr->px + x_mod[x2];
+		y2 = (p_ptr->py + y_mod[y + ym]);
+
+#undef vert
+#undef horiz
+
+		/*** Do (simple) optimization, Stage 1b ***/
+		if (okay[] && okay[x + xm] && okay[y + ym])
+
+		/*** Do (simple) optimization, Stage 1c ***/
 	}
 
-	no_paths = n;
+	/*** Step Two - Evaluate Condition ***/
 
-	return;
 }
 
 /*
@@ -217,13 +138,17 @@ static void run_continue(void)
  */
 static void run_start(int dir)
 {
+	/* Set the direction (for reference) */
 	run_dir = dir;
 
-	no_paths = run_set_grids();
+    /* Move if the grid is walkable */
+	if (is_walkable((p_ptr->px + x_mod[dir]), (p_ptr->py + y_mod[dir])))
+	{
+		return (TRUE);
+	}
 
-	run_continue();
-
-	return;
+	/* Otherwise, don't. */
+	return (FALSE);
 }
 
 /*
@@ -231,21 +156,19 @@ static void run_start(int dir)
  */
 void run_step(int dir)
 {
+	bool act;
+
 	/* Start Run */
 	if (dir)
 	{
 		p_ptr->running = (p_ptr->command_arg ? p_ptr->command_arg : -1);
-
-		/* Start Running */
-		run_start(dir);
-	}
-	else
-	{
-		/* Or Continue */
-		run_continue();
 	}
 
-	if (run_energy)
+	/* Whatever */
+	act = (dir ? run_start(dir) : run_continue());
+
+	/* If we should act, then do so */
+	if (act)
 	{
 		/* Decrease running counter */
 		p_ptr->running--;
@@ -259,3 +182,4 @@ void run_step(int dir)
 
 	return;
 }
+

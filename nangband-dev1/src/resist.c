@@ -12,7 +12,7 @@
 #include "angband.h"
 
 /* A quick little macro for testing a resist index. */
-#define RES_VALIDIZE(t) if (!resist_check_valid(t)) t = 0;
+#define RES_VALIDIZE(t) (!resist_check_valid(t) || t = 0)
 
 /*
  * Check that a given resist index is valid.

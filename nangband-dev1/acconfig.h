@@ -9,4 +9,4 @@
 #undef USE_TRANSPARENCY
 #undef DEFAULT_PATH
 #undef HAVE_MKSTEMP
-
+#undef ALLOW_BORG

@@ -10,7 +10,7 @@
 #undef USE_TRANSPARENCY
 #undef DEFAULT_PATH
 #undef HAVE_MKSTEMP
-
+#undef ALLOW_BORG
 
 /* Define if you don't have `vprintf' but do have `_doprnt.' */
 #undef HAVE_DOPRNT

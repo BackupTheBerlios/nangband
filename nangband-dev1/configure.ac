@@ -1,16 +1,16 @@
-dnl Process this file with autoconf to produce a configure script.
+# Process this file with autoconf to produce a configure script.
 
-dnl Initialize autoconf - look for the existance of a file to make sure
-dnl the source distribution is installed correctly.
+# Initialize autoconf - look for the existance of a file to make sure
+# the source distribution is installed correctly.
 AC_INIT(src/main.c)
 
-dnl write the resulting #defines into a header file
+# write the resulting #defines into a header file
 AM_CONFIG_HEADER(src/autoconf.h)
 
 AM_INIT_AUTOMAKE(nangband, 2.9.7)
 
 AC_ARG_WITH(setgid,
-[  --with-setgid=NAME      install angband as group NAME],
+[  --with-setgid=NAME      install nangband as group NAME],
 [case "${withval}" in
   no) GAMEGROUP="";;
   yes) AC_MSG_ERROR(missing argument for --with-setgid);;
@@ -21,7 +21,7 @@ AM_CONDITIONAL(SET_GID, test "$GAMEGROUP" != "")
 
 AC_LANG_C
 
-dnl generate the installation path for the ./lib/ folder
+# generate the installation path for the ./lib/ folder
 if test "$GAMEGROUP" != ""; then
   MY_EXPAND_DIR(game_datadir, "$datadir/games/$PACKAGE/lib/")
 else
@@ -29,7 +29,7 @@ else
   bindir=".."
 fi
 
-dnl overwrite the path with an user-specified value
+# overwrite the path with an user-specified value
 AC_ARG_WITH(libpath,
 [  --with-libpath=path     specify the path to the Angband lib folder],
 
@@ -42,22 +42,28 @@ AC_DEFINE_UNQUOTED(DEFAULT_PATH, "$game_datadir")
 DEFAULT_PATH="$game_datadir"
 AC_SUBST(DEFAULT_PATH)
 
-dnl Checks for programs.
+# Checks for programs.
 AC_PROG_CC
 AC_PROG_RANLIB
 
-dnl -fno-strength-reduce prevents a bug in some versions of gcc
+# -fno-strength-reduce prevents a bug in some versions of gcc
 if test "$GCC" = yes; then
   CFLAGS="$CFLAGS -fno-strength-reduce"
 fi
 
-dnl Checks for the borg.
+# Checks for the borg.
 AC_ARG_ENABLE(borg, [  --enable-borg           enable the borg])
-if test "X${enable_borg}" != Xno ; then
-  CFLAGS="$CFLAGS -DALLOW_BORG"
+if test "X${enable_borg-no}" != Xno ; then
+  AC_DEFINE(ALLOW_BORG)
 fi
 
-dnl Checks for libraries.
+# Checks for debugging mode
+AC_ARG_ENABLE(debug, [  --enable-debug          enable debugging mode])
+if test "X${enable_debug-no}" != Xno ; then
+  CFLAGS="$CFLAGS -g"
+fi
+
+# Checks for libraries.
 
 AC_CYGWIN
 AC_MINGW32
@@ -73,11 +79,11 @@ if test "$CYGWIN" = "yes"; then
   ANGBAND_OBJS="readdib.o angband.res"
   AC_SUBST(ANGBAND_OBJS)
 else
-  dnl SGI (IRIX) may need -lsun for the NIS version of getpwnam
+  # SGI (IRIX) may need -lsun for the NIS version of getpwnam
   AC_CHECK_LIB(sun, getpwnam)
 
-  dnl Check for ncurses, curses, or termcap
-  dnl Try -lncurses, -lcurses, -lcurses -ltermcap, and finally plain -ltermcap
+  # Check for ncurses, curses, or termcap
+  # Try -lncurses, -lcurses, -lcurses -ltermcap, and finally plain -ltermcap
   use_ncurses=no
   AC_CHECK_LIB(ncurses, initscr,
     [AC_CHECK_HEADER(ncurses.h, use_ncurses=yes,
@@ -96,7 +102,7 @@ else
          -ltermcap)])
   fi
 
-  dnl Check for GTK
+  # Check for GTK
   if test "X${enable_gtk-no}" != Xno ; then
     AC_DEFINE(USE_GTK)
 
@@ -123,7 +129,7 @@ else
      test "x${with_x+set}" != x ||
      test "x$x_includes" != xNONE || test "x$x_libraries" != xNONE
   then
-    dnl Checks for X window system.
+    # Checks for X window system.
     AC_PATH_XTRA
   fi
 
@@ -142,19 +148,19 @@ else
     LIBS="-lX11 $X_EXTRA_LIBS $LIBS"
     CFLAGS="$CFLAGS $X_CFLAGS"
     LDFLAGS="$LDFLAGS $X_LIBS"
-    dnl X_PRE_LIBS is prepended to LIBS below.
+    # X_PRE_LIBS is prepended to LIBS below.
 
-    dnl Check for the Athena widget set
-    dnl
-    dnl Does anyone know if it is OK to put '-lXmu -lXt' *before* X_PRE_LIBS?
-    dnl If so this code can be simplified by inserting X_PRE_LIBS in LIBS above.
-    dnl Today libraries come in the same sequence as in the old src/Makefile.std,
-    dnl since that is presumably the way which has been tested most.
+    # Check for the Athena widget set
+    #
+    # Does anyone know if it is OK to put '-lXmu -lXt' *before* X_PRE_LIBS?
+    # If so this code can be simplified by inserting X_PRE_LIBS in LIBS above.
+    # Today libraries come in the same sequence as in the old src/Makefile.std,
+    # since that is presumably the way which has been tested most.
     x_more_libs="$X_PRE_LIBS -lXt"
     AC_CHECK_LIB(Xmu, main, x_more_libs="$X_PRE_LIBS -lXmu -lXt", , $x_more_libs)
     AC_CHECK_LIB(Xext, main, x_more_libs="-lXext $x_more_libs", , $x_more_libs)
 
-    dnl Note: Both Xaw libraries and includes may be in nostandard places.
+    # Note: Both Xaw libraries and includes may be in nostandard places.
     ac_save_LIBS="$LIBS"
     LIBS="-lXaw $x_more_libs $LIBS"
     AC_CACHE_CHECK(for X11 Athena widget set, ac_cv_athena_widget,
@@ -176,13 +182,13 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h \
 sys/time.h termio.h unistd.h)
 
-dnl Checks for typedefs, structures, and compiler characteristics.
+# Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
 AC_HEADER_TIME
 AC_STRUCT_TM
 
-dnl Checks for library functions.
+# Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
 AC_FUNC_MEMCMP
 AC_TYPE_SIGNAL

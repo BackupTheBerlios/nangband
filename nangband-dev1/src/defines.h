@@ -692,11 +692,150 @@
 
 
 
-/*** Important artifact indexes (see "lib/edit/artifact.txt") ***/
+/*** Artifact indeces (see "lib/edit/artifact.txt") ***/
 
-#define ART_POWER			13
-#define ART_MORGOTH			34
-#define ART_GROND			111
+/* Lites */
+#define ART_GALADRIEL           1
+#define ART_ELENDIL                     2
+#define ART_THRAIN                      3
+
+/* Amulets */
+#define ART_CARLAMMAS           4 
+#define ART_INGWE                       5 
+#define ART_DWARVES                     6
+
+/* Rings */
+#define ART_BARAHIR                     8
+#define ART_TULKAS                      9
+#define ART_NARYA                       10
+#define ART_NENYA                       11
+#define ART_VILYA                       12
+#define ART_POWER                       13
+
+/* Dragon Scale */
+#define ART_RAZORBACK           16
+#define ART_BLADETURNER         17
+
+/* Hard Armour */
+#define ART_SOULKEEPER          19
+#define ART_ISILDUR                     20
+#define ART_ROHIRRIM            21
+#define ART_BELEGENNON          22
+#define ART_CELEBORN            23
+#define ART_ARVEDUI                     24
+#define ART_CASPANION           25
+
+/* Soft Armour */
+#define ART_HITHLOMIR           27
+#define ART_THALKETTOTH         28
+
+/* Shields */
+#define ART_THORIN                      30
+#define ART_CELEGORM            31
+#define ART_ANARION                     32
+
+/* Helms and Crowns */
+#define ART_MORGOTH                     34
+#define ART_BERUTHIEL           35
+#define ART_THRANDUIL           36
+#define ART_THENGEL                     37
+#define ART_HAMMERHAND          38
+#define ART_DOR                         39
+#define ART_HOLHENNETH          40
+#define ART_GORLIM                      41
+#define ART_GONDOR                      42
+
+/* Cloaks */
+#define ART_COLLUIN                     44
+#define ART_HOLCOLLETH          45
+#define ART_THINGOL                     46
+#define ART_THORONGIL           47
+#define ART_COLANNON            48
+#define ART_LUTHIEN                     49
+#define ART_TUOR                        50
+
+/* Gloves */
+#define ART_CAMBELEG            52
+#define ART_CAMMITHRIM          53
+#define ART_PAURHACH            54
+#define ART_PAURNIMMEN          55
+#define ART_PAURAEGEN           56
+#define ART_PAURNEN                     57
+#define ART_CAMLOST                     58
+#define ART_FINGOLFIN           59
+
+/* Boots */
+#define ART_FEANOR                      60
+#define ART_DAL                         61
+#define ART_THROR                       62
+
+/* Swords */
+#define ART_MAEDHROS            64
+#define ART_ANGRIST                     65
+#define ART_NARTHANC            66
+#define ART_NIMTHANC            67
+#define ART_DETHANC                     68
+#define ART_RILIA                       69
+#define ART_BELANGIL            70
+#define ART_CALRIS                      71
+#define ART_ARUNRUTH            72
+#define ART_GLAMDRING           73
+#define ART_AEGLIN                      74
+#define ART_ORCRIST                     75
+#define ART_GURTHANG            76
+#define ART_ZARCUTHRA           77
+#define ART_MORMEGIL            78
+#define ART_GONDRICAM           79
+#define ART_CRISDURIAN          80
+#define ART_AGLARANG            81
+#define ART_RINGIL                      82
+#define ART_ANDURIL                     83
+#define ART_ANGUIREL            84
+#define ART_ELVAGIL                     85
+#define ART_FORASGIL            86
+#define ART_CARETH                      87 
+#define ART_STING                       88 
+#define ART_HARADEKKET          89 
+#define ART_GILETTAR            90 
+#define ART_DOOMCALLER          91 
+
+/* Polearms */
+#define ART_THEODEN                     93
+#define ART_PAIN                        94
+#define ART_OSONDIR                     95
+#define ART_TIL                         96
+#define ART_AEGLOS                      97
+#define ART_OROME                       98
+#define ART_NIMLOTH                     99
+#define ART_EORLINGAS           100
+#define ART_DURIN                       101
+#define ART_EONWE                       102
+#define ART_BALLI                       103
+#define ART_LOTHARANG           104
+#define ART_MUNDWINE            105
+#define ART_BARUKKHELED         106
+#define ART_WRATH                       107
+#define ART_ULMO                        108
+#define ART_AVAVIR                      109
+
+/* Hafted */
+#define ART_GROND                       111
+#define ART_TOTILA                      112
+#define ART_THUNDERFIST         113
+#define ART_BLOODSPIKE          114
+#define ART_FIRESTAR            115
+#define ART_TARATOL                     116
+#define ART_AULE                        117
+#define ART_NAR                         118
+#define ART_ERIRIL                      119
+#define ART_OLORIN                      120
+#define ART_DEATHWREAKER        121
+#define ART_TURMIL                      122
+
+/* Bows */
+#define ART_BELTHRONDING        124
+#define ART_BARD                        125
+#define ART_CUBRAGOL            126
 
 
 /*

@@ -13,17 +13,17 @@ function page_header($title, $type)
 	echo '<head><title>Nangband - ' . $title . '</title></head>';
 	echo '<body bgcolor="#000000" text="#ffffff">';
 	echo '<h1 align="center">' . $title . '</h1>';
-	echo '<hr width="50%" align="center">';
+	echo '<hr width="50%" size="1" align="center">';
 
 	return;
 }
 
-function page_footer()
+function page_footer($creators)
 {
-	echo '<hr width="50%" align="center">';
-	echo '<div align="center">Nangband website. Contact ';
+	echo '<hr width="50%" size="1" align="center">';
+	echo '<font size="-1"><div align="center">All material is &copy; ' . $creators . '. Contact ';
 	echo '<a href="mailto:nevermiah@hotmail.com">nevermiah@hotmail.com</a>';
-	echo '</div>';
+	echo '</div></font>';
 	echo '</body></html>';
 
 	return;

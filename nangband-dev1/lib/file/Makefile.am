@@ -1,7 +1,7 @@
 ## Makefile.am -- Process this file with automake to process Makefile.in
 
 angband_files = \
-  dead.txt news.txt
+  dead.txt news.xml
 
 EXTRA_DIST = \
   $(angband_files)

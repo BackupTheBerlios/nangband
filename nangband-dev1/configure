@@ -1402,7 +1402,7 @@ fi
 
 PACKAGE=nangband
 
-VERSION=2.9.7
+VERSION=1.0.0
 
 if test "`cd $srcdir && pwd`" != "`pwd`" && test -f $srcdir/config.status; then
   { { echo "$as_me:$LINENO: error: source directory already configured; run \"make distclean\" there first" >&5
@@ -2391,7 +2391,6 @@ do
 done
 done
 
-  test -z "$ac_cv_prog_ac_ct_RANLIB" && ac_cv_prog_ac_ct_RANLIB=":"
 fi
 fi
 ac_ct_RANLIB=$ac_cv_prog_ac_ct_RANLIB
@@ -6103,7 +6102,7 @@ fi
 done
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile src/lua/Makefile lib/Makefile lib/apex/Makefile lib/bone/Makefile lib/data/Makefile lib/edit/Makefile lib/file/Makefile lib/help/Makefile lib/info/Makefile lib/pref/Makefile lib/save/Makefile lib/script/Makefile lib/user/Makefile lib/xtra/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile src/lua/Makefile lib/Makefile lib/apex/Makefile lib/bone/Makefile lib/data/Makefile lib/edit/Makefile lib/file/Makefile lib/help/Makefile lib/help/err/Makefile lib/help/coding/Makefile lib/info/Makefile lib/pref/Makefile lib/save/Makefile lib/script/Makefile lib/user/Makefile lib/xtra/Makefile"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -6595,6 +6594,8 @@ do
   "lib/edit/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/edit/Makefile" ;;
   "lib/file/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/file/Makefile" ;;
   "lib/help/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/help/Makefile" ;;
+  "lib/help/err/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/help/err/Makefile" ;;
+  "lib/help/coding/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/help/coding/Makefile" ;;
   "lib/info/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/info/Makefile" ;;
   "lib/pref/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/pref/Makefile" ;;
   "lib/save/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/save/Makefile" ;;

@@ -1,9 +1,10 @@
 ## Makefile.am -- Process this file with automake to process Makefile.in
 
+SUBDIRS = err coding
+
 angband_files = \
-  help.hlp attack.txt birth.txt command.txt \
-  dungeon.txt general.txt option.txt playing.txt \
-  version.txt
+	ahml.xml ahmlt.xsl coding copyright.xml demo.xml general.xml \
+	help.xml index.xml list.xml table.xml version.xml
 
 EXTRA_DIST = \
   $(angband_files)

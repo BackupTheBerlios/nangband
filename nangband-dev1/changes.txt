@@ -5,6 +5,7 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ----------
 - Added support for ABSORB_LIGHT, using three queues to avoid the calls for
   ang_sort. They uses about 18K of additional memory... (pelpel)
+- Changed all occurences of 'lite' to 'light' in object.lua. (pelpel)
 
 2002-07-28
 ----------

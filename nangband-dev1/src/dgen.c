@@ -15,31 +15,34 @@
  */
 
 /* Allocate memory for a map */
-map_grid_t *map_alloc(int width, int height)
+map_grid_t **map_alloc(int width, int height)
 {
-	map_grid_t *dungeon;
+	map_grid_t **dungeon;
+	int n;
 	
-	/* Allocate the memory */
-	dungeon = ralloc(sizeof(map_grid_t) * x * y);
-	if (!dungeon) exit();
+	/* Allocate the dungeon */
+	C_MAKE(dungeon, 80, map_grid_t *);
 	
-	/* Set the memory to nothing */
-	memset(dungeon, 0, sizeof(map_grid_t) * x * y);
-	
+	for (n = 0; n < width; n++)
+	{
+		/* Allocate the memory */
+		C_MAKE(dungeon[n], 80, map_grid_t);
+	}
+		
 	/* Return a pointer the the space */
 	return (dungeon);
 }
 
 /* Free up memory for a map */
-void map_free(map_grid_t *dungeon)
+void map_free(map_grid_t **dungeon)
 {
 	/* Free the space up */
-	rnfree((vptr) dungeon);
+	rnfree((vptr) *dungeon);
 
 	return;
 }
 
-static void generate_dungeon(map_grid_t *dungeon, int width, int height, int level, int exeption)
+static void generate_dungeon(map_grid_t **dungeon, int width, int height, int level, int exeption)
 {
 	map_grid_t *this_grid;
 	int x, y;
@@ -53,7 +56,7 @@ static void generate_dungeon(map_grid_t *dungeon, int width, int height, int lev
 		for (y = 0; y < height; y++)
 		{
 			printf("x = %i, y = %i", x, y);
-			dungeon->feature = TERRAIN_TYPE_WALL;
+			*dungeon->feature = TERRAIN_TYPE_WALL;
 		}
 	}
 	
@@ -68,7 +71,7 @@ static void generate_dungeon(map_grid_t *dungeon, int width, int height, int lev
 
 int main(int argc, char **argv)
 {
-	map_grid_t *dungeon;
+	map_grid_t **dungeon;
 	
 	dungeon = map_alloc(80, 80);
 	

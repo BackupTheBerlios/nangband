@@ -31,7 +31,7 @@ if ($dir = @opendir('extras/'))
 {
 	while (($file = readdir($dir)) != false)
 	{
-		if (!is_dir($file)) include('extras/'.$file);
+		if (!is_dir('extras/'.$file)) include('extras/'.$file);
 	}
 }
 

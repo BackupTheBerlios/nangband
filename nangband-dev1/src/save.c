@@ -235,7 +235,7 @@ static byte savefile_do_byte(byte *v, bool type)
 	else
 	{
 		/* Get the byte from the block. */
-		v = &savefile_block[savefile_blockused];
+		*v = savefile_block[savefile_blockused];
 	}
 
 	/* Increase the "used" counter */
@@ -250,10 +250,10 @@ static byte savefile_do_byte(byte *v, bool type)
  */
 static u16b savefile_do_u16b(u16b *v, bool type)
 {
-	byte i;
-
 	if (type == PUT)
 	{
+		byte i;
+
 		i = ((*v) & 0xFF);
 		savefile_do_byte(&i, PUT);
 
@@ -262,11 +262,12 @@ static u16b savefile_do_u16b(u16b *v, bool type)
 	}
 	else
 	{
-		savefile_do_byte(&i, GET);
-		(*v) = i;
+		byte b1, b2;
 
-		savefile_do_byte(&i, GET);
-		(*v) |= (i << 8);
+		savefile_do_byte(&b1, GET);
+		savefile_do_byte(&b2, GET);
+
+		(*v) = ((u32b) b1) | ((u32b) b2 << 8);
 	}
 
 	/* We are done */
@@ -278,10 +279,10 @@ static u16b savefile_do_u16b(u16b *v, bool type)
  */
 static u32b savefile_do_u32b(u32b *v, bool type)
 {
-	byte i;
-
 	if (type == PUT)
 	{
+		byte i;
+
 		i = ((*v) & 0xFF);
 		savefile_do_byte(&i, PUT);
 
@@ -296,17 +297,17 @@ static u32b savefile_do_u32b(u32b *v, bool type)
 	}
 	else
 	{
-		savefile_do_byte(&i, GET);
-		(*v) = i;
+		byte b1, b2, b3, b4;
 
-		savefile_do_byte(&i, GET);
-		(*v) |= ((u32b)i << 8);
+		savefile_do_byte(&b1, GET);
+		savefile_do_byte(&b2, GET);
+		savefile_do_byte(&b3, GET);
+		savefile_do_byte(&b4, GET);
 
-		savefile_do_byte(&i, GET);
-		(*v) |= ((u32b)i << 16);
-
-		savefile_do_byte(&i, GET);
-		(*v) |= ((u32b)i << 24);
+		(*v) = ((u32b) b1) |
+		       ((u32b) b2 << 8) |
+		       ((u32b) b3 << 16) |
+		       ((u32b) b4 << 24);
 	}
 
 	/* We are done */
@@ -2007,12 +2008,6 @@ static bool write_savefile(int fd)
 	savefile_write_block(fd, BLOCK_TYPE_OPTIONS, BLOCK_VERSION_OPTIONS);
 	printf("doing options\n");
 
-	/* Do the player information */
-	savefile_new_block();
-	savefile_do_block_player(PUT, BLOCK_VERSION_PLAYER);
-	savefile_write_block(fd, BLOCK_TYPE_PLAYER, BLOCK_VERSION_PLAYER);
-	printf("doing player\n");
-
 	/* Do the inventory */
 	savefile_new_block();
 	savefile_do_block_inventory(PUT, BLOCK_VERSION_INVENTORY);
@@ -2059,6 +2054,12 @@ static bool write_savefile(int fd)
 	savefile_new_block();
 	savefile_do_block_stores(PUT, BLOCK_VERSION_STORES);
 	savefile_write_block(fd, BLOCK_TYPE_STORES, BLOCK_VERSION_STORES);
+
+	/* Do the player information */
+	savefile_new_block();
+	savefile_do_block_player(PUT, BLOCK_VERSION_PLAYER);
+	savefile_write_block(fd, BLOCK_TYPE_PLAYER, BLOCK_VERSION_PLAYER);
+	printf("doing player\n");
 
 	/* Write the dungeon */
 	savefile_new_block();

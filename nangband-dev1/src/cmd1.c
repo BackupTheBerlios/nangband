@@ -323,7 +323,8 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
                        if (f2 & (TR2_BRAND_NETHER))
                        {
                                /* Notice immunity */
-                               if ((r_ptr->flags4 & (RF4_BR_NETH)) || (r_ptr->flags3 && (RF3_UNDEAD)))
+                               if ((r_ptr->flags4 & (RF4_BR_NETH)) ||
+ (r_ptr->flags3 && (RF3_UNDEAD)))
                                {
                                        /* Oh, never mind */
                                }
@@ -1238,8 +1239,10 @@ int py_attack(int y, int x)
 			/* No negative damage */
 			if (k < 0) k = 0;
 
-                       /* Polymorph attack -- monsters get a saving throw (chaos breathers are immune) */
-                       if (p_ptr->chaos_brand && !(r_ptr->flags4 & RF4_BR_CHAO) &&
+                       /* Polymorph attack -- monsters get a saving throw (chaos
+ breathers are immune) */
+                       if (p_ptr->chaos_brand && !(r_ptr->flags4 & RF4_BR_CHAO)
+ &&
                                rand_int(49) == 0 && randint(90) > r_ptr->level)
                        {
                                int tmp;
@@ -1257,7 +1260,8 @@ int py_attack(int y, int x)
                                        delete_monster_idx(cave_m_idx[y][x]);
 
                                        /* Create a new monster (no groups) */
-                                       (void)place_monster_aux(y, x, tmp, FALSE, FALSE);
+                                       (void)place_monster_aux(y, x, tmp, FALSE,
+ FALSE);
 
                                        /* Hack -- Assume success XXX XXX XXX */
 
@@ -1401,15 +1405,22 @@ void move_player(int dir, int jumping)
 	int py = p_ptr->py;
 	int px = p_ptr->px;
 
-	int y, x;
+	int y = 0, x = 0;
 
+	bool pass_walls = p_ptr->pass_walls;
 
 	/* Find the result of moving */
 	y = py + ddy[dir];
 	x = px + ddx[dir];
 
+	/* Make sure the player can't move out of bounds */
+	if ((cave_feat[y][x] >= FEAT_PERM_EXTRA) &&
+	    (cave_feat[y][x] <= FEAT_PERM_SOLID))
+	{
+		pass_walls = FALSE;
+	}
 
-	/* Hack -- attack monsters */
+	/* Attack monsters in the way */
 	if (cave_m_idx[y][x] > 0)
 	{
 		int attacks;
@@ -1450,7 +1461,7 @@ void move_player(int dir, int jumping)
 #endif /* ALLOW_EASY_ALTER */
 
 	/* Player can not walk through "walls" */
-	else if (!cave_floor_bold(y, x))
+	else if (!cave_floor_bold(y, x) && !pass_walls)
 	{
 		/* Disturb the player */
 		disturb(0, 0);
@@ -1458,29 +1469,16 @@ void move_player(int dir, int jumping)
 		/* Notice unknown obstacles */
 		if (!(cave_info[y][x] & (CAVE_MARK)))
 		{
-			/* Rubble */
-			if (cave_feat[y][x] == FEAT_RUBBLE)
-			{
-				message(MSG_HITWALL, 0, "You feel a pile of rubble blocking your way.");
-				cave_info[y][x] |= (CAVE_MARK);
-				light_spot(y, x);
-			}
+			int i = rand_int(3);
+			cptr mess = NULL;
 
-			/* Closed door */
-			else if (cave_feat[y][x] < FEAT_SECRET)
-			{
-				message(MSG_HITWALL, 0, "You feel a door blocking your way.");
-				cave_info[y][x] |= (CAVE_MARK);
-				light_spot(y, x);
-			}
+			/* Introduce some randomness */
+			if (i == 0) mess = "You stumble into something in the dark.";
+			else if (i == 1) mess = "You feel something blocking your way.";
+			else if (i == 0) mess = "Something is blocking your way.";
 
-			/* Wall (or secret door) */
-			else
-			{
-				message(MSG_HITWALL, 0, "You feel a wall blocking your way.");
-				cave_info[y][x] |= (CAVE_MARK);
-				light_spot(y, x);
-			}
+			/* Message the player */
+			message(MSG_HITWALL, 0, mess);
 		}
 
 		/* Mention known obstacles */
@@ -1509,9 +1507,6 @@ void move_player(int dir, int jumping)
 	/* Normal movement */
 	else
 	{
-		/* Sound XXX XXX XXX */
-		/* sound(MSG_WALK); */
-
 		/* Move player */
 		monster_swap(py, px, y, x);
 
@@ -1519,16 +1514,10 @@ void move_player(int dir, int jumping)
 		y = py = p_ptr->py;
 		x = px = p_ptr->px;
 
-
-		/* Spontaneous Searching */
+		/* Searching */
 		if ((p_ptr->skill_fos >= 50) ||
-		    (0 == rand_int(50 - p_ptr->skill_fos)))
-		{
-			search();
-		}
-
-		/* Continuous Searching */
-		if (p_ptr->searching)
+		    (0 == rand_int(50 - p_ptr->skill_fos)) ||
+			(p_ptr->searching))
 		{
 			search();
 		}
@@ -1577,4 +1566,7 @@ void move_player(int dir, int jumping)
 			hit_trap(y, x);
 		}
 	}
+
+	/* We are done. */
+	return;
 }

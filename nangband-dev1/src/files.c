@@ -1541,6 +1541,20 @@ void player_flags(u32b *f1, u32b *f2, u32b *f3)
 	(*f2) |= rp_ptr->flags2;
 	(*f3) |= rp_ptr->flags3;
 
+	/* Add the special flags for "astral! players */
+	if (adult_astral)
+	{
+		/* Nasty hack; implemented in xtra1.c */
+		(*f1) |= (TR1_SPEED);
+
+		/* Sme groovy stuff for astral players */
+		(*f2) |= (TR2_LIGHT3);
+		(*f3) |= (TR3_SEE_INVIS);
+		(*f3) |= (TR3_TELEPATHY);
+		(*f3) |= (TR3_SLOW_DIGEST);
+	}
+
+	/* We are done */
 	return;
 }
 

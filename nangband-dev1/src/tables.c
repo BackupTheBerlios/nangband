@@ -1551,7 +1551,7 @@ cptr option_text[OPT_MAX] =
 	"birth_no_artifacts",		/* OPT_birth_no_artifacts */
 	"birth_evil_mode",						/* OPT_birth_evil_mode */
 	"birth_no_stacking",		/* OPT_birth_no_stacking */
-	NULL,						/* xxx */
+	"birth_astral",						/* OPT_birth_astral */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
@@ -1616,7 +1616,7 @@ cptr option_text[OPT_MAX] =
 	"adult_rand_artifacts",		/* OPT_adult_rand_artifacts */
 	"adult_evil_mode",						/* OPT_adult_evil_mode */
 	"adult_no_stacking",		/* OPT_adult_no_stacking */
-	NULL,						/* xxx */
+	"adult_astral",						/* OPT_adult_astral */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
@@ -1815,7 +1815,7 @@ cptr option_desc[OPT_MAX] =
 	"Birth: Restrict creation of artifacts",        /* OPT_birth_no_artifacts */
 	"Birth: Evil mode",                             /* OPT_birth_evil_mode */
 	"Birth: Don't stack objects on the floor",      /* OPT_birth_no_stacking */
-	NULL,										/* xxx */
+	"Birth: Start as an astral being",				/* OPT_birth_astral */
 	NULL,										/* xxx */
 	NULL,										/* xxx */
 	NULL,										/* xxx */
@@ -1879,7 +1879,7 @@ cptr option_desc[OPT_MAX] =
 	"Adult: Restrict creation of artifacts",	/* OPT_adult_no_artifacts */
 	"Adult: Evil mode",								/* OPT_adult_evil_mode */
 	"Adult: Don't stack objects on the floor",	/* OPT_adult_no_stacking */
-	NULL,										/* xxx */
+	"Adult: Start as an astral being",			/* OPT_adult_astral */
 	NULL,										/* xxx */
 	NULL,										/* xxx */
 	NULL,										/* xxx */
@@ -2079,7 +2079,7 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* OPT_birth_no_artifacts */
 	FALSE,		/* OPT_birth_evil_mode */
 	FALSE,		/* OPT_birth_no_stacking */
-	FALSE,		/* xxx */
+	FALSE,		/* OPT_birth_astral */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
@@ -2142,7 +2142,7 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* OPT_adult_no_artifacts */
 	FALSE,		/* OPT_adult_evil_mode */
 	FALSE,		/* OPT_adult_no_stacking */
-	FALSE,		/* xxx */
+	FALSE,		/* OPT_adult_astral */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
@@ -2342,10 +2342,10 @@ const byte option_page[OPT_PAGE_MAX][OPT_PAGE_PER] =
 		OPT_birth_preserve,
 		OPT_birth_ironman,
 		OPT_birth_evil_mode,
+		OPT_birth_astral,
 		OPT_birth_no_stores,
 		OPT_birth_no_artifacts,
 		OPT_birth_no_stacking,
-		255,
 		255,
 		255,
 		255,

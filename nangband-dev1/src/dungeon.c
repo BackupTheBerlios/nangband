@@ -375,11 +375,20 @@ static void process_world(void)
 
 	object_type *o_ptr;
 
-
-
 	/* Every 10 game turns */
 	if (turn % 10) return;
 
+	/*** Stop being "astral" when in the town ***/
+	if ((adult_astral) && (!p_ptr->depth))
+	{
+		/* Nice messages */
+		message(MSG_GENERIC, 0, "As you return to the town, your body reforms itself...");
+		message(MSG_GENERIC, 0, "Now your task is clear: To kill Morgoth!");
+
+		/* Stop being astral; reset depth */
+		adult_astral = FALSE;
+		p_ptr->max_depth = 0;
+	}
 
 	/*** Check the Time and Load ***/
 
@@ -398,7 +407,7 @@ static void process_world(void)
 				closing_flag++;
 
 				/* Message */
-				msg_print("The gates to ANGBAND are closing...");
+				msg_print("The gates to Angband are closing...");
 				msg_print("Please finish up and/or save your game.");
 			}
 
@@ -406,7 +415,7 @@ static void process_world(void)
 			else
 			{
 				/* Message */
-				msg_print("The gates to ANGBAND are now closed.");
+				msg_print("The gates to Angband close!  Aborting the game.");
 
 				/* Stop playing */
 				p_ptr->playing = FALSE;
@@ -548,7 +557,8 @@ static void process_world(void)
 	/*** Check the Food, and Regenerate ***/
 
 	/* Digest normally */
-	if (p_ptr->food < PY_FOOD_MAX || ((p_ptr->food < (PY_FOOD_MAX * 2) / 3) && p_ptr->hunger))
+	if ((p_ptr->food < PY_FOOD_MAX) ||
+	   ((p_ptr->food < (PY_FOOD_MAX * 2) / 3) && p_ptr->hunger))
 	{
 		/* Every 100 game turns */
 		if (!(turn % 100))
@@ -811,7 +821,7 @@ static void process_world(void)
 	/* Burn some fuel in the current light */
 	if (o_ptr->tval == TV_LIGHT)
 	{
-		/* Hack -- Use some fuel (except on artifacts) */
+		/* Use some fuel */
 		if (!artifact_p(o_ptr) && (o_ptr->pval > 0))
 		{
 			/* Decrease life-span */
@@ -1060,7 +1070,6 @@ extern void do_cmd_debug(void);
 
 
 
-#ifdef COMPILE_ERRORS
 #ifdef ALLOW_BORG
 
 /*
@@ -1096,7 +1105,6 @@ static bool verify_borg_mode(void)
  */
 extern void do_cmd_borg(void);
 
-#endif
 #endif
 
 
@@ -2233,6 +2241,12 @@ static void dungeon(void)
 		p_ptr->create_down_stair = p_ptr->create_up_stair = FALSE;
 	}
 
+	/* No down stairs from 98 for astral people */
+	if ((adult_astral) && (p_ptr->depth == 98))
+	{
+		p_ptr->create_down_stair = FALSE;
+	}
+
 	/* Make a staircase */
 	if (p_ptr->create_down_stair || p_ptr->create_up_stair)
 	{
@@ -2619,6 +2633,9 @@ void play_game(bool new_game)
 
 		/* Roll up a new character */
 		player_birth();
+
+		/* Astral beings start in the dungeon */
+		if (adult_astral) p_ptr->depth = 98;
 
 		/* Hack -- enter the world */
 		turn = 1;

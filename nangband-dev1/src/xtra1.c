@@ -1815,6 +1815,7 @@ static void calc_bonuses(void)
 	p_ptr->sustain_dex = FALSE;
 	p_ptr->sustain_chr = FALSE;
 	p_ptr->resist_blind = FALSE;
+	p_ptr->pass_walls = FALSE;
 
 	/*** Extract race/class info ***/
 
@@ -1857,7 +1858,8 @@ static void calc_bonuses(void)
 	player_flags(&f1, &f2, &f3);
 
 	/* Affect speed */
-	if (f1 & (TR1_SPEED)) p_ptr->pspeed += (p_ptr->lev + 4) / 5;
+	if ((f1 & (TR1_SPEED)) && !adult_astral)
+		p_ptr->pspeed += (p_ptr->lev + 4) / 5;
 
 	/* Affect blows */
 	if (f1 & (TR1_BLOWS)) extra_blows += 1 + p_ptr->lev / 20;
@@ -2223,6 +2225,12 @@ static void calc_bonuses(void)
 	p_ptr->dis_to_h += ((int)(adj_dex_th[p_ptr->stat_ind[A_DEX]]) - 128);
 	p_ptr->dis_to_h += ((int)(adj_str_th[p_ptr->stat_ind[A_STR]]) - 128);
 
+	/* Hacks for astral beings */
+	if (adult_astral)
+	{
+		p_ptr->pspeed += 10;
+		p_ptr->pass_walls = TRUE;
+	}
 
 	/*** Modify skills ***/
 

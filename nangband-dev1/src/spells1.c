@@ -291,6 +291,18 @@ void teleport_player_level(void)
 		p_ptr->leaving = TRUE;
 	}
 
+	/* Special hack to prevent asstral players going down further than level 98 */
+	else if ((adult_astral) && (p_ptr->depth == 98))
+	{
+		message(MSG_TPLEVEL, 0, "You rise up through the ceiling.");
+
+		/* New depth */
+		p_ptr->depth--;
+
+		/* Leaving */
+		p_ptr->leaving = TRUE;
+	}
+
 	else if (is_quest(p_ptr->depth) || (p_ptr->depth >= MAX_DEPTH-1))
 	{
 		message(MSG_TPLEVEL, 0, "You rise up through the ceiling.");

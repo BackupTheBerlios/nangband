@@ -10,6 +10,9 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
   some UI stuff - also changed savefile code appropriately. (takkaria)
 - Fix for the Half-Troll & Elf races; they were broken.  Many thanks
   to Mogami! (takkaria)
+- Added astral mode.  This allows the player to start at the bottom
+  of the dungeon and work upwards.  Try playing with evil mode on! ;)
+  (takkaria)
 
 2002-06-26
 ----------

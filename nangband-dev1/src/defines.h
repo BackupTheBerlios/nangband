@@ -2650,6 +2650,7 @@
 #define OPT_birth_no_artifacts      (OPT_BIRTH+6)
 #define OPT_birth_evil_mode         (OPT_BIRTH+7)
 #define OPT_birth_no_stacking       (OPT_BIRTH+8)
+#define OPT_birth_astral			(OPT_BIRTH+9)
 /* xxx xxx */
 #define OPT_cheat_peek				(OPT_CHEAT+0)
 #define OPT_cheat_hear				(OPT_CHEAT+1)
@@ -2663,10 +2664,11 @@
 #define OPT_adult_maximize			(OPT_ADULT+2)
 #define OPT_adult_preserve			(OPT_ADULT+3)
 #define OPT_adult_ironman			(OPT_ADULT+4)
-#define OPT_adult_no_stores		(OPT_ADULT+5)
-#define OPT_adult_no_artifacts	(OPT_ADULT+6)
-#define OPT_adult_evil_mode		(OPT_ADULT+7)
+#define OPT_adult_no_stores			(OPT_ADULT+5)
+#define OPT_adult_no_artifacts		(OPT_ADULT+6)
+#define OPT_adult_evil_mode			(OPT_ADULT+7)
 #define OPT_adult_no_stacking		(OPT_ADULT+8)
+#define OPT_adult_astral			(OPT_ADULT+9)
 /* xxx xxx */
 #define OPT_score_peek				(OPT_SCORE+0)
 #define OPT_score_hear				(OPT_SCORE+1)
@@ -2770,6 +2772,7 @@
 #define birth_no_artifacts		op_ptr->opt[OPT_birth_no_artifacts]
 #define birth_evil_mode			op_ptr->opt[OPT_birth_evil_mode]
 #define birth_no_stacking		op_ptr->opt[OPT_birth_no_stacking]
+#define birth_astral			op_ptr->opt[OPT_birth_astral]
 /* xxx xxx */
 #define cheat_peek				op_ptr->opt[OPT_cheat_peek]
 #define cheat_hear				op_ptr->opt[OPT_cheat_hear]
@@ -2787,6 +2790,7 @@
 #define adult_no_artifacts		op_ptr->opt[OPT_adult_no_artifacts]
 #define adult_evil_mode			op_ptr->opt[OPT_adult_evil_mode]
 #define adult_no_stacking		op_ptr->opt[OPT_adult_no_stacking]
+#define adult_astral			op_ptr->opt[OPT_adult_astral]
 /* xxx xxx */
 #define score_peek				op_ptr->opt[OPT_score_peek]
 #define score_hear				op_ptr->opt[OPT_score_hear]

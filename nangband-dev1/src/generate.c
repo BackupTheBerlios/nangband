@@ -3435,6 +3435,12 @@ void generate_cave(void)
 		{
 			/* Make a dungeon */
 			cave_gen();
+
+			/* Build stairs for "astral" beings */
+			if (adult_astral)
+			{
+				place_random_stairs(p_ptr->py, p_ptr->px);
+			}
 		}
 
 
@@ -3522,5 +3528,15 @@ void generate_cave(void)
 
 	/* Remember when this level was "created" */
 	old_turn = turn;
+
+	/* Astral beings have a wizard-light dungeon already */
+	if (adult_astral)
+	{
+		msg_print("You feel you know this dungeon as well as you know your own skin.");
+		wiz_light();
+	}
+
+	/* Players always get first turn. */
+	p_ptr->energy = 100;
 }
 

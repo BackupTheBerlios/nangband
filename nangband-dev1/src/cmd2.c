@@ -489,8 +489,7 @@ static bool is_open(int feat)
  */
 static bool is_closed(int feat)
 {
-	return ((feat >= FEAT_DOOR_HEAD) &&
-	        (feat <= FEAT_DOOR_TAIL));
+	return ((feat >= FEAT_DOOR_HEAD) && (feat <= FEAT_DOOR_TAIL));
 }
 
 
@@ -499,19 +498,18 @@ static bool is_closed(int feat)
  */
 static bool is_trap(int feat)
 {
-	return ((feat >= FEAT_TRAP_HEAD) &&
-	        (feat <= FEAT_TRAP_TAIL));
+	return ((feat >= FEAT_TRAP_HEAD) && (feat <= FEAT_TRAP_TAIL));
 }
 
 
 /*
  * Return the number of doors/traps around (or under) the character.
  */
-static int count_feats(int *y, int *x, bool (*test)(int feat), bool under)
+static int count_feats(int *y, int *x, bool (*test) (int feat), bool under)
 {
 	int d;
 	int xx, yy;
-	int count = 0; /* Count how many matches */
+	int count = 0;	/* Count how many matches */
 
 	/* Check around (and under) the character */
 	for (d = 0; d < 9; d++)
@@ -530,7 +528,7 @@ static int count_feats(int *y, int *x, bool (*test)(int feat), bool under)
 		if (!(cave_info[yy][xx] & (CAVE_MARK))) continue;
 
 		/* Not looking for this feature */
-		if (!((*test)(cave_feat[yy][xx]))) continue;
+		if (!((*test) (cave_feat[yy][xx]))) continue;
 
 		/* Count it */
 		++count;
@@ -576,9 +574,8 @@ static int count_chests(int *y, int *x, bool trapped)
 
 		/* No (known) traps here */
 		if (trapped &&
-		    (!object_known_p(o_ptr) ||
-		     (o_ptr->pval < 0) ||
-		     !chest_traps[o_ptr->pval]))
+			(!object_known_p(o_ptr) ||
+			 (o_ptr->pval < 0) || !chest_traps[o_ptr->pval]))
 		{
 			continue;
 		}
@@ -625,7 +622,7 @@ static bool do_cmd_open_test(int y, int x)
 
 	/* Must be a closed door */
 	if (!((cave_feat[y][x] >= FEAT_DOOR_HEAD) &&
-	      (cave_feat[y][x] <= FEAT_DOOR_TAIL)))
+		  (cave_feat[y][x] <= FEAT_DOOR_TAIL)))
 	{
 		/* Message */
 		message(MSG_NOTHING_TO_OPEN, 0, "You see nothing there to open.");
@@ -854,9 +851,8 @@ static bool do_cmd_close_test(int y, int x)
 		return (FALSE);
 	}
 
- 	/* Require open/broken door */
-	if ((cave_feat[y][x] != FEAT_OPEN) &&
-	    (cave_feat[y][x] != FEAT_BROKEN))
+	/* Require open/broken door */
+	if ((cave_feat[y][x] != FEAT_OPEN) && (cave_feat[y][x] != FEAT_BROKEN))
 	{
 		/* Message */
 		msg_print("You see nothing there to close.");
@@ -1337,7 +1333,7 @@ static bool do_cmd_disarm_test(int y, int x)
 
 	/* Require an actual trap */
 	if (!((cave_feat[y][x] >= FEAT_TRAP_HEAD) &&
-	      (cave_feat[y][x] <= FEAT_TRAP_TAIL)))
+		  (cave_feat[y][x] <= FEAT_TRAP_TAIL)))
 	{
 		/* Message */
 		msg_print("You see nothing there to disarm.");
@@ -1559,7 +1555,7 @@ static bool do_cmd_bash_test(int y, int x)
 
 	/* Require a door */
 	if (!((cave_feat[y][x] >= FEAT_DOOR_HEAD) &&
-	      (cave_feat[y][x] <= FEAT_DOOR_TAIL)))
+		  (cave_feat[y][x] <= FEAT_DOOR_TAIL)))
 	{
 		/* Message */
 		msg_print("You see nothing there to bash.");
@@ -1630,8 +1626,7 @@ static bool do_cmd_bash_aux(int y, int x)
 	}
 
 	/* Saving throw against stun */
-	else if (rand_int(100) < adj_dex_safe[p_ptr->stat_ind[A_DEX]] +
-	         p_ptr->lev)
+	else if (rand_int(100) < adj_dex_safe[p_ptr->stat_ind[A_DEX]] + p_ptr->lev)
 	{
 		/* Message */
 		msg_print("The door holds firm.");
@@ -1903,7 +1898,7 @@ static bool do_cmd_spike_test(int y, int x)
 
 	/* Require a door */
 	if (!((cave_feat[y][x] >= FEAT_DOOR_HEAD) &&
-	      (cave_feat[y][x] <= FEAT_DOOR_TAIL)))
+		  (cave_feat[y][x] <= FEAT_DOOR_TAIL)))
 	{
 		/* Message */
 		msg_print("You see nothing there to spike.");
@@ -2009,6 +2004,10 @@ static bool do_cmd_walk_test(int y, int x)
 {
 	/* Hack -- walking obtains knowledge XXX XXX */
 	if (!(cave_info[y][x] & (CAVE_MARK))) return (TRUE);
+
+	/* If the player can pass walls, then allow walls to be "walked" */
+	if ((p_ptr->pass_walls) && (cave_feat[y][x] < FEAT_PERM_EXTRA))
+		return (TRUE);
 
 	/* Require open space */
 	if (!cave_floor_bold(y, x))
@@ -2198,7 +2197,7 @@ static void do_cmd_hold_or_stay(int pickup)
 
 	/* Hack -- enter a store if we are on one */
 	if ((cave_feat[p_ptr->py][p_ptr->px] >= FEAT_SHOP_HEAD) &&
-	    (cave_feat[p_ptr->py][p_ptr->px] <= FEAT_SHOP_TAIL))
+		(cave_feat[p_ptr->py][p_ptr->px] <= FEAT_SHOP_TAIL))
 	{
 		/* Disturb */
 		disturb(0, 0);
@@ -2315,7 +2314,7 @@ static int breakage_chance(const object_type *o_ptr)
 	/* Examine the item type */
 	switch (o_ptr->tval)
 	{
-		/* Always break */
+			/* Always break */
 		case TV_FLASK:
 		case TV_POTION:
 		case TV_BOTTLE:
@@ -2325,7 +2324,7 @@ static int breakage_chance(const object_type *o_ptr)
 			return (100);
 		}
 
-		/* Often break */
+			/* Often break */
 		case TV_LIGHT:
 		case TV_SCROLL:
 		case TV_SKELETON:
@@ -2333,13 +2332,13 @@ static int breakage_chance(const object_type *o_ptr)
 			return (50);
 		}
 
-		/* Sometimes break */
+			/* Sometimes break */
 		case TV_ARROW:
 		{
 			return (35);
 		}
 
-		/* Sometimes break */
+			/* Sometimes break */
 		case TV_WAND:
 		case TV_SHOT:
 		case TV_BOLT:
@@ -2582,9 +2581,9 @@ void do_cmd_fire(void)
 
 				/* Some monsters get "destroyed" */
 				if ((r_ptr->flags3 & (RF3_DEMON)) ||
-				    (r_ptr->flags3 & (RF3_UNDEAD)) ||
-				    (r_ptr->flags2 & (RF2_STUPID)) ||
-				    (strchr("Evg", r_ptr->d_char)))
+					(r_ptr->flags3 & (RF3_UNDEAD)) ||
+					(r_ptr->flags2 & (RF2_STUPID)) ||
+					(strchr("Evg", r_ptr->d_char)))
 				{
 					/* Special note at death */
 					note_dies = " is destroyed.";
@@ -2627,7 +2626,7 @@ void do_cmd_fire(void)
 				if (p_ptr->wizard)
 				{
 					msg_format("You do %d (out of %d) damage.",
-					           tdam, m_ptr->hp);
+							   tdam, m_ptr->hp);
 				}
 
 				/* Hit the monster, check for death */
@@ -2652,7 +2651,7 @@ void do_cmd_fire(void)
 
 						/* Message */
 						message_format(MSG_FLEE, m_ptr->r_idx,
-						               "%^s flees in terror!", m_name);
+									   "%^s flees in terror!", m_name);
 					}
 				}
 			}
@@ -2860,9 +2859,9 @@ void do_cmd_throw(void)
 
 				/* Some monsters get "destroyed" */
 				if ((r_ptr->flags3 & (RF3_DEMON)) ||
-				    (r_ptr->flags3 & (RF3_UNDEAD)) ||
-				    (r_ptr->flags2 & (RF2_STUPID)) ||
-				    (strchr("Evg", r_ptr->d_char)))
+					(r_ptr->flags3 & (RF3_UNDEAD)) ||
+					(r_ptr->flags2 & (RF2_STUPID)) ||
+					(strchr("Evg", r_ptr->d_char)))
 				{
 					/* Special note at death */
 					note_dies = " is destroyed.";
@@ -2905,7 +2904,7 @@ void do_cmd_throw(void)
 				if (p_ptr->wizard)
 				{
 					msg_format("You do %d (out of %d) damage.",
-					           tdam, m_ptr->hp);
+							   tdam, m_ptr->hp);
 				}
 
 				/* Hit the monster, check for death */
@@ -2930,7 +2929,7 @@ void do_cmd_throw(void)
 
 						/* Message */
 						message_format(MSG_FLEE, m_ptr->r_idx,
-						               "%^s flees in terror!", m_name);
+									   "%^s flees in terror!", m_name);
 					}
 				}
 			}

@@ -1049,6 +1049,7 @@ struct player_type
 	bool see_inv;		/* See invisible */
 	bool free_act;		/* Free action */
 	bool hold_life;		/* Hold life */
+	bool pass_walls;	/* Pass walls */
 
 	bool nethr_brand, nexus_brand, chaos_brand;
 		/* Life draining, teleport or chaos blows */

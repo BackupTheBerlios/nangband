@@ -45,6 +45,15 @@ his life force declines. Their light could shrink in radius,
 proportionately with their hitpoints, possibly even affecting how they
 interact with ABSORB_LIGHT monsters...
 
+--moose-- Interesting.  I like the idea; in my last attempt at doing
+monster light (which was in Elasticband, which is long dead now), monsters
+did drop torches; this tended to get somewhat annoying.  I'm pondering over
+implementing something like ARFC003 - Autodumper.
+http://everything.vaevictus.net/?node=Autodumper+ARFC+003 contains details
+on it; with it, there wouldn't be as much tedium with monsters dropping
+lights, or even themed drops.
+[note to moose: remember to go through the todo list again sometime soon]
+
 --MS-- About monster inventories. I love the idea, and i think any steps
 taken towards it would be well worth it.  Generic or themed drops would
 be a good way to implement them cleanly and relatively quickly.  A good
@@ -57,6 +66,8 @@ definately not be ruled out.  I think it will be difficult to implement
 this because a "real" monster inventory system would be one that allows
 the monster access to it's inventory and the benefits that it would
 receive from them.
+
+--moose-- see above.
 
 If an ABSORB_LIGHT monster is in the vicinity of a [CARRY|EMANATE]_LIGHT
 monster, the priority of effects is EMANATE_LIGHT, ABSORB_LIGHT and then
@@ -80,3 +91,9 @@ It can be done, but I wonder how practical it is. CPUs are faster than
 necessary these days, though. And if you don't like players to see
 through darkness created by ABSORB_LIGHT monsters, we have to rewrite
 update_view() as well, that means very substantial amount of work...
+
+--moose-- I think that the amount of work required it worth it.  It would add
+another element to the game, which is atmosphere.  Some of it may have to be
+optional, though; maybe have view_monster_light which just does monster lighting
+and absorbing, then have monster_light_complex or whatever to do the different
+loops for each one. 

@@ -859,8 +859,6 @@ bool set_timed_res(int res_idx, int amount)
 {
 	bool notice = FALSE;
 
-	s16b stupid = res_idx;
-
 	/* Hack -- Force good values */
 	amount = (amount > 10000) ? 10000 : (amount < 0) ? 0 : amount;
 
@@ -868,7 +866,7 @@ bool set_timed_res(int res_idx, int amount)
 	if (!resist_check(res_idx)) res_idx = 0;
 
 	/* Do a quick check for the original time */
-	if (!p_ptr->resist_timed[res_idx])
+	if (amount > p_ptr->resist_timed[res_idx])
 		p_ptr->resist_tim_max[res_idx] = amount;
 
 	/* Open */
@@ -876,10 +874,14 @@ bool set_timed_res(int res_idx, int amount)
 	{
 		if (!p_ptr->resist_timed[res_idx])
 		{
-			char text[64];
+			msg_format("You feel resistant to %s!", res_names[res_idx]);
 
-			sprintf(text, "You feel resistant to %s!", res_names[res_idx]);
-			msg_print(text);
+			notice = TRUE;
+		}
+		else if (amount > p_ptr->resist_timed[res_idx])
+		{
+			msg_format("You feel your resistance to %s increase.", 
+				res_names[res_idx]);
 
 			notice = TRUE;
 		}

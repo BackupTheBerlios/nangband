@@ -2461,9 +2461,21 @@ void do_cmd_note(void)
  */
 void do_cmd_version(void)
 {
-	/* Silly message */
-	msg_format("You are playing %s %s.  Type '?' for more info.",
-	           VERSION_NAME, VERSION_STRING);
+	/* Save the screen */
+	screen_save();
+
+	/* Silly screen */
+	render_xml_file("/file/news.xml", FALSE, FALSE, FALSE);
+
+	/* Wait for the user */
+	prompt_note("[Press any key to continue]");
+	(void)inkey();
+
+	/* Load the screen */
+	screen_load();
+
+	/* We are done. */
+	return;
 }
 
 

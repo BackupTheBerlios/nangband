@@ -1740,7 +1740,6 @@ void init_angband(void)
 	char buf[1024];
 
 	/*** Show the splash screen ***/
-
 	render_xml_file("/file/news.xml",FALSE,FALSE,FALSE);
 
 	/*** Verify (or create) the "high score" file ***/

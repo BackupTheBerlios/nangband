@@ -1426,7 +1426,7 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 				cave_info[y][x] = cave;
 
 				/* Advance/Wrap */
-				if (++x >= DUNGEON_WID)
+				if (++x >= dungeon_wid)
 				{
 					/* Wrap */
 					x = 0;

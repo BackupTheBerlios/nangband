@@ -2768,9 +2768,9 @@ static void do_cmd_knowledge_artifacts(void)
 	}
 
 	/* Check the dungeon */
-	for (y = 0; y < DUNGEON_HGT; y++)
+	for (y = 0; y < dungeon_hgt; y++)
 	{
-		for (x = 0; x < DUNGEON_WID; x++)
+		for (x = 0; x < dungeon_wid; x++)
 		{
 			object_type *o_ptr;
 

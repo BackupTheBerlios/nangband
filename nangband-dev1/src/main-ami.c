@@ -1,24 +1,27 @@
 /*
-	File			: main-ami.c
+ * File: main-ami.c
+ *
+ * Abstract: Display module for the Amiga ports of Angband.  Credits
+ *           follow.
+ *
+ * For licencing terms, please look at angband.h.
+ */
 
-	Version			: 1.2 (6th January 2002)
-	Angband			: 2.9.3+
-
-	Purpose			: Amiga module for Angband with graphics and sound
-
-	Author			: Mark Howson
-	Email			: Mark.Howson@ntu.ac.uk
-
-	Original Author		: Lars Haugseth
-	Email                   : lars@polygnosis.com
-
-	Current Form		: Bablos
-	Email			: angband@blueyonder.co.uk
-	WWW			: http://www.angband.pwp.blueyonder.co.uk
-*/
+/*
+ * Version: 1.2 (6th January 2002)
+ *
+ * Previous maintainers:
+ *
+ * - Original author: Lars Haugseth <lars@polygnosis.com>
+ * - Previous maintainer: Mark Howson <Mark.Howson@ntu.ac.uk>
+ *
+ * Current maintainer: Bablos <angband@blueyonder.co.uk>
+ *                     http://www.angband.pwp.blueyonder.co.uk
+ */
+#include "angband.h"
 
 /* Variant name and version */
-#define VARIANT "Angband 2.9.6 alpha 3"
+#define VARIANT VERSION_NAME VERSION_STRING
 
 /* Main 'assign' needed. Kick2.0+ systems usually don't need it anyway */
 #define VERPATH "Angband:"
@@ -26,10 +29,8 @@
 #define CGXSUPPORT		/* Define for RTG support. Leave on */
 
 #ifndef __CEXTRACT__
-#include "angband.h"
 
 #include "main.h"
-
 #include "vers.h"
 
 #ifndef __GNUC__
@@ -112,10 +113,17 @@
 #define KICK20 ((kick_ver) >= 36)		/* True if K2.0 or better */
 #define KICK13 ((kick_ver) < 36)		/* True if K1.3 or worse */
 
-#define PEN( p ) ( penconv[ p ] )			/* Pen number conversion */
-#define GPEN( p ) ( use_pub ? pubpens[ p ] : p )	/* Graphics pen number conversion */
-#define FAIL( str ) return ( amiga_fail( str ))		/* Failure */
-#define MSG( x, y, txt ) amiga_text( x, y, strlen( txt ), 1, txt );
+#define PEN(p) \
+	(penconv[p])                  /* Pen number conversion */
+
+#define GPEN(p) \
+	(use_pub ? pubpens[p] : p)    /* Graphics pen number conversion */
+
+#define FAIL(str) \
+	return (amiga_fail(str))      /* Failure */
+
+#define MSG(x, y, txt) \
+	amiga_text(x, y, strlen(txt), 1, txt);
 
 /* Char and attr under cursor */
 #define CUR_A ( td->t.scr->a[ td->cursor_ypos ][ td->cursor_xpos ] )
@@ -3779,8 +3787,8 @@ static int size_gfx( term_data *td )
 	td->gfx_h = (GFXH / tileh) * td->fh;
 
 	/* Calculate map bitmap dimensions */
-	td->mpt_w = td->ww / DUNGEON_WID;
-	td->mpt_h = td->wh / DUNGEON_HGT;
+	td->mpt_w = td->ww / dungeon_wid;
+	td->mpt_h = td->wh / dungeon_hgt;
 
 	td->map_w = td->mpt_w * tilenumw;
 	td->map_h = td->mpt_h * tilenumh;
@@ -4000,8 +4008,8 @@ static void amiga_map(void)
 	term_data *td = &data[0];
 	int i, j;
 	byte a, c, ta, tc;
-	int cur_wid = DUNGEON_WID
-	int cur_hgt = DUNGEON_HGT;
+	int cur_wid = dungeon_wid;
+	int cur_hgt = dungeon_hgt;
 
 	/* Only in graphics mode, and not on Kickstart1.3 */
 	if (!use_graphics || KICK13) return;

@@ -3243,8 +3243,8 @@ static void town_gen_hack(void)
 	while (TRUE)
 	{
 		/* Pick a location at least "three" from the outer walls */
-		y = rand_range(3, TOWN_HGT - 4);
-		x = rand_range(3, TOWN_WID - 4);
+		y = rand_range(3, 10 - 4);
+		x = rand_range(3, 10 - 4);
 
 		/* Require a "naked" floor grid */
 		if (cave_naked_bold(y, x)) break;
@@ -3287,7 +3287,18 @@ static void town_gen(void)
 	int residents;
 	bool daytime;
 
-	make_town_from_file();
+	/* Start with solid walls */
+	for (y = 0; y < DUNGEON_HGT; y++)
+	{
+		for (x = 0; x < DUNGEON_WID; x++)
+		{
+			/* Create "solid" perma-wall */
+			cave_set_feat(y, x, FEAT_PERM_SOLID);
+		}
+	}
+
+	/* Create the town */
+	town_create_from_def("town.txt");
 
 	/* Day time */
 	if ((turn % (10L * TOWN_DAWN)) < ((10L * TOWN_DAWN) / 2))
@@ -3319,20 +3330,7 @@ static void town_gen(void)
 	/* Apply illumination */
 	town_illuminate(daytime);
 
-	return;
-
-
-
-	/* Start with solid walls */
-	for (y = 0; y < DUNGEON_HGT; y++)
-	{
-		for (x = 0; x < DUNGEON_WID; x++)
-		{
-			/* Create "solid" perma-wall */
-			cave_set_feat(y, x, FEAT_PERM_SOLID);
-		}
-	}
-
+#if 0
 	/* Then place some floors */
 	for (y = 1; y < TOWN_HGT - 1; y++)
 	{
@@ -3345,6 +3343,8 @@ static void town_gen(void)
 
 	/* Build stuff */
 	town_gen_hack();
+#endif
+
 }
 
 
@@ -3441,6 +3441,9 @@ void generate_cave(void)
 		/* Build a real level */
 		else
 		{
+			dungeon_wid = DUNGEON_WID;
+			dungeon_hgt = DUNGEON_HGT;
+
 			/* Make a dungeon */
 			cave_gen();
 

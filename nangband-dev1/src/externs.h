@@ -270,6 +270,9 @@ extern void object_kind_track(int k_idx);
 extern void disturb(int stop_search, int unused_flag);
 extern bool is_quest(int level);
 
+/* init3.c */
+extern void create_town_from_def(cptr path);
+
 /* cmd1.c */
 extern bool test_hit(int chance, int ac, int vis);
 extern sint critical_shot(int weight, int plus, int dam);

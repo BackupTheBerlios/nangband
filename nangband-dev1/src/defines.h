@@ -19,7 +19,8 @@
  *
  * Most of the comments in this file are meant as reminders, not complete
  * descriptions, and even a complete knowledge of the source may not be
- * sufficient to fully understand the effects of changing certain definitions.
+ * sufficient to fully understand the effects of changing certain
+ * definitions.
  *
  * Lastly, note that the code does not always use the symbolic constants
  * below, and sometimes uses various hard-coded values that may not even
@@ -29,21 +30,14 @@
  * You have been warned.
  */
 
-
 /*
- * Name of the version/variant
+ * Name of the variant and it's version string
  */
 #define VERSION_NAME "Nangband"
-
-
-/*
- * Current version string
- */
 #define VERSION_STRING	"1.0.0 CVS"
 
-
 /*
- * Current version numbers
+ * Current version numbers (EXTRA is not used).
  */
 #define VERSION_MAJOR	1
 #define VERSION_MINOR	0
@@ -51,44 +45,18 @@
 #define VERSION_EXTRA	0
 
 /*
- * Current savefile version numbers
- */
-#define SAVEFILE_MAJOR	2
-#define SAVEFILE_MINOR	9
-#define SAVEFILE_PATCH	9
-#define SAVEFILE_EXTRA	0
-
-/*
- * Hack -- current lib/edit version numbers
+ * Version numbers for the files in lib/edit. XXX XXX
  */
 #define LIBEDIT_MAJOR	1
 #define LIBEDIT_MINOR	0
 #define LIBEDIT_PATCH	0
 
-/*
- * Oldest version number that can still be imported
- */
-#define OLD_VERSION_MAJOR	2
-#define OLD_VERSION_MINOR	9
-#define OLD_VERSION_PATCH	0
-
 
 /*
- * Version of random artifact code.
- */
-#define RANDART_VERSION		62
-
-
-/*
- * Number of grids in each block (vertically)
+ * Number of grids in each "block".
  * Probably hard-coded to 11, see "generate.c"
  */
 #define BLOCK_HGT	11
-
-/*
- * Number of grids in each block (horizontally)
- * Probably hard-coded to 11, see "generate.c"
- */
 #define BLOCK_WID	11
 
 
@@ -104,30 +72,22 @@
  */
 #define PANEL_WID	33
 
+
 #define ROW_MAP			1
 #define COL_MAP			13
 
-/* Number of grids in each screen (vertically & horizontally) */
+/*
+ * Number of grids in each screen.
+ */
 #define SCREEN_HGT	(Term->hgt - ROW_MAP - 1)
 #define SCREEN_WID	(Term->wid - COL_MAP - 1)
 
 
 /*
- * Number of grids in each dungeon (horizontally)
- * Must be a multiple of SCREEN_HGT
- * Must be less or equal to 256
+ * Number of grids in each dungeon; must be less than or equal to 256.
  */
 #define DUNGEON_HGT		66
-
-/*
- * Number of grids in each dungeon (vertically)
- * Must be a multiple of SCREEN_WID
- * Must be less or equal to 256
- */
 #define DUNGEON_WID		198
-
-#define TOWN_WID 66
-#define TOWN_HGT 22
 
 
 /*
@@ -3035,8 +2995,7 @@
  * Determines if a map location is "meaningful"
  */
 #define in_bounds(Y,X) \
-	(((unsigned)(Y) < (unsigned)(DUNGEON_HGT)) && \
-	 ((unsigned)(X) < (unsigned)(DUNGEON_WID)))
+	(((Y) < (dungeon_hgt)) && ((X) < (dungeon_wid)))
 
 #define in_bounds_xy(X, Y) \
 	(in_bounds(Y, X))
@@ -3047,8 +3006,8 @@
  * often we need to exclude the outer walls from calculations.
  */
 #define in_bounds_fully(Y,X) \
-	(((Y) > 0) && ((Y) < DUNGEON_HGT-1) && \
-	 ((X) > 0) && ((X) < DUNGEON_WID-1))
+	(((Y) > 0) && ((Y) < (dungeon_hgt - 1)) && \
+	 ((X) > 0) && ((X) < (dungeon_wid - 1)))
 
 
 /*

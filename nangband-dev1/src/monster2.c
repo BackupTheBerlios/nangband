@@ -1865,8 +1865,8 @@ bool alloc_monster(int dis, bool slp)
 	while (--attempts_left)
 	{
 		/* Pick a location */
-		y = rand_int(DUNGEON_HGT);
-		x = rand_int(DUNGEON_WID);
+		y = rand_int(dungeon_hgt);
+		x = rand_int(dungeon_wid);
 
 		/* Require "naked" floor grid */
 		if (!cave_naked_bold(y, x)) continue;

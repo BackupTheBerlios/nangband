@@ -2254,8 +2254,9 @@ static void dungeon(void)
 	}
 
 	/* No down stairs from 98 for astral people */
-	if ((adult_astral) && (p_ptr->depth == 98))
+	if (adult_astral && (p_ptr->depth == 98))
 	{
+		p_ptr->create_up_stair = TRUE;
 		p_ptr->create_down_stair = FALSE;
 	}
 

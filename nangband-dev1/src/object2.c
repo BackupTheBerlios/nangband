@@ -3505,8 +3505,8 @@ void drop_near(object_type *j_ptr, int chance, int y, int x)
 		/* Random locations */
 		else
 		{
-			ty = rand_int(DUNGEON_HGT);
-			tx = rand_int(DUNGEON_WID);
+			ty = rand_int(dungeon_hgt);
+			tx = rand_int(dungeon_wid);
 		}
 
 		/* Require floor space */

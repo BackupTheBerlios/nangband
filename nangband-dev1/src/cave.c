@@ -3630,9 +3630,9 @@ void forget_flow(void)
 	if (!flow_save) return;
 
 	/* Check the entire dungeon */
-	for (y = 0; y < DUNGEON_HGT; y++)
+	for (y = 0; y < dungeon_hgt; y++)
 	{
-		for (x = 0; x < DUNGEON_WID; x++)
+		for (x = 0; x < dungeon_wid; x++)
 		{
 			/* Forget the old data */
 			cave_cost[y][x] = 0;
@@ -3695,9 +3695,9 @@ void update_flow(void)
 	if (flow_save++ == 255)
 	{
 		/* Cycle the flow */
-		for (y = 0; y < DUNGEON_HGT; y++)
+		for (y = 0; y < dungeon_hgt; y++)
 		{
-			for (x = 0; x < DUNGEON_WID; x++)
+			for (x = 0; x < dungeon_wid; x++)
 			{
 				int w = cave_when[y][x];
 				cave_when[y][x] = (w >= 128) ? (w - 128) : 0;
@@ -3799,15 +3799,15 @@ void map_area(void)
 
 	/* Pick an area to map */
 	y1 = p_ptr->wy - randint(10);
-	y2 = p_ptr->wy+SCREEN_HGT + randint(10);
+	y2 = p_ptr->wy + SCREEN_HGT + randint(10);
 	x1 = p_ptr->wx - randint(20);
-	x2 = p_ptr->wx+SCREEN_WID + randint(20);
+	x2 = p_ptr->wx + SCREEN_WID + randint(20);
 
 	/* Efficiency -- shrink to fit legal bounds */
 	if (y1 < 1) y1 = 1;
-	if (y2 > DUNGEON_HGT-1) y2 = DUNGEON_HGT-1;
+	if (y2 > (dungeon_hgt - 1)) y2 = (dungeon_hgt - 1);
 	if (x1 < 1) x1 = 1;
-	if (x2 > DUNGEON_WID-1) x2 = DUNGEON_WID-1;
+	if (x2 > (dungeon_wid - 1)) x2 = (dungeon_wid - 1);
 
 	/* Scan that area */
 	for (y = y1; y < y2; y++)
@@ -3889,10 +3889,10 @@ void wiz_light(void)
 	}
 
 	/* Scan all normal grids */
-	for (y = 1; y < DUNGEON_HGT-1; y++)
+	for (y = 1; y < (dungeon_hgt - 1); y++)
 	{
 		/* Scan all normal grids */
-		for (x = 1; x < DUNGEON_WID-1; x++)
+		for (x = 1; x < (dungeon_wid - 1); x++)
 		{
 			/* Process all non-walls */
 			if (!(f_info[cave_feat[y][x]].f1 & (FF1_WALL)))
@@ -3945,9 +3945,9 @@ void wiz_dark(void)
 
 
 	/* Forget every grid */
-	for (y = 0; y < DUNGEON_HGT; y++)
+	for (y = 0; y < dungeon_hgt; y++)
 	{
-		for (x = 0; x < DUNGEON_WID; x++)
+		for (x = 0; x < dungeon_wid; x++)
 		{
 			/* Process the grid */
 			cave_info[y][x] &= ~(CAVE_MARK);
@@ -3989,14 +3989,30 @@ void town_illuminate(bool daytime)
 {
 	int y, x, i;
 
-
 	/* Apply light or darkness */
-	for (y = 0; y < DUNGEON_HGT; y++)
+	for (y = 0; y < dungeon_hgt; y++)
 	{
-		for (x = 0; x < DUNGEON_WID; x++)
+		for (x = 0; x < dungeon_wid; x++)
 		{
-			/* Non-boring grids */
-			if (!(f_info[cave_feat[y][x]].f1 & (FF1_BORING)))
+			/* Simple floor */
+			if (f_info[cave_feat[y][x]].f1 & (FF1_BORING))
+			{
+				/* Set flags if daytime */
+				if (daytime)
+				{
+					cave_info[y][x] |= CAVE_GLOW;
+					if (view_perma_grids) cave_info[y][x] |= CAVE_MARK;
+				}
+
+				/* Unset them otherwise */
+				else
+				{
+					cave_info[y][x] &= ~(CAVE_GLOW | CAVE_MARK);
+				}
+			}
+
+			/* Non-floor features */
+			else
 			{
 				/* Illuminate the grid */
 				cave_info[y][x] |= (CAVE_GLOW);
@@ -4004,40 +4020,13 @@ void town_illuminate(bool daytime)
 				/* Memorize the grid */
 				cave_info[y][x] |= (CAVE_MARK);
 			}
-
-			/* Boring grids (light) */
-			else if (daytime)
-			{
-				/* Illuminate the grid */
-				cave_info[y][x] |= (CAVE_GLOW);
-
-				/* Hack -- Memorize grids */
-				if (view_perma_grids)
-				{
-					cave_info[y][x] |= (CAVE_MARK);
-				}
-			}
-
-			/* Boring grids (dark) */
-			else
-			{
-				/* Darken the grid */
-				cave_info[y][x] &= ~(CAVE_GLOW);
-
-				/* Hack -- Forget grids */
-				if (view_perma_grids)
-				{
-					cave_info[y][x] &= ~(CAVE_MARK);
-				}
-			}
 		}
 	}
 
-
 	/* Handle shop doorways */
-	for (y = 0; y < DUNGEON_HGT; y++)
+	for (y = 0; y < dungeon_hgt; y++)
 	{
-		for (x = 0; x < DUNGEON_WID; x++)
+		for (x = 0; x < dungeon_wid; x++)
 		{
 			/* Track shop doorways */
 			if (f_info[cave_feat[y][x]].f1 & (FF1_STORE))
@@ -4059,7 +4048,6 @@ void town_illuminate(bool daytime)
 			}
 		}
 	}
-
 
 	/* Fully update the visuals */
 	p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS |

@@ -1683,9 +1683,13 @@ static errr init_alloc(void)
  */
 static void note(cptr str)
 {
-	Term_erase(0, 23, 255);
+/*	Term_erase(0, 23, 255);
 	Term_putstr(20, 23, -1, TERM_WHITE, str);
-	Term_fresh();
+	Term_fresh();*/
+
+	prompt_note((char *)str);
+
+	return;
 }
 
 
@@ -1755,9 +1759,9 @@ void init_angband(void)
 
 	int mode = 0644;
 
-	FILE *fp;
-
 	char buf[1024];
+
+	/*** Show the 'splash' screen ***/
 
 	render_xml_file("/file/news.xml",FALSE,FALSE,FALSE);
 

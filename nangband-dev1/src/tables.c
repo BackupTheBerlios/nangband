@@ -1924,7 +1924,7 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* OPT_rogue_like_commands */
 	TRUE,		/* OPT_quick_messages */
 	FALSE,		/* OPT_floor_query_flag */
-	TRUE,		/* OPT_carry_query_flag */
+	FALSE,		/* OPT_carry_query_flag */
 	FALSE,		/* OPT_use_old_target */
 	TRUE,		/* OPT_always_pickup */
 	TRUE,		/* OPT_always_repeat */

@@ -128,6 +128,26 @@ errr user_home(char *buf, int len)
 
 
 /*
+ * Here are some generic screen printing functions for aligning text
+ * on the screen.
+ */
+void prompt_note(char *prompt)
+{
+	int x, y;
+
+	Term_get_size(&x, &y);
+
+	x = (x / 2) - (strlen(prompt) / 2);
+
+	Term_erase(0, y - 1, 255);
+
+	prt(prompt, y - 1, x);
+
+	return;
+}
+
+
+/*
  * The concept of the "file" routines below (and elsewhere) is that all
  * file handling should be done using as few routines as possible, since
  * every machine is slightly different, but these routines always have the
@@ -3335,10 +3355,10 @@ bool get_com(cptr prompt, char *command)
  */
 void pause_line(int row)
 {
-	prt("", row, 0);
-	put_str("[Press any key to continue]", row, 23);
-	(void)inkey();
-	prt("", row, 0);
+/*	prt("", row, 0); */
+	prompt_note("[Press any key to continue]");
+	inkey();
+/*	prt("", row, 0); */
 }
 
 

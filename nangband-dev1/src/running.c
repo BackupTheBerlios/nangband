@@ -247,7 +247,7 @@ void run_step(int dir)
 		p_ptr->running = (p_ptr->command_arg ? p_ptr->command_arg : 100);
 
 		debug_downlevel();
-		debug_out("starting run:\n");
+		debug_out("starting run:");
 
 		debug_downlevel();
 		debug_out("p_ptr->running set to %d", p_ptr->running);
@@ -310,11 +310,13 @@ void run_step(int dir)
 		debug_downlevel();
 		
 		p_ptr->running = 0;
-		debug_out("reset p_ptr->running (%d)\n", p_ptr->running);
+		debug_out("reset p_ptr->running (%d)", p_ptr->running);
 
 		debug_uplevel();
 		debug_uplevel();
 	}
+
+	debug_out("\n");
 
 	return;
 }

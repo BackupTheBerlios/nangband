@@ -297,15 +297,17 @@ static void purchase_analyze(s32b price, s32b value, s32b guess)
 
 /*
  * Various global variables:
- * - display_position is the item at the top of the list.
+ * - top_item is the item at the top of the list.
  * - store_num is the current store
  * - st_ptr is a pointer to a store type. (XXX XXX)
  * - ot_ptr is the current store owner. (XXX XXX)
+ * - size_x & size_y are the current terminal sizes.
  */
-static int display_position = 0;
+static int top_item = 0;
 static int store_num = 7;
 static store_type *st_ptr = NULL;
 static owner_type *ot_ptr = NULL;
+static int size_x = 0, size_y = 0;
 
 
 
@@ -1311,7 +1313,7 @@ static void display_entry(int item, int row)
 
 	char o_name[80];
 	char out_val[160];
-	int maxwid = -2;
+	int maxwid = (size_y - 15);
 	bool show_id = TRUE,
 	     display_cost = TRUE;
 
@@ -1351,7 +1353,7 @@ static void display_entry(int item, int row)
 		/* Only show the weight of a single object */
 		int wgt = o_ptr->weight;
 		sprintf(out_val, "%3d.%d lb", wgt / 10, wgt % 10);
-		put_str(out_val, row, 68);
+		put_str(out_val, row, (size_x - 12));
 	}
 
 	if (display_cost)
@@ -1406,33 +1408,27 @@ static void display_inventory(void)
 {
 	int i, k;
 
-	/* Display the next 12 items */
-	for (k = 0; k < 12; k++)
+	/* Display all the items we can */
+	for (k = 0; k < (size_y - 11); k++)
 	{
-		char hac[5656];
-
 		/* Stop when we run out of items */
-		if (display_position + k >= st_ptr->stock_num) break;
+		if (top_item + k >= st_ptr->stock_num) break;
 
 		/* Display that line */
-		display_entry(display_position + k, 6 + k - display_position);
+		display_entry(top_item + k, 6 + k);
 	}
 
 	/* Erase the extra lines and the "more" prompt */
-	for (i = k; i < 13; i++) prt("", i + 6, 0);
+	for (i = k; i < (size_y - 11); i++) prt("", 6 + i, 0);
 
 	/* Assume "no current page" */
 	put_str("        ", 5, 20);
 
 	/* Visual reminder of "more items" */
-	if (display_position + k < st_ptr->stock_num)
+	if (top_item + k < st_ptr->stock_num)
 	{
 		/* Show "more" reminder (after the last object) */
-		c_prt(TERM_L_BLUE, "more >>", k + 6, 3);
-
-		/* Indicate the "current page" */
-		/* [note - add visual reminders] */
-/*		put_str(format("(Page %d)", display_position/12 + 1), 5, 20); */
+		c_prt(TERM_L_BLUE, "more >>", 6 + k, 3);
 	}
 }
 
@@ -1444,10 +1440,10 @@ static void store_prt_gold(void)
 {
 	char out_val[64];
 
-	prt("Gold Remaining: ", 19, 53);
+	prt("Gold Remaining: ", size_y - 3, 53);
 
 	sprintf(out_val, "%9ld", (long)p_ptr->au);
-	prt(out_val, 19, 68);
+	prt(out_val, size_y - 3, 68);
 }
 
 
@@ -2455,7 +2451,7 @@ static void store_purchase(void)
 					}
 
 					/* Start over */
-					display_position = 0;
+					top_item = 0;
 
 					/* Redraw everything */
 					display_inventory();
@@ -2467,7 +2463,7 @@ static void store_purchase(void)
 					/* Only one screen left */
 					if (st_ptr->stock_num <= 12)
 					{
-						display_position = 0;
+						top_item = 0;
 					}
 
 					/* Redraw everything */
@@ -2531,7 +2527,7 @@ static void store_purchase(void)
 			/* Only one screen left */
 			if (st_ptr->stock_num <= 12)
 			{
-				display_position = 0;
+				top_item = 0;
 			}
 
 			/* Redraw everything */
@@ -2875,11 +2871,11 @@ static void store_process_command(void)
 		/* Increase the display counter */
 		case '2':
 		{
-			display_position++;
+			top_item++;
 
-			if (display_position > st_ptr->stock_num)
+			if (top_item > st_ptr->stock_num)
 			{
-				display_position = 0;
+				top_item = 0;
 			}
 
 			display_inventory();
@@ -2890,11 +2886,11 @@ static void store_process_command(void)
 		/* Decrease the display counter */
 		case '8':
 		{
-			display_position--;
+			top_item--;
 
-			if (display_position == -1)
+			if (top_item == -1)
 			{
-				display_position = st_ptr->stock_num;
+				top_item = st_ptr->stock_num - 1;
 			}
 
 			display_inventory();
@@ -2905,7 +2901,7 @@ static void store_process_command(void)
 		/* Browse */
 		case ' ':
 		{
-			if (st_ptr->stock_num <= 12)
+			if (st_ptr->stock_num <= (size_y - 11))
 			{
 				/* Nothing to see */
 				msg_print("Entire inventory is shown.");
@@ -2914,11 +2910,11 @@ static void store_process_command(void)
 				break;
 			}
 
-			display_position += 12;
+			top_item += (size_y - 11);
 
-			if (display_position > st_ptr->stock_num)
+			if (top_item > st_ptr->stock_num)
 			{
-				display_position = 0;
+				top_item = 0;
 			}
 
 			display_inventory();
@@ -3216,7 +3212,6 @@ void do_cmd_store(void)
 
 	int tmp_chr;
 
-
 	/* Verify a store */
 	if (!((cave_feat[py][px] >= FEAT_SHOP_HEAD) &&
 	      (cave_feat[py][px] <= FEAT_SHOP_TAIL)))
@@ -3253,7 +3248,6 @@ void do_cmd_store(void)
 	/* No automatic command */
 	p_ptr->command_new = 0;
 
-
 	/* Save the store number */
 	store_num = which;
 
@@ -3261,12 +3255,21 @@ void do_cmd_store(void)
 	st_ptr = &store[store_num];
 	ot_ptr = &b_info[(store_num * z_info->b_max) + st_ptr->owner];
 
-
 	/* Start at the beginning */
-	display_position = 0;
+	top_item = 0;
 
-	/* Display the store */
+	/* XXX XXX XXX Hack XXX XXX XXX */
+
+	/* Grab the terminal sizes */
+	Term_get_size(&size_x, &size_y);
+
+	/* Draw the store */
 	display_store();
+
+	/* Reset the terminal sizes */
+	size_x = size_y = 0;
+
+	/* *** *** *** End Hack *** *** *** */
 
 	/* Do not leave */
 	leave_store = FALSE;
@@ -3274,6 +3277,26 @@ void do_cmd_store(void)
 	/* Interact with player */
 	while (!leave_store)
 	{
+		int old_x, old_y;
+
+		old_x = size_x;
+		old_y = size_y;
+
+		/* Grab the terminal sizes */
+		Term_get_size(&size_x, &size_y);
+
+		if (size_x != old_x && size_y != old_y)
+		{
+			/* Redraw */
+			do_cmd_redraw();
+
+			/* Display the store */
+			display_store();
+		}
+
+		/* Hack */
+		size_y--;
+
 		/* Hack -- Clear line 1 */
 		prt("", 1, 0);
 
@@ -3284,26 +3307,26 @@ void do_cmd_store(void)
 		clear_from(21);
 
 		/* Basic commands */
-		prt(" ESC) Exit from Building.", 22, 0);
+		prt(" ESC) Exit from Building.", size_y - 1, 0);
 
 		/* Browse if necessary */
 		if (st_ptr->stock_num > 12)
 		{
-			prt(" SPACE) Next page of stock.", 23, 0);
+			prt(" SPACE) Next page of stock.", size_y, 0);
 		}
 
 		/* Commands */
-		prt(" g) Get/Purchase an item.", 22, 29);
-		prt(" d) Drop/Sell an item.", 23, 29);
+		prt(" g) Get/Purchase an item.", size_y - 1, 29);
+		prt(" d) Drop/Sell an item.", size_y, 29);
 
 		/* Add in the eXamine option */
 		if (rogue_like_commands)
-			prt(" x) eXamine an item.", 22, 56);
+			prt(" x) eXamine an item.", size_y - 1, 56);
 		else
-			prt(" l) Look at an item.", 22, 56);
+			prt(" l) Look at an item.", size_y - 1, 56);
 
 		/* Prompt */
-		prt("You may: ", 21, 0);
+		prt("You may: ", size_y - 2, 0);
 
 		/* Get a command */
 		request_command(TRUE);
@@ -3416,18 +3439,14 @@ void do_cmd_store(void)
 	/* Hack -- Cancel "see" mode */
 	p_ptr->command_see = FALSE;
 
-
 	/* Flush messages XXX XXX XXX */
 	message_flush();
-
 
 	/* Hack -- Decrease "icky" depth */
 	character_icky--;
 
-
 	/* Clear the screen */
 	Term_clear();
-
 
 	/* Update the visuals */
 	p_ptr->update |= (PU_UPDATE_VIEW | PU_MONSTERS);

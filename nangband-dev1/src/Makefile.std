@@ -107,7 +107,7 @@ only-x11: nangband
 # you may have to add "-I/usr/include/ncurses" to the "CFLAGS".
 #
 only-gcu: CFLAGS = -Wall -O1 -pipe -g -D"USE_GCU"
-only-gcu: LIBS = -lcurses -ltermcap
+only-gcu: LIBS = -lncurses -ltermcap
 only-gcu: nangband
 
 # This version supports X11, GTK and GCU.

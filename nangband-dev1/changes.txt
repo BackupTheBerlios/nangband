@@ -5,6 +5,10 @@ Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ----------
 - generate_cave() didn't clear the cave_info2 array, causing various weird
   effects. (pelpel)
+- Broken doors don't count for the purpose of easy open/close, because the
+  game offers ways to tell them from open doors, and I feel it's mildly
+  annoying to be asked to choose them only to get the responce telling me
+  I can't do so. (pelpel)
 
 2002-07-27
 ----------

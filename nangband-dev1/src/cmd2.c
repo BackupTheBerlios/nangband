@@ -476,11 +476,11 @@ static bool do_cmd_disarm_chest(int y, int x, s16b o_idx)
 #if defined(ALLOW_EASY_OPEN)
 
 /*
- * Return TRUE if the given feature is an open (or broken) door
+ * Return TRUE if the given feature is an open door
  */
 static bool is_open(int feat)
 {
-	return ((feat == FEAT_OPEN) || (feat == FEAT_BROKEN));
+	return (feat == FEAT_OPEN);
 }
 
 

@@ -35,40 +35,26 @@ if ($dir = @opendir('extras/'))
 	}
 }
 
-// Come up with a page "title"
-switch ($page)
+// Come up with a page "title" - done in files.php
+include('files.php');
+$page_okay = (file_exists('content/' .$page) && !is_dir('content/' .$page));
+if (!$page_okay) $title = 'page not found';
+
+// Output the header
+page_header($title, $page, $pagestyle);
+
+// Include the data
+if ($page_okay)
 {
-	case 'main': $title = 'main page';
-	             break;
-
-	case 'changes': $title = 'changes';
-	                break;
-
-	case 'download': $title = 'download';
-	                 break;
-
-	case 'project': $redirect = 'http://developer.berlios.de/project/?group_id=266';
-	                break;
-}
-
-// Redirect if appropriate
-if ($redirect)
-{
-	// This redirects to another page.
-	header('Location: ' .$redirect);
+	include('content/'.$page);
 }
 else
 {
-	// Output the header
-	page_header($title, $page, $pagestyle);
-
-	// Include the data
-	include('content/'.$page);
-
-	// Output the footer
-	page_footer();
+	echo '<p><b>Sorry, that page was not found.</b></p>';
+	echo '<p>You may be looking for a page which does not exist any more; please follow the links on the sidebar.</p>';
 }
 
-// We are done.
+// Output the footer
+page_footer();
 
 ?>

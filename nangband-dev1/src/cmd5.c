@@ -588,7 +588,7 @@ void do_cmd_study(void)
 {
 	int i, item;
 
-	int spell = -1;
+	int spell;
 
 	cptr p = ((cp_ptr->spell_book == TV_MAGIC_BOOK) ? "spell" : "prayer");
 

@@ -3226,6 +3226,44 @@ bool fire_ball(int typ, int dir, int dam, int rad)
 
 
 /*
+ * Cast multiple non-jumping ball spells at the same target.
+ *
+ * Targets absolute coordinates instead of a specific monster, so that
+ * the death of the monster doesn't change the target's location.
+ */
+bool fire_swarm(int num, int typ, int dir, int dam, int rad)
+{
+	bool noticed = FALSE;
+
+	int py = p_ptr->py;
+	int px = p_ptr->px;
+
+	int ty, tx;
+
+	int flg = PROJECT_STOP | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL;
+
+	/* Use the given direction */
+	ty = py + 99 * ddy[dir];
+	tx = px + 99 * ddx[dir];
+
+	/* Hack -- Use an actual "target" (early detonation) */
+	if ((dir == 5) && target_okay())
+	{
+		ty = p_ptr->target_row;
+		tx = p_ptr->target_col;
+	}
+
+	while (num--)
+	{
+		/* Analyze the "dir" and the "target".  Hurt items on floor. */
+		if (project(-1, rad, ty, tx, dam, typ, flg)) noticed = TRUE;
+	}
+
+	return noticed;
+}
+
+
+/*
  * Hack -- apply a "projection()" in a direction (or at the target)
  */
 static bool project_hook(int typ, int dir, int dam, int flg)

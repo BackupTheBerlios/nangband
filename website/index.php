@@ -19,7 +19,14 @@ days.</p>
 or you can wait for a near-stable prerelease which should happen in the next week or two. The estimated
 release date of Nangband 0.1.0 is the first week of April.</p>
 <p><em>Berlios.de</em> is hosting the project, including the CVS, the website, file releases and the mailing
-lists. If you are interested in this project, please join 'nangband-discussion'.</p>
+lists. If you are interested in this project, please join 'nangband-discussion'. A direct link to the
+mailing page is: <a href="http://developer.berlios.de/mail/?group_id=266">http://developer.berlios.de/mail/?group_id=266</a>. 
+The CVS can be checked out using the following command:<br>
+<pre>
+cvs -z3 -:d:pserver:anonymous@cvs.nangband.berlios.de:/cvsroot/nangband co nangband
+</pre><br>
+Replace 'co nangband' with 'co nang-web' if you want to check out this websiter instead.</p>
+</p>
 <?
 page_footer($creators);
 ?>

@@ -2982,6 +2982,55 @@ static void do_cmd_knowledge_objects(void)
 	fd_kill(file_name);
 }
 
+/*
+ * Display kill count
+ */
+static void do_cmd_knowledge_kill_count(void)
+{
+        int i, n;
+	FILE *fff;
+        u16b *who;
+        char file_name[1024];
+
+	/* Temporary file */
+	fff = my_fopen_temp(file_name, 1024);
+
+        /* Failure */
+	if (!fff) return;
+
+	/* Allocate the "who" array */
+        C_MAKE(who, z_info->r_max, u16b);
+
+	/* Gather a list of monsters */
+	for (i = 1, n = 0; i < z_info->r_max; i++)
+	{
+            monster_lore *l_ptr = &l_list[i];
+
+	    /* The player has to have killed at least one */
+	    if (!(l_ptr->pkills)) continue;
+
+            /* Keep a list of killed monsters */
+	    who[n++] = i;
+	}
+
+	/* Print the monsters */
+	for (i = 0; i < n; i++)
+	{
+            monster_race *r_ptr = &r_info[who[i]];
+	    monster_lore *l_ptr = &l_list[who[i]];
+
+	    fprintf(fff, "     %s : %d\n", (r_name + r_ptr->name), l_ptr->pkills);
+	}
+
+	/* Close the file */
+	my_fclose(fff);
+
+	/* Display the file contents */
+	show_file(file_name, "Kill Count", 0, 0);
+
+	/* Remove the file */
+        fd_kill(file_name);
+}
 
 /*
  * Interact with "knowledge"
@@ -3012,9 +3061,9 @@ void do_cmd_knowledge(void)
 		prt("(1) Display known artifacts", 4, 5);
 		prt("(2) Display known uniques", 5, 5);
 		prt("(3) Display known objects", 6, 5);
-
+                prt("(4) Display kill count", 7, 5);
 		/* Prompt */
-		prt("Command: ", 8, 0);
+		prt("Command: ", 9, 0);
 
 		/* Prompt */
 		ch = inkey();
@@ -3041,6 +3090,13 @@ void do_cmd_knowledge(void)
 		{
 			/* Spawn */
 			do_cmd_knowledge_objects();
+		}
+
+		/* Kill count */
+		else if (ch == '4')
+		{
+		        /* Spawn */
+		        do_cmd_knowledge_kill_count();
 		}
 
 		/* Unknown option */

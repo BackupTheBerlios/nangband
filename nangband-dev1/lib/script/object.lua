@@ -1454,7 +1454,7 @@ function describe_item_activation_hook(object)
 	-- Orbs
 	if object.tval == TV_ORB then
 		local activations = {
-			[1] = "a fire bolt every now and again"}
+			[SV_ORB_FIRE_1] = "a fire bolt every now and again"}
 
 		return activations[object.sval]
 	end

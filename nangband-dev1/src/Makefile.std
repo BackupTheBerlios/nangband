@@ -41,10 +41,10 @@ ANGOBJS = \
 	cmd1.o cmd2.o cmd3.o cmd4.o cmd5.o cmd6.o \
 	resist.o interface.o \
 	help.o xmlbulp.o \
-	store.o birth.o load.o \
+	store.o birth.o load.o readdib.o \
 	wizard1.o wizard2.o \
 	generate.o dungeon.o init1.o init2.o randart.o \
-	main-cap.o main-gcu.o main-x11.o main-xaw.o main.o \
+	main-cap.o main-gcu.o main-x11.o main-xaw.o main-win.o main.o \
 	main-gtk.o main-lsl.o main-sla.o main-vcs.o main-xpj.o maid-x11.o \
 	script.o l-monst.o l-object.o l-player.o l-random.o l-ui.o l-misc.o l-spell.o l-dynamic.o \
 	$(LUAOBJS)
@@ -255,13 +255,19 @@ LIBS = -lX11 -lcurses -ltermcap -L/usr/X11R6/lib
 nangband: $(ANGOBJS) $(BORGOBJS)
 	$(CC) $(CFLAGS) $(HAVE_MKSTEMP) $(LDFLAGS) -o nangband $(ANGOBJS) $(BORGOBJS) $(LIBS)
 
-# Make the GTK or cygwin port
-gtk:
-	make -f Makefile.gtk
+# Lua stuff
+lua/tolua: $(TOLUAOBJS)
+	$(CC) -o lua/tolua $(TOLUAOBJS) $(LDFLAGS) $(LUALIBS)
 
-cygwin:
-	make -f Makefile.cyg
+# Set up the cygwin port
+cygwin: CC := gcc
+	WRES := windres
+	LUALIBS := -s -mno-cygwin
+	LIBS := -s -mno-cygwin -mwindows -e _mainCRTStartup -lwinmm
+	CFLAGS := -Wall -pedantic -mno-cygwin -O2 -fno-strength-reduce -DWINDOWS
+cygwin: nangband
 
+# Set up other stuff
 gcc-3.0: nangband
 gcc-3.0-warnings: nangband
 
@@ -273,11 +279,6 @@ install: nangband
 clean:
 	-rm -f *.o angband
 	-rm -f ./lua/*.o ./lua/tolua
-
-# Lua stuff
-lua/tolua: $(TOLUAOBJS)
-	$(CC) -o lua/tolua $(TOLUAOBJS) $(LDFLAGS) $(LIBS)
-
 
 #
 # Hack -- some file dependencies
@@ -352,6 +353,15 @@ z-rand.o: z-rand.c $(HDRS) z-rand.h
 z-term.o: z-term.c $(HDRS) z-term.h z-virt.h
 z-util.o: z-util.c $(HDRS) z-util.h
 z-virt.o: z-virt.c $(HDRS) z-virt.h z-util.h
+
+#
+# Cygwin-specific stuff
+#
+readdib.o: readdib.c readdib.h
+	$(CC) $(CFLAGS) -DNEAR= $(INCDIRS) -c -o $@ $<
+
+angband.res: angband.rc
+	$(WRES) $< -O coff -o $@
 
 #
 # Build wrappers

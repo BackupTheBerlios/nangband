@@ -391,6 +391,7 @@ W:0:0:12:10
 A:0/1:5/1:10/1:20/1
 P:0:1d4:0:0:0
 F:SHOW_MODS
+D:A short and sharp bit of metal used to cut 'n' kill.
 
 N:44:& Rapier~
 G:|:W

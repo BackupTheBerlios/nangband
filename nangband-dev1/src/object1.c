@@ -1839,11 +1839,11 @@ void obj_info_resists(byte *resists)
 /*
  * Output a description of the item flags.
  */
-static bool identify_fully_aux2(const object_type *o_ptr, int mode)
+static void identify_fully_aux2(const object_type *o_ptr, int mode)
 {
-	bool known = FALSE;
 	bool stat_boost = FALSE;
 	bool id = FALSE;
+	bool abilities = FALSE;
 
 	object_kind *k_ptr;
 
@@ -1874,7 +1874,8 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		text_out("It can be activated for ");
 		describe_item_activation(o_ptr);
 		text_out(" if it is being worn.  ");
-		known = TRUE;
+
+		abilities = TRUE;
 	}
 
 	/* Describe lights */
@@ -1896,6 +1897,8 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 
 		/* Finish */
 		text_out(".  ");
+
+		abilities = TRUE;
 	}
 
 	/* Count the stats affected */
@@ -1953,6 +1956,8 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		/* What's the bonus? */
 		text_out(" by ");
 		text_out(format("%i", ABS(o_ptr->pval)));
+
+		abilities = TRUE;
 	}
 
 	/* Count the stats affected */
@@ -1997,12 +2002,16 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 
 		/* Finish */
 		text_out(".  ");
+
+		abilities = TRUE;
 	}
 	else if (stat_boost)
 	{
 
 		/* Finish */
 		text_out(".  ");
+
+		abilities = TRUE;
 	}
 
 	/* Count the stats affected */
@@ -2056,6 +2065,8 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 
 		/* Finish */
 		text_out(".  ");
+
+		abilities = TRUE;
 	}
 
 	/* Collect the slays */
@@ -2090,6 +2101,8 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		}
 
 		text_out(".  ");
+
+		abilities = TRUE;
 	}
 
 	/* Collect the executes */
@@ -2119,6 +2132,8 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		}
 
 		text_out(".  ");
+
+		abilities = TRUE;
 	}
 
 	/* Collect the executes */
@@ -2153,158 +2168,106 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		}
 
 		text_out(".  ");
+
+		abilities = TRUE;
 	}
 
 	/* Describe the resists/immunities */
 	if (id) obj_info_resists(resists);
 
-	if (f2 & (TR2_NO_BLIND))
-	{
-		text_out("It grants you immunity to blindness.  ");
-		known = TRUE;
-	}
-
-	if (f2 & (TR2_NO_DISENCHANT))
-	{
-		text_out("It cannot be disenchanted.  ");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_SLOW_DIGEST))
-	{
-		text_out("It slows your metabolism.\n");
-		known = TRUE;
-	}
-
-        if (f3 & (TR3_HUNGER))
-	{
-	    	text_out("It increases you metabolism.\n");
-	    	known = TRUE;
-	}
-
-	if (f3 & (TR3_FEATHER))
-	{
-		text_out("It induces feather falling.\n");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_REGEN))
-	{
-		text_out("It speeds your regenerative powers.\n");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_TELEPATHY))
-	{
-		text_out("It gives telepathic powers.\n");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_SEE_INVIS))
-	{
-		text_out("It allows you to see invisible monsters.\n");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_FREE_ACT))
-	{
-		text_out("It provides immunity to paralysis.\n");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_HOLD_LIFE))
-	{
-		text_out("It provides resistance to life draining.\n");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_IMPACT))
-	{
-		text_out("It induces earthquakes.\n");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_TELEPORT))
-	{
-		text_out("It induces random teleportation.\n");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_AGGRAVATE))
-	{
-		text_out("It aggravates nearby creatures.\n");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_DRAIN_EXP))
-	{
-		text_out("It drains experience.\n");
-		known = TRUE;
-	}
-
-	if (f3 & (TR3_BLESSED))
-	{
-		text_out("It has been blessed by the gods.\n");
-		known = TRUE;
-	}
+	/* Describe other (weird) things */
+	if (f2 & (TR2_NO_BLIND)) text_out("It grants you immunity to blindness.  ");
+	if (f2 & (TR2_NO_DISENCHANT)) text_out("It cannot be disenchanted.  ");
+	if (f3 & (TR3_SLOW_DIGEST)) text_out("It slows your metabolism.  ");
+        if (f3 & (TR3_HUNGER)) text_out("It increases you metabolism.  ");
+	if (f3 & (TR3_FEATHER)) text_out("It induces feather falling.  ");
+	if (f3 & (TR3_REGEN)) text_out("It speeds your regenerative powers.  ");
+	if (f3 & (TR3_TELEPATHY)) text_out("It gives telepathic powers.  ");
+	if (f3 & (TR3_SEE_INVIS)) text_out("It allows you to see invisible monsters.  ");
+	if (f3 & (TR3_FREE_ACT)) text_out("It provides immunity to paralysis.  ");
+	if (f3 & (TR3_HOLD_LIFE)) text_out("It provides resistance to life draining.  ");
+	if (f3 & (TR3_IMPACT)) text_out("It induces earthquakes.  ");
+	if (f3 & (TR3_TELEPORT)) text_out("It induces random teleportation.  ");
+	if (f3 & (TR3_AGGRAVATE)) text_out("It aggravates nearby creatures.  ");
+	if (f3 & (TR3_DRAIN_EXP)) text_out("It drains experience.  ");
+	if (f3 & (TR3_BLESSED)) text_out("It has been blessed by the gods.  ");
 
 	if (object_known_p(o_ptr) && cursed_p(o_ptr))
 	{
 		if (f3 & (TR3_PERMA_CURSE))
 		{
-			text_out("It is permanently cursed.\n");
+			text_out("It can never be uncursed.  ");
 		}
 		else if (f3 & (TR3_HEAVY_CURSE))
 		{
-			text_out("It is heavily cursed.\n");
+			text_out("It carries a heavy curse. ");
 		}
 		else
 		{
-			text_out("It is cursed.\n");
+			text_out("It is cursed.  ");
 		}
-		known = TRUE;
+
+		abilities = TRUE;
 	}
 
 	if ((f3 & (TR3_IGNORE_ACID)) && (f3 & (TR3_IGNORE_ELEC)) &&
 	    (f3 & (TR3_IGNORE_FIRE)) && (f3 & (TR3_IGNORE_COLD)))
 	{
-		text_out("It cannot be harmed by the elements.\n");
-		known = TRUE;
+		text_out("It cannot be harmed by the elements.  ");
+
+		abilities = TRUE;
 	}
 	else
 	{
 		if (f3 & (TR3_IGNORE_ACID))
 		{
-			text_out("It cannot be harmed by acid.\n");
-			known = TRUE;
+			text_out("It cannot be harmed by acid.  ");
+
+			abilities = TRUE;
 		}
 		if (f3 & (TR3_IGNORE_ELEC))
 		{
-			text_out("It cannot be harmed by electricity.\n");
-			known = TRUE;
+			text_out("It cannot be harmed by electricity.  ");
+
+			abilities = TRUE;
 		}
 		if (f3 & (TR3_IGNORE_FIRE))
 		{
-			text_out("It cannot be harmed by fire.\n");
-			known = TRUE;
+			text_out("It cannot be harmed by fire.  ");
+
+			abilities = TRUE;
 		}
 		if (f3 & (TR3_IGNORE_COLD))
 		{
-			text_out("It cannot be harmed by cold.\n");
-			known = TRUE;
+			text_out("It cannot be harmed by cold.  ");
+
+			abilities = TRUE;
 		}
 	}
 
-	/* Unknown extra powers (ego-item with random extras or artifact) */
-	if (object_known_p(o_ptr) &&
-		(!(o_ptr->ident & IDENT_MENTAL)) &&
-	    ((o_ptr->xtra1) || artifact_p(o_ptr)))
+	if (!abilities)
 	{
-		text_out("   It might have hidden powers.\n");
-		known = TRUE;
+		text_out("There is nothing special about this item.");
 	}
 
-	return (known);
+	/* XXX */
+	text_out("\n");
+
+	/* Give the player warning of un-id'd things */
+	if (!object_known_p(o_ptr) && !(o_ptr->ident & (IDENT_MENTAL)))
+	{
+		text_out_c(TERM_RED, "You have not identified this item at all.  \n");
+	}
+	else if (object_known_p(o_ptr) && !(o_ptr->ident & (IDENT_MENTAL)))
+	{
+		text_out_c(TERM_L_BLUE, "You have identified this item.  \n");
+	}
+	else
+	{
+		text_out_c(TERM_L_GREEN, "You have full knowledge of this item.  \n");
+	}
+
+	return;
 }
 
 /*
@@ -2327,12 +2290,12 @@ bool identify_fully_aux(const object_type *o_ptr)
 	if (k_info[o_ptr->k_idx].text)
 	{
 		text_out_c(TERM_ORANGE, k_text + k_info[o_ptr->k_idx].text);
-		text_out("\n\n");
+		text_out("\n");
 	}
 
 	/* Output the flag descriptions */
 	identify_fully_aux2(o_ptr, OBJECT_AUX_KNOWN);
-
+ 
 	/* Clear the top line */
 	Term_erase(0, 0, 255);
 

@@ -3330,12 +3330,10 @@ static void death_examine(void)
 		msg_format("Examining %s...", o_name);
 
 		/* Describe it fully */
-		if (!identify_fully_aux(o_ptr))
-		{
-			msg_print("You see nothing special.");
-			message_flush();
-		}
+		identify_fully_aux(o_ptr);
 	}
+
+	return;
 }
 
 

@@ -1,0 +1,23 @@
+#!/usr/bin/perl -w
+# A script to generate HTML files from AHML files, using an (XSL) stylesheet.
+
+# Always be strict.
+use strict;
+
+# The list of files to convert
+my @files =
+(
+   "licence"
+);
+
+# Cycle through the files
+foreach my $i (0 .. (scalar @files - 1))
+{
+	my $outfile = $files[$i] .".html";
+	my $xmlfile = $files[$i] .".xml";
+
+   `xsltproc -o $outfile to-html.xsl $xmlfile`;
+}
+
+# Copy the files one level up.
+`cp *.html ../`;

@@ -1,6 +1,14 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-07-18
+----------
+- Divorced the new CAVE_TDETECT flag from cave_info[][]; it is now in 
+  cave_info2[][].  This is for efficiency.  The savefile code doesn't handle
+  old dungeons; it now prompts for dungeon regeneration.  (takkaria)
+- Added basic terrain flags; I still need to add some to lib/edit/terrain.txt.
+  (takkaria)
+
 2002-07-09
 ----------
 - Fixed two bugs; enchant_spell() was called incorrectly from the Lua scripts,

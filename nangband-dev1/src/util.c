@@ -3647,7 +3647,6 @@ uint maxroll(uint num, uint sides)
 
 
 
-
 /*
  * Check a char for "vowel-hood"
  */
@@ -3671,12 +3670,41 @@ bool is_a_vowel(int ch)
 	return (FALSE);
 }
 
+/*
+ * Extract a textual representation of an attribute
+ */
+cptr attr_to_text(byte a)
+{
+	switch (a)
+	{
+		case TERM_DARK:    return ("Dark");
+		case TERM_WHITE:   return ("White");
+		case TERM_SLATE:   return ("Slate");
+		case TERM_ORANGE:  return ("Orange");
+		case TERM_RED:     return ("Red");
+		case TERM_GREEN:   return ("Green");
+		case TERM_BLUE:    return ("Blue");
+		case TERM_UMBER:   return ("Umber");
+		case TERM_L_DARK:  return ("L.Dark");
+		case TERM_L_WHITE: return ("L.Slate");
+		case TERM_VIOLET:  return ("Violet");
+		case TERM_YELLOW:  return ("Yellow");
+		case TERM_L_RED:   return ("L.Red");
+		case TERM_L_GREEN: return ("L.Green");
+		case TERM_L_BLUE:  return ("L.Blue");
+		case TERM_L_UMBER: return ("L.Umber");
+	}
+
+	/* Oops */
+	return ("Icky");
+}
+
 
 /*
  * Convert a "color letter" into an "actual" color
  * The colors are: dwsorgbuDWvyRGBU, as shown below
  */
-int color_char_to_attr(char c)
+byte color_char_to_attr(char c)
 {
 	switch (c)
 	{
@@ -4305,9 +4333,11 @@ void put_continuous_text(int x_pos, int y_pos, char *txt, byte attr, bool clear)
 		}
 	}
 
-	/* We are done */
+	/* We are done. */
 	return;
 }
+
+
 
 /* ------------------------------------------------------------ ajps ---
  * This writes a block of text to the screen, starting from x_pos, y_pos
@@ -4505,35 +4535,5 @@ void put_text_block(int x_pos, int y_pos, int width, char *txt, byte attr, bool 
 
 	/* We are done */
 	return;
-}
-
-
-/*
- * Extract a textual representation of an attribute
- */
-cptr attr_to_text(byte a)
-{
-	switch (a)
-	{
-		case TERM_DARK:	return ("Dark");
-		case TERM_WHITE:   return ("White");
-		case TERM_SLATE:   return ("Slate");
-		case TERM_ORANGE:  return ("Orange");
-		case TERM_RED:	 return ("Red");
-		case TERM_GREEN:   return ("Green");
-		case TERM_BLUE:	return ("Blue");
-		case TERM_UMBER:   return ("Umber");
-		case TERM_L_DARK:  return ("L.Dark");
-		case TERM_L_WHITE: return ("L.Slate");
-		case TERM_VIOLET:  return ("Violet");
-		case TERM_YELLOW:  return ("Yellow");
-		case TERM_L_RED:   return ("L.Red");
-		case TERM_L_GREEN: return ("L.Green");
-		case TERM_L_BLUE:  return ("L.Blue");
-		case TERM_L_UMBER: return ("L.Umber");
-	}
-
-	/* Oops */
-	return ("Icky");
 }
 

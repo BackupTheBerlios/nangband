@@ -706,7 +706,8 @@ extern void request_command(bool shopping);
 extern uint damroll(uint num, uint sides);
 extern uint maxroll(uint num, uint sides);
 extern bool is_a_vowel(int ch);
-extern int color_char_to_attr(char c);
+extern cptr attr_to_text(byte a);
+extern byte color_char_to_attr(char c);
 extern void put_text_block(int x_pos, int y_pos, int width, char *txt, byte attr, bool clear, byte align);
 extern void put_continuous_text(int x_pos, int y_pos, char *txt, byte attr, bool clear);
 

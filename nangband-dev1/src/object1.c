@@ -2660,7 +2660,7 @@ void item_show_knowledge(const object_type *o_ptr)
 	text_out_hook = text_out_to_screen;
 
 	/* Output the description */
-	item_info_desc(o_ptr, OBJECT_AUX_KNOWN);
+	item_info_brief(o_ptr, OBJECT_AUX_KNOWN);
 
 	/* Wait for a keypress */
 	(void)inkey();

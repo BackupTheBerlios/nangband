@@ -1425,3 +1425,4 @@ int xmlbulp_get_CDATA_chunk(BULP *bptr, size_t size, u32b from, char *buffer, si
 
 	return(return_value);
 }
+

@@ -375,7 +375,7 @@ static void link_to_file(char *link_file, char *filename, char *mark, history_bl
  * selected - load a new file, move back or forward through the history,
  * or exit the help system with or without a return value.
  * --------------------------------------------------------------------- */
-static bool go_to_link(link_blk *linkptr, char *filename, char *mark, history_blk *history, u32b *passback)
+bool go_to_link(link_blk *linkptr, char *filename, char *mark, history_blk *history, u32b *passback)
 {
 	/* This isn't really a link */
 	if (linkptr == NULL) return (TRUE);

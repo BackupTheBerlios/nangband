@@ -76,16 +76,19 @@ ANGOBJS = \
 # Comment out the following line if you do not have mkstemp()
 HAVE_MKSTEMP = -DHAVE_MKSTEMP
 
-# Compiler warnings
-WARNINGS = -Wwrite-strings -Wpointer-arith -Wbad-function-cast -Wconversion \
+# This is your compiler
+CC = gcc
+WARNINGS = -Wall
+
+# gcc-3.0 with warnings
+gcc-3.0-warnings: WARNINGS = -Wwrite-strings -Wpointer-arith -Wbad-function-cast -Wconversion \
 	-Wsign-compare -Waggregate-return \
 	-Wredundant-decls -Wunreachable-code -Wdisabled-optimization -Wall
+gcc-3.0-warnings: CC = gcc-3.0
 
-
-
-# This is your compiler
-CC = gcc-3.0
-
+# gcc-3.0
+gcc-3.0: WARNINGS = -Wall
+gcc-3.0: CC = gcc-3.0
 
 #
 # Standard version (see main-x11.c and main-gcu.c)
@@ -259,6 +262,8 @@ gtk:
 cygwin:
 	make -f Makefile.cyg
 
+gcc-3.0: nangband
+gcc-3.0-warnings: nangband
 
 # Move the binary one level up.
 install: nangband

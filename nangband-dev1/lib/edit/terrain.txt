@@ -1,40 +1,40 @@
-# File: terrain.txt
+# File: nangband/lib/edit/terrain.txt
+# Purpose: Terrain information for Nangband
 
-
-# This file is used to initialize the "lib/data/terrain.raw" file, which is
-# used to initialize the "terrain feature" information for the Angband game.
-
-# Do not modify this file unless you know exactly what you are doing,
-# unless you wish to risk possible system crashes and broken savefiles.
-# After modifying this file, delete the "lib/data/terrain.raw" file.
-
-# Note that the terrain feature are grouped into very regular groups,
-# such that each of the bits in the feature type conveys information.
-
-# Note that terrain feature zero contains the "darkness" picture.
+# Modifying this file could result in system crashes, broken savefiles
+# or the game refusing to start.  Always keep backups.
 
 # === Understanding terrain.txt ===
 
-# N : serial number : terrain name
-# G : symbol : color
-# M : feature to mimic
+# N: serial number : terrain name
+# G: symbol : color
+# M: feature to mimic
+# F: flag | flag | flag
 
-# N' indicates the beginning of an entry. The serial number must
-# increase for each new item.
+# 'N' indicates the beginning of an entry. The serial number must increase
+# for each new item.
 
-# 'G' is for graphics - symbol and color. There are 16 colors, as
-# follows:
-
-# D - Dark Gray    w - White          s - Gray          o - Orange
-# r - Red          g - Green          b - Blue          u - Brown
-# d - Black        W - Light Gray     v - Violet        y - Yellow
-# R - Light Red    G - Light Green    B - Light Blue    U - Light Brown
+# 'G' is for graphics - symbol and color; these represent the terrain feature
+# on-screen.
 
 # 'M' is the index of a feature to mimic.
 
+# 'F' gives a list of flags.  These flags are:
+#  * BORING - this is "boring".
+#  * WALL - this flag marks a terrain feature impassable (under any
+#           cirumstances) for the player and monsters.
+#  * BLOCKING - this is a terrain feature which blocks the player or
+#               monsters in some way - doors, walls, etc.
+#  * STORE - marks terrain as a store entrance
 
+### Notes on terrain.txt ###
+# Do not move or modify record 0 of this file, as it must be kept there.
+#
+# Note that the terrain features could be rearranged, and little would be
+# lost except savefile compibility - and this could be "kept" by
+# regenerating the level the player is currently on.
+#
 # Version stamp (required)
-
 V:1.0.0
 
 
@@ -42,12 +42,13 @@ V:1.0.0
 
 N:0:<darkness>
 G: :w
-
+F:BORING
 
 # 0x01 --> open floor
 
 N:1:open floor
 G:.:w
+F:BORING
 
 # 0x02 --> invisible trap (drawn as open floor)
 
@@ -84,41 +85,49 @@ G:>:w
 
 N:8:General Store
 G:1:U
+F:STORE
 
 # 0x09 --> shop -- armoury (perm)
 
 N:9:Armoury
 G:2:s
+F:STORE
 
 # 0x0A --> shop -- weapon shop (perm)
 
 N:10:Weapon Smiths
 G:3:w
+F:STORE
 
 # 0x0B --> shop -- temple (perm)
 
 N:11:Temple
 G:4:g
+F:STORE
 
 # 0x0C --> shop -- alchemist (perm)
 
 N:12:Alchemy Shop
 G:5:b
+F:STORE
 
 # 0x0D --> shop -- magic shop (perm)
 
 N:13:Magic Shop
 G:6:r
+F:STORE
 
 # 0x0E --> shop -- black market (perm)
 
 N:14:Black Market
 G:7:D
+F:STORE
 
 # 0x0F --> shop -- home (perm)
 
 N:15:Home
 G:8:y
+F:STORE
 
 # 0x10 --> visible trap -- trap door
 
@@ -205,183 +214,215 @@ G:^:g
 N:32:door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> locked door (power 1)
 
 N:33:locked door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> locked door (power 2)
 
 N:34:locked door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> locked door (power 3)
 
 N:35:locked door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> locked door (power 4)
 
 N:36:locked door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> locked door (power 5)
 
 N:37:locked door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> locked door (power 6)
 
 N:38:locked door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> locked door (power 7)
 
 N:39:locked door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> jammed door (power 0)
 
 N:40:jammed door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> jammed door (power 1)
 
 N:41:jammed door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> jammed door (power 2)
 
 N:42:jammed door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> jammed door (power 3)
 
 N:43:jammed door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> jammed door (power 4)
 
 N:44:jammed door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> jammed door (power 5)
 
 N:45:jammed door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> jammed door (power 6)
 
 N:46:jammed door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x2x --> jammed door (power 7)
 
 N:47:jammed door
 G:+:U
 M:32
+F:BLOCKING
 
 # 0x30 --> secret door
 
 N:48:secret door
 G:#:w
 M:56
+F:BLOCKING | WALL
 
 # 0x31 --> pile of rubble
 
 N:49:pile of rubble
 G:::w
+F:BLOCKING | WALL
 
 # 0x32 --> magma vein
 
 N:50:magma vein
 G:%:s
+F:BLOCKING | WALL
 
 # 0x33 --> quartz vein
 
 N:51:quartz vein
 G:%:w
+F:BLOCKING | WALL
 
 # 0x34 --> magma vein + treasure
 
 N:52:magma vein
 G:%:s
 M:50
+F:BLOCKING | WALL
 
 # 0x35 --> quartz vein + treasure
 
 N:53:quartz vein
 G:%:w
 M:51
+F:BLOCKING | WALL
 
 # 0x36 --> magma vein + known treasure
 
 N:54:magma vein with treasure
 G:*:o
+F:BLOCKING | WALL
 
 # 0x37 --> quartz vein + known treasure
 
 N:55:quartz vein with treasure
 G:*:o
+F:BLOCKING | WALL
 
 # 0x38 --> granite wall -- basic
 
 N:56:granite wall
 G:#:w
+F:BLOCKING | WALL
 
 # 0x39 --> granite wall -- inner
 
 N:57:granite wall
 G:#:w
 M:56
+F:BLOCKING | WALL
 
 # 0x3A --> granite wall -- outer
 
 N:58:granite wall
 G:#:w
 M:56
+F:BLOCKING | WALL
 
 # 0x3B --> granite wall -- solid
 
 N:59:granite wall
 G:#:w
 M:56
+F:BLOCKING | WALL
 
 # 0x3C --> permanent wall -- basic (perm)
 
 N:60:permanent wall
 G:#:w
+F:BLOCKING | WALL
 
 # 0x3D --> permanent wall -- inner (perm)
 
 N:61:permanent wall
 G:#:w
 M:60
+F:BLOCKING | WALL
 
 # 0x3E --> permanent wall -- outer (perm)
 
 N:62:permanent wall
 G:#:w
 M:60
+F:BLOCKING | WALL
 
 # 0x3F --> permanent wall -- solid (perm)
 
 N:63:permanent wall
 G:#:w
 M:60
+F:BLOCKING | WALL
 

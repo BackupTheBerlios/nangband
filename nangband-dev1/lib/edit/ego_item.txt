@@ -2,7 +2,7 @@
 # Purpose: Ego-item information for Nangband
 
 # Modifying this file could result in system crashes, broken savefiles
-# or the game refusing to start. Always keep backups.
+# or the game refusing to start.  Always keep backups.
 
 # Note that several "ego-item" types may share the same "textual name",
 # such as with "Armor of Resistance" and "Shield of Resistance".

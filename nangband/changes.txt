@@ -7,3 +7,6 @@ First release: "Thru These Architecht's Eyes", Nangband 0.1.0
 --------
 - 11:24 GMT: imported the Vanilla 3.0.2 sources.  Work may now begin.
 - 07:28 EST: applied patch to remove haggling.
+- 02:47 GMT: fixed a minor interface problem brought about by the removal of
+             haggling.  The game now aborts when buying if the player doesn't
+             have enough money to buy an item and they try to.

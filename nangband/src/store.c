@@ -1291,6 +1291,16 @@ static void store_purchase(void)
 		amt_max = p_ptr->au / base_price;
 	else amt_max = o_ptr->number;
 
+	/* Player cannot afford it at all */
+	if (!amt_max)
+	{
+		/* Simple message (no insult) */
+		msg_print("You do not have enough gold.");
+
+		/* Forget it */
+		return;
+	}
+
 	/* Get a quantity */
 	amt = get_quantity(NULL, amt_max);
 
@@ -1336,123 +1346,110 @@ static void store_purchase(void)
 			o_ptr->ident |= (IDENT_FIXED);
 		}
 
-		/* Player can afford it */
-		if (p_ptr->au >= price)
+		/* Seal the deal */
+		say_comment_1();
+
+		/* Spend the money */
+		p_ptr->au -= price;
+
+		/* Update the display */
+		store_prt_gold();
+
+		/* Buying an object makes you aware of it */
+		object_aware(i_ptr);
+
+		/* Combine / Reorder the pack (later) */
+		p_ptr->notice |= (PN_COMBINE | PN_REORDER);
+
+		/* The object no longer belongs to the store */
+		i_ptr->ident &= ~(IDENT_STORE);
+
+		/* Describe the transaction */
+		object_desc(o_name, sizeof(o_name), i_ptr, TRUE, 3);
+
+		/* Message */
+		msg_format("You bought %s (%c) for %ld gold.", o_name, store_to_label(item), (long)price);
+
+		/* Erase the inscription */
+		i_ptr->note = 0;
+
+		/* Remove special inscription, if any */
+		if (o_ptr->discount >= INSCRIP_NULL) o_ptr->discount = 0;
+
+		/* Give it to the player */
+		item_new = inven_carry(i_ptr);
+
+		/* Describe the final result */
+		object_desc(o_name, sizeof(o_name), &inventory[item_new], TRUE, 3);
+
+		/* Message */
+		msg_format("You have %s (%c).", o_name, index_to_label(item_new));
+
+		/* Handle stuff */
+		handle_stuff();
+
+		/* Note how many slots the store used to have */
+		n = st_ptr->stock_num;
+
+		/* Remove the bought objects from the store */
+		store_item_increase(item, -amt);
+		store_item_optimize(item);
+
+		/* Store is empty */
+		if (st_ptr->stock_num == 0)
 		{
-			/* Seal the deal */
-			say_comment_1();
+			int i;
 
-			/* Spend the money */
-			p_ptr->au -= price;
-
-			/* Update the display */
-			store_prt_gold();
-
-			/* Buying an object makes you aware of it */
-			object_aware(i_ptr);
-
-			/* Combine / Reorder the pack (later) */
-			p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-
-			/* The object no longer belongs to the store */
-			i_ptr->ident &= ~(IDENT_STORE);
-
-			/* Describe the transaction */
-			object_desc(o_name, sizeof(o_name), i_ptr, TRUE, 3);
-
-			/* Message */
-			msg_format("You bought %s (%c) for %ld gold.", o_name,
-			           store_to_label(item), (long)price);
-
-			/* Erase the inscription */
-			i_ptr->note = 0;
-
-			/* Remove special inscription, if any */
-			if (o_ptr->discount >= INSCRIP_NULL) o_ptr->discount = 0;
-
-			/* Give it to the player */
-			item_new = inven_carry(i_ptr);
-
-			/* Describe the final result */
-			object_desc(o_name, sizeof(o_name), &inventory[item_new], TRUE, 3);
-
-			/* Message */
-			msg_format("You have %s (%c).", o_name, index_to_label(item_new));
-
-			/* Handle stuff */
-			handle_stuff();
-
-			/* Note how many slots the store used to have */
-			n = st_ptr->stock_num;
-
-			/* Remove the bought objects from the store */
-			store_item_increase(item, -amt);
-			store_item_optimize(item);
-
-			/* Store is empty */
-			if (st_ptr->stock_num == 0)
+			/* Shuffle */
+			if (rand_int(STORE_SHUFFLE) == 0)
 			{
-				int i;
+				/* Message */
+				msg_print("The shopkeeper retires.");
 
-				/* Shuffle */
-				if (rand_int(STORE_SHUFFLE) == 0)
-				{
-					/* Message */
-					msg_print("The shopkeeper retires.");
-
-					/* Shuffle the store */
-					store_shuffle(store_num);
-				}
-
-				/* Maintain */
-				else
-				{
-					/* Message */
-					msg_print("The shopkeeper brings out some new stock.");
-				}
-
-				/* New inventory */
-				for (i = 0; i < 10; ++i)
-				{
-					/* Maintain the store */
-					store_maint(store_num);
-				}
-
-				/* Start over */
-				store_top = 0;
-
-				/* Redraw everything */
-				display_inventory();
+				/* Shuffle the store */
+				store_shuffle(store_num);
 			}
 
-			/* The object is gone */
-			else if (st_ptr->stock_num != n)
-			{
-				/* Only one screen left */
-				if (st_ptr->stock_num <= 12)
-				{
-					store_top = 0;
-				}
-
-				/* Redraw everything */
-				display_inventory();
-			}
-
-			/* The object is still here */
+			/* Maintain */
 			else
 			{
-				/* Redraw the object */
-				display_entry(item);
+				/* Message */
+				msg_print("The shopkeeper brings out some new stock.");
 			}
-			
+
+			/* New inventory */
+			for (i = 0; i < 10; ++i)
+			{
+				/* Maintain the store */
+				store_maint(store_num);
+			}
+
+			/* Start over */
+			store_top = 0;
+
+			/* Redraw everything */
+			display_inventory();
 		}
 
-		/* Player cannot afford it */
+		/* The object is gone */
+		else if (st_ptr->stock_num != n)
+		{
+			/* Only one screen left */
+			if (st_ptr->stock_num <= 12)
+			{
+				store_top = 0;
+			}
+
+			/* Redraw everything */
+			display_inventory();
+		}
+
+		/* The object is still here */
 		else
 		{
-			/* Simple message (no insult) */
-			msg_print("You do not have enough gold.");
-		}
+			/* Redraw the object */
+			display_entry(item);
+		}			
 	}
 
 	/* Home is much easier */

@@ -2313,7 +2313,7 @@ errr init_x11(int argc, char **argv)
 
 #ifdef USE_GRAPHICS
 
-	cptr bitmap_file;
+	cptr bitmap_file = "";
 	char filename[1024];
 
 	int pict_wid = 0;

@@ -18287,92 +18287,6 @@ diff --recursive --unified=4 angband-291/lib/user/user-mac.prf antiband/lib/user
 diff --recursive --unified=4 angband-291/src/birth.c antiband/src/birth.c
 --- angband-291/src/birth.c	Tue Jul 25 19:57:47 2000
 +++ antiband/src/birth.c	Tue Oct 30 11:10:46 2001
-@@ -78,8 +78,16 @@
- 	}
- }
- 
- 
-+static int stat_limit(int stat)
-+{
-+	if (stat <= 18)
-+		return 18+100 + 5 * (stat - 14);
-+	else
-+		return 18+120 + (stat - 18) / 2;
-+}
-+
- /*
-  * Load the previously rolled data.
-  */
- static void load_prev_data(void)
-@@ -124,8 +132,11 @@
- 	for (i = 0; i < A_MAX; i++)
- 	{
- 		p_ptr->stat_max[i] = prev.stat[i];
- 		p_ptr->stat_cur[i] = prev.stat[i];
-+
-+		/* Stat limit */
-+		p_ptr->stat_lim[i] = stat_limit(prev.stat[i]);
- 	}
- 
- 	/* Load the history */
- 	for (i = 0; i < 4; i++)
-@@ -274,8 +285,11 @@
- 
- 			/* Save the resulting stat maximum */
- 			p_ptr->stat_cur[i] = p_ptr->stat_max[i] = stat_use[i];
- 		}
-+
-+		/* Stat limit */
-+		p_ptr->stat_lim[i] = stat_limit(p_ptr->stat_max[i]);
- 	}
- }
- 
- 
-@@ -930,10 +944,13 @@
- 
- 
- /*
-  * Initial stat costs (initial stats always range from 10 to 18 inclusive).
-+ * Stat 10 11 12 13 14 15 16 17 18
-+ * Old   0  1  2  4  7 11 16 22 30
-+ * New   0  1  2  4  7 11 17 25 40
-  */
--static int birth_stat_costs[(18-10)+1] = { 0, 1, 2, 4, 7, 11, 16, 22, 30 };
-+static int birth_stat_costs[(18-10)+1] = { 0, 1, 2, 4, 7, 11, 17, 25, 40 };
- 
- 
- /*
-  * Helper function for 'player_birth()'.
-@@ -1011,8 +1028,11 @@
- 			}
- 
- 			/* Total cost */
- 			cost += birth_stat_costs[stats[i] - 10];
-+
-+			/* Stat limit */
-+			p_ptr->stat_lim[i] = stat_limit(stats[i]);
- 		}
- 
- 		/* Restrict cost */
- 		if (cost > 48)
-@@ -1105,8 +1125,17 @@
- 	/* Done */
- 	return (TRUE);
- }
- 
-+static int def_weights[MAX_CLASS][A_MAX] =
-+{
-+	{80, 10, 10, 40, 60, 20}, /* Fighter */
-+	{40, 80, 10, 20, 40, 20}, /* Mage */
-+	{60, 10, 80, 20, 60, 20}, /* Priest */
-+	{60, 60, 10, 60, 40, 20}, /* Rogue */
-+	{80, 60, 10, 60, 40, 20}, /* Ranger */
-+	{80, 10, 60, 40, 60, 20}, /* Paladin */
-+};
- 
- /*
-  * Helper function for 'player_birth()'.
-  *
 @@ -1120,9 +1149,9 @@
  {
  	int i, j, m, v;
@@ -29344,16 +29258,6 @@ diff --recursive --unified=4 angband-291/src/types.h antiband/src/types.h
  
  
  
-@@ -919,8 +958,9 @@
- 	u16b csp_frac;		/* Cur mana frac (times 2^16) */
- 
- 	s16b stat_max[A_MAX];	/* Current "maximal" stat values */
- 	s16b stat_cur[A_MAX];	/* Current "natural" stat values */
-+	s16b stat_lim[A_MAX];	/* Absolute maximum stat values */
- 
- 	s16b fast;			/* Timed -- Fast */
- 	s16b slow;			/* Timed -- Slow */
- 	s16b blind;			/* Timed -- Blindness */
 @@ -1076,8 +1116,13 @@
  	bool resist_fire;	/* Resist fire */
  	bool resist_cold;	/* Resist cold */

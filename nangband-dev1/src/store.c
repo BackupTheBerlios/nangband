@@ -467,6 +467,7 @@ static void mass_produce(object_type *o_ptr)
 		case TV_CLOAK:
 		case TV_HELM:
 		case TV_CROWN:
+		case TV_BELT:
 		case TV_SWORD:
 		case TV_POLEARM:
 		case TV_HAFTED:
@@ -717,6 +718,7 @@ static bool store_will_buy(const object_type *o_ptr)
 				case TV_BOLT:
 				case TV_DIGGING:
 				case TV_CLOAK:
+				case TV_BELT:
 				break;
 				default:
 				return (FALSE);
@@ -732,6 +734,7 @@ static bool store_will_buy(const object_type *o_ptr)
 			{
 				case TV_BOOTS:
 				case TV_GLOVES:
+				case TV_BELT:
 				case TV_CROWN:
 				case TV_HELM:
 				case TV_SHIELD:

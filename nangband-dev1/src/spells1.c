@@ -513,6 +513,7 @@ static bool hates_acid(const object_type *o_ptr)
 		case TV_BOLT:
 		case TV_BOW:
 		case TV_SWORD:
+		case TV_BELT:
 		case TV_HAFTED:
 		case TV_POLEARM:
 		case TV_HELM:
@@ -592,6 +593,7 @@ static bool hates_fire(const object_type *o_ptr)
 		case TV_GLOVES:
 		case TV_CLOAK:
 		case TV_SOFT_ARMOR:
+		case TV_BELT:
 		{
 			return (TRUE);
 		}
@@ -792,14 +794,15 @@ static int minus_ac(void)
 
 
 	/* Pick a (possibly empty) inventory slot */
-	switch (randint(6))
+	switch (randint(7))
 	{
 		case 1: o_ptr = &inventory[INVEN_BODY]; break;
 		case 2: o_ptr = &inventory[INVEN_ARM]; break;
 		case 3: o_ptr = &inventory[INVEN_OUTER]; break;
-		case 4: o_ptr = &inventory[INVEN_HANDS]; break;
-		case 5: o_ptr = &inventory[INVEN_HEAD]; break;
-		case 6: o_ptr = &inventory[INVEN_FEET]; break;
+		case 4: o_ptr = &inventory[INVEN_WAIST]; break;
+		case 5: o_ptr = &inventory[INVEN_HANDS]; break;
+		case 6: o_ptr = &inventory[INVEN_HEAD]; break;
+		case 7: o_ptr = &inventory[INVEN_FEET]; break;
 	}
 
 	/* Nothing to damage */

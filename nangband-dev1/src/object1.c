@@ -794,6 +794,7 @@ void object_desc(char *buf, const object_type *o_ptr, int pref, int mode)
 		}
 
 		/* Armour */
+	        case TV_BELT:
 		case TV_BOOTS:
 		case TV_GLOVES:
 		case TV_CLOAK:
@@ -2325,7 +2326,12 @@ s16b wield_slot(const object_type *o_ptr)
 		{
 			return (INVEN_FEET);
 		}
-	}
+
+	        case TV_BELT:
+		{
+			return (INVEN_WAIST);
+		}
+}
 
 	/* No slot available */
 	return (-1);
@@ -2350,6 +2356,7 @@ cptr mention_use(int i)
 		case INVEN_LITE:  p = "Light source"; break;
 		case INVEN_BODY:  p = "On body"; break;
 		case INVEN_OUTER: p = "About body"; break;
+		case INVEN_WAIST: p = "Around waist"; break;
 		case INVEN_ARM:   p = "On arm"; break;
 		case INVEN_HEAD:  p = "On head"; break;
 		case INVEN_HANDS: p = "On hands"; break;
@@ -2402,6 +2409,7 @@ cptr describe_use(int i)
 		case INVEN_LITE:  p = "using to light the way"; break;
 		case INVEN_BODY:  p = "wearing on your body"; break;
 		case INVEN_OUTER: p = "wearing on your back"; break;
+		case INVEN_WAIST: p = "wearing around your waist"; break;
 		case INVEN_ARM:   p = "wearing on your arm"; break;
 		case INVEN_HEAD:  p = "wearing on your head"; break;
 		case INVEN_HANDS: p = "wearing on your hands"; break;

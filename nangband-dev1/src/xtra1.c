@@ -1470,6 +1470,7 @@ static void calc_mana(void)
 	cur_wgt += inventory[INVEN_HEAD].weight;
 	cur_wgt += inventory[INVEN_ARM].weight;
 	cur_wgt += inventory[INVEN_OUTER].weight;
+        cur_wgt += inventory[INVEN_WAIST].weight;
 	cur_wgt += inventory[INVEN_HANDS].weight;
 	cur_wgt += inventory[INVEN_FEET].weight;
 

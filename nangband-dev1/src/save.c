@@ -413,7 +413,7 @@ static void savefile_write_block(int fd, byte type, byte ver)
 	KILL(savefile_head);
 
 #ifdef DEBUGGING
-	printf("Block size is %i\n", savefile_blockused);
+	printf("Block size is %i\n", (int) savefile_blockused);
 #endif
 
 	/* Write the block */
@@ -831,16 +831,24 @@ static void savefile_start(int fd)
  */
 static void savefile_do_block_header(bool type, int ver)
 {
-	char v_name[32] = VERSION_NAME;
-	byte v_j = VERSION_MAJOR, v_m = VERSION_MINOR, v_p = VERSION_PATCH,
-	    v_x = VERSION_EXTRA;
+	char v_name[32];
+	byte v_j, v_m, v_p, v_x;
 
 #ifdef DEBUGGING
 	printf("savefile_block_header()\n");
 #endif
 
+	if (type == PUT)
+	{
+		strcpy(v_name, VERSION_NAME);
+		v_j = VERSION_MAJOR;
+		v_m = VERSION_MINOR;
+		v_p = VERSION_PATCH;
+		v_x = VERSION_EXTRA;
+	}
+
 	/* Add the variant string */
-	savefile_do_string(v_name, type);
+	savefile_do_string(&v_name, type);
 
 	/* Add the version number */
 	savefile_do_byte(&v_j, type);
@@ -1986,6 +1994,7 @@ static bool write_savefile(int fd)
 	savefile_start(fd);
 
 	printf("write_savefile()\n");
+
 	/* Put information about the variant that saved the file */
 	savefile_new_block();
 	savefile_do_block_header(PUT, BLOCK_VERSION_HEADER);

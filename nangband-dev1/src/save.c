@@ -2290,6 +2290,9 @@ static errr read_savefile(int fd)
 	/* Check if we should regenerate the dungeon if neccessary */
 	if (reload_dungeon) (void)savefile_check_reload_dungeon();
 
+	/* Character is in the dungeon */
+	character_dungeon = TRUE;
+
 	/* If the player isn't dead, initialise some things */
 	if (!p_ptr->is_dead)
 	{

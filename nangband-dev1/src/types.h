@@ -1028,6 +1028,8 @@ struct player_type
 	bool free_act;		/* Free action */
 	bool hold_life;		/* Hold life */
 
+	bool nethr_brand, nexus_brand, chaos_brand;
+
         bool hunger;            /* Extra hungery */
 	bool impact;		/* Earthquake blows */
 	bool aggravate;		/* Aggravate monsters */

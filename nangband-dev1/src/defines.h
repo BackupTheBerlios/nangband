@@ -1976,9 +1976,9 @@
 #define TR3_SEE_INVIS       0x00000020L /* See Invis */
 #define TR3_FREE_ACT        0x00000040L /* Free action */
 #define TR3_HOLD_LIFE       0x00000080L /* Hold life */
-#define TR3_XXX1            0x00000100L
-#define TR3_XXX2            0x00000200L
-#define TR3_XXX3            0x00000400L
+#define TR3_BRAND_NETHR     0x00000100L
+#define TR3_BRAND_NEXUS     0x00000200L
+#define TR3_BRAND_CHAOS     0x00000400L
 #define TR3_XXX4            0x00000800L
 #define TR3_IMPACT          0x00001000L /* Earthquake blows */
 #define TR3_TELEPORT        0x00002000L /* Random teleportation */
@@ -3174,8 +3174,9 @@ extern int PlayerUID;
 #define ACT_STARLIGHT           47
 #define ACT_MANA_BOLT           48
 #define ACT_BERSERKER           49
+#define ACT_ELEMENTS		50
 
-#define ACT_MAX                 50
+#define ACT_MAX                 51
 
 /*
  * HACK - define if the source contains the cleanup_angband() function.

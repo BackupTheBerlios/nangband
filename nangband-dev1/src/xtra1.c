@@ -1795,6 +1795,9 @@ static void calc_bonuses(void)
 	p_ptr->teleport = FALSE;
 	p_ptr->exp_drain = FALSE;
 	p_ptr->bless_blade = FALSE;
+	p_ptr->nethr_brand = FALSE;
+	p_ptr->nexus_brand = FALSE;
+	p_ptr->chaos_brand = FALSE;
 	p_ptr->impact = FALSE;
 	p_ptr->see_inv = FALSE;
 	p_ptr->free_act = FALSE;
@@ -1883,6 +1886,11 @@ static void calc_bonuses(void)
 
 	/* Weird flags */
 	if (f3 & (TR3_BLESSED)) p_ptr->bless_blade = TRUE;
+
+	/* Weirder flags */
+	if (f3 & (TR3_BRAND_NETHR)) p_ptr->nethr_brand = TRUE;
+	if (f3 & (TR3_BRAND_NEXUS)) p_ptr->nexus_brand = TRUE;
+	if (f3 & (TR3_BRAND_CHAOS)) p_ptr->chaos_brand = TRUE;
 
 	/* Bad flags */
 	if (f3 & (TR3_HUNGER)) p_ptr->hunger = TRUE;

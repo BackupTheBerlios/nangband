@@ -162,7 +162,7 @@ sint critical_norm(int weight, int plus, int dam)
  * Note that most brands and slays are x3, except Slay Animal (x2),
  * Slay Evil (x2), and Kill dragon (x5).
  */
-sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
+sint tot_dam_aux(const object_type *o_ptr, int tdam, const monster_type *m_ptr)
 {
 	int mult = 10, bmult = 10;
 
@@ -323,6 +323,53 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 				if (mult < 5) mult = 5;
 			}
 
+                       /* Brand (Nether) */
+                       if (f3 & (TR3_BRAND_NETHR))
+                       {
+                               /* Notice immunity */
+                               if ((r_ptr->flags4 & (RF4_BR_NETH)) || (r_ptr->flags3 && (RF3_UNDEAD)))
+                               {
+                                       /* Oh, never mind */
+                               }
+
+                               /* Otherwise, take the damage */
+                               else
+                               {
+                                       if (bmult < 15) bmult = 15;
+                               }
+                       }
+
+                       /* Brand (Nexus) */
+                       if (f3 & (TR3_BRAND_NEXUS))
+                       {
+                               /* Notice immunity */
+                               if (r_ptr->flags4 & (RF4_BR_NEXU))
+                               {
+                                       /* Oh, never mind */
+                               }
+
+                               /* Otherwise, take the damage */
+                               else
+                               {
+                                       if (bmult < 15) bmult = 15;
+                               }
+                       }
+
+                       /* Brand (Chaos) */
+                       if (f3 & (TR3_BRAND_CHAOS))
+                       {
+                               /* Notice immunity */
+                               if (r_ptr->flags4 & (RF4_BR_CHAO))
+                               {
+                                       /* Oh, never mind */
+                               }
+
+                               /* Otherwise, take the damage */
+                               else
+                               {
+                                       if (bmult < 15) bmult = 15;
+                               }
+                       }
 
 
 			/* Brand (Acid) */
@@ -340,7 +387,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 				/* Otherwise, take the damage */
 				else
 				{
-					if (mult < 3) mult = 3;
+					if (bmult < 15) bmult = 15;
 				}
 			}
 
@@ -359,7 +406,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 				/* Otherwise, take the damage */
 				else
 				{
-					if (mult < 3) mult = 3;
+					if (bmult < 15) bmult = 15;
 				}
 			}
 
@@ -378,7 +425,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 				/* Otherwise, take the damage */
 				else
 				{
-					if (mult < 3) mult = 3;
+					if (bmult < 15) bmult = 15;
 				}
 			}
 
@@ -397,7 +444,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 				/* Otherwise, take the damage */
 				else
 				{
-					if (mult < 3) mult = 3;
+					if (bmult < 15) bmult = 15;
 				}
 			}
 
@@ -416,7 +463,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 				/* Otherwise, take the damage */
 				else
 				{
-					if (mult < 3) mult = 3;
+					if (bmult < 15) bmult = 15;
 				}
 			}
 
@@ -426,7 +473,7 @@ sint tot_dam_aux(const object_type *o_ptr, s32b tdam, const monster_type *m_ptr)
 
 
 	/* Return the total damage */
-	return (tdam * mult);
+	return (tdam * (mult + bmult - 10) / 10);
 }
 
 
@@ -1133,7 +1180,9 @@ void py_attack(int y, int x)
 	bool fear = FALSE;
 
 	bool do_quake = FALSE;
+	bool do_poly = FALSE;
 
+	bool sneak_attack = FALSE;
 
 	/* Get the monster */
 	m_ptr = &m_list[cave_m_idx[y][x]];
@@ -1144,6 +1193,9 @@ void py_attack(int y, int x)
 	/* Disturb the player */
 	disturb(0, 0);
 
+	/* Check for sneak attack */
+	if (m_ptr->csleep)
+		sneak_attack = TRUE;
 
 	/* Disturb the monster */
 	m_ptr->csleep = 0;
@@ -1167,6 +1219,7 @@ void py_attack(int y, int x)
 		msg_format("You are too afraid to attack %s!", m_name);
 
 		/* Done */
+/*		return (p_ptr->num_blow);*/
 		return;
 	}
 
@@ -1195,10 +1248,19 @@ void py_attack(int y, int x)
 			if (o_ptr->k_idx)
 			{
 				k = damroll(o_ptr->dd, o_ptr->ds);
-				k = tot_dam_aux(o_ptr, k, m_ptr);
 				if (p_ptr->impact && (k > 50)) do_quake = TRUE;
 				k = critical_norm(o_ptr->weight, o_ptr->to_h, k);
 				k += o_ptr->to_d;
+
+				/* Slays are applied after plus to dam from weapon */
+				k = tot_dam_aux(o_ptr, k, m_ptr);
+
+				/* Sneak attacks are cool */
+				if (sneak_attack)
+				{
+					sneak_attack = FALSE;
+					k = k * 6 / (2 + rand_int(3)); 
+				}
 			}
 
 			/* Apply the player damage bonuses */
@@ -1207,23 +1269,73 @@ void py_attack(int y, int x)
 			/* No negative damage */
 			if (k < 0) k = 0;
 
+                       /* Polymorph attack -- monsters get a saving throw (chaos breathers are immune) */
+                       if (p_ptr->chaos_brand && !(r_ptr->flags4 & RF4_BR_CHAO) &&
+                               rand_int(49) == 0 && randint(90) > r_ptr->level)
+                       {
+                               int tmp;
+
+                               /* Pick a "new" monster race */
+                               tmp = poly_r_idx(m_ptr->r_idx);
+
+                               /* Handle polymorh */
+                               if (tmp != m_ptr->r_idx)
+                               {
+                                       /* Monster polymorphs */
+                                       msg_format("%^s changes!", m_name);
+
+                                       /* "Kill" the "old" monster */
+                                       delete_monster_idx(cave_m_idx[y][x]);
+
+                                       /* Create a new monster (no groups) */
+                                       (void)place_monster_aux(y, x, tmp, FALSE, FALSE);
+
+                                       /* Hack -- Assume success XXX XXX XXX */
+
+                                       /* Hack -- Get new monster */
+                                       m_ptr = &m_list[cave_m_idx[y][x]];
+
+                                       /* Hack -- Get new race */
+                                       r_ptr = &r_info[m_ptr->r_idx];
+
+                                       /* Hack -- Get new description */
+                                       monster_desc(m_name, m_ptr, 0);
+                               }
+
+                               break;
+                       }
+
 			/* Complex message */
 			if (p_ptr->wizard)
 			{
 				msg_format("You do %d (out of %d) damage.", k, m_ptr->hp);
 			}
 
+                       /* Nether heals the player some (nether breathers, demons and undead are immune) */
+                       if (p_ptr->nethr_brand && k > 0 && !(r_ptr->flags3 & RF3_UNDEAD) &&
+                               !(r_ptr->flags3 & RF3_DEMON) && !(r_ptr->flags4 & RF4_BR_NETH))
+                       {
+                               if (k > m_ptr->hp)
+                                       hp_player(m_ptr->hp / 3);
+                               else
+                                       hp_player(k / 3);
+                       }
+
 			/* Damage, check for fear and death */
 			if (mon_take_hit(cave_m_idx[y][x], k, &fear, NULL)) break;
 
 			/* Confusion attack */
-			if (p_ptr->confusing)
+			if (p_ptr->confusing || (p_ptr->chaos_brand && rand_int(7) == 0))
 			{
 				/* Cancel glowing hands */
-				p_ptr->confusing = FALSE;
+                               if (p_ptr->confusing && rand_int(3) == 0)
+                               {
+                                       /* Cancel glowing hands */
+                                       p_ptr->confusing = FALSE;
 
-				/* Message */
-				msg_print("Your hands stop glowing.");
+					/* Message */
+					msg_print("Your hands stop glowing.");
+				}
 
 				/* Confuse the monster */
 				if (r_ptr->flags3 & (RF3_NO_CONF))
@@ -1245,6 +1357,38 @@ void py_attack(int y, int x)
 					m_ptr->confused += 10 + rand_int(p_ptr->lev) / 5;
 				}
 			}
+
+                       /* Fear attack (nether breathers & undead are immune) */
+                       if (p_ptr->nethr_brand && !(r_ptr->flags4 & RF4_BR_NETH) &&
+                               !(r_ptr->flags3 & RF3_UNDEAD) && !(r_ptr->flags3 & (RF3_NO_FEAR)) &&
+                               rand_int(13) == 0)
+                       {
+                               int tmp;
+
+                               if (m_ptr->monfear == 0)
+                                       msg_format("%^s flees in terror!", m_name);
+
+                               /* Increase fear */
+                               tmp = m_ptr->monfear + 13 + randint(13);
+
+                               /* Set fear */
+                               m_ptr->monfear = (tmp < 200) ? tmp : 200;
+                       }
+
+                       /* Teleport attack (nexus breathers are immune) */
+                       if (p_ptr->nexus_brand && !(r_ptr->flags4 & RF4_BR_NEXU) && rand_int(9) == 0)
+                       {
+                               msg_format("%^s disappears!", m_name);
+                               if (rand_int(9) < 2)
+                                       teleport_away(cave_m_idx[y][x], 200);
+                               else
+                                       teleport_away(cave_m_idx[y][x], 10);
+
+                               /* Can't do anything after it's teleported */
+                               break;
+                       }
+
+
 		}
 
 		/* Player misses */

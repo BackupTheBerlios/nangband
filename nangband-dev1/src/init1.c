@@ -448,9 +448,9 @@ static cptr k_info_flags3[] =
 	"SEE_INVIS",
 	"FREE_ACT",
 	"HOLD_LIFE",
-	"XXX1",
-	"XXX2",
-	"XXX3",
+	"BRAND_NETHR",
+	"BRAND_NEXUS",
+	"BRAND_CHAOS",
 	"XXX4",
 	"IMPACT",
 	"TELEPORT",
@@ -529,7 +529,8 @@ static cptr a_info_act[ACT_MAX] =
 	"FIREBRAND",
 	"STARLIGHT",
 	"MANA_BOLT",
-	"BERSERKER"
+	"BERSERKER",
+	"ELEMENTS"
 };
 
 

@@ -1193,6 +1193,11 @@ function activate_object(object)
 		elseif artifact.activation == ACT_BERSERKER then
 			msg_print(format("Your %s glows in anger...", o_name))
 			set_shero(player.shero + randint(50) + 50)
+		elseif artifact.activation == ACT_ELEMENTS then
+			msg_print(format("Your %s glows brillian white...", o_name))
+			success, dir = get_aim_dir()
+			if not sucess then return FALSE, FALSE end
+			fire_ball(GF_MISSILE, dir, 400, 3);
 		end
 
 		-- Set the recharge time
@@ -1408,7 +1413,8 @@ function describe_item_activation_hook(object)
 			"fire branding of bolts",
 			"starlight (10d8)",
 			"mana bolt (12d8)",
-			"berserk rage (50+d50 turns)"}
+			"berserk rage (50+d50 turns)",
+			"the elements (400)"}
 
 		local artifact = a_info[object.name1 + 1]
 

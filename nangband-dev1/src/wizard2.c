@@ -407,7 +407,7 @@ static const tval_desc tvals[] =
 	{ TV_SKELETON,          "Skeletons"            },
 	{ TV_BOTTLE,            "Empty bottle"         },
 	{ TV_JUNK,              "Junk"                 },
-	{ TV_ORB,		"An Orb"               },
+	{ TV_ORB,		"Orb"                  },
 	{ 0,                    NULL                   }
 };
 

@@ -31,7 +31,7 @@
 #    # - granite
 #    X - impenetrable rock
 #    * - treasure or trap
-#    + - secret door
+#    - secret door
 #    ^ - trap
 #    & - monster up to 5 levels out of depth (OOD)
 #    @ - monster up to 11 levels OOD
@@ -254,7 +254,7 @@ D:%&+..^..^..^..^..^..^..^..^..^..^..^.+&%
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-N:14:Planet X
+N:14:planet X
 X:7:10:13:15
 D:%%%%%%%%%%%%%%%
 D:%.............%
@@ -348,7 +348,7 @@ D:%XXXXXXXXXX%
 D:%%%%%%%%%%%%
 
 
-N:20:The I in the Storm
+N:20:the I in the storm
 X:8:40:25:41
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 D:%XXXXXXXXXXXXXXXXXXX#XXXXXXXXXXXXXXXXXXX%
@@ -377,7 +377,7 @@ D:%XXXXXXXXXXXXXXXXXXX#XXXXXXXXXXXXXXXXXXX%
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-N:21:The Bank From Hell
+N:21:the bank from hell
 X:8:30:20:31
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 D:%XXXXXXXXXXXXXX+XXXXXXXXXXXXXX%
@@ -401,7 +401,7 @@ D:%XXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-N:22:Snake Maze
+N:22:snake maze
 X:8:15:21:23
 D:%%%%%%%%%%%%%%%%%%%%%%%
 D:%.....................%
@@ -426,7 +426,7 @@ D:%.....................%
 D:%%%%%%%%%%%%%%%%%%%%%%%
 
 
-N:23:Roundabouts One
+N:23:roundabout one
 X:8:15:21:43
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 D:%#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
@@ -451,7 +451,7 @@ D:%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#%
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-N:24:Roundabout Two
+N:24:roundabout two
 X:8:25:25:40
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 D:%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
@@ -501,7 +501,7 @@ D:%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-N:26:Mirrored Quartet
+N:26:mirrored quartet
 X:8:20:21:49
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 D:%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
@@ -526,7 +526,7 @@ D:%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-N:27:False Wall
+N:27:false wall
 X:8:20:15:64
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 D:%X+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX+X%
@@ -580,7 +580,7 @@ D:%.....................................................%
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-N:29:Curlicues One
+N:29:curlicues one
 X:8:15:23:44
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 D:%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
@@ -607,7 +607,7 @@ D:%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-N:30:Bubbles
+N:30:bubbles
 X:8:35:25:41
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 D:%XXX#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
@@ -636,7 +636,7 @@ D:%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-N:31:Symmet
+N:31:symmet
 X:8:20:23:29
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 D:%...........................%
@@ -1119,3 +1119,131 @@ D:%X,,,,,,,XX,,,,,,,,,,,XXX&&&XXX^XXX&&&XXX,,,,,,,,,,,XX,,,,,,,X%
 D:%X,,,,,,X#@@@@@@@@@@@@@@XXX&&&&&&&&&XXX@@@@@@@@@@@@@@#X,,,,,,X%
 D:%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+N:51:baka^2
+X:8:20:19:23
+D:%%%%%%%%%%%%%%%%%%%%%%%
+D:%#####################%
+D:%#,&,&,&,&,#&,&,&,&,&#%
+D:%#&X*,X,*X&#,*X*,*X*,#%
+D:%#,X,XXX,X,#&XXXXX,X&#%
+D:%#&X&9X,,*&#,,X99X,X,#%
+D:%#,X,XXX,*,#&X&&&X,*&#%
+D:%#&X*XX*X*&#,X,XX**,,#%
+D:%#,&,&,&,&,#&,&,&,&,&#%
+D:%#####################%
+D:%#&,&,&,&,&#,&,&,&,&,#%
+D:%#,**,X,**,#&*XXXXX*&#%
+D:%#&*&XXX&*&#,XX898XX,#%
+D:%#,,XX9XX,,#&*#XXXX,&#%
+D:%#&XX,,,XX&#,XX99&&,,#%
+D:%#,*,***,*,#&XXXXXXX&#%
+D:%#&,&,&,&,&#,&,&,&,&,#%
+D:%#####################%
+D:%%%%%%%%%%%%%%%%%%%%%%%
+
+N:52:miniature checkerboard
+X:7:15:9:11
+D:%%%%%%%%%%%
+D:%XXXXXXXXX%
+D:%#8#8#8#8X%
+D:%XXXXXXX#X%
+D:%X8#8#8#8X%
+D:%X#XXXXXXX%
+D:%X8#8#8#8#%
+D:%XXXXXXXXX%
+D:%%%%%%%%%%%
+
+N:53:popcorn
+X:7:5:10:9
+D: %%%%%   
+D:%%*,*%%% 
+D:%*.&,#*%%
+D:%####&,,%
+D:%,.,,#.,%
+D:%*&.*###%
+D:%.,##&,#%
+D:%%%#,.*.%
+D:  %%%,,% 
+D:    %%%% 
+
+N:54:false miniature checkerboard
+X:7:10:9:11
+D:%%%%%%%%%%%
+D:%XXXXXXXXX%
+D:%#9#9#9#9X%
+D:%XXXXXXX#X%
+D:%X9#9#9#9X%
+D:%X#XXXXXXX%
+D:%X9#9#9#9#%
+D:%XXXXXXXXX%
+D:%%%%%%%%%%%
+
+N:55:bullseye
+X:7:10:11:13
+D:  %%%%%%%%%  
+D: %%^^^^^^^%% 
+D:%%^^#####^^%%
+D:%^^##&9&##^^%
+D:%^,#9###9#,^%
+D:%^,#&#8#&#,^%
+D:%^,#9###9#,^%
+D:%^^##&9&##^^%
+D:%%^^#####^^%%
+D: %%^^^^^^^%% 
+D:  %%%%%%%%%  
+
+N:56:false room
+X:7:5:11:11
+D:   %%%%%   
+D:   %&^.%   
+D:   %^..%   
+D:%%%%.,&%%%%
+D:%&&.XXX.,.%
+D:%...X8X^.&%
+D:%.^,X#X...%
+D:%%%%..^%%%%
+D:   %^..%   
+D:   %.&.%   
+D:   %%%%%   
+
+N:57:quarters
+X:8:30:26:30
+D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+D:%#XXXXXXXXXXXXXXXXXXXXXXXXXX#%
+D:%X...........X88X...........X%
+D:%X.XX^XXX^XX.X##X.XX^XXX^XX.X%
+D:%X.X,,X@X,,X.X@@X.X,,X@X,,X.X%
+D:%X.^,,X9X,,^.X##X.^,,X9X,,^.X%
+D:%X.XX^^^^^XX.X99X.XX^^^^^XX.X%
+D:%X.^,,X9X,,^.X##X.^,,X9X,,^.X%
+D:%X.X,,X@X,,X.X@@X.X,,X@X,,X.X%
+D:%X.XX^XXX^XX.X##X.XX^XXX^XX.X%
+D:%X...........X99X...........X%
+D:%XXXXXXXXXXXX####XXXXXXXXXXXX%
+D:%X8#9#@#9#@#9#,,#9#@#9#@#9#8X%
+D:%X8#9#@#9#@#9#,,#9#@#9#@#9#8X%
+D:%XXXXXXXXXXXX####XXXXXXXXXXXX%
+D:%X...........X99X...........X%
+D:%X.XX^XXX^XX.X##X.XX^XXX^XX.X%
+D:%X.X,,X@X,,X.X@@X.X,,X@X,,X.X%
+D:%X.^,,X9X,,^.X##X.^,,X9X,,^.X%
+D:%X.XX^^^^^XX.X99X.XX^^^^^XX.X%
+D:%X.^,,X9X,,^.X##X.^,,X9X,,^.X%
+D:%X.X,,X@X,,X.X@@X.X,,X@X,,X.X%
+D:%X.XX^XXX^XX.X##X.XX^XXX^XX.X%
+D:%X...........X88X...........X%
+D:%#XXXXXXXXXXXXXXXXXXXXXXXXXX#%
+D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+N:58:snake
+X:7:15:9:20
+D:%%%%%%%%%%%%%%% %%% 
+D:%,,9,,,9%%,,,9%%%,%%
+D:%######,,,9##,,##,9%
+D:%#,9,,########,###,%
+D:%,,##,9,#####,9###,%
+D:%9#####,9,,9,,###9,%
+D:%,,#############,,%%
+D:%%,9,,,9,,,9,,,9,%% 
+D: %%%%%%%%%%%%%%%%%  

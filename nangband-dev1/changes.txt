@@ -1,4 +1,4 @@
-Nangband ChangeLog
+Nangband ChangeLog - If it's not broken, let's fix it until it is
 ==================
 
 2002-04-06

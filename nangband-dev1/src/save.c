@@ -231,6 +231,7 @@ static byte savefile_do_byte(byte *v, bool type)
 	/* Increase the "used" counter */
 	savefile_blockused++;
 
+#if 0
 	if (savefile_blockused > savefile_blocksize)
 	{
         printf("Ouch.  Out-of-bounds access.\n");
@@ -239,9 +240,10 @@ static byte savefile_do_byte(byte *v, bool type)
 	{
         printf("Reached end of savefile block.\n");
 	}
+#endif
 
 	/* We are done */
- 	return(*v);
+ 	return (*v);
 }
 
 /*
@@ -854,24 +856,26 @@ static void savefile_do_block_options(bool type, int ver)
 static errr savefile_do_block_player(bool type, int ver)
 {
 	int i = 0, n = 0;
-	byte tmp8u = 0;
 
 	/* Add number of past lives */
 	savefile_do_u16b(&sf_lives, type);
 
 	/* Set the level */
-	if (type == PUT) n = tmp8u = PY_MAX_LEVEL;
+	if (type == PUT) n = i = PY_MAX_LEVEL;
 
 	/* Do the numebr of HP entries */
-	savefile_do_byte(&tmp8u, type);
+	savefile_do_byte((byte *) &i, type);
 
 	/* Set the level */
-	if (type == GET) n = tmp8u;
+	if (type == GET) n = i;
 
 	/* Incompatible save files */
 	if (n > PY_MAX_LEVEL)
 	{
-		note(format("Too many (%u) hitpoint entries!", n), type);
+		/* Warn */
+		note(format("Too many hitpoint entries! (%i player levels.)", n), type);
+
+		/* Return an error */
 		return (-1);
 	}
 

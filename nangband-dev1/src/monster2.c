@@ -449,16 +449,16 @@ s16b get_mon_num(int level)
 		/* Hack -- No town monsters in dungeon */
 		if ((level > 0) && (table[i].level <= 0)) continue;
 
-                /* Hack -- Only astral monsters in the astral realm */
-                if (!(r_ptr->flags3 & (RF3_ASTRAL)) && (adult_astral)) continue;
-
                 /* Get the "r_idx" of the chosen monster */
 		r_idx = table[i].index;
 
 		/* Get the actual race */
 		r_ptr = &r_info[r_idx];
 
-		/* Hack -- "unique" monsters must be "unique" */
+                /* Hack -- Only astral monsters in the astral realm */
+                if (!(r_ptr->flags3 & (RF3_ASTRAL)) && (adult_astral)) continue;
+
+                /* Hack -- "unique" monsters must be "unique" */
 		if ((r_ptr->flags1 & (RF1_UNIQUE)) &&
 		    (r_ptr->cur_num >= r_ptr->max_num))
 		{

@@ -1,6 +1,14 @@
 Nangband Website changelog
 ==========================
 
+18-07-02
+--------
+- Changed the clean style completely.  It looks good with all
+  browsers (Dillo included!) and better with Gecko.  It is, of
+  course, text-browser compliant.  (takkaria)
+- Loadsa fiddling.  Removed some CSS warnings.  Did other neat
+  stuff, I'm sure.  (takkaria)
+
 07-07-02
 --------
 - Made the site much more flexible and added references to a few

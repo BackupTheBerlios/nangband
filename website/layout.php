@@ -7,7 +7,7 @@
 ///////////////////////////////////
 
 // Sidebar link ends and beginnings
-$sidebar_links_start = '<tr><td bgcolor="#bbbbbb" align="center">';
+$sidebar_links_start = '<tr><td bgcolor="#dddddd" align="center">';
 $sidebar_links_end   = '</td></tr>';
 
 // Output all the links using flexible formatting.
@@ -75,20 +75,14 @@ function page_header($title, $type)
 <body bgcolor="#ffffff">
 <table width="95%" align="center" cellspacing="1" cellpadding="0" border="0">
 	<tr><td>
-		<table width="100%" align="center" cellspacing="0" cellpadding="4" border="0">
-		<tr><td bgcolor="#eeeeee" align="center">
-			<font color="#555555" size="+2"><b>nangband - <?php echo $title; ?></b></font>
-
-			<br>
-
-			<font size="-1" color="#555555">Change style: <?php do_styles($type); ?></font>
-
-			<br>
-
-			<font color="#555555"><?php do_links(0, 0, 1); ?></font>
-
+		<table width="100%" align="center" cellspacing="0" cellpadding="15" border="0">
+		<tr><td class="border" bgcolor="#dddddd" align="center">
+			<font size="+2"><b>nangband - <?=$title?></b></font>
+		</td></tr><tr><td bgcolor="#ffffff" align="center">
+			<?php do_links(0, 0, 1); ?><br>
+			<font size="-1">change style: <?php do_styles($type);?></font>
 		</td></tr>
-		<tr><td bgcolor="#dddddd">
+		<tr><td bgcolor="#eeeeee" class="border">
 <?php
 	}
 	else if ($style == 'sidebar')
@@ -124,7 +118,7 @@ function page_footer()
 	{
 		echo '</td></tr>';
  
-		echo '<tr><td bgcolor="#eeeeee" align="center">';
+		echo '<tr><td bgcolor="#ffffff" align="center">';
 		echo '<font color="#555555">';
 		do_links(0, 0, 1);
 		echo '</font>';
@@ -174,17 +168,7 @@ Contact <a href="mailto:nevermiah@hotmail.com">nevermiah@hotmail.com</a>
 	return;
 }
 
-// Make sure prying eyes get a nice response :)
-if ($included == false)
-{
-	// Output a nice header
-	page_header('Source for layout.php', 'clean');
-
-	// Show the source
-	show_source('layout.php');
-
-	// Output a nice footer
-	page_footer();
-}
+// Redirect to the "real" source lister if we're not included
+if (!$included[1]) header('Location: /?source=layout');
 
 ?>

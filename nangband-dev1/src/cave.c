@@ -3380,7 +3380,7 @@ void update_monster_light(void)
 	for (i = 0; i < fast_temp_n; i++)
 	{
 		/* Access grids */
-		g = temp_g[i];
+		g = fast_temp_g[i];
 
 		/* Retrieve cave info */
 		info = fast_cave_info[g];
@@ -3419,7 +3419,7 @@ void update_monster_light(void)
 		}
 
 		/* Save the location */
-		light_g[i] = g;
+		fast_light_g[i] = g;
 	}
 
 	/* Save light_n */

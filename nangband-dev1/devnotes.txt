@@ -17,7 +17,7 @@ CARRY_LIGHT monsters are theoretically "carrying" light sources, which
 should be radius 1 or 2, depending on level; probably, the transition
 shouldn't occur much later than dungeon level 15.
 
---Could this light source be dropped or somehow run out?
+--MS-- Could this light source be dropped or somehow run out?
 
 --GW-- well if a basic monster inventory could be created this could
 done, however the balancing issues would be pretty major. Of course
@@ -30,6 +30,34 @@ though. The main problem with the second idea is that the light source
 wouldn't 'exist' until the creature is killed and therefore would be
 more difficult to make run out in a nice way.
 
+--MS-- Hmm. That takes in a completely differant direction than I had
+originally intended (not a bad thing at all ;).  I will attempt to clarify
+what I was thinking when I made that comment.  My idea of dropping, in
+this case, was merely the monster losing their source of light. The light
+source running out would achieve the same goal. This would be in contrast
+to the monsters which emanate light; who either inherently emit light
+from their bodies, or somehow have a light source (most likely magical in
+nature).  Even these monsters could lose their source of light, but it
+would take much more to affect them.  Perhaps a critical hit, or certain
+spells could cause a monster carrying a light to drop it, whereas one
+that emanates light would find that his light source becomes weaker as
+his life force declines. Their light could shrink in radius,
+proportionately with their hitpoints, possibly even affecting how they
+interact with ABSORB_LIGHT monsters...
+
+--MS-- About monster inventories. I love the idea, and i think any steps
+taken towards it would be well worth it.  Generic or themed drops would
+be a good way to implement them cleanly and relatively quickly.  A good
+place to start might be with uniques.  Giving a couple deep uniques set
+drops, mostly in artifact form, would be a good step towards a full system.
+And furthermore, it would be able to hold it's own as a feature, even if that
+is as far as we take the concept. A more comprehensive system would be more
+trouble than it is worth at this point in time, but something that should
+definately not be ruled out.  I think it will be difficult to implement
+this because a "real" monster inventory system would be one that allows
+the monster access to it's inventory and the benefits that it would
+receive from them.
+
 If an ABSORB_LIGHT monster is in the vicinity of a [CARRY|EMANATE]_LIGHT
 monster, the priority of effects is EMANATE_LIGHT, ABSORB_LIGHT and then
 CARRY_LIGHT.  CARRY_LIGHT monsters may be scared by the absence of
@@ -40,7 +68,7 @@ seeing in the dark (ie infra_vision, esp, etc) then maybe they would
 fear being in the dark, or maybe ,if they do have an alternate sense,
 the may just merely be slightly more timid and not all out scared.
 
---ABSORB_LIGHT monster could also possibly be afraid of EMANATE_LIGHT
-  monsters.
+--MS-- ABSORB_LIGHT monster could also possibly be afraid of EMANATE_LIGHT
+monsters.
 
 --GW-- see above

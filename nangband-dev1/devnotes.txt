@@ -177,15 +177,15 @@ diff -ur nangband/src/cave.c pelpel/src/cave.c
  							/* Check for "complex" illumination */
  							if ((!(cave_info[yy][xx] & (CAVE_WALL)) &&
 -							      (cave_info[yy][xx] & (CAVE_GLOW))) ||
-+							      (cave_info[yy][xx] & (CAVE_GLOW))
++							      (cave_info[yy][xx] & (CAVE_GLOW)) &&
 +							     !(cave_info2[yy][xx] & (CAVE2_MDARK))) ||
  							    (!(cave_info[y][xx] & (CAVE_WALL)) &&
 -							      (cave_info[y][xx] & (CAVE_GLOW))) ||
-+							      (cave_info[y][xx] & (CAVE_GLOW))
++							      (cave_info[y][xx] & (CAVE_GLOW)) &&
 +							     !(cave_info2[y][xx] & (CAVE2_MDARK))) ||
  							    (!(cave_info[yy][x] & (CAVE_WALL)) &&
 -							      (cave_info[yy][x] & (CAVE_GLOW))))
-+							      (cave_info[yy][x] & (CAVE_GLOW))
++							      (cave_info[yy][x] & (CAVE_GLOW)) &&
 +							     !(cave_info2[yy][x] & (CAVE2_MDARK))))
  							{
  								/* Mark as seen */

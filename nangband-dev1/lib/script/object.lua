@@ -1296,6 +1296,20 @@ function activate_object(object)
 		return FALSE, FALSE
 	end
 
+	-- Some orbs can be activated
+	if object.tval == TV_ORB then
+		-- Get a direction for firing (or abort)
+		success, dir = get_aim_dir()
+		if not success then return FALSE, FALSE end
+
+		if object.sval == SV_ORB_FLAMES then
+			fire_bolt(GF_FIRE, dir, 80)
+			object.timeout = rand_int(30) + 30
+		end
+
+		return FALSE, FALSE
+	end
+
 	-- Some Rings can be activated for double resist and element ball
 	if object.tval == TV_RING then
 		-- Get a direction for firing (or abort)
@@ -1460,7 +1474,7 @@ function describe_item_activation_hook(object)
 	-- Orbs
 	if object.tval == TV_ORB then
 		local activations = {
-			[SV_ORB_FIRE_1] = "a fire bolt"}
+			[SV_ORB_FLAMES] = "a fire bolt (80) every 30+d30 turns"}
 
 		return activations[object.sval]
 	end

@@ -103,7 +103,7 @@ static const grouper group_item[] =
 
 	{ TV_ROD,		"Rods" },
 	{ TV_WAND,		"Wands" },
-	{ TV_STAFF,		"Staffs" },
+	{ TV_STAFF,		"Staves" },
 
 	{ TV_MAGIC_BOOK,	"Books (Mage)" },
 	{ TV_PRAYER_BOOK,	"Books (Priest)" },
@@ -116,6 +116,8 @@ static const grouper group_item[] =
 	{ TV_JUNK,		  NULL },
 	{ TV_BOTTLE,	  NULL },
 	{ TV_SKELETON,	  NULL },
+
+	{ TV_ORB,		"Orbs" },
 
 	{ 0, "" }
 };

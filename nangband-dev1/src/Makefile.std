@@ -258,6 +258,8 @@ cygwin: CFLAGS := -Wall -pedantic -mno-cygwin -O2 -fno-strength-reduce -DWINDOWS
 cygwin: ANGOBJS += angband.res readdib.o
 cygwin: nangband
 
+
+
 # Use GCC 3.0 with extranaeous warning options
 gcc-3.0-warnings: WARNINGS = -Wwrite-strings -Wpointer-arith -Wbad-function-cast -Wconversion \
 	-Wsign-compare -Waggregate-return \

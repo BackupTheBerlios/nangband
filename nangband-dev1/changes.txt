@@ -1,6 +1,15 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-06-04
+----------
+(experimental branch)
+- New running code is working. (takkaria)
+
+(normal branch)
+- Changed some file headers.  Nangband is now completely GPL'd.
+  (takkaria)
+
 2002-06-02
 ----------
 - Updated to the latest [v] CVS; this brings some niceties.

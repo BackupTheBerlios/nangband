@@ -62,7 +62,7 @@ CC = gcc
 ##
 ## Compile for Linux
 ##
-CFLAGS = -Wall -O `gtk-config --cflags` -D"USE_GTK" -g
+CFLAGS = -Wall -O `gtk-config --cflags` -D"USE_GTK" -g -DHAVE_MKSTEMP
 # -DALLOW_BORG
 LIBS = `gtk-config --libs`
 

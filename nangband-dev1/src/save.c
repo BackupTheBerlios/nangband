@@ -114,13 +114,12 @@
 /*
  * Variables needed by the code
  */
-static vptr savefile_head;       /* Current block's header */
+static byte *savefile_head;       /* Current block's header */
 static byte savefile_head_type;  /* The type of block */
 static byte savefile_head_ver;   /* The version of this block */
-static vptr savefile_block;      /* Current block */
+static byte *savefile_block;      /* Current block */
 static u32b savefile_blocksize;  /* Current block's size */
 static u32b savefile_blockused;  /* The amount of the block that has been used */
-static byte *savefile_blockpos;  /* The posiition inside the block */
 
 /*
  * All generic savefile "block" adding functions
@@ -136,7 +135,7 @@ static void savefile_add_byte(byte v)
 	/* See if we need to allocate more memory */
 	if (savefile_blocksize == savefile_blockused)
 	{
-		vptr savefile_new;
+		byte *savefile_new;
 
 		/* Make space for the new block. */
 		C_MAKE(savefile_new, savefile_blocksize + BLOCK_INCREMENT, byte);
@@ -155,7 +154,7 @@ static void savefile_add_byte(byte v)
 	}
 
 	/* Add the byte to the block. */
-	*savefile_blockpos++ = v;
+	savefile_block[savefile_blockused] = v;
 
 	/* Increase the "used" counter */
 	savefile_blockused++;
@@ -234,7 +233,6 @@ static void savefile_new_block(int type, int ver)
 	/* Initialise the values */
 	savefile_blocksize = BLOCK_INCREMENT;
 	savefile_blockused = 0;
-	savefile_blockpos = (byte *)savefile_block;
 
 	savefile_head_type = type;
 	savefile_head_ver = ver;
@@ -247,31 +245,30 @@ static void savefile_new_block(int type, int ver)
  */
 static void savefile_write_block(vptr block, int fd)
 {
-	byte *header_pos = (byte *) savefile_head;
+	int pos = 0;
 
 	/* Create the header - first, the type */
-	*header_pos++ = (savefile_head_type & 0xFF);
-	*header_pos++ = ((savefile_head_type >> 8) & 0xFF);
+	savefile_head[pos++] = (savefile_head_type & 0xFF);
+	savefile_head[pos++] = ((savefile_head_type >> 8) & 0xFF);
 
 	/* Add the version of this block. */
-	*header_pos++ = (savefile_head_ver & 0xFF);
-	*header_pos++ = ((savefile_head_ver >> 8) & 0xFF);
+	savefile_head[pos++] = (savefile_head_ver & 0xFF);
+	savefile_head[pos++] = ((savefile_head_ver >> 8) & 0xFF);
 
 	/* Add the size of this block. */
-	*header_pos++ = (savefile_blockused & 0xFF);
-	*header_pos++ = ((savefile_blockused >> 8) & 0xFF);
-	*header_pos++ = ((savefile_blockused >> 16) & 0xFF);
-	*header_pos++ = ((savefile_blockused  >> 24) & 0xFF);
+	savefile_head[pos++] = (savefile_blockused & 0xFF);
+	savefile_head[pos++] = ((savefile_blockused >> 8) & 0xFF);
+	savefile_head[pos++] = ((savefile_blockused >> 16) & 0xFF);
+	savefile_head[pos++] = ((savefile_blockused  >> 24) & 0xFF);
 
 	/* Indicate end of header */
-	*header_pos++ = 0;
-	*header_pos++ = 0;
+	savefile_head[pos++] = 0;
+	savefile_head[pos++] = 0;
 
 	/* Write the header */
 	fd_write(fd, (cptr) savefile_head, BLOCK_HEAD_SIZE);
 
 	/* Free up the header's memory */
-	header_pos = NULL;
 	KILL(savefile_head);
 
 	/* Reset the header type */
@@ -282,7 +279,6 @@ static void savefile_write_block(vptr block, int fd)
 	if (savefile_block) fd_write(fd, (cptr) savefile_block, savefile_blockused);
 
 	/* Free the block's memory */
-	savefile_blockpos = NULL;
 	if (savefile_block) KILL(savefile_block);
 
 	/* We are done */

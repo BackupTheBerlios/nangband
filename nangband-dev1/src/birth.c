@@ -1137,8 +1137,6 @@ static bool player_birth_aux_3(void)
 		            "the one with the best stats, according to the weightings you");
 		Term_putstr(5, 12, -1, TERM_WHITE,
 		            "choose below. Enter a value from 1-100 for each stat.");
-		Term_putstr(5, 13, -1, TERM_WHITE,
-		            "Pressing escape when prompted for a stat will accept the default.");
 
 		/* Prompt for the minimum stats */
 		put_str("Enter weighting for: ", 15, 2);

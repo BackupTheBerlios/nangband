@@ -15,7 +15,7 @@
  * Version numbers of the savefile code.
  */
 #define SAVEFILE_VERSION_MAJOR   1
-#define SAVEFILE_VERSION_MINOR   0
+#define SAVEFILE_VERSION_MINOR   1
 
 /*
  * The new savefile format was first the idea of Ben Harrison.
@@ -109,6 +109,11 @@
 #define BLOCK_VERSION_STORES     1
 #define BLOCK_VERSION_DUNGEON    1
 #define BLOCK_VERSION_INVENTORY  1
+
+/* "Helper" functions - versions */
+#define HELPER_VERSION_OBJECT    1
+#define HELPER_VERSION_MONSTER   1
+#define HELPER_VERSION_STORE     1
 
 /* The smallest block we can have */
 #define BLOCK_INCREMENT         32
@@ -422,6 +427,7 @@ static void savefile_write_block(int fd, byte type, byte version)
 static errr savefile_helper_item(object_type *o_ptr, bool type)
 {
 	int temp_kind;
+	byte version = HELPER_VERSION_OBJECT;
 	object_kind *k_ptr;
 
 	byte temp;
@@ -430,6 +436,10 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	byte old_ds = 0;
 
 	u32b f1, f2, f3;
+
+	/* Simple version */
+	if (type == PUT) version = HELPER_VERSION_OBJECT;
+	savefile_do_byte(&version, type);
 
 	/* tval/sval/pval */
 	savefile_do_byte(&o_ptr->tval, type);
@@ -469,6 +479,7 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	/* Artifact/Ego-item status */
 	savefile_do_byte(&o_ptr->name1, type);
 	savefile_do_byte(&o_ptr->name2, type);
+	savefile_do_u16b(&o_ptr->name3, type);
 
 	/* Timeout field */
 	savefile_do_s16b(&o_ptr->timeout, type);
@@ -486,8 +497,29 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	/* Identification info */
 	savefile_do_byte(&o_ptr->ident, type);
 
-	/* ??? */
+	/* "marked" (???) */
 	savefile_do_byte(&o_ptr->marked, type);
+
+	/* Load ranadrt info (if appropriate) */
+	if (o_ptr->name3)
+	{
+		randart_type *x_ptr = &x_info[o_ptr->name3];
+
+		/* Do the name */
+		savefile_do_string(x_ptr->name, type);
+
+		savefile_do_s32b(&x_ptr->cost, type);
+
+		savefile_do_u32b(&x_ptr->flags1, type);
+		savefile_do_u32b(&x_ptr->flags2, type);
+		savefile_do_u32b(&x_ptr->flags3, type);
+
+		savefile_do_byte(&x_ptr->level, type);
+
+		savefile_do_byte(&x_ptr->activation, type);
+		savefile_do_u16b(&x_ptr->time, type);
+		savefile_do_u16b(&x_ptr->randtime, type);
+	}
 
 	/* Write the index of the monster holding this item */
 	savefile_do_s16b(&o_ptr->held_m_idx, type);
@@ -579,6 +611,14 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 		if (!e_ptr->name) o_ptr->name2 = 0;
 	}
 
+	/* Paranoia */
+	if (o_ptr->name3)
+	{
+		randart_type *x_ptr = &x_info[o_ptr->name3];
+
+		/* Verify the randart */
+		if (!x_ptr->name[0]) o_ptr->name3 = 0;
+	}
 
 	/* Get the standard fields */
 	o_ptr->ac = k_ptr->ac;
@@ -1163,92 +1203,6 @@ static void savefile_do_block_messages(bool type, int ver)
 
 	/* We are done. */
 	return;
-}
-
-/* -------------------------------------------- takkaria, 2002-04-18 ---
- * Do the random artifacts.
- * --------------------------------------------------------------------- */
-static errr savefile_do_block_randarts(bool type, int ver)
-{
-	int i = 0;
-	u32b n = 0;
-
-	/* Grab the version */
-	if (type == PUT) n = RANDART_VERSION;
-
-	/* Put/Get the version */
-	savefile_do_u32b(&n, type);
-
-	/* Paranoia */
-	if ((n != RANDART_VERSION) && adult_rand_artifacts)
-	{
-		if (type == GET)
-		{
-			char ch = 0;
-
-			note(format("Random artifact version has changed; this may break savefiles. Continue? (y/n)"), type);
-
-			ch = inkey();
-
-			if (tolower(ch) != 'y')
-			{
-				note(format("Aborting loading due to user request."), type);
-				return (-1);
-			}
-		}
-	}
-
-	/* Grab the count */
-	if (type == PUT) n = z_info->a_max;
-
-	/* Put/Get the count */
-	savefile_do_u32b(&n, type);
-
-	if (!adult_rand_artifacts) return (0);
-
-	/* Write all randart data */
-	for (i = 0; i < n; i++)
-	{
-		artifact_type *a_ptr = &a_info[i];
-
-		/* tval/sval/pval */
-		savefile_do_byte(&a_ptr->tval, type);
-		savefile_do_byte(&a_ptr->sval, type);
-		savefile_do_s16b(&a_ptr->pval, type);
-
-		/* Bonuses */
-		savefile_do_s16b(&a_ptr->to_h, type);
-		savefile_do_s16b(&a_ptr->to_d, type);
-		savefile_do_s16b(&a_ptr->to_a, type);
-		savefile_do_s16b(&a_ptr->ac, type);
-
-		/* Base damage dice */
-		savefile_do_byte(&a_ptr->dd, type);
-		savefile_do_byte(&a_ptr->ds, type);
-
-		/* Weight */
-		savefile_do_s16b(&a_ptr->weight, type);
-
-		/* Cost */
-		savefile_do_s32b(&a_ptr->cost, type);
-
-		/* Flags */
-		savefile_do_u32b(&a_ptr->flags1, type);
-		savefile_do_u32b(&a_ptr->flags2, type);
-		savefile_do_u32b(&a_ptr->flags3, type);
-
-		/* Level/Rarity */
-		savefile_do_byte(&a_ptr->level, type);
-		savefile_do_byte(&a_ptr->rarity, type);
-
-		/* Activation, timeout and randtime */
-		savefile_do_byte(&a_ptr->activation, type);
-		savefile_do_u16b(&a_ptr->time, type);
-		savefile_do_u16b(&a_ptr->randtime, type);
-	}
-
-	/* We are done. */
-	return (0);
 }
 
 /*
@@ -2037,11 +1991,6 @@ static bool write_savefile(int fd)
 	savefile_do_block_artifacts(PUT, BLOCK_VERSION_ARTIFACTS);
 	savefile_write_block(fd, BLOCK_TYPE_ARTIFACTS, BLOCK_VERSION_ARTIFACTS);
 
-	/* Write the randarts */
-	savefile_new_block();
-	savefile_do_block_randarts(PUT, BLOCK_VERSION_RANDARTS);
-	savefile_write_block(fd, BLOCK_TYPE_RANDARTS, BLOCK_VERSION_RANDARTS);
-
 	/* Write the stores */
 	savefile_new_block();
 	savefile_do_block_stores(PUT, BLOCK_VERSION_STORES);
@@ -2141,9 +2090,6 @@ static errr read_savefile(int fd)
 				break;
 			case BLOCK_TYPE_ARTIFACTS:
 				savefile_do_block_artifacts(GET, version);
-				break;
-			case BLOCK_TYPE_RANDARTS:
-				savefile_do_block_randarts(GET, version);
 				break;
 			case BLOCK_TYPE_STORES:
 				savefile_do_block_stores(GET, version);
@@ -2437,6 +2383,14 @@ bool load_player(void)
 			else if (header[pos++] != 97) { what = "Invalid savefile"; err = 1; }
 			else if (header[pos++] != 118) { what = "Invalid savefile"; err = 1; }
 			else if (header[pos++] != 101) { what = "Invalid savefile"; err = 1; }
+			else if ((header[pos++] == 1) && (header[pos++] = 0))
+			{
+				/* Old savefile! */
+				err = 1;
+
+				/* Error */
+				what = "Cannot import this savefile";
+			}
 			else
 			{
 				/* Read the savefile */

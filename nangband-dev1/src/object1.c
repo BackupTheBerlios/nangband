@@ -153,9 +153,6 @@ static void flavor_assign_random(byte tval)
  * Initialize descriptions for the "colored" objects, including:
  * Rings, Amulets, Staffs, Wands, Rods, Food, Potions, Scrolls.
  *
- * The first 4 entries for potions are fixed (Water, Apple Juice,
- * Slime Mold Juice, Unused Potion).
- *
  * Scroll titles are always between 6 and 14 letters long.  This is
  * ensured because every title is composed of whole words, where every
  * word is from 1 to 8 letters long (one or two syllables of 1 to 4
@@ -1941,386 +1938,26 @@ void obj_info_resists(byte *resists, bool shorten, char *buffer)
 }
 
 /*
- * Output a brief "description" of an item.
+ * Calculate the multiplier we'll get with a given bow type.  This is done
+ * differently in 2.8.2 than it was in 2.8.1.
  */
-static void item_info_brief(const object_type *o_ptr, int mode)
+static int bow_multiplier(int sval)
 {
-	/* Does the item posess any special "abilities" at all? */
-	bool abilities = FALSE;
-
-	/* The "level" of identification of the item */
-	byte identify_status = IDENTIFY_STATUS_NONE;
-
-	/* An "object kind" */
-	object_kind *k_ptr;
-
-    /* Temp */
-    char temp[256];
-
-	/* Eric. */
-	int i = 0;
-
-	/* A counter, and text */
-	int vn;
-	cptr vp[32];
-
-	/* The item's flags && resists */
-	u32b f1, f2, f3;
-	byte resists[RES_MAX];
-
-	/* Extract the correct flags && resists */
-	object_flags_aux(mode, o_ptr, &f1, &f2, &f3);
-	object_resists_aux(mode, o_ptr, resists);
-
-	/* Prepare the object base kind */
-	k_ptr = &k_info[o_ptr->k_idx];
-
-	/* Check the level of identification */
-	if (object_known_p(o_ptr)) identify_status = IDENTIFY_STATUS_KNOWN;
-	if (o_ptr->ident & (IDENT_MENTAL)) identify_status = IDENTIFY_STATUS_MENTAL;
-
-	/* Describe activation */
-	if (f3 & (TR3_ACTIVATE))
+	switch (sval)
 	{
-		text_out("It can be activated ");
-		describe_item_activation(o_ptr);
-		text_out(".\n");
-
-		abilities = TRUE;
+		case SV_SLING:
+		case SV_SHORT_BOW:
+			return 2;
+		case SV_LONG_BOW:
+		case SV_LIGHT_XBOW:
+			return 3;
+		case SV_HEAVY_XBOW:
+			return 4;
+		default:
+			msg_format("Illegal bow sval %s\n", sval);
 	}
 
-	/* Describe lights */
-	if (f2 & ((TR2_LIGHT1) | (TR2_LIGHT2) | (TR2_LIGHT3) | (TR2_LIGHT4)))
-	{
-		/* Describe */
-		if (f2 & (TR2_NEEDS_FUEL)) text_out("Provides fuelled");
-		else text_out("Permanent");
-
-		text_out("Light ");
-
-		/* Show the radius */
-		if (f2 & (TR2_LIGHT1)) text_out("(radius 1)");
-		else if (f2 & (TR2_LIGHT2)) text_out("(radius 2)");
-		else if (f2 & (TR2_LIGHT3)) text_out("(radius 3)");
-		else if (f2 & (TR2_LIGHT4)) text_out("(radius 4)");
-
-		/* Complete the sentence */
-		text_out("\n");
-
-		abilities = TRUE;
-	}
-
-	/* Count the stats affected */
-	vn = 0;
-
-	for (i = 0; i < A_MAX; i++)
-	{
-		if (o_ptr->stat_mods[i]) vp[vn++] = stat_names_full[i];
-	}
-
-	/* Describe */
-	if (vn)
-	{
-		int n;
-
-		/* What does it do? */
-		if (o_ptr->pval > 0) text_out("+");
-		else if (o_ptr->pval < 0) text_out("-");
-		else if (o_ptr->pval == 0) text_out("software bug: ");
-
-		text_out(format("%i ", ABS(o_ptr->pval)));
-
-		/* Print stats */
-		for (n = 0; n < vn; n++)
-		{
-			/* Connective */
-			if (n != 0) text_out(", ");
-
-			/* Dump the stat */
-			text_out(vp[n]);
-		}
-
-		/* Finish */
-		text_out("\n");
-
-		abilities = TRUE;
-	}
-
-	/* Collect sustains */
-	vn = 0;
-	if (f2 & (TR2_SUST_STR)) vp[vn++] = "STR";
-	if (f2 & (TR2_SUST_INT)) vp[vn++] = "INT";
-	if (f2 & (TR2_SUST_WIS)) vp[vn++] = "WIS";
-	if (f2 & (TR2_SUST_DEX)) vp[vn++] = "DEX";
-	if (f2 & (TR2_SUST_CON)) vp[vn++] = "CON";
-	if (f2 & (TR2_SUST_CHR)) vp[vn++] = "CHA";
-
-	if (vn)
-	{
-		int n;
-
-		text_out("Sustains ");
-
-		for (n = 0; n < vn; n++)
-		{
-			/* Connective */
-			if (n != 0) text_out(", ");
-
-			/* Dump the stat */
-			text_out(vp[n]);
-		}
-
-		/* Finish */
-		text_out("\n");
-
-		abilities = TRUE;
-	}
-
-	/* Count the stats affected */
-	vn = 0;
-	if (f1 & (TR1_STEALTH)) vp[vn++] = "stealth";
-	if (f1 & (TR1_SEARCH)) vp[vn++] = "searching";
-	if (f1 & (TR1_TUNNEL)) vp[vn++] = "ability to tunnel";
-	if (f1 & (TR1_SPEED)) vp[vn++] = "speed";
-	if (f1 & (TR1_MIGHT)) vp[vn++] = "shooting power";
-
-	/* Describe */
-	if (vn)
-	{
-		int n;
-
-		/* What does it do? */
-		if (o_ptr->pval > 0) text_out("+");
-		else if (o_ptr->pval < 0) text_out("-");
-		else if (o_ptr->pval == 0) text_out("software bug: ");
-
-		text_out(format("%i ", ABS(o_ptr->pval)));
-
-		/* Print stats */
-		for (n = 0; n < vn; n++)
-		{
-			/* Connective */
-			if (n != 0) text_out(", ");
-
-			/* Dump the stat */
-			text_out(vp[n]);
-		}
-
-		/* Finish */
-		text_out("\n");
-
-		abilities = TRUE;
-	}
-
-
-	if (f1 & (TR1_INFRA))
-	{
-		text_out(format("+%i' Infravision\n", o_ptr->pval * 10));
-		abilities = TRUE;
-	}
-
-	if (f1 & (TR1_BLOWS))
-	{
-		text_out(format("+%i blow%s per round\n", o_ptr->pval, o_ptr->pval > 1 ? "s" :
- ""));
-		abilities = TRUE;
-	}
-
-	if (f1 & (TR1_SHOTS))
-	{
-		text_out(format("+%i shot%s per round\n", o_ptr->pval, o_ptr->pval > 1 ? "s" :
- ""));
-		abilities = TRUE;
-	}
-
-	/* Collect the slays */
-	vn = 0;
-	if (f1 & (TR1_SLAY_ANIMAL)) vp[vn++] = "natural creatures";
-	if (f1 & (TR1_SLAY_EVIL)) vp[vn++] = "evil";
-	if (f1 & (TR1_SLAY_ORC)) vp[vn++] = "orcs";
-	if (f1 & (TR1_SLAY_TROLL)) vp[vn++] = "trolls";
-	if (f1 & (TR1_SLAY_GIANT)) vp[vn++] = "giants";
-	if (f1 & (TR1_SLAY_UNDEAD) && !(f1 & (TR1_KILL_UNDEAD))) vp[vn++] = "undead";
-	if (f1 & (TR1_SLAY_DEMON) && !(f1 & (TR1_KILL_DEMON))) vp[vn++] = "demons";
-	if (f1 & (TR1_SLAY_DRAGON) && !(f1 & (TR1_KILL_DRAGON))) vp[vn++] = "dragons";
-
-	/* Describe */
-	if (vn)
-	{
-		int n;
-
-		/* Intro */
-		text_out("Slay ");
-
-		/* List the slays */
-		for (n = 0; n < vn; n++)
-		{
-			/* Connective */
-			if (n != 0) text_out(", ");
-
-			/* Dump the stat */
-			text_out(vp[n]);
-		}
-
-		text_out(".  ");
-
-		abilities = TRUE;
-	}
-
-	/* Collect the executes */
-	vn = 0;
-	if (f1 & (TR1_KILL_DRAGON)) vp[vn++] = "dragons";
-	if (f1 & (TR1_KILL_DEMON)) vp[vn++] = "demons";
-	if (f1 & (TR1_KILL_UNDEAD)) vp[vn++] = "undead";
-
-	/* Describe */
-	if (vn)
-	{
-		int n;
-
-		/* Intro */
-		text_out("Kill ");
-
-		/* List the slays */
-		for (n = 0; n < vn; n++)
-		{
-			/* Connective */
-			if (n != 0) text_out(", ");
-
-			/* Dump the stat */
-			text_out(vp[n]);
-		}
-
-		text_out("\n");
-
-		abilities = TRUE;
-	}
-
-	/* Collect the executes */
-	vn = 0;
-	if (f2 & (TR2_BRAND_ACID)) vp[vn++] = "acid";
-	if (f2 & (TR2_BRAND_ELEC)) vp[vn++] = "electricity";
-	if (f2 & (TR2_BRAND_FIRE)) vp[vn++] = "fire";
-	if (f2 & (TR2_BRAND_COLD)) vp[vn++] = "cold";
-	if (f2 & (TR2_BRAND_POIS)) vp[vn++] = "poison";
-	if (f2 & (TR2_BRAND_NETHER)) vp[vn++] = "nether";
-	if (f2 & (TR2_BRAND_CHAOS)) vp[vn++] = "chaos";
-	if (f2 & (TR2_BRAND_NEXUS)) vp[vn++] = "nexus";
-
-	/* Describe */
-	if (vn)
-	{
-		int n;
-
-		/* Intro */
-		text_out("Branded with ");
-
-		/* List the slays */
-		for (n = 0; n < vn; n++)
-		{
-			/* Connective */
-			if (n != 0) text_out(", ");
-
-			/* Dump the stat */
-			text_out(vp[n]);
-		}
-
-		text_out("\n");
-
-		abilities = TRUE;
-	}
-
-	/* Describe the resists/immunities */
-	obj_info_resists(resists, TRUE, temp);
-    text_out(temp);
-    text_out("\n");
-
-	/* Describe other (weird) things */
-	if (f2 & (TR2_NO_BLIND)) text_out("\nIt grants you immunity to blindness.  ");
-	if (f2 & (TR2_NO_DISENCHANT)) text_out("\nIt cannot be disenchanted.  ");
-	if (f3 & (TR3_SLOW_DIGEST)) text_out("\nIt slows your metabolism.  ");
-	if (f3 & (TR3_HUNGER)) text_out("\nIt increases you metabolism.  ");
-	if (f3 & (TR3_FEATHER)) text_out("\nIt induces feather falling.  ");
-	if (f3 & (TR3_REGEN)) text_out("\nIt speeds your regenerative powers.  ");
-	if (f3 & (TR3_TELEPATHY)) text_out("\nIt gives telepathic powers.  ");
-	if (f3 & (TR3_SEE_INVIS)) text_out("\nIt allows you to see invisible monsters.  ");
-	if (f3 & (TR3_FREE_ACT)) text_out("\nIt provides immunity to paralysis.  ");
-	if (f3 & (TR3_HOLD_LIFE)) text_out("\nIt provides resistance to life draining.  ");
-	if (f3 & (TR3_IMPACT)) text_out("\nIt induces earthquakes.  ");
-	if (f3 & (TR3_TELEPORT)) text_out("\nIt induces random teleportation.  ");
-	if (f3 & (TR3_AGGRAVATE)) text_out("\nIt aggravates nearby creatures.  ");
-	if (f3 & (TR3_DRAIN_EXP)) text_out("\nIt drains experience.  ");
-	if (f3 & (TR3_BLESSED)) text_out("\nIt has been blessed by the gods.  ");
-
-	if ((identify_status == IDENT_KNOWN) && cursed_p(o_ptr))
-	{
-		if (f3 & (TR3_PERMA_CURSE))
-		{
-			text_out("Permanently cursed\n");
-		}
-		else if (f3 & (TR3_HEAVY_CURSE))
-		{
-			text_out("Heavy cursed\n");
-		}
-		else
-		{
-			text_out("Cursed\n");
-		}
-
-		abilities = TRUE;
-	}
-
-	/* Count the "ignore"s */
-	vn = 0;
-	if (f1 & (TR3_IGNORE_ACID)) vp[vn++] = "acid";
-	if (f1 & (TR3_IGNORE_ELEC)) vp[vn++] = "lightning";
-	if (f1 & (TR3_IGNORE_FIRE)) vp[vn++] = "fire";
-	if (f1 & (TR3_IGNORE_COLD)) vp[vn++] = "cold";
-
-	/* Describe */
-	if (vn)
-	{
-		int n;
-
-		text_out("Ignores ");
-
-		for (n = 0; n < vn; n++)
-		{
-			/* Connectives */
-			if (n != 0) text_out(", ");
-
-			/* Dump the entry */
-			text_out(vp[n]);
-		}
-
-
-		/* Finish */
-		text_out("\n");
-
-		abilities = TRUE;
-	}
-
-	/* XXX */
-	text_out("\n");
-
-	/* Give the player warning of un-id'd things */
-	if (!abilities)
-	{
-		if (identify_status == (IDENTIFY_STATUS_NONE))
-		{
-			text_out_c(TERM_RED, "Not identified\n");
-		}
-		else if (identify_status == (IDENTIFY_STATUS_KNOWN))
-		{
-			text_out_c(TERM_L_BLUE, "Identified\n");
-		}
-		else if (identify_status == (IDENTIFY_STATUS_MENTAL))
-		{
-			text_out_c(TERM_L_BLUE, "*Identified*\n");
-		}
-	}
-
-	return;
+	return 0;
 }
 
 /*
@@ -2536,8 +2173,11 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	if (f2 & (TR2_SUST_CON)) vp[vn++] = "constitution";
 	if (f2 & (TR2_SUST_CHR)) vp[vn++] = "charisma";
 
-	/* Hack - shorten to "all stats" if appropriate */
-	if (vn == 6) text_out("It sustains all your stats.  ");
+	/* Shorten, if appropriate */
+	if (vn == 6)
+	{
+		text_out("It sustains all your stats.  ");
+	}
 	else if (vn)
 	{
 		int n;
@@ -2564,7 +2204,6 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	if (f1 & (TR1_SEARCH)) vp[vn++] = "searching";
 	if (f1 & (TR1_TUNNEL)) vp[vn++] = "ability to tunnel";
 	if (f1 & (TR1_SPEED)) vp[vn++] = "speed";
-	if (f1 & (TR1_MIGHT)) vp[vn++] = "shooting power";
 
 	/* Describe */
 	if (vn)
@@ -2575,18 +2214,9 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 		text_out("It ");
 
 		/* What does it do? */
-		if (o_ptr->pval > 0)
-		{
-			text_out_c(TERM_L_GREEN, "increases");
-		}
-		else if (o_ptr->pval < 0)
-		{
-			text_out_c(TERM_RED, "decreases");
-		}
-		else if (o_ptr->pval == 0)
-		{
-			text_out("does not affect [software bug]");
-		}
+		if (o_ptr->pval > 0) text_out_c(TERM_L_GREEN, "increases");
+		else if (o_ptr->pval < 0) text_out_c(TERM_RED, "decreases");
+		else if (o_ptr->pval == 0) text_out("does not affect [software bug]");
 
 		/* Print stats */
 		for (n = 0; n < vn; n++)
@@ -2613,8 +2243,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 	if (f1 & (TR1_INFRA))
 	{
-		text_out(format("It increases your range of infravision by %i'.  ",
- o_ptr->pval * 10));
+		text_out(format("It increases your range of infravision by %i'.  ", o_ptr->pval * 10));
 		abilities = TRUE;
 	}
 
@@ -2630,9 +2259,15 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 		abilities = TRUE;
 	}
 
+	if (f1 & (TR1_MIGHT))
+	{
+		text_out(format("Its damage multiplier is increased to x%i.  ", bow_multiplier(o_ptr->sval) + o_ptr->pval));
+		abilities = TRUE;
+	}
+
 	/* Collect the slays */
 	vn = 0;
-	if (f1 & (TR1_SLAY_ANIMAL)) vp[vn++] = "natural";
+	if (f1 & (TR1_SLAY_ANIMAL)) vp[vn++] = "natural creatures";
 	if (f1 & (TR1_SLAY_EVIL)) vp[vn++] = "evil";
 	if (f1 & (TR1_SLAY_ORC)) vp[vn++] = "orcs";
 	if (f1 & (TR1_SLAY_TROLL)) vp[vn++] = "trolls";
@@ -2738,23 +2373,50 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	obj_info_resists(resists, FALSE, temp);
 	text_out(temp);
 
+	/* Collect strange effects */
+	vn = 0;
+	if (f3 & (TR3_IMPACT)) vp[vn++] = "earthquakes";
+	if (f3 & (TR3_HUNGER)) vp[vn++] = "hunger";
+	if (f3 & (TR3_DRAIN_EXP)) vp[vn++] = "life draining";
+	if (f3 & (TR3_AGGRAVATE)) vp[vn++] = "an aura of aggravation";
+
+	/* Describe */
+	if (vn > 0)
+	{
+		int n;
+
+		text_out("It burdens its wearer ");
+
+		for (n = 0; n < vn; n++)
+		{
+			/* Intro */
+			if (n == 0) text_out(" with ");
+			else if (n < (vn - 1)) text_out(", ");
+			else text_out(" and ");
+
+			/* Dump it */
+			text_out(vp[n]);
+		}
+
+		text_out(".  ");
+		abilities = TRUE;
+	}
+
 	/* Describe other (weird) things */
+
 	if (f2 & (TR2_NO_BLIND)) text_out("It grants you immunity to blindness.  ");
 	if (f2 & (TR2_NO_DISENCHANT)) text_out("It cannot be disenchanted.  ");
 	if (f3 & (TR3_SLOW_DIGEST)) text_out("It slows your metabolism.  ");
-	if (f3 & (TR3_HUNGER)) text_out("It increases you metabolism.  ");
 	if (f3 & (TR3_FEATHER)) text_out("It induces feather falling.  ");
 	if (f3 & (TR3_REGEN)) text_out("It speeds your regenerative powers.  ");
 	if (f3 & (TR3_TELEPATHY)) text_out("It gives telepathic powers.  ");
 	if (f3 & (TR3_SEE_INVIS)) text_out("It allows you to see invisible monsters.  ");
 	if (f3 & (TR3_FREE_ACT)) text_out("It provides immunity to paralysis.  ");
 	if (f3 & (TR3_HOLD_LIFE)) text_out("It provides resistance to life draining.  ");
-	if (f3 & (TR3_IMPACT)) text_out("It induces earthquakes.  ");
 	if (f3 & (TR3_TELEPORT)) text_out("It induces random teleportation.  ");
-	if (f3 & (TR3_AGGRAVATE)) text_out("It aggravates nearby creatures.  ");
-	if (f3 & (TR3_DRAIN_EXP)) text_out("It drains experience.  ");
 	if (f3 & (TR3_BLESSED)) text_out("It has been blessed by the gods.  ");
 
+	/* Write curse status */
 	if (object_known_p(o_ptr) && cursed_p(o_ptr))
 	{
 		if (f3 & (TR3_PERMA_CURSE))
@@ -2868,7 +2530,7 @@ void item_show_knowledge(const object_type *o_ptr)
  */
 void identify_backend(const object_type *o_ptr)
 {
-	item_info_brief(o_ptr, OBJECT_AUX_KNOWN);
+//	item_info_brief(o_ptr, OBJECT_AUX_KNOWN);
 
 	return;
 }

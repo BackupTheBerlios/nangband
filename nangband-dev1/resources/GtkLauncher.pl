@@ -22,7 +22,7 @@ $window->set_border_width(5);
 # Connect the clicking event to the buttons.
 $button_gtk->signal_connect("clicked", sub { `$angband_path -mgtk`; });
 $button_x11->signal_connect("clicked", sub { `$angband_path -mx11`; });
-$button_gcu->signal_connect("clicked", sub { `xterm -e $angband_path -mgcu`; });
+$button_gcu->signal_connect("clicked", sub { `xterm -e $angband_path -mgcu -- -b`; });
 $button_quit->signal_connect("clicked", sub {Gtk->main_quit});
 
 # Add the VBox to the window

@@ -464,7 +464,7 @@ static void mass_produce(object_type *o_ptr)
 		case TV_DIGGING:
 		case TV_BOW:
 		{
-			if (o_ptr->name2) break;
+			if (o_ptr->name2 || o_ptr->name3) break;
 			if (cost <= 10L) size += mass_roll(3, 5);
 			if (cost <= 100L) size += mass_roll(3, 5);
 			break;
@@ -581,6 +581,9 @@ static bool store_object_similar(const object_type *o_ptr, const object_type *j_
 
 	/* Require identical "artifact" names */
 	if (o_ptr->name1 != j_ptr->name1) return (0);
+
+	/* Require identical "randart" names */
+	if (o_ptr->name3 != j_ptr->name3) return (0);
 
 	/* Require identical "ego-item" names */
 	if (o_ptr->name2 != j_ptr->name2) return (0);
@@ -1056,6 +1059,10 @@ static void store_item_optimize(int item)
 
 	/* Must have no items */
 	if (o_ptr->number) return;
+
+	/* Reclaim randarts */
+	if (o_ptr->name3)
+		x_info[o_ptr->name3].name[0] = 0;
 
 	/* One less object */
 	st_ptr->stock_num--;

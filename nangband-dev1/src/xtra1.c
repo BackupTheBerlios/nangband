@@ -1917,6 +1917,18 @@ static void calc_bonuses(void)
 	/* Extract the player flags */
 	player_flags(&f1, &f2, &f3);
 
+	/* Affect speed */
+	if (f1 & (TR1_SPEED)) p_ptr->pspeed += (p_ptr->lev + 4) / 5;
+
+	/* Affect blows */
+	if (f1 & (TR1_BLOWS)) extra_blows += 1 + p_ptr->lev / 20;
+
+	/* Affect shots */
+	if (f1 & (TR1_SHOTS)) extra_shots += 1;
+
+	/* Affect Might */
+	if (f1 & (TR1_MIGHT)) extra_might += 1;
+
 	/* deal with silly flags --takkaria */
 	if ((cp_ptr->flags & (CF_BRAVERY_30)) && (p_ptr->lev > 29))
 		p_ptr->resist_cur[RES_FEAR] += 30;

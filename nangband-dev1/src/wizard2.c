@@ -626,6 +626,7 @@ static void wiz_reroll_item(object_type *o_ptr)
 		/* Apply normal magic, but first clear object */
 		else if (ch == 'n' || ch == 'N')
 		{
+			if (i_ptr->name3) x_info[i_ptr->name3].name[0] = 0;
 			object_prep(i_ptr, o_ptr->k_idx);
 			apply_magic(i_ptr, p_ptr->depth, FALSE, FALSE, FALSE, FALSE);
 		}
@@ -633,6 +634,7 @@ static void wiz_reroll_item(object_type *o_ptr)
 		/* Apply good magic, but first clear object */
 		else if (ch == 'g' || ch == 'g')
 		{
+			if (i_ptr->name3) x_info[i_ptr->name3].name[0] = 0;
 			object_prep(i_ptr, o_ptr->k_idx);
 			apply_magic(i_ptr, p_ptr->depth, FALSE, TRUE, FALSE, FALSE);
 		}
@@ -640,6 +642,7 @@ static void wiz_reroll_item(object_type *o_ptr)
 		/* Apply great magic, but first clear object */
 		else if (ch == 'e' || ch == 'e')
 		{
+			if (i_ptr->name3) x_info[i_ptr->name3].name[0] = 0;
 			object_prep(i_ptr, o_ptr->k_idx);
 			apply_magic(i_ptr, p_ptr->depth, FALSE, TRUE, TRUE, FALSE);
 		}
@@ -647,6 +650,7 @@ static void wiz_reroll_item(object_type *o_ptr)
 		/* Apply randarism, but first clear object */
 		else if (ch == 'r' || ch == 'r')
 		{
+			if (i_ptr->name3) x_info[i_ptr->name3].name[0] = 0;
 			object_prep(i_ptr, o_ptr->k_idx);
 			apply_magic(i_ptr, p_ptr->depth, FALSE, TRUE, TRUE, TRUE);
 		}
@@ -676,7 +680,33 @@ static void wiz_reroll_item(object_type *o_ptr)
 	}
 }
 
+/*
+ * Create a tremendously bogus randart
+ */
+static void create_wiz_randart(void)
+{
+	object_type *i_ptr;
+	object_type object_type_body;
 
+	/* Get local object */
+	i_ptr = &object_type_body;
+
+	/* Wipe the object */
+	object_wipe(i_ptr);
+
+	/* Make a good (or great) object (if possible) */
+	if (!make_object(i_ptr, TRUE, TRUE, TRUE))
+		return;
+
+	/* Drop the randart from heaven */
+	drop_near(i_ptr, -1, p_ptr->py, p_ptr->px);
+
+	/* All done */
+	msg_print("Allocated.");
+
+	/* We are done. */
+	return;
+}
 
 /*
  * Maximum number of rolls
@@ -1700,6 +1730,13 @@ void do_cmd_debug(void)
 			}
 			break;
 		}
+
+		/* Create stupid randart */
+		case 'X':
+		{
+			create_wiz_randart();
+ 			break;
+ 		}
 
 		/* Zap Monsters (Genocide) */
 		case 'z':

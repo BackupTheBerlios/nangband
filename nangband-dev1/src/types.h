@@ -1,13 +1,10 @@
-/* File: types.h */
-
 /*
- * Copyright (c) 1997 Ben Harrison, James E. Wilson, Robert A. Koeneke
+ * File: types.h
  *
- * This software may be copied and distributed for educational, research,
- * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * Abstract: Basic types for the Angband game.
+ *
+ * Licences: the Traditional Angband Licence, see angband.h
  */
-
 
 /*
  * Note that "char" may or may not be signed, and that "signed char"
@@ -499,7 +496,7 @@ struct object_type
 
 	byte name1;			/* Artifact type, if any */
 	byte name2;			/* Ego-Item type, if any */
-	byte name3;			/* Randart type, if any */
+	u16b name3;			/* Randart type, if any */
 
 	byte xtra1;			/* Extra info type */
 	byte xtra2;			/* Extra info index */

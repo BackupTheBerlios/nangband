@@ -10,7 +10,7 @@
 #include "angband.h"
 #include "dtype.h"
 
-static void generate_dungeon(map_grid_t **dungeon, int width, int height, int level, int exeption)
+static void generate_dungeon(map_grid_t *dungeon, int width, int height, int level, int exeption)
 {
 	map_grid_t *this_grid;
 	int x, y;
@@ -24,7 +24,7 @@ static void generate_dungeon(map_grid_t **dungeon, int width, int height, int le
 		for (y = 0; y < height; y++)
 		{
 			printf("x = %i, y = %i", x, y);
-			*dungeon->feature = TERRAIN_TYPE_WALL;
+			dungeon->feature = TERRAIN_TYPE_WALL;
 		}
 	}
 	

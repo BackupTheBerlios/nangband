@@ -1643,7 +1643,7 @@ void obj_info_resists(const object_type *o_ptr)
 /*	if (f2 & ((TR2_IM_ACID) | (TR2_IM_ELEC) | (TR2_IM_FIRE) | (TR2_IM_COLD)))
 	{ */
 
-		if (f2 & (TR2_IM_ACID))
+/*		if (f2 & (TR2_IM_ACID))
 		{
 			vp[vn++] = "acid";
 			vc[cn++] = TERM_L_GREEN;
@@ -1669,28 +1669,28 @@ void obj_info_resists(const object_type *o_ptr)
 			vp[vn++] = "cold";
 			vc[cn++] = TERM_L_BLUE;
 			si_cold = TRUE;
-		}
+		} */
 	
 		/* Describe */
-		if (vn)
+/*		if (vn)
 		{
 			int n;
-	
+	*/
 			/* Intro */
-			text_out("It grants you immunity");
-
+		/*	text_out("It grants you immunity");
+*/
 			/* List the resists */
-			for (n = 0; n < vn; n++)
-			{
+		/*	for (n = 0; n < vn; n++)
+			{ */
 				/* Intro */
-				if (n == 0) text_out(" to ");
+		/*		if (n == 0) text_out(" to ");
 				else text_out(", ");
-	
+	*/
 				/* Dump it */
-				text_out_c(vc[n], vp[n]);
+		/*		text_out_c(vc[n], vp[n]);
 			}
 		}
-	
+	*/
 	/* Collect the resists */
 /*	vn = cn = 0;
 

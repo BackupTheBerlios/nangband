@@ -1,6 +1,13 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-08-02
+----------
+- Added the USE_CHOICE_PATH option; with this defined, PRIVATE_USER_PATH
+  will be ~/Choices/Angband/Nangband instead of ~/.angband/Nangband.
+  An option in the makefile has been added (normally set off).
+  (takkaria)
+
 2002-07-31
 ----------
 - Reorganized the lua files.  Also, updated the Vanilla's spell code -

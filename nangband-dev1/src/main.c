@@ -132,7 +132,8 @@ extern unsigned _ovrbuffer = 0x1500;
 #ifdef PRIVATE_USER_PATH
 
 /*
- * Create an ".angband/" directory in the users home directory.
+ * Create either "~/.angband" or "~/Choices/Angband" if it doesn't
+ * already exist.
  *
  * ToDo: Add error handling.
  * ToDo: Only create the directories when actually writing files.
@@ -142,11 +143,10 @@ static void create_user_dir(void)
 	char dirpath[1024];
 	char subdirpath[1024];
 
-
 	/* Get an absolute path from the filename */
 	path_parse(dirpath, 1024, PRIVATE_USER_PATH);
 
-	/* Create the ~/.angband/ directory */
+	/* Create the appropriate directory */
 	mkdir(dirpath, 0700);
 
 	/* Build the path to the variant-specific sub-directory */

@@ -402,7 +402,11 @@
  * for storing pref-files and character-dumps.
  */
 #ifdef SET_UID
-#define PRIVATE_USER_PATH "~/.angband"
+	#ifdef USE_CHOICE_PATH
+		#define PRIVATE_USER_PATH "~/Choices/Angband"
+	#else
+		#define PRIVATE_USER_PATH "~/.angband"
+	#endif /* USE_CHOICES */
 #endif /* SET_UID */
 
 

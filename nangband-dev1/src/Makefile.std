@@ -97,6 +97,11 @@ WARNINGS = -Wall
 # OPTIMISATION = 
 # WARNINGS =
 
+## OPTION: Use ~/Choices/Angband/Nangband instead of ~/.angband/Nangband
+##         as the user directory.
+#
+# EXTRAS += -DUSE_CHOICE_PATH
+
 ## OPTION: Enable debugging in the compiler.  Comment out the following
 ##         line if you do not want debugging information in the
 ##         executable.
@@ -277,19 +282,24 @@ s-lang: LIBS += -lslang
 #
 
 ifdef EXTRAS
-nangband: CFLAGS += $(EXTRAS)
-nangband: LINKFLAGS += $(EXTRAS)
+	CFLAGS += $(EXTRAS)
+	LINKFLAGS += $(EXTRAS)
+endif
+
+ifdef OPTIMISATION
+	CFLAGS += $(OPTIMISATION)
+	LINKFLAGS += $(OPTIMISATION)
 endif
 
 ifdef WARNINGS
-nangband: CFLAGS += $(WARNINGS)
-nangband: LINKFLAGS += $(WARNINGS)
+	CFLAGS += $(WARNINGS)
+	LINKFLAGS += $(WARNINGS)
 endif
 
 ifdef ALLOW_BORG
-nangband: CFLAGS += -DALLOW_BORG
-nangband: LINKFLAGS += -DALLOW_BORG
-nangband: ANGOBJS += $(BORGOBJS)
+	CFLAGS += -DALLOW_BORG
+	LINKFLAGS += -DALLOW_BORG
+	ANGOBJS += $(BORGOBJS)
 endif
 
 nangband: lua/tolua $(ANGOBJS)

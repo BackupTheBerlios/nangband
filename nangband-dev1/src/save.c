@@ -14,7 +14,7 @@
  * Version numbers of the savefile code.
  */
 #define SAVEFILE_VERSION_MAJOR   0
-#define SAVEFILE_VERSION_MINOR   3
+#define SAVEFILE_VERSION_MINOR   7
 
 /*
  * The new savefile format was first the idea of Ben Harrison.
@@ -102,8 +102,8 @@
 #define BLOCK_VERSION_OBJLORE    1
 #define BLOCK_VERSION_QUESTS     1
 #define BLOCK_VERSION_ARTIFACTS  1
-#define BLOCK_VERSION_RANDARTS   1 
-#define BLOCK_VERSION_STORES     1 
+#define BLOCK_VERSION_RANDARTS   1
+#define BLOCK_VERSION_STORES     1
 #define BLOCK_VERSION_DUNGEON    1
 
 /* The smallest block we can have */
@@ -112,9 +112,11 @@
 /* The size of the header (in bytes) */
 #define BLOCK_HEAD_SIZE         11
 
-/*
- * Variables needed by the code
- */
+/* The two possible "operations" */
+#define PUT    FALSE
+#define GET    TRUE
+
+/* Variables needed by the code */
 static byte *savefile_head;      /* Current block's header */
 static byte savefile_head_type;  /* The type of block */
 static byte savefile_head_ver;   /* The version of this block */
@@ -122,10 +124,184 @@ static byte *savefile_block;     /* Current block */
 static u32b savefile_blocksize;  /* Current block's size */
 static u32b savefile_blockused;  /* The amount of the block that has been used */
 
+/* Hack - Counter */
+int __pnt__;
+
+/*
+ * Show information on the screen, one line at a time.
+ */
+static void note(const char *msg, bool type)
+{
+	if (type == PUT) return;
+
+	/* Draw the message */
+	prt(msg, __pnt__, 0);
+
+	/* Advance one line */
+	__pnt__++;
+
+	/* Flush it */
+	Term_fresh();
+
+	/* We are done */
+	return;
+}
+
 /*
  * All generic savefile "block" adding functions
  */
 
+/*
+ * Recallocate some memory
+ */
+static void block_realloc(int newsize, void *mem)
+{
+	byte *savefile_new;
+
+	/* Make space for the new block. */
+	savefile_new = C_RNEW(savefile_blocksize + BLOCK_INCREMENT, byte);
+
+	/* Copy the memory across */
+	COPY(savefile_new, mem, vptr);
+
+	/* Wipe the old block. */
+	KILL(mem);
+
+	/* The new block is now the savefile block. */
+	mem = savefile_new;
+
+	/* We are done */
+	return;
+}
+
+/*
+ * This function gets/puts a byte to the savefile block.
+ * If more memory is needed, it allocates more memory, and makes
+ * savefile_block point to it.
+ */
+static void savefile_do_byte(byte *v, bool type)
+{
+	/* See if we need to allocate more memory */
+	if ((savefile_blocksize == savefile_blockused) && (type == PUT))
+	{
+		/* Reallocate the memory */
+		block_realloc(savefile_blocksize + BLOCK_INCREMENT, savefile_block);
+
+		/* Increment variables */
+		savefile_blocksize += BLOCK_INCREMENT;
+	}
+
+	/* If we are supposed to be putting, do so */
+	if (type == PUT)
+	{
+		/* Put the byte in the block. */
+		savefile_block[savefile_blockused] = *v;
+	}
+	else
+	{
+		/* Get the byte from the block. */
+		*v = savefile_block[savefile_blockused];
+	}
+
+	/* Increase the "used" counter */
+	savefile_blockused++;
+
+	/* We are done */
+ 	return;
+}
+
+/*
+ * This function gets/puts an unsigned 16-bit integer.
+ */
+static void savefile_do_u16b(u16b *v, bool type)
+{
+	if (type == PUT)
+	{
+		savefile_do_byte(((byte *)((*v) & 0xFF)), PUT);
+		savefile_do_byte(((byte *)(((*v) >> 8) & 0xFF)), PUT);
+	}
+	else
+	{
+		byte i;
+
+		savefile_do_byte(&i, GET);
+		(*v) = i;
+
+		savefile_do_byte(&i, GET);
+		(*v) |= ((u32b) i << 8);
+	}
+
+	/* We are done */
+	return;
+}
+
+/*
+ * This function gets/puts an unsigned 32-bit integer.
+ */
+static void savefile_do_u32b(u32b *v, bool type)
+{
+	if (type == PUT)
+	{
+		savefile_do_byte((byte *) ((*v) & 0xFF), PUT);
+		savefile_do_byte((byte *) (((*v) >> 8) & 0xFF), PUT);
+		savefile_do_byte((byte *) (((*v) >> 16) & 0xFF), PUT);
+		savefile_do_byte((byte *) (((*v) >> 24) & 0xFF), PUT);
+	}
+	else
+	{
+		byte i;
+
+		savefile_do_byte(&i, GET);
+		(*v) = i;
+
+		savefile_do_byte(&i, GET);
+		(*v) |= ((u32b)i << 8);
+
+		savefile_do_byte(&i, GET);
+		(*v) |= ((u32b)i << 16);
+
+		savefile_do_byte(&i, GET);
+		(*v) |= ((u32b)i << 24);
+	}
+
+	/* We are done */
+	return;
+}
+
+/*
+ * Either put or get a string.
+ */
+static void savefile_do_string(char *str, bool record, bool type)
+{
+	byte i = 255;
+	int pos = 0;
+
+	/* Count */
+	if (type == PUT) i = (byte) strlen(str);
+
+	/* Put/Get the length of the string first */
+	if (record) savefile_do_byte(&i, type);
+
+	/* Put/Get the string, one byte at a time */
+	while (TRUE)
+	{
+		/* Put the byte */
+		savefile_do_byte(&str[pos], type);
+
+		/* Check the value */
+		if (str[pos - 1] != '\0' || pos < i) pos++;
+		else break;
+	}
+
+	/* We are done */
+	return;
+}
+
+/* Here we define space-saving macros */
+#define savefile_do_s16b(v, t)     savefile_do_u16b((u16b *) v, t);
+#define savefile_do_s32b(v, t)     savefile_do_u32b((u32b *) v, t);
+
+#if 0
 /*
  * This function adds a byte to the savefile block.
  * If more memory is needed, it allocates more memory, and makes
@@ -167,22 +343,22 @@ static void savefile_add_byte(byte v)
 /*
  * This function adds an unsigned 16-bit integer to the savefile block.
  */
-static void savefile_add_u16b(u16b v)
+static void savefile_do_u16b(u16b v)
 {
-	savefile_add_byte((byte)(v & 0xFF));
-	savefile_add_byte((byte)((v >> 8) & 0xFF));
+	savefile_do_byte((byte)(v & 0xFF));
+	savefile_do_byte((byte)((v >> 8) & 0xFF));
 
 	return;
 }
 /*
  * This function adds an unsigned 32-bit integer to the savefile block.
  */
-static void savefile_add_u32b(u32b v)
+static void savefile_do_u32b(u32b v)
 {
-	savefile_add_byte((byte) (v & 0xFF));
-	savefile_add_byte((byte) ((v >> 8) & 0xFF));
-	savefile_add_byte((byte) ((v >> 16) & 0xFF));
-	savefile_add_byte((byte) ((v >> 24) & 0xFF));
+	savefile_do_byte((byte) (v & 0xFF));
+	savefile_do_byte((byte) ((v >> 8) & 0xFF));
+	savefile_do_byte((byte) ((v >> 16) & 0xFF));
+	savefile_do_byte((byte) ((v >> 24) & 0xFF));
 
 	return;
 }
@@ -190,8 +366,9 @@ static void savefile_add_u32b(u32b v)
 /*
  * This function adds a string to the savefile block.
  */
-static void savefile_add_string(char *str, bool record)
+static void savefile_do_string(char *str, bool record)
 {
+
 	/* Cycle through the string */
 	if (record)
 	{
@@ -201,20 +378,22 @@ static void savefile_add_string(char *str, bool record)
 		i = strlen(str);
 
 		/* Record it */
-		savefile_add_byte((byte) i);
+		savefile_do_byte((byte) i);
 	}
 
 	/* Put the string, one at a time */
-	for (; *str; *str++) savefile_add_byte(*str);
-	savefile_add_byte(*str);
+	for (; *str; *str++) savefile_do_byte(*str);
+	savefile_do_byte(*str);
 
 	/* We are done. */
 	return;
 }
 
 /* Here we define space-saving macros */
-#define savefile_add_s16b(v)     savefile_add_u16b((u16b) v);
-#define savefile_add_s32b(v)     savefile_add_u32b((u32b) v);
+#define savefile_do_s16b(v)     savefile_do_u16b((u16b) v);
+#define savefile_do_s32b(v)     savefile_do_u32b((u32b) v);
+
+#endif
 
 /*
  * Functions to deal with creating, writing, and freeing "blocks".
@@ -293,61 +472,61 @@ static void savefile_write_block(vptr block, int fd)
 /*
  * Add an item to the savefile.
  */
-static void savefile_helper_item(const object_type *o_ptr)
+static void savefile_helper_item(const object_type *o_ptr, bool type)
 {
 	/* Write the "kind" index */
-	savefile_add_s16b(o_ptr->k_idx);
+	savefile_do_s16b(&o_ptr->k_idx, type);
 
 	/* Location in the dungeon */
-	savefile_add_byte(o_ptr->iy);
-	savefile_add_byte(o_ptr->ix);
+	savefile_do_byte(&o_ptr->iy, type);
+	savefile_do_byte(&o_ptr->ix, type);
 
 	/* tval/sval/pval */
-	savefile_add_byte(o_ptr->tval);
-	savefile_add_byte(o_ptr->sval);
-	savefile_add_s16b(o_ptr->pval);
+	savefile_do_byte(&o_ptr->tval, type);
+	savefile_do_byte(&o_ptr->sval, type);
+	savefile_do_s16b(&o_ptr->pval, type);
 
 	/* Discount (if any) */
-	savefile_add_byte(o_ptr->discount);
+	savefile_do_byte(&o_ptr->discount, type);
 
 	/* Number of items */
-	savefile_add_byte(o_ptr->number);
+	savefile_do_byte(&o_ptr->number, type);
 
 	/* Weight of the item */
-	savefile_add_s16b(o_ptr->weight);
+	savefile_do_s16b(&o_ptr->weight, type);
 
 	/* Artifact/Ego-item status */
-	savefile_add_byte(o_ptr->name1);
-	savefile_add_byte(o_ptr->name2);
+	savefile_do_byte(&o_ptr->name1, type);
+	savefile_do_byte(&o_ptr->name2, type);
 
 	/* Timeout field */
-	savefile_add_s16b(o_ptr->timeout);
+	savefile_do_s16b(&o_ptr->timeout, type);
 
 	/* Any enchantments */
-	savefile_add_s16b(o_ptr->to_h);
-	savefile_add_s16b(o_ptr->to_d);
-	savefile_add_s16b(o_ptr->to_a);
-	savefile_add_s16b(o_ptr->ac);
+	savefile_do_s16b(&o_ptr->to_h, type);
+	savefile_do_s16b(&o_ptr->to_d, type);
+	savefile_do_s16b(&o_ptr->to_a, type);
+	savefile_do_s16b(&o_ptr->ac, type);
 
 	/* Damage dice and sides */
-	savefile_add_byte(o_ptr->dd);
-	savefile_add_byte(o_ptr->ds);
+	savefile_do_byte(&o_ptr->dd, type);
+	savefile_do_byte(&o_ptr->ds, type);
 
 	/* Identification info */
-	savefile_add_byte(o_ptr->ident);
+	savefile_do_byte(&o_ptr->ident, type);
 
 	/* ??? */
-	savefile_add_byte(o_ptr->marked);
+	savefile_do_byte(&o_ptr->marked, type);
 
 	/* Write the index of the monster holding this item */
-	savefile_add_s16b(o_ptr->held_m_idx);
+	savefile_do_s16b(&o_ptr->held_m_idx, type);
 
 	/* Extra information */
-	savefile_add_byte(o_ptr->xtra1);
-	savefile_add_byte(o_ptr->xtra2);
+	savefile_do_byte(&o_ptr->xtra1, type);
+	savefile_do_byte(&o_ptr->xtra2, type);
 
 	/* Save the inscription (if any) */
-	savefile_add_string(o_ptr->note ? (char *) quark_str(o_ptr->note) : "", TRUE);
+	savefile_do_string(o_ptr->note ? (char *) quark_str(o_ptr->note) : "", TRUE, type);
 
 	/* We are done. */
 	return;
@@ -356,28 +535,28 @@ static void savefile_helper_item(const object_type *o_ptr)
 /*
  * Add a monster record to the savefile.
  */
-static void savefile_helper_monster(const monster_type *m_ptr)
+static void savefile_helper_monster(const monster_type *m_ptr, bool type)
 {
 	/* Monster race */
-	savefile_add_s16b(m_ptr->r_idx);
+	savefile_do_s16b(&m_ptr->r_idx, type);
 
 	/* Position of the monster */
-	savefile_add_byte(m_ptr->fy);
-	savefile_add_byte(m_ptr->fx);
+	savefile_do_byte(&m_ptr->fy, type);
+	savefile_do_byte(&m_ptr->fx, type);
 
 	/* Current/Maximum HP */
-	savefile_add_s16b(m_ptr->hp);
-	savefile_add_s16b(m_ptr->maxhp);
+	savefile_do_s16b(&m_ptr->hp, type);
+	savefile_do_s16b(&m_ptr->maxhp, type);
 
 	/* Status flags; sleeping, stunned, confused, scared */
-	savefile_add_s16b(m_ptr->csleep);
-	savefile_add_byte(m_ptr->stunned);
-	savefile_add_byte(m_ptr->confused);
-	savefile_add_byte(m_ptr->monfear);
+	savefile_do_s16b(&m_ptr->csleep, type);
+	savefile_do_byte(&m_ptr->stunned, type);
+	savefile_do_byte(&m_ptr->confused, type);
+	savefile_do_byte(&m_ptr->monfear, type);
 
 	/* Speed and energy */
-	savefile_add_byte(m_ptr->mspeed);
-	savefile_add_byte(m_ptr->energy);
+	savefile_do_byte(&m_ptr->mspeed, type);
+	savefile_do_byte(&m_ptr->energy, type);
 
 	/* We are done */
 	return;
@@ -387,31 +566,31 @@ static void savefile_helper_monster(const monster_type *m_ptr)
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Add a store record to the current block.
  * --------------------------------------------------------------------- */
-static void savefile_helper_store(const store_type *st_ptr)
+static void savefile_helper_store(const store_type *st_ptr, bool type)
 {
 	int i;
 
 	/* Save the "open" counter */
-	savefile_add_u32b(st_ptr->store_open);
+	savefile_do_u32b(&st_ptr->store_open, type);
 
 	/* Save the "insults" */
-	savefile_add_s16b(st_ptr->insult_cur);
+	savefile_do_s16b(&st_ptr->insult_cur, type);
 
 	/* Save the current owner */
-	savefile_add_byte(st_ptr->owner);
+	savefile_do_byte(&st_ptr->owner, type);
 
 	/* Save the stock size */
-	savefile_add_byte(st_ptr->stock_num);
+	savefile_do_byte(&st_ptr->stock_num, type);
 
 	/* Save the "haggle" info */
-	savefile_add_s16b(st_ptr->good_buy);
-	savefile_add_s16b(st_ptr->bad_buy);
+	savefile_do_s16b(&st_ptr->good_buy, type);
+	savefile_do_s16b(&st_ptr->bad_buy, type);
 
 	/* Save the stock */
 	for (i = 0; i < st_ptr->stock_num; i++)
 	{
 		/* Save each item in stock */
-		savefile_helper_item(&st_ptr->stock[i]);
+		savefile_helper_item(&st_ptr->stock[i], type);
 	}
 
 	/* We are done. */
@@ -458,19 +637,19 @@ static void savefile_start(int fd)
 /*
  * Write information about this variant.
  */
-static void savefile_do_block_header(void)
+static void savefile_do_block_header(bool type)
 {
 	/* Add the variant string */
-	savefile_add_string(VERSION_NAME, TRUE);
+	savefile_do_string(VERSION_NAME, TRUE, type);
 
 	/* Marker - XXX XXX XXX */
-	savefile_add_byte(0);
+	savefile_do_byte(&0, type);
 
 	/* Add the version number */
-	savefile_add_byte(VERSION_MAJOR);
-	savefile_add_byte(VERSION_MINOR);
-	savefile_add_byte(VERSION_PATCH);
-	savefile_add_byte(VERSION_EXTRA);
+	savefile_do_byte(&VERSION_MAJOR, type);
+	savefile_do_byte(&VERSION_MINOR, type);
+	savefile_do_byte(&VERSION_PATCH, type);
+	savefile_do_byte(&VERSION_EXTRA, type);
 
 	/* We are done. */
 	return;
@@ -479,26 +658,26 @@ static void savefile_do_block_header(void)
 /*
  * Write the player's options.
  */
-static void savefile_do_block_options(void)
+static void savefile_do_block_options(bool type)
 {
 	int n;
 
 	/* Add delay factor and hitpoint warning "special options" */
-	savefile_add_byte(op_ptr->delay_factor);
-	savefile_add_byte(op_ptr->hitpoint_warn);
+	savefile_do_byte(&op_ptr->delay_factor, type);
+	savefile_do_byte(&op_ptr->hitpoint_warn, type);
 
 	/* Add the "normal" options */
 	for (n = 0; n < OPT_MAX; n++)
 	{
-		if (op_ptr->opt[n]) savefile_add_byte(1);
-		else savefile_add_byte(0);
+		if (op_ptr->opt[n]) savefile_do_byte(&1, type);
+		else savefile_do_byte(&0, type);
 	}
 
 	/* Add the "window" options */
 	for (n = 0; n < ANGBAND_TERM_MAX; n++)
 	{
-		if (op_ptr->window_flag[n]) savefile_add_byte(1);
-		else savefile_add_byte(0);
+		if (op_ptr->window_flag[n]) savefile_do_byte(&1, type);
+		else savefile_do_byte(&0, type);
 	}
 
 	/* We are done. */
@@ -508,135 +687,135 @@ static void savefile_do_block_options(void)
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Do the player block.
  * --------------------------------------------------------------------- */
-static void savefile_do_block_player(void)
+static void savefile_do_block_player(bool type)
 {
 	int i;
 
 	/* Add number of past lives */
-	savefile_add_u16b(sf_lives);
+	savefile_do_u16b(&sf_lives, type);
 
 	/* Dump the player's HP entries */
-	savefile_add_byte(PY_MAX_LEVEL);
+	savefile_do_byte(&PY_MAX_LEVEL, type);
 
 	for (i = 0; i < PY_MAX_LEVEL; i++)
-		savefile_add_s16b(p_ptr->player_hp[i]);
+		savefile_do_s16b(&p_ptr->player_hp[i], type);
 
 	/* Write spell data */
-	savefile_add_u32b(p_ptr->spell_learned1);
-	savefile_add_u32b(p_ptr->spell_learned2);
-	savefile_add_u32b(p_ptr->spell_worked1);
-	savefile_add_u32b(p_ptr->spell_worked2);
-	savefile_add_u32b(p_ptr->spell_forgotten1);
-	savefile_add_u32b(p_ptr->spell_forgotten2);
+	savefile_do_u32b(&p_ptr->spell_learned1, type);
+	savefile_do_u32b(&p_ptr->spell_learned2, type);
+	savefile_do_u32b(&p_ptr->spell_worked1, type);
+	savefile_do_u32b(&p_ptr->spell_worked2, type);
+	savefile_do_u32b(&p_ptr->spell_forgotten1, type);
+	savefile_do_u32b(&p_ptr->spell_forgotten2, type);
 
 	/* Dump the ordered spells */
 	for (i = 0; i < PY_MAX_SPELLS; i++)
-		savefile_add_byte(p_ptr->spell_order[i]);
+		savefile_do_byte(&p_ptr->spell_order[i], type);
 
 	/* What the player's name is */
-	savefile_add_string(op_ptr->full_name, TRUE);
+	savefile_do_string(op_ptr->full_name, TRUE, type);
 
 	/* What the player died from */
-	savefile_add_string(p_ptr->died_from, TRUE);
+	savefile_do_string(p_ptr->died_from, TRUE, type);
 
 #if 0
 	/* Player's history */
-	savefile_add_string(p_ptr->history);
+	savefile_do_string(p_ptr->history, type);
 #endif
 
 	/* Sex/Race/Class */
-	savefile_add_byte(p_ptr->psex);
-	savefile_add_byte(p_ptr->prace);
-	savefile_add_byte(p_ptr->pclass);
+	savefile_do_byte(&p_ptr->psex, type);
+	savefile_do_byte(&p_ptr->prace, type);
+	savefile_do_byte(&p_ptr->pclass, type);
 
 	/* Hit dice and experience factor */
-	savefile_add_byte(p_ptr->hitdie);
-	savefile_add_byte(p_ptr->expfact);
+	savefile_do_byte(&p_ptr->hitdie, type);
+	savefile_do_byte(&p_ptr->expfact, type);
 
 	/* Age, Weight and Height */
-	savefile_add_s16b(p_ptr->age);
-	savefile_add_s16b(p_ptr->ht);
-	savefile_add_s16b(p_ptr->wt);
+	savefile_do_s16b(&p_ptr->age, type);
+	savefile_do_s16b(&p_ptr->ht, type);
+	savefile_do_s16b(&p_ptr->wt, type);
 
 	/* Dump the stats (maximum and current) */
-	for (i = 0; i < A_MAX; ++i) savefile_add_s16b(p_ptr->stat_max[i]);
-	for (i = 0; i < A_MAX; ++i) savefile_add_s16b(p_ptr->stat_cur[i]);
+	for (i = 0; i < A_MAX; ++i) savefile_do_s16b(&p_ptr->stat_max[i], type);
+	for (i = 0; i < A_MAX; ++i) savefile_do_s16b(&p_ptr->stat_cur[i], type);
 
 	/* Player's Gold and Social Class */
-	savefile_add_u32b(p_ptr->au);
-	savefile_add_s16b(p_ptr->sc);
+	savefile_do_u32b(&p_ptr->au, type);
+	savefile_do_s16b(&p_ptr->sc, type);
 
 	/* Maximum and current experience */
-	savefile_add_u32b(p_ptr->max_exp);
-	savefile_add_u32b(p_ptr->exp);
-	savefile_add_u16b(p_ptr->exp_frac);
+	savefile_do_u32b(&p_ptr->max_exp, type);
+	savefile_do_u32b(&p_ptr->exp, type);
+	savefile_do_u16b(&p_ptr->exp_frac, type);
 
 	/* Character level */
-	savefile_add_s16b(p_ptr->lev);
+	savefile_do_s16b(&p_ptr->lev, type);
 
 	/* Maximum and current HPs */
-	savefile_add_s16b(p_ptr->mhp);
-	savefile_add_s16b(p_ptr->chp);
-	savefile_add_u16b(p_ptr->chp_frac);
+	savefile_do_s16b(&p_ptr->mhp, type);
+	savefile_do_s16b(&p_ptr->chp, type);
+	savefile_do_u16b(&p_ptr->chp_frac, type);
 
 	/* Maximum and current Mana */
-	savefile_add_s16b(p_ptr->msp);
-	savefile_add_s16b(p_ptr->csp);
-	savefile_add_u16b(p_ptr->csp_frac);
+	savefile_do_s16b(&p_ptr->msp, type);
+	savefile_do_s16b(&p_ptr->csp, type);
+	savefile_do_u16b(&p_ptr->csp_frac, type);
 
 	/* Max Player and Dungeon Levels */
-	savefile_add_s16b(p_ptr->max_lev);
-	savefile_add_s16b(p_ptr->max_depth);
+	savefile_do_s16b(&p_ptr->max_lev, type);
+	savefile_do_s16b(&p_ptr->max_depth, type);
 
 	/* Vaious states */
-	savefile_add_s16b(p_ptr->blind);
-	savefile_add_s16b(p_ptr->paralyzed);
-	savefile_add_s16b(p_ptr->confused);
-	savefile_add_s16b(p_ptr->food);
-	savefile_add_s16b(p_ptr->energy);
-	savefile_add_s16b(p_ptr->fast);
-	savefile_add_s16b(p_ptr->slow);
-	savefile_add_s16b(p_ptr->afraid);
-	savefile_add_s16b(p_ptr->cut);
-	savefile_add_s16b(p_ptr->stun);
-	savefile_add_s16b(p_ptr->poisoned);
-	savefile_add_s16b(p_ptr->image);
-	savefile_add_s16b(p_ptr->protevil);
-	savefile_add_s16b(p_ptr->invuln);
-	savefile_add_s16b(p_ptr->hero);
-	savefile_add_s16b(p_ptr->shero);
-	savefile_add_s16b(p_ptr->shield);
-	savefile_add_s16b(p_ptr->blessed);
-	savefile_add_s16b(p_ptr->tim_invis);
-	savefile_add_s16b(p_ptr->word_recall);
-	savefile_add_s16b(p_ptr->see_infra);
-	savefile_add_s16b(p_ptr->tim_infra);
+	savefile_do_s16b(&p_ptr->blind, type);
+	savefile_do_s16b(&p_ptr->paralyzed, type);
+	savefile_do_s16b(&p_ptr->confused, type);
+	savefile_do_s16b(&p_ptr->food, type);
+	savefile_do_s16b(&p_ptr->energy, type);
+	savefile_do_s16b(&p_ptr->fast, type);
+	savefile_do_s16b(&p_ptr->slow, type);
+	savefile_do_s16b(&p_ptr->afraid, type);
+	savefile_do_s16b(&p_ptr->cut, type);
+	savefile_do_s16b(&p_ptr->stun, type);
+	savefile_do_s16b(&p_ptr->poisoned, type);
+	savefile_do_s16b(&p_ptr->image, type);
+	savefile_do_s16b(&p_ptr->protevil, type);
+	savefile_do_s16b(&p_ptr->invuln, type);
+	savefile_do_s16b(&p_ptr->hero, type);
+	savefile_do_s16b(&p_ptr->shero, type);
+	savefile_do_s16b(&p_ptr->shield, type);
+	savefile_do_s16b(&p_ptr->blessed, type);
+	savefile_do_s16b(&p_ptr->tim_invis, type);
+	savefile_do_s16b(&p_ptr->word_recall, type);
+	savefile_do_s16b(&p_ptr->see_infra, type);
+	savefile_do_s16b(&p_ptr->tim_infra, type);
 
 	/* Timed resistances */
-	for (i = 0; i < RES_MAX; i++) savefile_add_byte(p_ptr->resist_timed[i]);
+	for (i = 0; i < RES_MAX; i++) savefile_do_byte(&p_ptr->resist_timed[i], type);
 
-	savefile_add_byte(p_ptr->confusing);
-	savefile_add_byte(p_ptr->searching);
+	savefile_do_byte(&p_ptr->confusing, type);
+	savefile_do_byte(&p_ptr->searching, type);
 
 	/* Random artifact version */
-	savefile_add_u32b(RANDART_VERSION);
+	savefile_do_u32b(&RANDART_VERSION, type);
 
 	/* Special stuff */
-	savefile_add_u16b(p_ptr->panic_save);
-	savefile_add_u16b(p_ptr->total_winner);
-	savefile_add_u16b(p_ptr->noscore);
+	savefile_do_u16b(&p_ptr->panic_save, type);
+	savefile_do_u16b(&p_ptr->total_winner, type);
+	savefile_do_u16b(&p_ptr->noscore, type);
 
 	/* Write death */
-	savefile_add_byte(p_ptr->is_dead);
+	savefile_do_byte(&p_ptr->is_dead, type);
 
 	/* Write feeling */
-	savefile_add_byte(feeling);
+	savefile_do_byte(&feeling, type);
 
 	/* Turn of last "feeling" */
-	savefile_add_s32b(old_turn);
+	savefile_do_s32b(&old_turn, type);
 
 	/* Current turn */
-	savefile_add_s32b(turn);
+	savefile_do_s32b(&turn, type);
 
 	/* We are done. */
 	return;
@@ -645,22 +824,22 @@ static void savefile_do_block_player(void)
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Do the RNG block.
  * --------------------------------------------------------------------- */
-static void savefile_do_block_rng(void)
+static void savefile_do_block_rng(bool type)
 {
 	int i;
 
 	/* Add the "place" */
-	savefile_add_u16b(Rand_place);
+	savefile_do_u16b(&Rand_place, type);
 
 	/* State */
-	for (i = 0; i < RAND_DEG; i++) savefile_add_u32b(Rand_state[i]);
+	for (i = 0; i < RAND_DEG; i++) savefile_do_u32b(&Rand_state[i], type);
 
 	/* Add the random artifact seed */
-	savefile_add_u32b(seed_randart);
+	savefile_do_u32b(&seed_randart, type);
 
 	/* Add the object seeds */
-	savefile_add_u32b(seed_flavor);
-	savefile_add_u32b(seed_town);
+	savefile_do_u32b(&seed_flavor, type);
+	savefile_do_u32b(&seed_town, type);
 
 	/* We are done. */
 	return;
@@ -669,28 +848,45 @@ static void savefile_do_block_rng(void)
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Do the player's messages block.
  * --------------------------------------------------------------------- */
-static void savefile_do_block_messages(void)
+static void savefile_do_block_messages(bool type)
 {
-	int i, numtowr;
+	int i = 0, num = 0;
 
 	/* Get the number of messages to print */
-	numtowr = message_num();
+	if (type == PUT)
+	{
+		num = message_num();
 
-	/* Trim messages if requested */
-	if (compress_savefile && (numtowr > 40)) numtowr = 40;
+		/* Trim messages if requested */
+		if (compress_savefile && (num > 40)) num = 40;
+	}
 
-	/* Add a counter to the block */
-	savefile_add_u16b(numtowr);
+	/* Get the counter a counter to the block */
+	savefile_do_s16b((s16b *) num, type);
+
 
 	/* Dump the messages, oldest first */
-	for (i = numtowr - 1; i >= 0; i--)
+	for (i = num - 1; i >= 0; i--)
 	{
+		cptr buffer[512];
+		u16b mess_type;
+
+		if (type == PUT)
+		{
+			buffer = message_str((s16b) i);
+			mess_type = message_type((s16b) i);
+		}
+
 		/* Write the string */
-		savefile_add_string((char *) message_str((s16b) i), TRUE);
+		savefile_do_string((char *) buffer, TRUE, type);
 
 		/* Write the type */
-		savefile_add_u16b(message_type((s16b) i));
+		savefile_do_u16b(&mess_type, type);
+
+		/* Save to message to the buffer */
+		if (type == GET) message_add((char *) buffer, mess_type);
 	}
+
 
 	/* We are done. */
 	return;
@@ -699,53 +895,57 @@ static void savefile_do_block_messages(void)
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Do the random artifacts.
  * --------------------------------------------------------------------- */
-static void savefile_do_block_randarts(void)
+static void savefile_do_block_randarts(bool type)
 {
-	int i;
+	int i = 0, n = 0;
 
-	/* Write the number of randarts */
-	if (adult_rand_artifacts) savefile_add_u16b(z_info->a_max);
-	else {savefile_add_u16b(0); return;}
+	/* Grab the count */
+	if (type == PUT) n = z_info->a_max;
+
+	/* Put/Get the count */
+	savefile_do_u32b((u32b *) n, type);
+
+	if (!adult_rand_artifacts) return;
 
 	/* Write all randart data */
-	for (i = 0; i < z_info->a_max; i++)
+	for (i = 0; i < n; i++)
 	{
 		artifact_type *a_ptr = &a_info[i];
 
 		/* tval/sval/pval */
-		savefile_add_byte(a_ptr->tval);
-		savefile_add_byte(a_ptr->sval);
-		savefile_add_s16b(a_ptr->pval);
+		savefile_do_byte(&a_ptr->tval, type);
+		savefile_do_byte(&a_ptr->sval, type);
+		savefile_do_s16b(&a_ptr->pval, type);
 
 		/* Bonuses */
-		savefile_add_s16b(a_ptr->to_h);
-		savefile_add_s16b(a_ptr->to_d);
-		savefile_add_s16b(a_ptr->to_a);
-		savefile_add_s16b(a_ptr->ac);
+		savefile_do_s16b(&a_ptr->to_h, type);
+		savefile_do_s16b(&a_ptr->to_d, type);
+		savefile_do_s16b(&a_ptr->to_a, type);
+		savefile_do_s16b(&a_ptr->ac, type);
 
 		/* Base damage dice */
-		savefile_add_byte(a_ptr->dd);
-		savefile_add_byte(a_ptr->ds);
+		savefile_do_byte(&a_ptr->dd, type);
+		savefile_do_byte(&a_ptr->ds, type);
 
 		/* Weight */
-		savefile_add_s16b(a_ptr->weight);
+		savefile_do_s16b(&a_ptr->weight, type);
 
 		/* Cost */
-		savefile_add_s32b(a_ptr->cost);
+		savefile_do_s32b(&a_ptr->cost, type);
 
 		/* Flags */
-		savefile_add_u32b(a_ptr->flags1);
-		savefile_add_u32b(a_ptr->flags2);
-		savefile_add_u32b(a_ptr->flags3);
+		savefile_do_u32b(&a_ptr->flags1, type);
+		savefile_do_u32b(&a_ptr->flags2, type);
+		savefile_do_u32b(&a_ptr->flags3, type);
 
 		/* Level/Rarity */
-		savefile_add_byte(a_ptr->level);
-		savefile_add_byte(a_ptr->rarity);
+		savefile_do_byte(&a_ptr->level, type);
+		savefile_do_byte(&a_ptr->rarity, type);
 
 		/* Activation, timeout and randtime (?) */
-		savefile_add_byte(a_ptr->activation);
-		savefile_add_u16b(a_ptr->time);
-		savefile_add_u16b(a_ptr->randtime);
+		savefile_do_byte(&a_ptr->activation, type);
+		savefile_do_u16b(&a_ptr->time, type);
+		savefile_do_u16b(&a_ptr->randtime, type);
 	}
 
 	/* We are done. */
@@ -760,197 +960,456 @@ static void savefile_do_block_randarts(void)
 
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Do the dungeon block.
+ *
+ * This function is *extremely* hacky.
  * --------------------------------------------------------------------- */
-static void savefile_do_block_dungeon(void)
+static errr savefile_do_block_dungeon(bool type, int b_ver)
 {
 	int i, y, x;
+	u16b xmax = 0, ymax = 0;
+	s16b py, px;
 
 	byte tmp8u;
 
-	byte count;
-	byte prev_char;
+	u16b limit;
+
+	byte count = 0, prev_char = 0;
 
 	/*** Basic info ***/
 
-	/* Dungeon specific info follows */
-	savefile_add_u16b(p_ptr->depth);
-	savefile_add_u16b(p_ptr->py);
-	savefile_add_u16b(p_ptr->px);
-	savefile_add_u16b(DUNGEON_HGT);
-	savefile_add_u16b(DUNGEON_WID);
+	/* Dungeon depth */
+	savefile_do_u16b(&p_ptr->depth, type);
+
+	/* Set the player's co-ordinates, if applicable */
+	if (type == PUT)
+	{
+		py = p_ptr->py;
+		px = p_ptr->px;
+	}
+
+	savefile_do_u16b(&py, type);
+	savefile_do_u16b(&px, type);
+
+	/* Perform paranoia */
+	if ((p_ptr->depth >= MAX_DEPTH) || (p_ptr->depth < 0))
+	{
+		/* Reset it */
+		p_ptr->depth = 0;
+
+		/* Warn the user */
+		note(format("Invalid player depth - %i!", p_ptr->depth), type);
+	}
+
+	/* Set the height, if applicable */
+	if (type == PUT) ymax = DUNGEON_HGT;
+	savefile_do_u16b(&ymax, type);
+
+	/* Set the width, if applicable */
+	if (type == PUT) xmax = DUNGEON_WID;
+	savefile_do_u16b(&xmax, type);
+
+	/* Perform paranoia */
+	if ((ymax != DUNGEON_HGT) || (xmax != DUNGEON_WID))
+	{
+		/* Warn the user */
+		note(format("Invalid dungeon size - %dx%d!", ymax, xmax), type);
+
+		/* Fatal error */
+		return (0);
+	}
 
 	/*** Simple "Run-Length-Encoding" of cave ***/
-
-	/* Note that this will induce two wasted bytes */
-	count = 0;
-	prev_char = 0;
-
-	/* Dump the cave */
-	for (y = 0; y < DUNGEON_HGT; y++)
+#if 0
+	/*
+	 * Note that there are two wasted bytes here.
+	 */
+	if (type == GET)
 	{
-		for (x = 0; x < DUNGEON_WID; x++)
+		u16b whoops;
+
+		rd_u16b(&whoops);
+		rd_u16b(&whoops);
+	}
+#endif
+
+	/* Do RLE/RLD */
+	if (type == PUT)
+	{
+		/* Dump the cave */
+		for (y = 0; y < DUNGEON_HGT; y++)
 		{
-			/* Extract the important cave_info flags */
-			tmp8u = (cave_info[y][x] & (IMPORTANT_FLAGS));
-
-			/* If the run is broken, or too full, flush it */
-			if ((tmp8u != prev_char) || (count == MAX_UCHAR))
+			for (x = 0; x < DUNGEON_WID; x++)
 			{
-				savefile_add_byte((byte) count);
-				savefile_add_byte((byte) prev_char);
-				prev_char = tmp8u;
-				count = 1;
+				/* Extract the important cave_info flags */
+				tmp8u = (cave_info[y][x] & (IMPORTANT_FLAGS));
+
+				/* If the run is broken, or too full, flush it */
+				if ((tmp8u != prev_char) || (count == MAX_UCHAR))
+				{
+					savefile_do_byte(&count, type);
+					savefile_do_byte(&prev_char, type);
+					prev_char = tmp8u;
+					count = 1;
+				}
+
+				/* Continue the run */
+				else
+				{
+					count++;
+				}
 			}
+		}
 
-			/* Continue the run */
-			else
+		/* Flush the data (if any) */
+		if (count)
+		{
+			savefile_do_byte(&count, type);
+			savefile_do_byte(&prev_char, type);
+		}
+	}
+	else
+	{
+		/* Load the dungeon data */
+		for (x = y = 0; y < DUNGEON_HGT; )
+		{
+			/* Grab RLE info */
+			savefile_do_byte(&count, type);
+			savefile_do_byte(&tmp8u, type);
+
+			/* Apply the RLE info */
+			for (i = count; i > 0; i--)
 			{
-				count++;
+				/* Extract "info" */
+				cave_info[y][x] = tmp8u;
+
+				/* Advance/Wrap */
+				if (++x >= DUNGEON_WID)
+				{
+					/* Wrap */
+					x = 0;
+
+					/* Advance/Wrap */
+					if (++y >= DUNGEON_HGT) break;
+				}
 			}
 		}
 	}
 
-	/* Flush the data (if any) */
-	if (count)
-	{
-		savefile_add_byte((byte) count);
-		savefile_add_byte((byte) prev_char);
-	}
-
-
 	/*** Simple "Run-Length-Encoding" of cave ***/
 
-	/* Note that this will induce two wasted bytes */
+	/* Reset */
 	count = 0;
 	prev_char = 0;
 
-	/* Dump the cave */
-	for (y = 0; y < DUNGEON_HGT; y++)
+	if (type == PUT)
 	{
-		for (x = 0; x < DUNGEON_WID; x++)
+		/* Dump the cave */
+		for (y = 0; y < DUNGEON_HGT; y++)
 		{
-			/* Extract a byte */
-			tmp8u = cave_feat[y][x];
-
-			/* If the run is broken, or too full, flush it */
-			if ((tmp8u != prev_char) || (count == MAX_UCHAR))
+			for (x = 0; x < DUNGEON_WID; x++)
 			{
-				savefile_add_byte((byte)count);
-				savefile_add_byte((byte)prev_char);
-				prev_char = tmp8u;
-				count = 1;
+				/* Extract a byte */
+				tmp8u = cave_feat[y][x];
+
+				/* If the run is broken, or too full, flush it */
+				if ((tmp8u != prev_char) || (count == MAX_UCHAR))
+				{
+					savefile_do_byte(&count, type);
+					savefile_do_byte(&prev_char, type);
+					prev_char = tmp8u;
+					count = 1;
+				}
+
+				/* Continue the run */
+				else
+				{
+					count++;
+				}
 			}
+		}
 
-			/* Continue the run */
-			else
+		/* Flush the data (if any) */
+		if (count)
+		{
+			savefile_do_byte(&count, type);
+			savefile_do_byte(&prev_char, type);
+		}
+	}
+	else
+	{
+		/* Load the dungeon data */
+		for (x = y = 0; y < DUNGEON_HGT; )
+		{
+			/* Grab RLE info */
+			savefile_do_byte(&count, type);
+			savefile_do_byte(&tmp8u, type);
+
+			/* Apply the RLE info */
+			for (i = count; i > 0; i--)
 			{
-				count++;
+				/* Extract "feat" */
+				cave_set_feat(y, x, tmp8u);
+
+				/* Advance/Wrap */
+				if (++x >= DUNGEON_WID)
+				{
+					/* Wrap */
+					x = 0;
+
+					/* Advance/Wrap */
+					if (++y >= DUNGEON_HGT) break;
+				}
 			}
 		}
 	}
 
-	/* Flush the data (if any) */
-	if (count)
+	/* Compact if we are saving */
+	if (type == PUT)
 	{
-		savefile_add_byte((byte) count);
-		savefile_add_byte((byte) prev_char);
+		/* Compact the objects */
+		compact_objects(0);
+
+		/* Compact the monsters */
+		compact_monsters(0);
 	}
 
 
-	/*** Compact ***/
+	/* Place player in dungeon if we are loading */
+	if (type == GET)
+	{
+		if (!player_place(py, px))
+		{
+			note(format("Cannot place player (%d,%d)!", py, px), type);
+			return (-1);
+		}
+	}
 
-	/* Compact the objects */
-	compact_objects(0);
+	/* Put/Get objects */
 
-	/* Compact the monsters */
-	compact_monsters(0);
+	/* If we are putting, set limit */
+	if (type == PUT) limit = o_max;
 
+	/* Do objects */
+	savefile_do_u16b(&limit, type);
 
-	/*** Dump objects ***/
-
-	/* Total objects */
-	savefile_add_u16b(o_max);
+	/* Verify maximum */
+	if (limit >= z_info->o_max)
+	{
+		note(format("Too many (%d) object entries!", limit), type);
+		return (-1);
+	}
 
 	/* Dump the objects */
-	for (i = 1; i < o_max; i++)
+	if (type == PUT)
 	{
-		object_type *o_ptr = &o_list[i];
+		for (i = 1; i < limit; i++)
+		{
+			object_type *o_ptr = &o_list[i];
 
-		/* Dump it */
-		savefile_helper_item(o_ptr);
+			/* Dump it */
+			savefile_helper_item(o_ptr, type);
+		}
+	}
+	else
+	{
+		for (i = 1; i < limit; i++)
+		{
+			object_type *i_ptr;
+			object_type object_type_body;
+
+			s16b o_idx;
+			object_type *o_ptr;
+
+
+			/* Get the object */
+			i_ptr = &object_type_body;
+
+			/* Wipe the object */
+			object_wipe(i_ptr);
+
+			/* Read the item */
+			savefile_helper_item(i_ptr, type);
+
+			/* Make an object */
+			o_idx = o_pop();
+
+			/* Paranoia */
+			if (o_idx != i)
+			{
+				note(format("Cannot place object %d!", i), type);
+				return (-1);
+			}
+
+			/* Get the object */
+			o_ptr = &o_list[o_idx];
+
+			/* Structure Copy */
+			object_copy(o_ptr, i_ptr);
+
+			/* Dungeon floor */
+			if (!i_ptr->held_m_idx)
+			{
+				int x = i_ptr->ix;
+				int y = i_ptr->iy;
+
+				/* ToDo: Verify coordinates */
+
+				/* Link the object to the pile */
+				o_ptr->next_o_idx = cave_o_idx[y][x];
+
+				/* Link the floor to the object */
+				cave_o_idx[y][x] = o_idx;
+			}
+		}
 	}
 
+	/* Put/Get Monsters */
 
-	/*** Dump the monsters ***/
+	/* If we are putting, set limit */
+	if (type == PUT) limit = m_max;
 
-	/* Total monsters */
-	savefile_add_u16b(m_max);
+	/* Do monsters */
+	savefile_do_u16b(&limit, type);
 
-	/* Dump the monsters */
-	for (i = 1; i < m_max; i++)
+	/* XXX XXX XXX */
+	if (type == PUT)
 	{
-		monster_type *m_ptr = &m_list[i];
+		/* Dump the monsters */
+		for (i = 1; i < limit; i++)
+		{
+			monster_type *m_ptr = &m_list[i];
 
-		/* Dump it */
-		savefile_helper_monster(m_ptr);
+			/* Dump it */
+			savefile_helper_monster(m_ptr, type);
+		}
+	}
+	else
+	{
+ 	  	/* Read the monsters */
+ 		for (i = 1; i < limit; i++)
+ 		{
+ 			monster_type *n_ptr;
+ 			monster_type monster_type_body;
+
+ 			/* Get local monster */
+ 			n_ptr = &monster_type_body;
+
+ 			/* Clear the monster */
+ 			(void)WIPE(n_ptr, monster_type);
+
+ 			/* Read the monster */
+ 			savefile_helper_monster(n_ptr, type);
+
+ 			/* Place monster in dungeon */
+ 			if (monster_place(n_ptr->fy, n_ptr->fx, n_ptr) != i)
+ 			{
+ 				note(format("Cannot place monster %d", i), type);
+ 				return (-1);
+ 			}
+ 		}
+	}
+
+	if (type == GET)
+	{
+		/*** Holding ***/
+
+		/* Reacquire objects */
+		for (i = 1; i < o_max; ++i)
+		{
+			object_type *o_ptr;
+
+			monster_type *m_ptr;
+
+			/* Get the object */
+			o_ptr = &o_list[i];
+
+			/* Ignore dungeon objects */
+			if (!o_ptr->held_m_idx) continue;
+
+			/* Verify monster index */
+			if (o_ptr->held_m_idx >= z_info->m_max)
+			{
+				note("Invalid monster index", type);
+				return (-1);
+			}
+
+			/* Get the monster */
+			m_ptr = &m_list[o_ptr->held_m_idx];
+
+			/* Link the object to the pile */
+			o_ptr->next_o_idx = m_ptr->hold_o_idx;
+
+			/* Link the monster to the object */
+			m_ptr->hold_o_idx = i;
+		}
+	}
+
+	/* Dungeon is ready */
+	if (type == GET)
+	{
+		/* if (b_ver < x && p_ptr->depth == 0) character_dungeon = FALSE; else */
+		character_dungeon = TRUE;
 	}
 
 	/* We are done. */
-	return;
+	return (0);
 }
 
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Do the monster lore block.
  * --------------------------------------------------------------------- */
- static void savefile_do_block_monlore(void)
+ static void savefile_do_block_monlore(bool type)
  {
-	int i, n;
+	int i = 0, n = 0;
 
-	/* Write the count */
-	savefile_add_u32b((u32b) z_info->r_max);
+	/* Grab the count */
+	if (type == PUT) n = z_info->r_max;
+
+	/* Put/Get the count */
+	savefile_do_u32b((u32b *) n, type);
 
 	/* Write the individual entries */
-	for (i = 0; i < z_info->r_max; i++)
+	for (i = 0; i < n; i++)
 	{
 		monster_race *r_ptr = &r_info[i];
 		monster_lore *l_ptr = &l_list[i];
 
 		/* Count sights/deaths/kills */
-		savefile_add_s16b(l_ptr->sights);
-		savefile_add_s16b(l_ptr->deaths);
-		savefile_add_s16b(l_ptr->pkills);
-		savefile_add_s16b(l_ptr->tkills);
+		savefile_do_s16b(&l_ptr->sights, type);
+		savefile_do_s16b(&l_ptr->deaths, type);
+		savefile_do_s16b(&l_ptr->pkills, type);
+		savefile_do_s16b(&l_ptr->tkills, type);
 
 		/* Count wakes and ignores */
-		savefile_add_byte(l_ptr->wake);
-		savefile_add_byte(l_ptr->ignore);
+		savefile_do_byte(&l_ptr->wake, type);
+		savefile_do_byte(&l_ptr->ignore, type);
 
 		/* Extra stuff */
-		savefile_add_byte(l_ptr->xtra1);
-		savefile_add_byte(l_ptr->xtra2);
+		savefile_do_byte(&l_ptr->xtra1, type);
+		savefile_do_byte(&l_ptr->xtra2, type);
 
 		/* Count drops */
-		savefile_add_byte(l_ptr->drop_gold);
-		savefile_add_byte(l_ptr->drop_item);
+		savefile_do_byte(&l_ptr->drop_gold, type);
+		savefile_do_byte(&l_ptr->drop_item, type);
 
 		/* Count spells */
-		savefile_add_byte(l_ptr->cast_innate);
-		savefile_add_byte(l_ptr->cast_spell);
+		savefile_do_byte(&l_ptr->cast_innate, type);
+		savefile_do_byte(&l_ptr->cast_spell, type);
 
 		/* Count blows of each type */
 		for (n = 0; n < MONSTER_BLOW_MAX; n++)
-			savefile_add_byte(l_ptr->blows[n]);
+			savefile_do_byte(&l_ptr->blows[n], type);
 
 		/* Memorize flags */
-		savefile_add_u32b(l_ptr->flags1);
-		savefile_add_u32b(l_ptr->flags2);
-		savefile_add_u32b(l_ptr->flags3);
-		savefile_add_u32b(l_ptr->flags4);
-		savefile_add_u32b(l_ptr->flags5);
-		savefile_add_u32b(l_ptr->flags6);
+		savefile_do_u32b(&l_ptr->flags1, type);
+		savefile_do_u32b(&l_ptr->flags2, type);
+		savefile_do_u32b(&l_ptr->flags3, type);
+		savefile_do_u32b(&l_ptr->flags4, type);
+		savefile_do_u32b(&l_ptr->flags5, type);
+		savefile_do_u32b(&l_ptr->flags6, type);
 
 		/* Monster limit per level */
-		savefile_add_byte(r_ptr->max_num);
+		savefile_do_byte(&r_ptr->max_num, type);
 	}
 
 	/* We are done. */
@@ -961,15 +1420,18 @@ static void savefile_do_block_dungeon(void)
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Do the "object lore" block.
  * --------------------------------------------------------------------- */
-static void savefile_do_block_objlore(void)
+static void savefile_do_block_objlore(bool type)
 {
-	int i;
+	int i = 0, n = 0;
 
-	/* Write the count */
-	savefile_add_u32b((u32b) z_info->k_max);
+	/* Grab the count */
+	if (type == PUT) n = z_info->k_max;
+
+	/* Put/Get the count */
+	savefile_do_u32b((u32b *) n, type);
 
 	/* Write the individual entries */
-	for (i = 0; i < z_info->k_max; i++)
+	for (i = 0; i < n; i++)
 	{
 		byte temp = 0;
 		object_kind *k_ptr = &k_info[i];
@@ -979,7 +1441,7 @@ static void savefile_do_block_objlore(void)
 		if (k_ptr->tried) temp |= 0x02;
 
 		/* Write the byte */
-		savefile_add_byte(temp);
+		savefile_do_byte(&temp, type);
 	}
 
 	/* We are done. */
@@ -989,18 +1451,21 @@ static void savefile_do_block_objlore(void)
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Do the artifacts block.
  * --------------------------------------------------------------------- */
-static void savefile_do_block_artifacts(void)
+static void savefile_do_block_artifacts(bool type)
 {
-	int i;
+	int i = 0, n = 0;
 
-	/* Write the count */
-	savefile_add_u32b(z_info->a_max);
+	/* Grab the count */
+	if (type == PUT) n = z_info->a_max;
+
+	/* Put/Get the count */
+	savefile_do_u32b((u32b *) n, type);
 
 	/* Write the individual entries */
-	for (i = 0; i < z_info->a_max; i++)
+	for (i = 0; i < n; i++)
 	{
-  	artifact_type *a_ptr = &a_info[i];
-		savefile_add_byte(a_ptr->cur_num);
+		artifact_type *a_ptr = &a_info[i];
+		savefile_do_byte(&a_ptr->cur_num, type);
 	}
 
 	/* We are done. */
@@ -1010,17 +1475,20 @@ static void savefile_do_block_artifacts(void)
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Do the quests block.
  * --------------------------------------------------------------------- */
-static void savefile_do_block_quests(void)
+static void savefile_do_block_quests(bool type)
 {
-	int i;
+	int i = 0, n = 0;
 
-	/* Write the count */
-	savefile_add_u32b(MAX_Q_IDX);
+	/* Grab the count */
+	if (type == PUT) n = MAX_Q_IDX;
 
-	/* Write the individual entries */
-	for (i = 0; i < MAX_Q_IDX; i++)
+	/* Put/Get the count */
+	savefile_do_u32b((u32b *) n, type);
+
+	/* Put/Get the individual entries */
+	for (i = 0; i < n; i++)
 	{
-		savefile_add_byte(q_list[i].level);
+		savefile_do_byte(&q_list[i].level, type);
 	}
 
 	/* We are done. */
@@ -1030,17 +1498,20 @@ static void savefile_do_block_quests(void)
 /* -------------------------------------------- takkaria, 2002-04-18 ---
  * Do the store block.
  * --------------------------------------------------------------------- */
-static void savefile_do_block_stores(void)
+static void savefile_do_block_stores(bool type)
 {
-	int i;                         
+	int i = 0, n = 0;
 
-	/* Write the count */
-	savefile_add_u32b(MAX_STORES);
+	/* Grab the count */
+	if (type == PUT) n = MAX_STORES;
+
+	/* Put/Get the count */
+	savefile_do_u32b((u32b *) n, type);
 
 	/* Write the individual entries */
-	for (i = 0; i < MAX_STORES; i++)
+	for (i = 0; i < n; i++)
 	{
-		savefile_helper_store(&store[i]);
+		savefile_helper_store(&store[i], type);
 	}
 
 	/* We are done. */

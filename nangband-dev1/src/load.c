@@ -36,9 +36,10 @@
  * by a monster will reduce the shield by that amount.  XXX XXX XXX
  */
 
-
-
-
+/*
+ * Hack -- last line printed on.
+ */
+int print__ = 2;
 
 /*
  * Local "savefile" pointer
@@ -46,38 +47,21 @@
 static FILE	*fff;
 
 /*
- * Hack -- old "encryption" byte
+ * Show information on the screen, one line at a time.
  */
-static byte	xor_byte;
-
-/*
- * Hack -- simple "checksum" on the actual values
- */
-static u32b	v_check = 0L;
-
-/*
- * Hack -- simple "checksum" on the encoded bytes
- */
-static u32b	x_check = 0L;
-
-
-/*
- * Hack -- Show information on the screen, one line at a time.
- *
- * Avoid the top two lines, to avoid interference with "msg_print()".
- */
-static void note(cptr msg)
+static void note(const char *msg)
 {
-	static int y = 2;
-
 	/* Draw the message */
-	prt(msg, y, 0);
+	prt(msg, print__, 0);
 
-	/* Advance one line (wrap if needed) */
-	if (++y >= 24) y = 2;
+	/* Advance one line */
+	print__++;
 
 	/* Flush it */
 	Term_fresh();
+
+	/* We are done */
+	return;
 }
 
 
@@ -87,18 +71,6 @@ static void note(cptr msg)
  */
 bool older_than(int x, int y, int z)
 {
-	/* Much older, or much more recent */
-	if (sf_major < x) return (TRUE);
-	if (sf_major > x) return (FALSE);
-
-	/* Distinctly older, or distinctly more recent */
-	if (sf_minor < y) return (TRUE);
-	if (sf_minor > y) return (FALSE);
-
-	/* Barely older, or barely more recent */
-	if (sf_patch < z) return (TRUE);
-	if (sf_patch > z) return (FALSE);
-
 	/* Identical versions */
 	return (FALSE);
 }
@@ -120,8 +92,8 @@ static bool wearable_p(const object_type *o_ptr)
 		case TV_HAFTED:
 		case TV_POLEARM:
 		case TV_SWORD:
-	        case TV_BELT:
-	        case TV_BOOTS:
+		case TV_BELT:
+		case TV_BOOTS:
 		case TV_GLOVES:
 		case TV_HELM:
 		case TV_CROWN:
@@ -143,83 +115,154 @@ static bool wearable_p(const object_type *o_ptr)
 	return (FALSE);
 }
 
+/*
+ * Recallocate some memory
+ */
+static void block_realloc(int newsize, void *mem)
+{
+	byte *savefile_new;
+
+	/* Make space for the new block. */
+	savefile_new = C_RNEW(savefile_blocksize + BLOCK_INCREMENT, byte);
+
+	/* Copy the memory across */
+	COPY(savefile_new, mem, vptr);
+
+	/* Wipe the old block. */
+	KILL(mem);
+
+	/* The new block is now the savefile block. */
+	mem = savefile_new;
+
+	/* We are done */
+	return;
+}
 
 /*
- * The following functions are used to load the basic building blocks
- * of savefiles.  They also maintain the "checksum" info.
+ * This function gets/puts a byte to the savefile block.
+ * If more memory is needed, it allocates more memory, and makes
+ * savefile_block point to it.
  */
-
-static byte sf_get(void)
+static void savefile_do_byte(byte *v, bool type)
 {
-	byte c, v;
-
-	/* Get a character, decode the value */
-	c = getc(fff) & 0xFF;
-	v = c ^ xor_byte;
-	xor_byte = c;
-
-	/* Maintain the checksum info */
-	v_check += v;
-	x_check += xor_byte;
-
-	/* Return the value */
-	return (v);
-}
-
-static void rd_byte(byte *ip)
-{
-	*ip = sf_get();
-}
-
-static void rd_u16b(u16b *ip)
-{
-	(*ip) = sf_get();
-	(*ip) |= ((u16b)(sf_get()) << 8);
-}
-
-static void rd_s16b(s16b *ip)
-{
-	rd_u16b((u16b*)ip);
-}
-
-static void rd_u32b(u32b *ip)
-{
-	(*ip) = sf_get();
-	(*ip) |= ((u32b)(sf_get()) << 8);
-	(*ip) |= ((u32b)(sf_get()) << 16);
-	(*ip) |= ((u32b)(sf_get()) << 24);
-}
-
-static void rd_s32b(s32b *ip)
-{
-	rd_u32b((u32b*)ip);
-}
-
-
-/*
- * Hack -- read a string
- */
-static void rd_string(char *str, int max)
-{
-	int i;
-
-	/* Read the string */
-	for (i = 0; TRUE; i++)
+	/* See if we need to allocate more memory */
+	if ((savefile_blocksize == savefile_blockused) && (type == PUT))
 	{
-		byte tmp8u;
+		/* Reallocate the memory */
+		block_realloc(savefile_blocksize + BLOCK_INCREMENT, savefile_block);
 
-		/* Read a byte */
-		rd_byte(&tmp8u);
-
-		/* Collect string while legal */
-		if (i < max) str[i] = tmp8u;
-
-		/* End of string */
-		if (!tmp8u) break;
+		/* Increment variables */
+		savefile_blocksize += BLOCK_INCREMENT;
 	}
 
-	/* Terminate */
-	str[max-1] = '\0';
+	/* If we are supposed to be putting, do so */
+	if (type == PUT)
+	{
+		/* Put the byte in the block. */
+		savefile_block[savefile_blockused] = *v;
+	}
+	else
+	{
+		/* Get the byte from the block. */
+		*v = savefile_block[savefile_blockused];
+	}
+
+	/* Increase the "used" counter */
+	savefile_blockused++;
+
+	/* We are done */
+ 	return;
+}
+
+/*
+ * This function gets/puts an unsigned 16-bit integer.
+ */
+static void savefile_do_u16b(u16b *v, bool type)
+{
+	if (type == PUT)
+	{
+		savefile_do_byte(((byte *)((*v) & 0xFF)), PUT);
+		savefile_do_byte(((byte *)(((*v) >> 8) & 0xFF)), PUT);
+	}
+	else
+	{
+		byte i;
+
+		savefile_do_byte(&i, GET);
+		(*v) = i;
+
+		savefile_do_byte(&i, GET);
+		(*v) |= ((u32b) i << 8);
+	}
+
+	/* We are done */
+	return;
+}
+
+/*
+ * This function gets/puts an unsigned 32-bit integer.
+ */
+static void savefile_do_u32b(u32b *v, bool type)
+{
+	if (type == PUT)
+	{
+		savefile_do_byte((byte *) ((*v) & 0xFF), PUT);
+		savefile_do_byte((byte *) (((*v) >> 8) & 0xFF), PUT);
+		savefile_do_byte((byte *) (((*v) >> 16) & 0xFF), PUT);
+		savefile_do_byte((byte *) (((*v) >> 24) & 0xFF), PUT);
+	}
+	else
+	{
+		byte i;
+
+		savefile_do_byte(&i, GET);
+		(*v) = i;
+
+		savefile_do_byte(&i, GET);
+		(*v) |= ((u32b)i << 8);
+
+		savefile_do_byte(&i, GET);
+		(*v) |= ((u32b)i << 16);
+
+		savefile_do_byte(&i, GET);
+		(*v) |= ((u32b)i << 24);
+	}
+
+	/* We are done */
+	return;
+}
+
+/* Here we define space-saving macros */
+#define savefile_do_s16b(v, t)     savefile_do_u16b((u16b) v, t);
+#define savefile_do_s32b(v, t)     savefile_do_u32b((u32b) v, t);
+
+/*
+ * Either put or get a string.
+ */
+static void savefile_do_string(char *str, bool record, bool type)
+{
+	byte i = 255;
+	int pos = 0;
+
+	/* Count */
+	if (type == PUT) i = (byte) strlen(str);
+
+	/* Put/Get the length of the string first */
+	if (record) savefile_do_byte(&i, type);
+
+	/* Put/Get the string, one byte at a time */
+	while (TRUE)
+	{
+		/* Put the byte */
+		savefile_do_byte(&str[pos], type);
+
+		/* Check the value */
+		if (str[pos - 1] != '\0' || pos < i) pos++;
+		else break;
+	}
+
+	/* We are done */
+	return;
 }
 
 

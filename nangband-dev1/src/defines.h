@@ -914,10 +914,10 @@
 #define TV_GOLD         100	/* Gold can only be picked up by players */
 
 /* The "sval" codes for TV_ORB */
-#define SV_ORB_FIRE_1		0
-#define SV_ORB_FIRE_2		1
-#define SV_ORB_COLD_1		2
-#define SV_ORN_COLD_2		3
+#define SV_ORB_FIRE_1		1
+#define SV_ORB_FIRE_2		2
+#define SV_ORB_COLD_1		3
+#define SV_ORN_COLD_2		4
 
 
 /* The "sval" codes for TV_SHOT/TV_ARROW/TV_BOLT */

@@ -3,9 +3,11 @@ Nangband ChangeLog
 
 2002-03-08
 ----------
-- Added RES_POIS20 to weapons of venom and also made them a little
-  rarer. (grahame)
+- Added RES_POIS20 to weapons of venom and also made them a little rarer.
+  (grahame)
 - Added Runescrye's new artifact file to the cvs. (takkaria)
+- Made areas of detection circlular. Taken the rough way of doing it from ToME.
+  (takkaria)
 
 2002-03-03
 ----------
@@ -42,8 +44,8 @@ Nangband ChangeLog
 - Fixed a few bugs, removed a few compiler warnings. (takkaria)
 - Added object recall code. (takkaria)
 
-2002-02-20
-----------
+2002-02-20 (takkaria)
+---------------------
 - Added Nexus, Chaos and Nether brands (from Antiband).
 - Tweaked the artifacts.
 - Added the Ring of Elemental Mastery (from Antiband).

@@ -77,7 +77,7 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 angband_files = \
-  init.lua object.lua spell.lua test.lua trace.lua
+  init.lua object.lua spell.lua test.lua trace.lua borg.lua
 
 
 EXTRA_DIST = \

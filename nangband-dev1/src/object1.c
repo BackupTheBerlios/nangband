@@ -2486,7 +2486,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 				{
 					if (stat[current_stat - no_the_same].bonus < 0)
 					{
-						text_out(", but also increases ");
+						text_out("but also increases ");
 						n = 0;
 					}
 					if (n == pluses - 1) text_out("and ");
@@ -2495,7 +2495,6 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 				{
 					if (n == minuses - 1) text_out("and ");
 				}
-				text_out("your ");
 			}
 		}
 

@@ -728,6 +728,7 @@ struct start_item
 struct player_class
 {
 	u32b name;			/* Name (offset) */
+	u32b text;			/* Text (offset) */
 
 	u32b title[10];		/* Titles - offset */
 

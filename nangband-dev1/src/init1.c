@@ -2560,6 +2560,20 @@ errr parse_p_info(char *buf, header *head)
 			s = t;
 		}
 	}
+
+	/* Process 'D' for "Description" */
+	else if (buf[0] == 'D')
+	{
+		/* There better be a current h_ptr */
+		if (!pr_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
+
+		/* Get the text */
+		s = buf+2;
+
+		/* Store the text */
+		if (!add_text(&pr_ptr->text, head, s))
+			return (PARSE_ERROR_OUT_OF_MEMORY);
+	}
 	else
 	{
 		/* Oops */
@@ -2931,6 +2945,19 @@ errr parse_c_info(char *buf, header *head)
 			s = t;
 		}
 	}
+	/* Process 'D' for "Description" */
+	else if (buf[0] == 'D')
+	{
+		/* There better be a current h_ptr */
+		if (!pc_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
+
+		/* Get the text */
+		s = buf+2;
+
+		/* Store the text */
+		if (!add_text(&pc_ptr->text, head, s))
+			return (PARSE_ERROR_OUT_OF_MEMORY);
+	}
 	else
 	{
 		/* Oops */
@@ -2986,7 +3013,6 @@ errr parse_h_info(char *buf, header *head)
 		h_ptr->roll = prc;
 		h_ptr->bonus = soc;
 	}
-
 	/* Process 'D' for "Description" */
 	else if (buf[0] == 'D')
 	{

@@ -2426,7 +2426,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	{
 		bonus_data stat[A_MAX]; 	
 		int current_stat = 0;
-		int n = 0, l = 0, iter = 0;
+		int n = 0, iter = 0;
 
 		/* Make the structure */
 		for (n = 0; n < A_MAX; n++)
@@ -2456,7 +2456,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 			/* Count number of identical stats bounuses / penalties */
 			vn = current_stat;
-			while ((vn < A_MAX && (stat[vn].bonus == stat[current_stat].bonus))
+			while ((vn < A_MAX) && (stat[vn].bonus == stat[current_stat].bonus))
 			{
 				no_the_same ++;
 				vn ++;

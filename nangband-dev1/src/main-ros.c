@@ -65,7 +65,7 @@
  * PORTERS
  *  For the info box. [eg. "Musus Umbra"]
  */
-#define PORTERS		"Andrew Sidwell"
+#define PORTERS		"Antony Sidwell"
 
 /*
  * ICONNAME
@@ -624,19 +624,19 @@ static char *find_alarmfile(int write);
 
 
 /*
- * This function is supplied as a wrapper to the save_player function.
+ * This function is supplied as a wrapper to the save_game function.
  |
  * Its purpose is to change the filename that the game will be saved with
  * the leafname "!!PANIC!!" so that panic saves that break the savefile
  * won't overwrite the original savefile.
  |
  * To get this to work, you'll need to ammend files.c and change the call
- * to save_player in the panic save function(s) (search for "panic save")
- * to a call to save_player_panic_acn.  You can declare a prototype for
+ * to save_game in the panic save function(s) (search for "panic save")
+ * to a call to save_game_panic_acn.  You can declare a prototype for
  * the function if you like.
  */
 
-extern int save_player_panic_acn(void)
+extern int save_game_panic_acn(void)
 {
 	char *e, *l;
 
@@ -644,14 +644,14 @@ extern int save_player_panic_acn(void)
 	for (l = e = savefile; *e; e++)
 		if (*e == '/')
 		{
-l = e + 1;
+			l = e + 1;
 		}
 
 	/* Write over the current leaf with the special panic one */
 	strcpy(l, "!!PANIC!!");
 
 	/* save the game */
-	return save_player();
+	return save_game();
 }
 
 
@@ -681,7 +681,7 @@ static void core_hook(cptr str)
 	Msgs_Report(1, "err.core", str);
 
 	if (game_in_progress && character_generated)
-		save_player_panic_acn();
+		save_game_panic_acn();
 
 	quit(NULL);
 }
@@ -1981,7 +1981,7 @@ static BOOL SaveHnd_FileSave(char *filename, void *ref)
 	/* Try a save (if sensible) */
 	if (game_in_progress && character_generated)
 	{
-		if (!save_player())
+		if (!save_game())
 		{
 			Msgs_Report(0, "err.save", filename);
 			strcpy(savefile, old_savefile);
@@ -4061,7 +4061,7 @@ static BOOL Hnd_IbarMenu(event_pollblock * pb, void *ref)
 			break;
 		case IBAR_MENU_QUIT:	/* Quit */
 			if (game_in_progress && character_generated)
-				save_player();
+				save_game();
 			quit(NULL);
 			break;
 	}
@@ -4200,7 +4200,7 @@ static BOOL Hnd_PreQuit(event_pollblock * b, void *ref)
 			return TRUE;		/* no! Pleeeeeease don't kill leeeeddle ol' me! */
 
 		if (ok == 3)
-			save_player();		/* Save & Quit */
+			save_game();		/* Save & Quit */
 	}
 
 

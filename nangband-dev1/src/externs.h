@@ -448,6 +448,7 @@ extern void update_smart_learn(int m_idx, int what);
 /* object1.c */
 extern void flavor_init(void);
 extern void reset_visuals(bool prefs);
+extern void object_stat_bonuses(const object_type *o_ptr, s16b *mods);
 extern void object_flags(const object_type *o_ptr, u32b *f1, u32b *f2, u32b *f3);
 extern void object_flags_known(const object_type *o_ptr, u32b *f1, u32b *f2, u32b *f3);
 extern void object_resists(const object_type *o_ptr, byte *resists);

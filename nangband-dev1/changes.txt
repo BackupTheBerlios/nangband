@@ -1,6 +1,11 @@
 Nangband ChangeLog - If it's not broken, let's fix it until it is.
 ==================
 
+2002-04-30
+----------
+- Fixed up lots of the save code, thanks pelpel. (takkaria)
+- Added pelpel's equippy chars patch; they are now an option. (takkaria)
+
 2002-04-28
 ----------
 - Many fixes from pelpel.  Character now load, even if they are very

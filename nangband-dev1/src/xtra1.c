@@ -240,6 +240,8 @@ static void prt_equippy(void)
 
 	object_type *o_ptr;
 
+	/* Do nothing unless the option is turned on */
+	if (!view_equippy_chars) return;
 
 	/* Dump equippy chars */
 	for (i = INVEN_WIELD; i < INVEN_TOTAL; i++)

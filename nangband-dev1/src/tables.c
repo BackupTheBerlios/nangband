@@ -1479,7 +1479,7 @@ cptr option_text[OPT_MAX] =
 	"smart_monsters",			/* OPT_smart_monsters */
 	"smart_packs",				/* OPT_smart_packs */
 	"view_player_colour",			/* OPT_view_player_colour */
-	NULL,						/* xxx */
+	"view_equippy_chars",                   /* OPT_view_equippy_chars */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
 	NULL,						/* xxx */
@@ -1743,7 +1743,7 @@ cptr option_desc[OPT_MAX] =
 	"Monsters behave more intelligently",		/* OPT_smart_monsters */
 	"Monsters act smarter in groups (v.slow)",	/* OPT_smart_packs */
 	"View special player colours",					/* OPT_view_player_colour */
-	NULL,										/* xxx */
+	"Display equippy chars",                       /* OPT_view_equippy_chars */
 	NULL,										/* xxx */
 	NULL,										/* xxx */
 	NULL,										/* xxx */
@@ -2007,8 +2007,7 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* OPT_smart_monsters */
 	FALSE,		/* OPT_smart_packs */
 	TRUE,		/* OPT_view_player_colour */
-	FALSE,		/* xxx */
-	FALSE,		/* xxx */
+	TRUE,		/* OPT_view_equippy_chars */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
 	FALSE,		/* xxx */
@@ -2313,10 +2312,10 @@ const byte option_page[OPT_PAGE_MAX][OPT_PAGE_PER] =
 		OPT_view_granite_lite,
 		OPT_view_special_lite,
 		OPT_view_player_colour,
+		OPT_view_equippy_chars,
  		OPT_center_player,
  		OPT_run_avoid_center,
 		OPT_show_piles,
-		255,
 		255,
 		255,
 		255,

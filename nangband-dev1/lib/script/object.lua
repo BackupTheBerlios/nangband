@@ -322,12 +322,12 @@ function quaff_potion(object)
 		if do_inc_stat(A_CHR) then ident = TRUE end
 	elseif object.sval == SV_POTION_ENLIGHTENMENT then
 		msg_print("An image of your surroundings forms in your mind...")
-		wiz_lite()
+		wiz_light()
 		ident = TRUE
 	elseif object.sval == SV_POTION_STAR_ENLIGHTENMENT then
 		msg_print("You begin to feel more enlightened...")
 		message_flush()
-		wiz_lite()
+		wiz_light()
 		do_inc_stat(A_INT)
 		do_inc_stat(A_WIS)
 		detect_traps()
@@ -371,7 +371,7 @@ function read_scroll(object)
 		if not player.resist_blind then
 			set_blind(player.blind + 3 + randint(5))
 		end
-		if unlite_area(10, 3) then ident = TRUE end
+		if unlight_area(10, 3) then ident = TRUE end
 	elseif object.sval == SV_SCROLL_AGGRAVATE_MONSTER then
 		msg_print("There is a high pitched humming noise.")
 		aggravate_monsters(0)
@@ -439,7 +439,7 @@ function read_scroll(object)
 		if not recharge(60) then used_up = FALSE end
 		ident = TRUE
 	elseif object.sval == SV_SCROLL_LIGHT then
-		if lite_area(damroll(2, 8), 2) then ident = TRUE end		
+		if light_area(damroll(2, 8), 2) then ident = TRUE end		
 	elseif object.sval == SV_SCROLL_MAPPING then
 		map_area()
 		ident = TRUE
@@ -508,7 +508,7 @@ function use_staff(object)
 		if not player.resist_blind then
 			if set_blind(player.blind + 3 + randint(5)) then ident = TRUE end
 		end
-		if unlite_area(10, 3) then ident = TRUE end
+		if unlight_area(10, 3) then ident = TRUE end
 	elseif object.sval == SV_STAFF_SLOWNESS then
 		if set_slow(player.slow + randint(30) + 15) then ident = TRUE end
 	elseif object.sval == SV_STAFF_HASTE_MONSTERS then
@@ -538,11 +538,11 @@ function use_staff(object)
 		end
 
 		for i = 1, 9 do
-			lite_line(ddd[i])
+			light_line(ddd[i])
 		end
 		ident = TRUE
 	elseif object.sval == SV_STAFF_LIGHT then
-		if lite_area(damroll(2, 8), 2) then ident = TRUE end
+		if light_area(damroll(2, 8), 2) then ident = TRUE end
 	elseif object.sval == SV_STAFF_MAPPING then
 		map_area()
 		ident = TRUE
@@ -702,7 +702,7 @@ function aim_wand(object)
 		if wall_to_mud(dir) then ident = TRUE end
 	elseif sval == SV_WAND_LIGHT then
 		msg_print("A line of blue shimmering light appears.")
-		lite_line(dir)
+		light_line(dir)
 		ident = TRUE
 	elseif sval == SV_WAND_SLEEP_MONSTER then
 		if sleep_monster(dir) then ident = TRUE end
@@ -850,7 +850,7 @@ function zap_rod(object)
 		ident = TRUE
 		object.pval = 60
 	elseif sval == SV_ROD_ILLUMINATION then
-		if lite_area(damroll(2, 8), 2) then ident = TRUE end
+		if light_area(damroll(2, 8), 2) then ident = TRUE end
 		object.pval = 30
 	elseif sval == SV_ROD_MAPPING then
 		map_area()
@@ -900,7 +900,7 @@ function zap_rod(object)
 		object.pval = 30
 	elseif sval == SV_ROD_LIGHT then
 		msg_print("A line of blue shimmering light appears.")
-		lite_line(dir)
+		light_line(dir)
 		ident = TRUE
 		object.pval = 9
 	elseif sval == SV_ROD_SLEEP_MONSTER then
@@ -974,13 +974,13 @@ function activate_object(object)
 
 		if artifact.activation == ACT_ILLUMINATION then
 			msg_print(format("The %s wells with clear light...", o_name))
-			lite_area(damroll(2, 15), 3)
+			light_area(damroll(2, 15), 3)
 		elseif artifact.activation == ACT_MAGIC_MAP then
 			msg_print(format("The %s shines brightly...", o_name))
 			map_area()
 		elseif artifact.activation == ACT_CLAIRVOYANCE then
 			msg_print(format("The %s glows a deep green...", o_name))
-			wiz_lite()
+			wiz_light()
 			detect_traps()
 			detect_doors()
 			detect_stairs()
@@ -1185,7 +1185,7 @@ function activate_object(object)
 			brand_bolts()
 		elseif artifact.activation == ACT_STARLIGHT then
 			msg_print(format("Your %s glows with the light of a thousand stars...", o_name))
-			for i = 1, 9 do strong_lite_line(ddd[k]) end
+			for i = 1, 9 do strong_light_line(ddd[k]) end
 		elseif artifact.activation == ACT_MANA_BOLT then
 			msg_print(format("Your %s glows white...", o_name))
 			success, dir = get_aim_dir()

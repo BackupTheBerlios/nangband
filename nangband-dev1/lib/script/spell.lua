@@ -617,7 +617,7 @@ function spell_wonder()
 	elseif (die < 46) then
 		fire_ball(GF_POIS, dir, 20 + (plev / 2), 3)
 	elseif (die < 51) then
-		lite_line(dir)
+		light_line(dir)
 	elseif (die < 56) then
 		fire_beam(GF_ELEC, dir, damroll(3 + ((plev - 5) / 6), 6))
 	elseif (die < 61) then
@@ -676,7 +676,7 @@ function cast_spell(index)
 	elseif index == SPELL_PHASE_DOOR then
 		teleport_player(10)
 	elseif index == SPELL_LIGHT_AREA then
-		lite_area(damroll(2, (plev / 2)), (plev / 10) + 1)
+		light_area(damroll(2, (plev / 2)), (plev / 10) + 1)
 	elseif index == SPELL_TREASURE_DETECTION then
 		detect_treasure()
 		detect_objects_gold()
@@ -720,7 +720,7 @@ function cast_spell(index)
 		if not success then return FALSE end
 
 		msg_print("A line of blue shimmering light appears.")
-		lite_line(dir)
+		light_line(dir)
 	elseif index == SPELL_FROST_BOLT then
 		success, dir = get_aim_dir()
 		if not success then return FALSE end
@@ -924,7 +924,7 @@ function pray(index)
 	elseif index == PRAYER_REMOVE_FEAR then
 		set_afraid(0)
 	elseif index == PRAYER_CALL_LIGHT then
-		lite_area(damroll(2, (plev / 2)), (plev / 10) + 1)
+		light_area(damroll(2, (plev / 2)), (plev / 10) + 1)
 	elseif index == PRAYER_FIND_TRAPS then
 		detect_traps()
 	elseif index == PRAYER_DETECT_DOORS_STAIRS then
@@ -1015,7 +1015,7 @@ function pray(index)
 	elseif index == PRAYER_PROBING then
 		probing()
 	elseif index == PRAYER_CLAIRVOYANCE then
-		wiz_lite()
+		wiz_light()
 	elseif index == PRAYER_CURE_SERIOUS_WOUNDS2 then
 		hp_player(damroll(4, 10))
 		set_cut(0)

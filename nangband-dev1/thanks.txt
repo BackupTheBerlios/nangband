@@ -4,7 +4,7 @@ Nangband Credits and Developers - Those who fixed what wasn't broken.
 The DevTeam:
     * Andrew Sidwell [takkaria] <nevermiah@hotmail.com>: Main developer
     * Grahame White [grahame]: Secondry Developer
-    * Scott A. Marshall [parodyingbird]: Secondry Developer
+    * Marshall A. Scott [parodyingbird]: Secondry Developer
 
 Previous maintainers:
     * Robert Ruehlmann <rr9@angband.org>: Current Maintainer of Angband

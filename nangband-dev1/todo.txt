@@ -56,3 +56,13 @@ Todo list for Nangband
 - Allow a restricted amount of functions to be used by the player
   for macros and add a better macro recorder.
 - Improve the savefile handling of the monster recall.
+- Seperate structure into those that need initializing once, at game load,
+  or during character load/generation.
+- Implement race/class powers, using lua.
+- Players start with "full" equipment and little money.
+- Work on brief item recall function.
+- Store interface change.
+- Documentation needs to be updated.
+- Make IMPACT weapons have high critical chances.
+- Move everything possible to variables from flags.
+- Fix artifact spoilers.

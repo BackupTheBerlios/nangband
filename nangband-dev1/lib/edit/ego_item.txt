@@ -111,7 +111,7 @@ X:25:2
 W:0:4:0:15000
 C:0:0:10:3
 T:36:0:99
-T:37:0:99
+# T:37:0:99 < No hard elvenkind armour
 F:STEALTH | 
 F:RES_ACID | RES_ELEC | RES_FIRE | RES_COLD | 
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
@@ -571,7 +571,12 @@ C:10:10:0:2
 F:STR | BLOWS | AGGRAVATE | RES_FEAR | HIDE_TYPE | 
 F:IGNORE_ACID | IGNORE_FIRE
 
-# 71 (unused)
+N:71:(Vorpal)
+X:20:3
+W:0:10:0:5000
+C:2:2:0:3
+T:23:0:99
+F:DEX
 
 # The "Branded" weapons (5)
 
@@ -763,9 +768,22 @@ F:CON | KILL_DRAGON | RES_FEAR
 
 # 96 (unused)
 
-# 97 (unused)
+N:97:of Piercing
+X:24:15:0
+W:0:8:0:2500
+C:20:5:0:0
+T:22:0:99
+T:23:0:99
 
-# 98 (unused)
+# These get extra damage dice
+
+N:98:of Slaying
+X:24:20:0
+W:0:8:0:2500
+C:5:15:0:0
+T:21:0:99
+T:22:0:99
+T:23:0:99
 
 # 99 (unused)
 

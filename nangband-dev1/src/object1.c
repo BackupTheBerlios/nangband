@@ -1621,11 +1621,112 @@ void object_desc_store(char *buf, const object_type *o_ptr, int pref, int mode)
 	k_info[i_ptr->k_idx].aware = hack_aware;
 }
 
+/*
+ * Print a given object's resists/immunities.
+ */
+void obj_info_resists(const object_type *o_ptr)
+{
+	/* Texts */
+	int vn;
+	cptr text[32];
+
+	/* Colours */
+	int cn;
+	int colours[32];
+
+	/* XXX */
+	bool si_acid = FALSE, si_elec = FALSE, si_fire = FALSE, si_cold = FALSE;
+
+	/* Collect the immunities */
+	vn = cn = 0;
+
+/*	if (f2 & ((TR2_IM_ACID) | (TR2_IM_ELEC) | (TR2_IM_FIRE) | (TR2_IM_COLD)))
+	{ */
+
+		if (f2 & (TR2_IM_ACID))
+		{
+			vp[vn++] = "acid";
+			vc[cn++] = TERM_L_GREEN;
+			si_acid = TRUE;
+		}
+	
+		if (f2 & (TR2_IM_ELEC))
+		{
+			vp[vn++] = "electricity";
+			vc[cn++] = TERM_BLUE;
+			si_elec = TRUE;
+		}
+	
+		if (f2 & (TR2_IM_FIRE))
+		{
+			vp[vn++] = "fire";
+			vc[cn++] = TERM_RED;
+			si_fire = TRUE;
+		}
+	
+		if (f2 & (TR2_IM_COLD))
+		{
+			vp[vn++] = "cold";
+			vc[cn++] = TERM_L_BLUE;
+			si_cold = TRUE;
+		}
+	
+		/* Describe */
+		if (vn)
+		{
+			int n;
+	
+			/* Intro */
+			text_out("It grants you immunity");
+
+			/* List the resists */
+			for (n = 0; n < vn; n++)
+			{
+				/* Intro */
+				if (n == 0) text_out(" to ");
+				else text_out(", ");
+	
+				/* Dump it */
+				text_out_c(vc[n], vp[n]);
+			}
+		}
+	
+	/* Collect the resists */
+/*	vn = cn = 0;
+
+	if (f2 & (TR2_IM_ACID))
+	{
+		vp[vn++] = "acid";
+		vc[cn++] = TERM_L_GREEN;
+		sr_acid = TRUE;
+	}
+
+	if (f2 & (TR2_RES_ELEC))
+	{
+		vp[vn++] = "electricity";
+		vc[cn++] = TERM_BLUE;
+		sr_elec = TRUE;
+	}
+
+	if (f2 & (TR2_RES_FIRE))
+	{
+		vp[vn++] = "fire";
+		vc[cn++] = TERM_RED;
+		sr_fire = TRUE;
+	}
+
+	if (f2 & (TR2_RES_COLD))
+	{
+		vp[vn++] = "cold";
+		vc[cn++] = TERM_L_BLUE;
+		sr_cold = TRUE;
+	} */
+
+	return;
+}
 
 /*
  * Output a description of the item flags.
- *
- * ToDo: List various flags together in one line.
  */
 static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 {
@@ -1901,8 +2002,7 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 	}
 
 	/* Collect the executes */
-	vn = 0;
-	vcn = 0;
+	vn = vcn = 0;
 	if (f1 & (TR1_BRAND_ACID)) { vp[vn++] = "acid"; vc[vcn++] = TERM_L_GREEN; }
 	if (f1 & (TR1_BRAND_ELEC)) { vp[vn++] = "electricity"; vc[vcn++] = TERM_L_BLUE; }
 	if (f1 & (TR1_BRAND_FIRE)) { vp[vn++] = "fire"; vc[vcn++] = TERM_RED; }
@@ -1933,51 +2033,8 @@ static bool identify_fully_aux2(const object_type *o_ptr, int mode)
 		text_out(".  ");
 	}
 
-	/* Here is the old stuff */
-
-	if (f2 & (TR2_IM_ACID))
-	{
-		text_out("It provides immunity to acid.\n");
-		known = TRUE;
-	}
-	else if (f2 & (TR2_RES_ACID))
-	{
-		text_out("It provides resistance to acid.\n");
-		known = TRUE;
-	}
-
-	if (f2 & (TR2_IM_ELEC))
-	{
-		text_out("It provides immunity to electricity.\n");
-		known = TRUE;
-	}
-	else if (f2 & (TR2_RES_ELEC))
-	{
-		text_out("It provides resistance to electricity.\n");
-		known = TRUE;
-	}
-
-	if (f2 & (TR2_IM_FIRE))
-	{
-		text_out("It provides immunity to fire.\n");
-		known = TRUE;
-	}
-	else if (f2 & (TR2_RES_FIRE))
-	{
-		text_out("It provides resistance to fire.\n");
-		known = TRUE;
-	}
-
-	if (f2 & (TR2_IM_COLD))
-	{
-		text_out("It provides immunity to cold.\n");
-		known = TRUE;
-	}
-	else if (f2 & (TR2_RES_COLD))
-	{
-		text_out("It provides resistance to cold.\n");
-		known = TRUE;
-	}
+	/* Describe the resists/immunities */
+	obj_info_resists(o_ptr);
 
 	if (f2 & (TR2_RES_POIS))
 	{

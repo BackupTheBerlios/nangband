@@ -1,6 +1,7 @@
 Todo list for Nangband
 ======================
 
+- Remove haggling.
 - (Suggested by Zach Levi) Add inscriptions that exclude items from the
   using list.
 - Write a Qt port.

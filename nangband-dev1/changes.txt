@@ -1,19 +1,20 @@
 Nangband ChangeLog
 ==================
 
+2002-02-22
+----------
+- Improved the object recall code.
+
 2002-02-21
 ----------
 - Fixed a few bugs, removed a few compiler warnings.
+- Added object recall code
 
 2002-02-20
 ----------
-- Added Nexus, Chaos and Nether brands.
+- Added Nexus, Chaos and Nether brands (from Antiband).
 - Tweaked the artifacts.
 - Added the Ring of Elemental Mastery (from Antiband).
-
-2002-02-19
-----------
-- Prepared Nangband for release.
 
 Previous
 --------

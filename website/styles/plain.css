@@ -1,0 +1,34 @@
+/*
+ * Stylesheet for the Nangband website
+ * clean.css - "clean" layout.
+ *
+ * Design (c) Andrew Sidwell, 2002. 
+ */
+
+body
+{
+	color: #333333;
+	background-color: #ffffff;
+	font-family: sans-serif;
+}
+
+a
+{
+	color: #3399FF;
+	background-color: inherit;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+a:hover
+{
+	text-decoration: underline;
+}
+
+hr
+{
+	color: #005500;
+	background-color: inherit;
+	height: 1pt;
+	text-align: center;
+}

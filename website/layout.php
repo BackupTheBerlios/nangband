@@ -1,16 +1,16 @@
 <?php
-/*
- * layout.php - page layout functions
- * ----------------------------------
- *
- * started on:		07/03/02
- * by:				takkaria
- */
+///////////////////////////////////
+//                               //
+// layout.php - layout functions //
+//   (c) Andrew Sidwell, 2002    //
+//                               //
+///////////////////////////////////
 
-/*if ($access != 'eric')
+// Make sure prying eyes get a nice response ;)
+if ($access != 'arnold')
 {
-echo '<html><head><title>Access Denied.</title></head><body>Access Denied.</body></html>';
-}*/
+	echo '<html><head><title>Access Denied.</title></head><body><h1>Access Denied.</h1></body></html>';
+}
 
 function do_links()
 {
@@ -49,7 +49,7 @@ function page_header($title, $type)
 	return;
 }
 
-function page_footer($creators)
+function page_footer()
 {
 	echo '</font></td></tr>';
  
@@ -57,7 +57,7 @@ function page_footer($creators)
 	echo '<font face="Veranda" color="#555555">';
 	do_links();
 	echo '<br>';
-	echo '<font size="-1"><div align="center">All material is &copy; ' . $creators . '. Contact ';
+	echo '<font size="-1"><div align="center">Material &copy; Nangband Developers. Contact ';
 	echo '<a href="mailto:nevermiah@hotmail.com">nevermiah@hotmail.com</a>';
 
 	echo '</font></td></tr>';

@@ -3032,7 +3032,7 @@ void update_monster_light(void)
 		m_idx = cave_m_idx[y][x];
 
 		/* Was lit, is no longer lit */
-		if (!fast_cave_info2[g] & (CAVE2_MLIGHT))
+		if (!(fast_cave_info2[g] & (CAVE2_MLIGHT)))
 		{
 			/* Clear the temp flag */
 			fast_cave_info[g] &= ~(CAVE_TEMP);

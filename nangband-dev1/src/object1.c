@@ -2419,7 +2419,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 		int n = 0, l = 0, iter = 0;
 
 		/* Sort the stats */
-		qsort((void *) stat_bonuses, A_MAX, sizeof(s16b), qsort_hook);
+/*		qsort((void *) stat_bonuses, A_MAX, sizeof(s16b), qsort_hook); */
 
 		/* Intro */
 		text_out("It ");
@@ -2685,7 +2685,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	}
 
 	/* Describe the resists/immunities */
-	obj_info_resists(resists, FALSE, temp);
+	obj_info_resists(resists, FALSE, &temp);
     text_out(temp);
 
 	/* Describe other (weird) things */

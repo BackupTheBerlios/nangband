@@ -115,7 +115,7 @@
 #define BLOCK_INCREMENT         32
 
 /* The size of the header (in bytes) */
-#define BLOCK_HEAD_SIZE         11
+#define BLOCK_HEAD_SIZE         10
 
 /* The two possible "operations" */
 #define PUT    FALSE
@@ -320,7 +320,7 @@ static u32b savefile_do_u32b(u32b *v, bool type)
 static char *savefile_do_string(char *str, bool type)
 {
 	byte i = 255;
-	
+
 	/* Counter */
 	int n = 0;
 
@@ -382,7 +382,7 @@ static void savefile_write_block(int fd, byte type, byte ver)
 	byte *savefile_head;
 
 #ifdef DEBUGGING
-	printf("Block being written to the savefile: ver = %i, type = %i", ver, type);
+	printf("Block being written to the savefile: ver = %i, type = %i\n", ver, type);
 #endif
 
 	/* Make the header */
@@ -412,8 +412,16 @@ static void savefile_write_block(int fd, byte type, byte ver)
 	/* Free up the header's memory */
 	KILL(savefile_head);
 
+#ifdef DEBUGGING
+	printf("Block size is %i\n", savefile_blockused);
+#endif
+
 	/* Write the block */
-	if (savefile_block) fd_write(fd, (cptr) savefile_block, savefile_blockused);
+	if (savefile_block)
+	{
+		printf("We really are saving this bit.\n");
+		fd_write(fd, (cptr) savefile_block, savefile_blockused);
+	}
 
 	/* Free the block's memory */
 	if (savefile_block) KILL(savefile_block);
@@ -823,7 +831,7 @@ static void savefile_start(int fd)
  */
 static void savefile_do_block_header(bool type, int ver)
 {
-	char v_name[] = VERSION_NAME;
+	char v_name[32] = VERSION_NAME;
 	byte v_j = VERSION_MAJOR, v_m = VERSION_MINOR, v_p = VERSION_PATCH,
 	    v_x = VERSION_EXTRA;
 
@@ -841,7 +849,7 @@ static void savefile_do_block_header(bool type, int ver)
 	savefile_do_byte(&v_x, type);
 
 	/* Tell the user about the savefile */
-	note(format("Loading a %s %i.%i.%i savefile.", v_name, v_j, v_m, v_p, v_x), type);
+	note(format("Loading a %s %i.%i.%i savefile.", v_name, v_j, v_m, v_p), type);
 
 #ifdef DEBUGGING
 	printf("returning ...\n");
@@ -1977,6 +1985,7 @@ static bool write_savefile(int fd)
 	/* Start the savefile */
 	savefile_start(fd);
 
+	printf("write_savefile()\n");
 	/* Put information about the variant that saved the file */
 	savefile_new_block();
 	savefile_do_block_header(PUT, BLOCK_VERSION_HEADER);
@@ -2069,6 +2078,10 @@ static errr read_savefile(int fd)
 	byte *savefile_head;
     bool finished = FALSE;
 
+#ifdef DEBUGGING
+	printf("read_savefile()\n");
+#endif
+
 	while (!finished)
 	{
 		byte i;
@@ -2090,12 +2103,20 @@ static errr read_savefile(int fd)
 		i |= ((u32b) i << 8);
 		savefile_head_type = i;
 
+#ifdef DEBUGGING
+		printf("savefile_head_type = %i\n",savefile_head_type);
+#endif
+
 		/* Get the version of the block */
 		temp = savefile_head[pos++];
 		i = temp;
 		temp = savefile_head[pos++];
 		i |= ((u32b) i << 8);
 		version = i;
+
+#ifdef DEBUGGING
+		printf("version = %i\n",version);
+#endif
 
 		/* Get the size of the block. */
 		temp = savefile_head[pos++];
@@ -2108,6 +2129,10 @@ static errr read_savefile(int fd)
 		i |= ((u32b) i << 24);
 		savefile_blocksize = i;
 
+#ifdef DEBUGGING
+		printf("savefile_blocksize = %i\n", (int) savefile_blocksize);
+#endif
+
 		/* XXX */
 		temp = savefile_head[pos++];
 		temp = savefile_head[pos++];
@@ -2117,6 +2142,9 @@ static errr read_savefile(int fd)
 
 		/* Allocate memory for the block */
 		savefile_block = C_RNEW(savefile_blocksize, byte);
+
+		/* Read the data */
+		fd_read(fd, (char *) savefile_block, savefile_blocksize);
 
 		/* Switch */
 		switch (savefile_head_type)
@@ -2444,7 +2472,7 @@ bool load_player(void)
             else if (header[pos++] != 118) { what = "Invalid savefile"; err = 1; }
             else if (header[pos++] != 101) { what = "Invalid savefile"; err = 1; }
             else
-            {                
+            {
                 /* Read the savefile */
 				err = (errr) read_savefile(fd);
 
@@ -2473,7 +2501,7 @@ bool load_player(void)
 	}
 
     inkey();
-    
+
 	if (!err)
 	{
 		/* Player is dead */

@@ -11,8 +11,8 @@
 
 static byte run_dir;
 
-static const byte x_mod[10] = {0, -1, +0, +1, -1, +0, +1, -1, +0, +1};
-static const byte y_mod[10] = {0, +1, +1, +1, +0, +0, +0, -1, -1, -1};
+static const sbyte x_mod[10] = {0, -1, +0, +1, -1, +0, +1, -1, +0, +1};
+static const sbyte y_mod[10] = {0, +1, +1, +1, +0, +0, +0, -1, -1, -1};
 
 static const byte cycle_index[8] = {0, 1, 2, 4, 5, 6, 7, 3};
 static const byte iter_to_dir[8] = {1, 2, 3, 4, 6, 7, 8, 9};
@@ -158,13 +158,17 @@ static bool run_start(int dir)
 	/* Set the direction (for reference) */
 	run_dir = dir;
 
+	fprintf(stderr, "  - run_start(%d) called.\n", dir);
+
 	/* Move if the grid is walkable */
 	if (is_walkable((p_ptr->px + x_mod[dir]), (p_ptr->py + y_mod[dir])))
 	{
+		fprintf(stderr, "    - returning TRUE, dir (%d) is walkable.\n", dir);
 		return (TRUE);
 	}
 
 	/* Otherwise, don't. */
+	fprintf(stderr, "    - returning FALSE, dir (%d) is not walkable.\n", dir);
 	return (FALSE);
 }
 
@@ -175,19 +179,32 @@ void run_step(int dir)
 {
 	bool act;
 
+	fprintf(stderr, "run_step(%d) called.\n", dir);
+
 	/* Start Run */
 	if (dir)
 	{
 		/* Set the counter */
-		p_ptr->running = (p_ptr->command_arg ? p_ptr->command_arg : -1);
+		p_ptr->running = (p_ptr->command_arg ? p_ptr->command_arg : 100);
+
+		fprintf(stderr, "  - starting run:\n");
+		fprintf(stderr, "    - p_ptr->running has been set to %d\n", p_ptr->running);
+		fprintf(stderr, "    - p_ptr->command_arg is %d\n", p_ptr->command_arg);
+		fprintf(stderr, "  - calling run_start(%d).\n", dir);
 
 		/* Run */
 		act = run_start(dir);
+
+		fprintf(stderr, "    - run_start(%d) returned %d.\n", dir, act);
 	}
 	else
 	{
 		/* Run */
+		fprintf(stderr, "  - continuing run:\n");
+
 		act = run_continue();
+
+		fprintf(stderr, "    - run_continue() returned %d.\n", act);
 	}
 
 	/* If we should act, then do so */
@@ -201,6 +218,15 @@ void run_step(int dir)
 
 		/* Move the player */
 		move_player(run_dir, FALSE);
+	}
+	else
+	{
+		fprintf(stderr, "  - not acting:\n");
+		fprintf(stderr, "    - resetting p_ptr->running (%d)\n", p_ptr->running);
+
+		p_ptr->running = 0;
+
+		fprintf(stderr, "    - reset p_ptr->running (%d)\n", p_ptr->running);
 	}
 
 	return;

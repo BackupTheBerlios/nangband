@@ -898,6 +898,9 @@ static void savefile_do_block_options(bool type, int ver)
 {
 	int n = 0;
 
+	/* We don't use the version yet. */
+	(void)ver;
+
 	/* Add delay factor and hitpoint warning "special options" */
 	savefile_do_byte(&op_ptr->delay_factor, type);
 	savefile_do_byte(&op_ptr->hitpoint_warn, type);
@@ -933,6 +936,9 @@ static errr savefile_do_block_player(bool type, int ver)
 	int i = 0, n = 0;
 	byte temp;
 	u16b t16u;
+
+	/* We don't use the version yet. */
+	(void)ver;
 
 	/* Add number of past lives */
 	if (ver < 3)
@@ -1141,6 +1147,9 @@ static void savefile_do_block_rng(bool type, int ver)
 {
 	int i;
 
+	/* We don't use the version yet. */
+	(void)ver;
+
 	/* Add the "place" */
 	savefile_do_u16b(&Rand_place, type);
 
@@ -1168,6 +1177,9 @@ static void savefile_do_block_messages(bool type, int ver)
 {
 	int i = 0;
 	s16b num = 0;
+
+	/* We don't use the version yet. */
+	(void)ver;
 
 	/* Get the number of messages to print */
 	if (type == PUT)
@@ -1239,6 +1251,9 @@ static errr savefile_do_block_dungeon(bool type, int ver)
 	u16b limit;
 
 	byte count = 0, prev_char = 0;
+
+	/* We don't use the version yet. */
+	(void)ver;
 
 	/* Make a "sentinel" */
 	if (type == PUT) strcpy(record, "Player Dungeon");
@@ -1624,6 +1639,9 @@ static errr savefile_do_block_monlore(bool type, int ver)
 	int i, j, n;
 	u32b max;
 
+	/* We don't use the version yet. */
+	(void)ver;
+
 	/* Grab the count */
 	if (type == PUT) max = z_info->r_max;
 
@@ -1712,6 +1730,9 @@ static errr savefile_do_block_objlore(bool type, int ver)
 	int i = 0, n = 0;
 	u32b max;
 
+	/* We don't use the version yet. */
+	(void)ver;
+
 	/* Grab the count */
 	if (type == PUT) max = z_info->k_max;
 
@@ -1765,8 +1786,11 @@ static errr savefile_do_block_objlore(bool type, int ver)
  * --------------------------------------------------------------------- */
 static void savefile_do_block_artifacts(bool type, int ver)
 {
-	int i = 0;
+	u32b i = 0;
 	u32b n = 0;
+
+	/* We don't use the version yet. */
+	(void)ver;
 
 	/* Grab the count */
 	if (type == PUT) n = z_info->a_max;
@@ -1790,8 +1814,11 @@ static void savefile_do_block_artifacts(bool type, int ver)
  * --------------------------------------------------------------------- */
 static void savefile_do_block_quests(bool type, int ver)
 {
-	int i = 0;
+	u32b i = 0;
 	u32b n = 0;
+
+	/* We don't use the version yet. */
+	(void)ver;
 
 	/* Grab the count */
 	if (type == PUT) n = MAX_Q_IDX;
@@ -1814,8 +1841,11 @@ static void savefile_do_block_quests(bool type, int ver)
  * --------------------------------------------------------------------- */
 static void savefile_do_block_stores(bool type, int ver)
 {
-	int i = 0;
+	u32b i = 0;
 	u32b n = 0;
+
+	/* We don't use the version yet. */
+	(void)ver;
 
 	/* Grab the count */
 	if (type == PUT) n = MAX_STORES;
@@ -1841,6 +1871,9 @@ static errr savefile_do_block_inventory(bool type, int ver)
 	u16b n = 0;
 	int slot = 0;
 	object_type *o_ptr = NULL, object_type_body;
+
+	/* We don't use the version yet. */
+	(void)ver;
 
 	/* Write the inventory */
 	while (1)

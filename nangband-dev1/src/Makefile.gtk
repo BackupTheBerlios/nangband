@@ -49,8 +49,8 @@ OBJS = \
   script.o use-obj.o \
   l-monst.o l-object.o l-player.o l-random.o l-ui.o \
   l-misc.o l-spell.o \
-  $(LUAOBJS) \
-  $(BORGOBJS)
+  $(LUAOBJS)
+#  $(BORGOBJS)
 
 
 #
@@ -62,8 +62,8 @@ CC = gcc
 ##
 ## Compile for Linux
 ##
-CFLAGS = -Wall -O `gtk-config --cflags` \
-         -D"USE_GTK" -g
+CFLAGS = -Wall -O `gtk-config --cflags` -D"USE_GTK" -g
+# -DALLOW_BORG
 LIBS = `gtk-config --libs`
 
 #

@@ -391,7 +391,7 @@ void reset_visuals(bool unused)
 /*
  * Obtain the stat mods for an item
  */
-static void object_stat_bonuses_aux(int mode, const object_type *o_ptr, s16b *mods)
+static void object_stat_bonuses_aux(int mode, const object_type *o_ptr, sbyte *mods)
 {
 	object_kind *k_ptr = NULL;
 	bool fully_known = FALSE;
@@ -426,13 +426,6 @@ static void object_stat_bonuses_aux(int mode, const object_type *o_ptr, s16b *mo
 		mods[n] += k_ptr->stat_mods[n];
 	}
 
-	/* Get the resists from the object itself */
-	for (n = 0; n < A_MAX; n++)
-	{
-		/* Copy it across */
-		mods[n] += o_ptr->stat_mods[n];
-	}
-
 	/* Show all bonuses if fully known */
 	if (fully_known)
 	{
@@ -447,14 +440,12 @@ static void object_stat_bonuses_aux(int mode, const object_type *o_ptr, s16b *mo
 			}
 		}
 
-		/* Ego-item */
-		if (o_ptr->name2)
+		/* Bonuses granted by object_bonus structure */
+		if (o_ptr->bonuses)
 		{
-			ego_item_type *e_ptr = &e_info[o_ptr->name2];
-
-			for (n = 0; n < A_MAX; n++)
+			for (n = 0; n < RES_MAX; n++)
 			{
-				mods[n] += e_ptr->stat_mods[n];
+				mods[n] += o_ptr->bonuses->stats[n];
 			}
 		}
 	}
@@ -519,14 +510,12 @@ static void object_resists_aux(int mode, const object_type *o_ptr, byte *resists
 			}
 		}
 
-		/* Ego-item */
-		if (o_ptr->name2)
+		/* Resists granted by object_bonus structure */
+		if (o_ptr->bonuses)
 		{
-			ego_item_type *e_ptr = &e_info[o_ptr->name2];
-
 			for (n = 0; n < RES_MAX; n++)
 			{
-				resists[n] += e_ptr->resists[n];
+				resists[n] += o_ptr->bonuses->resists[n];
 			}
 		}
 
@@ -596,14 +585,14 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 			(*f3) |= a_ptr->flags3;
 		}
 
-		/* Ego-item */
-		if (o_ptr->name2)
+		/* Flags granted by object_bonus structure */
+		if (o_ptr->bonuses)
 		{
-			ego_item_type *e_ptr = &e_info[o_ptr->name2];
+			object_bonus *ob_ptr = o_ptr->bonuses;
 
-			(*f1) |= e_ptr->flags1;
-			(*f2) |= e_ptr->flags2;
-			(*f3) |= e_ptr->flags3;
+			(*f1) |= ob_ptr->flags1;
+			(*f2) |= ob_ptr->flags2;
+			(*f3) |= ob_ptr->flags3;
 		}
 
 		/* Randarts */
@@ -649,26 +638,6 @@ static void object_flags_aux(int mode, const object_type *o_ptr, u32b *f1, u32b 
 		}
 	}
 
-	/* Extra powers */
-	switch (o_ptr->xtra1)
-	{
-		case OBJECT_XTRA_TYPE_SUSTAIN:
-		{
-			/* OBJECT_XTRA_WHAT_SUSTAIN == 1 */
-			if (!fully_known) return;
-			(*f2) |= (OBJECT_XTRA_BASE_SUSTAIN << o_ptr->xtra2);
-			break;
-		}
-
-		case OBJECT_XTRA_TYPE_POWER:
-		{
-			/* OBJECT_XTRA_WHAT_POWER == 3 */
-			if (!fully_known) return;
-			(*f3) |= (OBJECT_XTRA_BASE_POWER << o_ptr->xtra2);
-			break;
-		}
-	}
-	
 	return;
 }
 
@@ -694,7 +663,7 @@ void object_flags_known(const object_type *o_ptr, u32b *f1, u32b *f2, u32b *f3)
 /*
  * Obtain the "resists" for an item
  */
-void object_resists(const object_type *o_ptr, byte *resists)
+void object_resists(const object_type *o_ptr, sbyte *resists)
 {
 	object_resists_aux(OBJECT_AUX_FULL, o_ptr, resists);
 }
@@ -702,7 +671,7 @@ void object_resists(const object_type *o_ptr, byte *resists)
 /*
  * Obtain the "resists" for an item which are known to the player
  */
-void object_resists_known(const object_type *o_ptr, byte *resists)
+void object_resists_known(const object_type *o_ptr, sbyte *resists)
 {
 	object_resists_aux(OBJECT_AUX_KNOWN, o_ptr, resists);
 }
@@ -710,7 +679,7 @@ void object_resists_known(const object_type *o_ptr, byte *resists)
 /*
  * Obtain the stat bonuses for an item
  */
-void object_stat_bonuses(const object_type *o_ptr, s16b *mods)
+void object_stat_bonuses(const object_type *o_ptr, sbyte *mods)
 {
 	object_stat_bonuses_aux(OBJECT_AUX_FULL, o_ptr, mods);
 }
@@ -718,7 +687,7 @@ void object_stat_bonuses(const object_type *o_ptr, s16b *mods)
 /*
  * Obtain the stat bonuses for an item which are known to the player
  */
-void object_stat_bonuses_known(const object_type *o_ptr, s16b *mods)
+void object_stat_bonuses_known(const object_type *o_ptr, sbyte *mods)
 {
 	object_stat_bonuses_aux(OBJECT_AUX_KNOWN, o_ptr, mods);
 }
@@ -1287,12 +1256,13 @@ flavor_info[k_ptr->flavor].text; */
 		}
 
 		/* Grab any randart names */
-		else if (o_ptr->name3)
+		else if (o_ptr->bonuses)
 		{
-			randart_type *x_ptr = &x_info[o_ptr->name3];
-
-			object_desc_chr_macro(t, ' ');
-			object_desc_str_macro(t, x_ptr->name);
+			if (o_ptr->bonuses->suffix_name)
+			{
+				object_desc_chr_macro(t, ' ');
+				object_desc_str_macro(t, o_ptr->bonuses->suffix_name);
+			}
 		}
 
 		/* Grab any ego-item name */
@@ -1998,8 +1968,8 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 	/* The item's flags, bonuses && resists */
 	u32b f1, f2, f3;
-	byte resists[RES_MAX];
-	s16b stat_bonuses[A_MAX];
+	sbyte resists[RES_MAX];
+	sbyte stat_bonuses[A_MAX];
 
 	/* Extract the correct flags, bonuses && resists */
 	object_flags_aux(mode, o_ptr, &f1, &f2, &f3);

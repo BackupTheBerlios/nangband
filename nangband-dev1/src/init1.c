@@ -71,6 +71,19 @@ static cptr resist_flag_names[RES_MAX] =
 };
 
 /*
+ * Table of stat "flag" names.
+ */
+static cptr stat_flag_names[A_MAX] = 
+{
+	"STR",
+	"INT",
+	"WIS",
+	"DEX",
+	"CON",
+	"CHR"
+};
+
+/*
  * Terrain flags.
  */
 static cptr feature_flags_1[32] =
@@ -589,7 +602,7 @@ static cptr a_info_act[ACT_MAX] =
 	"MANA_BOLT",
 	"BERSERKER",
 	"ELEMENTS",
-        "SAT_HUNGER"
+	"SAT_HUNGER"
 };
 
 
@@ -605,8 +618,8 @@ static cptr c_info_flags[] =
 	"ZERO_FAIL",
 	"BEAM",
 	"CHOOSE_SPELLS",
-	"PSEUDO_ID_HEAVY",
-	"PSEUDO_ID_IMPROV",
+	"XXX08",
+	"XXX09",
 	"XXX10",
 	"XXX11",
 	"XXX12",
@@ -1308,31 +1321,31 @@ static errr grab_one_statbonus(cptr what, s16b *stat_bonuses, s16b pval)
 		return (0);
 	}
     
-    	if (prefix(what, "DEX"))
+	if (prefix(what, "DEX"))
 	{
 		stat_bonuses[A_DEX] = pval;
 		return (0);
 	}
     
-    	if (prefix(what, "CON"))
+	if (prefix(what, "CON"))
 	{
 		stat_bonuses[A_CON] = pval;
 		return (0);
 	}
     
-    	if (prefix(what, "CHR"))
+	if (prefix(what, "CHR"))
 	{
 		stat_bonuses[A_CHR] = pval;
 		return (0);
 	}
     
-    	if (prefix(what, "INT"))
+	if (prefix(what, "INT"))
 	{
 		stat_bonuses[A_INT] = pval;
 		return (0);
 	}
     
-    	if (prefix(what, "WIS"))
+	if (prefix(what, "WIS"))
 	{
 		stat_bonuses[A_WIS] = pval;
 		return (0);
@@ -1463,10 +1476,6 @@ static errr grab_one_kind_flag(object_kind *k_ptr, cptr what)
 		return (0);
 
 	if (grab_one_flag(&k_ptr->flags3, k_info_flags3, what) == 0)
-		return (0);
-
-	/* Grab the resists stuff */
-	if (grab_one_resist(k_ptr->resists, what) == 0)
 		return (0);
 
 	/* Grab stat bonuses */
@@ -1717,9 +1726,13 @@ errr parse_k_info(char *buf, header *head)
 		/* Paranoia */
 		if (!(s = strchr(buf, ':'))) return (PARSE_ERROR_GENERIC);
 
-		(*s) = 0;
-		s++;
-		grab_resist_index(&i, buf);
+		/* NUL-terminate the resist name */
+		(*s) = 0; s++;
+
+		/* Find the index for the resist */
+		if (grab_resist_index(&i, buf) == -1) return (PARSE_ERROR_GENERIC);
+
+		/* Set the minima and maxima */
 		k_ptr->resists[i] = atoi(s);
 	}
 
@@ -1792,9 +1805,10 @@ static errr grab_one_artifact_flag(artifact_type *a_ptr, cptr what)
 	/* Grab the resists stuff */
 	if (grab_one_resist(a_ptr->resists, what) == 0)
 		return (0);
-        
-           if (grab_one_statbonus(what, a_ptr->stat_mods, a_ptr->pval) == 0)
-        return (0);
+
+	/* Stat stuff XXX */
+	if (grab_one_statbonus(what, a_ptr->stat_mods, a_ptr->pval) == 0)
+		return (0);
         
 	/* Oops */
 	msg_format("Unknown artifact flag '%s'.", what);
@@ -1974,6 +1988,29 @@ errr parse_a_info(char *buf, header *head)
 		a_ptr->to_a = ta;
 	}
 
+	/* 'R' for resists */
+	else if (buf[0] == 'R')
+	{
+		/* There better be a current a_ptr */
+		if (!a_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
+
+		/* Ensure */
+		if (buf[1] != ':') return (PARSE_ERROR_GENERIC);
+		buf += 2;
+
+		/* Paranoia */
+		if (!(s = strchr(buf, ':'))) return (PARSE_ERROR_GENERIC);
+
+		/* NUL-terminate the resist name */
+		(*s) = 0; s++;
+
+		/* Find the index for the resist */
+		if (grab_resist_index(&i, buf) == -1) return (PARSE_ERROR_GENERIC);
+
+		/* Set the minima and maxima */
+		a_ptr->resists[i] = atoi(s);
+	}
+
 	/* Process 'F' for flags */
 	else if (buf[0] == 'F')
 	{
@@ -2058,12 +2095,9 @@ static bool grab_one_ego_item_flag(ego_item_type *e_ptr, cptr what)
 		return (0);
 
 	/* Grab the resists stuff */
-	if (grab_one_resist(e_ptr->resists, what) == 0)
+	if (grab_one_resist(e_ptr->resist_max, what) == 0)
 		return (0);
-        
-           if (grab_one_statbonus(what, e_ptr->stat_mods, 1) == 0)
-        return (0);
-        
+      
 	/* Oops */
 	msg_format("Unknown ego-item flag '%s'.", what);
 
@@ -2238,6 +2272,36 @@ errr parse_e_info(char *buf, header *head)
 		e_ptr->max_to_d = td;
 		e_ptr->max_to_a = ta;
 		e_ptr->max_pval = pv;
+	}
+
+	/* 'R' for resists */
+	else if (buf[0] == 'R')
+	{
+		/* There better be a current e_ptr */
+		if (!e_ptr) return (PARSE_ERROR_MISSING_RECORD_HEADER);
+
+		/* Ensure */
+		if (buf[1] != ':') return (PARSE_ERROR_GENERIC);
+		buf += 2;
+
+		/* Paranoia */
+		if (!(s = strchr(buf, ':'))) return (PARSE_ERROR_GENERIC);
+
+		/* NUL-terminate the resist name */
+		(*s) = 0; s++;
+
+		/* Paranoia */
+		if (!(t = strchr(s, ':'))) return (PARSE_ERROR_GENERIC);
+
+		/* NUL-terminate the "minimum resist" */
+		(*t) = 0; t++;
+
+		/* Find the index for the resist */
+		if (grab_resist_index(&i, buf) == -1) return (PARSE_ERROR_GENERIC);
+
+		/* Set the minima and maxima */
+		e_ptr->resist_min[i] = atoi(s);
+		e_ptr->resist_max[i] = atoi(t);
 	}
 
 	/* Hack -- Process 'F' for flags */
@@ -3330,7 +3394,6 @@ errr parse_h_info(char *buf, header *head)
 
 	/* Current entry */
 	static hist_type *h_ptr = NULL;
-
 
 	/* Process 'N' for "New/Number" */
 	if (buf[0] == 'N')

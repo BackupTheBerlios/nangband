@@ -588,9 +588,6 @@ static bool store_object_similar(const object_type *o_ptr, const object_type *j_
 	/* Require identical "ego-item" names */
 	if (o_ptr->name2 != j_ptr->name2) return (0);
 
-	/* Hack -- Never stack "powerful" items */
-	if (o_ptr->xtra1 || j_ptr->xtra1) return (0);
-
 	/* Hack -- Never stack recharging items */
 	if (o_ptr->timeout || j_ptr->timeout) return (0);
 
@@ -1212,12 +1209,11 @@ static void store_create(void)
 			if (i_ptr->sval == SV_LIGHT_LANTERN) i_ptr->pval = FUEL_LAMP / 2;
 		}
 
-
 		/* The object is "known" */
 		object_known(i_ptr);
 
 		/* The object is *identified* if needed */
-		if (i_ptr->xtra1 || i_ptr->name3)
+		if (i_ptr->name3)
 			i_ptr->ident |= IDENT_MENTAL;
 
 		/* Mega-Hack -- no chests in stores */

@@ -196,6 +196,24 @@ void delete_object(int y, int x)
 	light_spot(y, x);
 }
 
+/*
+ * Create an object_bonuses structure if neccessary.
+ */
+void object_make_bonuses(object_type *o_ptr)
+{
+	/* Paranoia -- check for validity of o_ptr */
+	if (!o_ptr)
+	{
+		msg_print("object_make_bonuses() called with a NULL pointer!");
+		return;
+	}
+
+	/* Only allocate if needed */
+	if (!o_ptr->bonuses)
+		MAKE(o_ptr->bonuses, object_bonus);
+
+	return;
+}
 
 
 /*
@@ -901,6 +919,16 @@ static s32b object_value_real(const object_type *o_ptr)
 		value = a_ptr->cost;
 	}
 
+	/* Bonuses */
+	else if (o_ptr->bonuses)
+	{
+		/* Hack -- "worthless" "bonuses" */
+		if (!o_ptr->bonuses->cost) return (0L);
+
+		/* Increase our value count */
+		value += o_ptr->bonuses->cost;
+	}
+
 	/* Randart */
 	else if (o_ptr->name3)
 	{
@@ -951,17 +979,13 @@ static s32b object_value_real(const object_type *o_ptr)
 		case TV_AMULET:
 		case TV_RING:
 		{
+			object_bonus *ob_ptr = o_ptr->bonuses;
+
 			/* Hack -- Negative "pval" is always bad */
 			if (o_ptr->pval < 0) return (0L);
 
 			/* No pval */
 			if (!o_ptr->pval) break;
-
-			/* Give credit for stat bonuses */
-			for (i = 0; i < A_MAX; i++)
-			{
-				if (o_ptr->stat_mods[i]) value += (o_ptr->stat_mods[i] * 200L);
-			}
 
 			/* Give credit for stealth and searching */
 			if (f1 & (TR1_STEALTH)) value += (o_ptr->pval * 100L);
@@ -976,6 +1000,16 @@ static s32b object_value_real(const object_type *o_ptr)
 
 			/* Give credit for speed bonus */
 			if (f1 & (TR1_SPEED)) value += (o_ptr->pval * 30000L);
+
+			/* No "other" bonuses */
+			if (!ob_ptr) break;
+
+			/* Give credit for stat bonuses */
+			for (i = 0; i < A_MAX; i++)
+			{
+				if (ob_ptr->stats[i])
+					value += (ob_ptr->stats[i] * 200L);
+			}
 
 			break;
 		}
@@ -1173,6 +1207,32 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 	/* Require identical object types */
 	if (o_ptr->k_idx != j_ptr->k_idx) return (0);
 
+	if ((o_ptr->bonuses && !j_ptr->bonuses) ||
+	    (!o_ptr->bonuses && j_ptr->bonuses))
+	{
+		return (FALSE);
+	}
+
+	if (o_ptr->bonuses && j_ptr->bonuses)
+	{
+		object_bonus *ob_ptr = o_ptr->bonuses;
+		object_bonus *jb_ptr = j_ptr->bonuses;
+		int i;
+
+		if (ob_ptr->cost != jb_ptr->cost) return (FALSE);
+		if (!streq(ob_ptr->prefix_name, jb_ptr->prefix_name)) return (FALSE);
+		if (!streq(ob_ptr->suffix_name, jb_ptr->suffix_name)) return (FALSE);
+
+		if (ob_ptr->flags1 != jb_ptr->flags1) return (FALSE);
+		if (ob_ptr->flags2 != jb_ptr->flags2) return (FALSE);
+		if (ob_ptr->flags3 != jb_ptr->flags3) return (FALSE);
+
+		for (i = 0; i < A_MAX; i++)
+			if (ob_ptr->stats[i] != jb_ptr->stats[i]) return (FALSE);
+
+		for (i = 0; i < RES_MAX; i++)
+			if (ob_ptr->resists[i] != jb_ptr->resists[i]) return (FALSE);
+	}
 
 	/* Analyze the items */
 	switch (o_ptr->tval)
@@ -1280,9 +1340,6 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 
 			/* Require identical "randart" names */
 			if (o_ptr->name3 != j_ptr->name3) return (FALSE);
-
-			/* Hack -- Never stack "powerful" items */
-			if (o_ptr->xtra1 || j_ptr->xtra1) return (FALSE);
 
 			/* Hack -- Never stack recharging items */
 			if (o_ptr->timeout || j_ptr->timeout) return (FALSE);
@@ -1437,6 +1494,10 @@ s16b lookup_kind(int tval, int sval)
  */
 void object_wipe(object_type *o_ptr)
 {
+	/* Destroy the object_bonuses struct */
+	if (o_ptr->bonuses)
+		(void)WIPE(o_ptr->bonuses, object_bonus);
+
 	/* Wipe the structure */
 	(void)WIPE(o_ptr, object_type);
 }
@@ -1449,6 +1510,10 @@ void object_copy(object_type *o_ptr, const object_type *j_ptr)
 {
 	/* Copy the structure */
 	COPY(o_ptr, j_ptr, object_type);
+
+	/* Copy the object_bonuses struct if it exists */
+	if (o_ptr->bonuses)
+		COPY(o_ptr->bonuses, j_ptr->bonuses, object_bonus);
 }
 
 
@@ -1543,7 +1608,6 @@ static s16b m_bonus(int max, int level)
 	/* Paranoia -- enforce maximal "level" */
 	if (level > MAX_DEPTH - 1) level = MAX_DEPTH - 1;
 
-
 	/* The "bonus" moves towards the max */
 	bonus = ((max * level) / MAX_DEPTH);
 
@@ -1553,7 +1617,6 @@ static s16b m_bonus(int max, int level)
 	/* Hack -- simulate floating point computations */
 	if (rand_int(MAX_DEPTH) < extra) bonus++;
 
-
 	/* The "stand" is equal to one quarter of the max */
 	stand = (max / 4);
 
@@ -1562,7 +1625,6 @@ static s16b m_bonus(int max, int level)
 
 	/* Hack -- simulate floating point computations */
 	if (rand_int(4) < extra) stand++;
-
 
 	/* Choose an "interesting" value */
 	value = Rand_normal(bonus, stand);
@@ -1616,10 +1678,12 @@ static void object_mention(const object_type *o_ptr)
 /*
  * Attempt to change an object into an ego-item -MWK-
  * Better only called by apply_magic().
+ *
  * The return value says if we picked a cursed item (if allowed) and is
  * passed on to a_m_aux1/2().
- * If no legal ego item is found, this routine returns 0, resulting in
- * an unenchanted item.
+ *
+ * If the ego-item cannot be created, we return FALSE and don't alter
+ * the item.
  */
 bool make_ego_item(object_type *o_ptr, bool cursed, int level)
 {
@@ -2585,6 +2649,99 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power)
 }
 
 
+/*
+ * For a given "xtra" byte, we add flags to o_ptr.  Note that we assume
+ * o_ptr->bonuses is a valid pointer.  XXX
+ */
+void object_add_xtra(object_type *o_ptr, int xtra)
+{
+	object_bonus *ob_ptr = o_ptr->bonuses;
+
+	switch (xtra)
+	{
+		case OBJECT_XTRA_SUSTAIN:
+		{
+			/* Choose a random sustain */
+			ob_ptr->flags2 |= (TR2_SUST_STR << randint(A_MAX));
+
+			break;
+		}
+
+		case OBJECT_XTRA_POWER:
+		{
+			u32b flag_to_set = TR3_SLOW_DIGEST;
+
+			/* Choose a random power */
+			switch (randint(8))
+			{
+				case 2: flag_to_set = TR3_FEATHER; break;
+				case 3: flag_to_set = TR3_REGEN; break;
+				case 4: flag_to_set = TR3_TELEPATHY; break;
+				case 5: flag_to_set = TR3_SEE_INVIS; break;
+				case 6: flag_to_set = TR3_FREE_ACT; break;
+				case 7: flag_to_set = TR3_HOLD_LIFE; break;
+				case 8:
+				{
+					if (o_ptr->tval == TV_HAFTED)
+						flag_to_set = TR3_IMPACT;
+					else flag_to_set = TR3_REGEN;
+
+					break;
+				}
+			}
+
+			/* Set the flag */
+			ob_ptr->flags3 |= flag_to_set;
+
+			break;
+		}
+
+		case OBJECT_XTRA_RESIST:
+		{
+			sbyte res_amnt = (rand_range(3, 6) * 5);
+			int res_index = RES_CHAOS;
+
+			/* Choose a random resist */
+			switch (randint(12))
+			{
+				case 1: case 2:
+					res_index = RES_FIRE;
+					break;
+
+				case 3: case 4:
+					res_index = RES_COLD;
+					break;
+
+				case 5: case 6:
+					res_index = RES_ELEC;
+					break;
+
+				case 7: case 8:
+					res_index = RES_POIS;
+					break;
+
+				case 9:
+					res_index = RES_SHARDS;
+					break;
+
+				case 10:
+					res_index = RES_NEXUS;
+					break;
+
+				case 11:
+					res_index = RES_NETHER;
+					break;
+			}
+
+			ob_ptr->resists[res_index] += res_amnt;
+
+			break;
+		}
+	}
+
+	return;
+}
+
 
 /*
  * Complete the "creation" of an object by applying "magic" to the item
@@ -2827,56 +2984,83 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, 
 	if (o_ptr->name2)
 	{
 		ego_item_type *e_ptr = &e_info[o_ptr->name2];
+		object_bonus *ob_ptr;
 
-		/* Extra powers */
-		if (e_ptr->xtra)
-		{
-			o_ptr->xtra1 = e_ptr->xtra;
-		}
+		/* Check for bonuses */
+		object_make_bonuses(o_ptr);
+		ob_ptr = o_ptr->bonuses;
+
+		/* Copy the flags across */
+		ob_ptr->flags1 |= e_ptr->flags1;
+		ob_ptr->flags2 |= e_ptr->flags2;
+		ob_ptr->flags3 |= e_ptr->flags3;
+
+		/* Add the "xtra" flags */
+		if (e_ptr->xtra) object_add_xtra(o_ptr, e_ptr->xtra);
+
+		/* Copy the prefix name */
+		strcpy(ob_ptr->suffix_name, (e_name + e_ptr->name));
+
+		/* Copy the price */
+		ob_ptr->cost += e_ptr->cost;
 
 		/* Hack -- acquire "broken" flag */
-		if (!e_ptr->cost) o_ptr->ident |= (IDENT_BROKEN);
+		if (!ob_ptr->cost) o_ptr->ident |= (IDENT_BROKEN);
 
 		/* Hack -- acquire "cursed" flag */
-		if (e_ptr->flags3 & (TR3_LIGHT_CURSE)) o_ptr->ident |= (IDENT_CURSED);
+		if (ob_ptr->flags3 & (TR3_LIGHT_CURSE)) o_ptr->ident |= (IDENT_CURSED);
 
-		/* Hack -- apply extra penalties if needed */
+		/* Apply extra penalties if needed */
 		if (cursed_p(o_ptr) || broken_p(o_ptr))
 		{
-			int i;
-            
-			/* Hack -- obtain bonuses */
+			/* Obtain to-h/to-d/ac penalties */
 			if (e_ptr->max_to_h > 0) o_ptr->to_h -= randint(e_ptr->max_to_h);
 			if (e_ptr->max_to_d > 0) o_ptr->to_d -= randint(e_ptr->max_to_d);
 			if (e_ptr->max_to_a > 0) o_ptr->to_a -= randint(e_ptr->max_to_a);
 
-			/* Hack -- obtain stat bonuses */
+			/* Obtain stat penalties */
 			for (i = 0; i < A_MAX; i++)
 			{
-				if (e_ptr->stat_mods[i] > 0) o_ptr->stat_mods[i] -= randint(e_ptr->stat_mods[i]);
+				if (e_ptr->stat_mods[i])
+					ob_ptr->stats[i] -= randint(e_ptr->stat_mods[i]);
+			}
+
+			/* Obtain resist penalties */
+			for (i = 0; i < RES_MAX; i++)
+			{
+				if (e_ptr->resist_max[i] > e_ptr->resist_min[i])
+					ob_ptr->resists[i] -= (rand_range((int)e_ptr->resist_min[i], (int)e_ptr->resist_max) * 5);
 			}
     
-			/* Hack -- obtain pval */
+			/* Obtain pval */
 			if (e_ptr->max_pval > 0) o_ptr->pval -= randint(e_ptr->max_pval);
 		}
 
-		/* Hack -- apply extra bonuses if needed */
+		/* Apply bonuses */
 		else
 		{
-            int i;
-            
-			/* Hack -- obtain bonuses */
+			/* Obtain to-h/to-d/ac bonuses */
 			if (e_ptr->max_to_h > 0) o_ptr->to_h += randint(e_ptr->max_to_h);
 			if (e_ptr->max_to_d > 0) o_ptr->to_d += randint(e_ptr->max_to_d);
 			if (e_ptr->max_to_a > 0) o_ptr->to_a += randint(e_ptr->max_to_a);
 
-            /* Hack -- obtain stat bonuses */
-            for (i = 0; i < A_MAX; i++)
-            {
-              if (e_ptr->stat_mods[i] > 0) o_ptr->stat_mods[i] += randint(e_ptr->stat_mods[i]);
-            }
-            
-			/* Hack -- obtain pval */
+			/* Obtain stat bonuses */
+			for (i = 0; i < A_MAX; i++)
+			{
+				if (e_ptr->stat_mods[i])
+					ob_ptr->stats[i] += randint(e_ptr->stat_mods[i]);
+			}         
+
+			/* Obtain resist penalties */
+			for (i = 0; i < RES_MAX; i++)
+			{
+				if (e_ptr->resist_max[i] > e_ptr->resist_min[i])
+					ob_ptr->resists[i] += (rand_range((int)e_ptr->resist_min[i], (int)e_ptr->resist_max) * 5);
+				else if (e_ptr->resist_max[i] == e_ptr->resist_min[i])
+					ob_ptr->resists[i] += e_ptr->resist_max[i];
+			}
+   
+			/* Obtain pval */
 			if (e_ptr->max_pval > 0) o_ptr->pval += randint(e_ptr->max_pval);
 		}
 
@@ -2889,7 +3073,6 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, 
 		/* Done */
 		return;
 	}
-
  
 	/* Hack -- analyze artifacts */
 	if (o_ptr->name3)
@@ -2923,13 +3106,19 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, 
 		/* Total hack - examine rings of mastery */
 		if (o_ptr->tval == TV_RING && o_ptr->sval == SV_RING_MASTERY)
 		{
-			o_ptr->xtra1 = OBJECT_XTRA_TYPE_POWER;
+			object_add_xtra(o_ptr, OBJECT_XTRA_POWER);
 		}
 
 		/* Total hack - examine amulets of the magi */
-		if (o_ptr->tval == TV_AMULET && o_ptr->sval == SV_AMULET_THE_MAGI)
+		else if (o_ptr->tval == TV_AMULET && o_ptr->sval == SV_AMULET_THE_MAGI)
 		{
-			o_ptr->xtra1 = OBJECT_XTRA_TYPE_POWER;
+			object_add_xtra(o_ptr, OBJECT_XTRA_POWER);
+		}
+
+		/* Total hack - examine orbs of resistance */
+		else if (o_ptr->tval == TV_ORB && o_ptr->sval == SV_ORB_RESISTANCE)
+		{
+			object_add_xtra(o_ptr, OBJECT_XTRA_RESIST);
 		}
 
 		/* Hack -- acquire "broken" flag */
@@ -2937,25 +3126,6 @@ void apply_magic(object_type *o_ptr, int lev, bool okay, bool good, bool great, 
 
 		/* Hack -- acquire "cursed" flag */
 		if (k_ptr->flags3 & (TR3_LIGHT_CURSE)) o_ptr->ident |= (IDENT_CURSED);
-	}
-
-	/* Handle special powers */
-	if (o_ptr->xtra1)
-	{
-		switch (o_ptr->xtra1)
-		{
-			case OBJECT_XTRA_TYPE_SUSTAIN:
-			{
-				o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_SUSTAIN);
-				break;
-			}
-
-			case OBJECT_XTRA_TYPE_POWER:
-			{
-				o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_POWER);
-				break;
-			}
-		}
 	}
 
 	/* We are done. */

@@ -1489,7 +1489,7 @@ static void calc_mana(void)
 		/* Normal gloves hurt mage-type spells */
 		if (o_ptr->k_idx &&
 		    !(f3 & (TR3_FREE_ACT)) &&
-		    !((o_ptr->stat_mods[A_DEX]) && (o_ptr->pval > 0)))
+		    !(o_ptr->bonuses ? o_ptr->bonuses->stats[A_DEX] : 0))
 		{
 			/* Encumbered */
 			p_ptr->cumber_glove = TRUE;

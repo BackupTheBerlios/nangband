@@ -93,10 +93,10 @@
 #define BLOCK_VERSION_STORES     1
 #define BLOCK_VERSION_DUNGEON    3
 #define BLOCK_VERSION_INVENTORY  1
-#define BLOCK_VERSION_METADATA   1
+#define BLOCK_VERSION_METADATA   2
 
 /* "Helper" functions - versions */
-#define HELPER_VERSION_OBJECT    2
+#define HELPER_VERSION_OBJECT    3
 #define HELPER_VERSION_MONSTER   1
 #define HELPER_VERSION_STORE     1
 
@@ -346,6 +346,7 @@ static char *savefile_do_string(char *str, bool type)
 #define savefile_do_s16b(v, t)     (s16b) savefile_do_u16b((u16b *) v, t);
 #define savefile_do_s32b(v, t)     (s32b) savefile_do_u32b((u32b *) v, t);
 #define savefile_do_sbyte(v, t)    (sbyte) savefile_do_byte((byte *) v, t);
+#define savefile_do_bool(v, t)     (bool) savefile_do_byte((byte *) v, t);
 
 /*
  * Functions to deal with creating, writing, and freeing "blocks".
@@ -424,11 +425,11 @@ static void savefile_write_block(int fd, byte type, byte version)
  */
 static errr savefile_helper_item(object_type *o_ptr, bool type)
 {
-	int temp_kind;
 	byte version;
 	object_kind *k_ptr;
 
 	byte temp;
+	bool has_bonus;
 
 	byte old_dd = 0;
 	byte old_ds = 0;
@@ -439,33 +440,31 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	if (type == PUT) version = HELPER_VERSION_OBJECT;
 	savefile_do_byte(&version, type);
 
-	/* tval/sval/pval */
-	savefile_do_byte(&o_ptr->tval, type);
-	savefile_do_byte(&o_ptr->sval, type);
-	savefile_do_s16b(&o_ptr->pval, type);
-
-	/* stat bonuses (XXX) */
-	if (version > 1)
+	if (version < 3)
 	{
-		for (temp_kind = 0; temp_kind < A_MAX; temp_kind++)
-		{
-			savefile_do_sbyte(&o_ptr->stat_mods[temp_kind], type);
-		}
+		note("Sorry, this savefile cannot be loaded due to compatibility problems.", PUT);
+		note("The game will quit when you press a key.", PUT);
+		inkey();
+
+		quit("savefile incompatible");
 	}
 
+	/* Do the item type and subtype */
+	savefile_do_byte(&o_ptr->tval, type);
+	savefile_do_byte(&o_ptr->sval, type);
+
 	/* Look it up */
-	temp_kind = lookup_kind(o_ptr->tval, o_ptr->sval);
-	o_ptr->k_idx = temp_kind;
+	if (type == GET)
+	{
+		o_ptr->k_idx = lookup_kind(o_ptr->tval, o_ptr->sval);
 
-	/* Write the "kind" index */
-	savefile_do_s16b(&o_ptr->k_idx, type);
+		/* Paranoia */
+		if ((o_ptr->k_idx < 0) || (o_ptr->k_idx >= z_info->k_max))
+			return (-1);
+	}
 
-	/* Restore the value */
-	o_ptr->k_idx = temp_kind;
-
-	/* Paranoia */
-	if ((o_ptr->k_idx < 0) || (o_ptr->k_idx >= z_info->k_max))
-		return (-1);
+	/* Do the parameter */
+	savefile_do_s16b(&o_ptr->pval, type);
 
 	/* Obtain the "kind" template */
 	k_ptr = &k_info[o_ptr->k_idx];
@@ -488,6 +487,10 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	savefile_do_byte(&o_ptr->name2, type);
 	savefile_do_u16b(&o_ptr->name3, type);
 
+	/* Whether this structure has an associated object_bonus */
+	if (type == PUT) has_bonus = (o_ptr->bonuses) ? TRUE : FALSE;
+	savefile_do_bool(&has_bonus, type);
+
 	/* Timeout field */
 	savefile_do_s16b(&o_ptr->timeout, type);
 
@@ -507,7 +510,7 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 	/* "marked" ( ??? ) */
 	savefile_do_byte(&o_ptr->marked, type);
 
-	/* Load ranadrt info (if appropriate) */
+	/* Do ranadart info if appropriate */
 	if (o_ptr->name3)
 	{
 		int i;
@@ -522,11 +525,8 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 		savefile_do_u32b(&x_ptr->flags2, type);
 		savefile_do_u32b(&x_ptr->flags3, type);
 
-		if (version > 1)
-		{
-			for (i = 0; i < RES_MAX; i++)
-				savefile_do_sbyte(&x_ptr->resists[i], type);
-		}
+		for (i = 0; i < RES_MAX; i++)
+			savefile_do_sbyte(&x_ptr->resists[i], type);
 
 		savefile_do_byte(&x_ptr->level, type);
 
@@ -535,12 +535,35 @@ static errr savefile_helper_item(object_type *o_ptr, bool type)
 		savefile_do_u16b(&x_ptr->randtime, type);
 	}
 
+	/* Do "object_bonus" stuff if appropriate */
+	if (has_bonus)
+	{
+		int i;
+		object_bonus *ob_ptr;
+
+		/* Create the structure */
+		if (type == GET) object_make_bonuses(o_ptr);
+
+		ob_ptr = o_ptr->bonuses;
+
+		savefile_do_string(ob_ptr->suffix_name, type);
+		savefile_do_string(ob_ptr->prefix_name, type);
+
+		savefile_do_s32b(&ob_ptr->cost, type);
+
+		savefile_do_u32b(&ob_ptr->flags1, type);
+		savefile_do_u32b(&ob_ptr->flags2, type);
+		savefile_do_u32b(&ob_ptr->flags3, type);
+
+		for (i = 0; i < RES_MAX; i++)
+			savefile_do_sbyte(&ob_ptr->resists[i], type);
+
+		for (i = 0; i < A_MAX; i++)
+			savefile_do_sbyte(&ob_ptr->stats[i], type);
+	}
+
 	/* Write the index of the monster holding this item */
 	savefile_do_s16b(&o_ptr->held_m_idx, type);
-
-	/* Extra information */
-	savefile_do_byte(&o_ptr->xtra1, type);
-	savefile_do_byte(&o_ptr->xtra2, type);
 
 	/* Do the inscription */
 	if (o_ptr->note && type == PUT) temp = TRUE;

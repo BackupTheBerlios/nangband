@@ -1,9 +1,10 @@
 /*
  * File: defines.h
- * Purpose: Various constants and macros for Angband
- * Copyright (c) 1997 Ben Harrison, James E. Wilson, Robert A. Koeneke
  *
- * This file is distributed under the Angband licence.
+ * Abstract: Various constants, macros and otherwise useful information
+ *           for the game.
+ *
+ * For licencing terms, please see angband.h.
  */
 
 /*
@@ -14,7 +15,7 @@
  * places, mathematical properties, optimisations, limits, or various
  * text files outside of the game.  Changing these values may have strange
  * effects; they may induce crashes, memory errors, or possibly savefile
- * mis-reads.
+ * mis-reads (though this is quite unlikely).
  *
  * Most of the comments in this file are meant as reminders, not complete
  * descriptions, and even a complete knowledge of the source may not be
@@ -1083,11 +1084,11 @@
 #define TV_GOLD         100	/* Gold can only be picked up by players */
 
 /* The "sval" codes for TV_ORB */
-#define SV_ORB_FLAMES		0
-#define SV_ORB_BURNIN		1
-#define SV_ORB_FROST		2
-#define SV_ORB_ICE		3
-
+#define SV_ORB_FLAMES      0
+#define SV_ORB_BURNIN      1
+#define SV_ORB_FROST       2
+#define SV_ORB_ICE         3
+#define SV_ORB_RESISTANCE  4
 
 /* The "sval" codes for TV_SHOT/TV_ARROW/TV_BOLT */
 #define SV_AMMO_LIGHT		0	/* pebbles */
@@ -2044,38 +2045,74 @@
 #define TR2_BRAND_CHAOS     0x40000000L /* Chaos Brand */
 #define TR2_BRAND_NETHER    0x80000000L /* Nether Brand */
 
-#define TR3_SLOW_DIGEST     0x00000001L /* Slow digest */
-#define TR3_FEATHER         0x00000002L /* Feather Falling */
-#define TR3_XXX1            0x00000004L
-#define TR3_REGEN           0x00000008L /* Regeneration */
-#define TR3_TELEPATHY       0x00000010L /* Telepathy */
-#define TR3_SEE_INVIS       0x00000020L /* See Invis */
-#define TR3_FREE_ACT        0x00000040L /* Free action */
-#define TR3_HOLD_LIFE       0x00000080L /* Hold life */
-#define TR3_XXX2            0x00000100L
-#define TR3_XXX3            0x00000200L
-#define TR3_XXX4            0x00000400L
-#define TR3_XXX5            0x00000800L
-#define TR3_IMPACT          0x00001000L /* Earthquake blows */
-#define TR3_TELEPORT        0x00002000L /* Random teleportation */
-#define TR3_AGGRAVATE       0x00004000L /* Aggravate monsters */
-#define TR3_DRAIN_EXP       0x00008000L /* Experience drain */
-#define TR3_IGNORE_ACID     0x00010000L /* Item ignores Acid Damage */
-#define TR3_IGNORE_ELEC     0x00020000L /* Item ignores Elec Damage */
-#define TR3_IGNORE_FIRE     0x00040000L /* Item ignores Fire Damage */
-#define TR3_IGNORE_COLD     0x00080000L /* Item ignores Cold Damage */
-#define TR3_XXX6            0x00100000L
-#define TR3_XXX7            0x00200000L
-#define TR3_BLESSED         0x00400000L /* Item has been blessed */
-#define TR3_ACTIVATE        0x00800000L /* Item can be activated */
-#define TR3_INSTA_ART       0x01000000L /* Item makes an artifact */
-#define TR3_EASY_KNOW       0x02000000L /* Item is known if aware */
-#define TR3_HIDE_TYPE       0x04000000L /* Item hides description */
-#define TR3_SHOW_MODS       0x08000000L /* Item shows Tohit/Todam */
-#define TR3_HUNGER          0x10000000L /* Item increases hunger */
-#define TR3_LIGHT_CURSE     0x20000000L /* Item has Light Curse */
-#define TR3_HEAVY_CURSE     0x40000000L /* Item has Heavy Curse */
-#define TR3_PERMA_CURSE     0x80000000L /* Item has Perma Curse */
+
+
+#define TR3_SLOW_DIGEST     (1<<0)		/* Slow digest */
+#define TR3_FEATHER         (1<<1)		/* Feather Falling */
+#define TR3_REGEN           (1<<2)		/* Regeneration */
+#define TR3_TELEPATHY       (1<<3)		/* Telepathy */
+#define TR3_SEE_INVIS       (1<<4)		/* See Invis */
+#define TR3_FREE_ACT        (1<<5)		/* Free action */
+#define TR3_HOLD_LIFE       (1<<6)		/* Hold life */
+#define TR3_IMPACT          (1<<7)		/* Earthquake blows */
+#define TR3_TELEPORT        (1<<8)		/* Random teleportation */
+#define TR3_AGGRAVATE       (1<<9)		/* Aggravate monsters */
+#define TR3_DRAIN_EXP       (1<<10)		/* Experience drain */
+#define TR3_IGNORE_ACID     (1<<11)		/* Item ignores Acid Damage */
+#define TR3_IGNORE_ELEC     (1<<12)		/* Item ignores Elec Damage */
+#define TR3_IGNORE_FIRE     (1<<13)		/* Item ignores Fire Damage */
+#define TR3_IGNORE_COLD     (1<<14)		/* Item ignores Cold Damage */
+#define TR3_XXX1            (1<<15)
+#define TR3_XXX2            (1<<16)
+#define TR3_XXX3            (1<<17)
+#define TR3_XXX4            (1<<18)
+#define TR3_XXX5            (1<<19)
+#define TR3_XXX6            (1<<20)
+#define TR3_XXX7            (1<<21)
+#define TR3_BLESSED         (1<<22)		/* Item has been blessed */
+#define TR3_ACTIVATE        (1<<23)		/* Item can be activated */
+#define TR3_INSTA_ART       (1<<24)		/* Item makes an artifact */
+#define TR3_EASY_KNOW       (1<<25)		/* Item is known if aware */
+#define TR3_HIDE_TYPE       (1<<26)		/* Item hides description */
+#define TR3_SHOW_MODS       (1<<27)		/* Item shows Tohit/Todam */
+#define TR3_HUNGER          (1<<28)		/* Item increases hunger */
+#define TR3_LIGHT_CURSE     (1<<29)		/* Item has Light Curse */
+#define TR3_HEAVY_CURSE     (1<<30)		/* Item has Heavy Curse */
+#define TR3_PERMA_CURSE     (1<<31)		/* Item has Perma Curse */
+
+#define NAME_TR3_00         "SLOW_DIGEST"
+#define NAME_TR3_01         "FEATHER"
+#define NAME_TR3_02         "REGEN"
+#define NAME_TR3_03         "TELEPATHY"
+#define NAME_TR3_04         "SEE_INVIS"
+#define NAME_TR3_05         "FREE_ACT"
+#define NAME_TR3_06         "HOLD_LIFE"
+#define NAME_TR3_07         "IMPACT"
+#define NAME_TR3_08         "TELEPORT"
+#define NAME_TR3_09         "AGGRAVATE"
+#define NAME_TR3_10         "DRAIN_EXP"
+#define NAME_TR3_11         "IGNORE_ACID"
+#define NAME_TR3_12         "IGNORE_ELEC"
+#define NAME_TR3_13         "IGNORE_FIRE"
+#define NAME_TR3_14         "IGNORE_COLD"
+#define NAME_TR3_15         "XXX1"
+#define NAME_TR3_16         "XXX2"
+#define NAME_TR3_17         "XXX3"
+#define NAME_TR3_18         "XXX4"
+#define NAME_TR3_19         "XXX5"
+#define NAME_TR3_20         "XXX6"
+#define NAME_TR3_21         "XXX7"
+#define NAME_TR3_22         "BLESSED"
+#define NAME_TR3_23         "ACTIVATE"
+#define NAME_TR3_24         "INSTRA_ART"
+#define NAME_TR3_25         "EASY_KNOW"
+#define NAME_TR3_26         "HIDE_TYPE"
+#define NAME_TR3_27         "SHOW_MODS"
+#define NAME_TR3_28         "HUNGER"
+#define NAME_TR3_29         "LIGHT_CURSE"
+#define NAME_TR3_30         "HEAVY_CURSE"
+#define NAME_TR3_31         "PERMA_CURSE"
+
 
 
 /*
@@ -2099,30 +2136,13 @@
 #define TR3_CURSED_MASK \
    (TR3_LIGHT_CURSE | TR3_HEAVY_CURSE | TR3_PERMA_CURSE)
 
-/*
- * Hack -- special "xtra" object flag info (type)
- */
-#define OBJECT_XTRA_TYPE_SUSTAIN	1
-#define OBJECT_XTRA_TYPE_POWER		3
 
 /*
- * Hack -- special "xtra" object flag info (what flag set)
+ * The "xtra" properties of ego-items.
  */
-#define OBJECT_XTRA_WHAT_SUSTAIN	2
-#define OBJECT_XTRA_WHAT_POWER		3
-
-/*
- * Hack -- special "xtra" object flag info (base flag value)
- */
-#define OBJECT_XTRA_BASE_SUSTAIN	TR2_SUST_STR
-#define OBJECT_XTRA_BASE_POWER		TR3_SLOW_DIGEST
-
-/*
- * Hack -- special "xtra" object flag info (number of flags)
- */
-#define OBJECT_XTRA_SIZE_SUSTAIN	6
-#define OBJECT_XTRA_SIZE_RESIST		12
-#define OBJECT_XTRA_SIZE_POWER		8
+#define OBJECT_XTRA_SUSTAIN		1
+#define OBJECT_XTRA_RESIST			2
+#define OBJECT_XTRA_POWER			3
 
 
 /*** Class flags ***/

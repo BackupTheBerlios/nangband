@@ -412,7 +412,7 @@ void self_knowledge(void)
 	int i = 0, j, k;
 
 	u32b f1 = 0L, f2 = 0L, f3 = 0L;
-	s16b stat_mods[A_MAX];
+	sbyte stat_mods[A_MAX];
 
 	object_type *o_ptr;
 
@@ -424,6 +424,7 @@ void self_knowledge(void)
 	{
 		int n;
 		u32b t1, t2, t3;
+		sbyte stats[A_MAX];
 
 		o_ptr = &inventory[k];
 
@@ -433,11 +434,15 @@ void self_knowledge(void)
 		/* Extract the flags */
 		object_flags(o_ptr, &t1, &t2, &t3);
 
-		/* Extract flags */
-		f1 |= t1; f2 |= t2; f3 |= t3;
+		f1 |= t1;
+		f2 |= t2;
+		f3 |= t3;
 
 		/* Extract stat bonuses */
-		for (n = 0; n < A_MAX; n++) stat_mods[n] += o_ptr->stat_mods[n];
+		object_stat_bonuses(o_ptr, stats);
+
+		for (n = 0; n < A_MAX; n++)
+			stat_mods[n] += stats[n];	
 	}
 
 	if (p_ptr->blind) info[i++] = "You cannot see.";
@@ -1566,10 +1571,7 @@ static bool brand_spell(object_type *o_ptr)
 	e_ptr = &e_info[o_ptr->name2];
 
 	/* Extra powers */
-	if (e_ptr->xtra)
-	{
-		o_ptr->xtra1 = e_ptr->xtra;
-	}
+	if (e_ptr->xtra) object_add_xtra(o_ptr, e_ptr->xtra);
 
 	/* Hack -- obtain pval */
 	if (e_ptr->max_pval > 0) o_ptr->pval += randint(e_ptr->max_pval);
@@ -1578,28 +1580,6 @@ static bool brand_spell(object_type *o_ptr)
 	if (e_ptr->max_to_a > 0) o_ptr->to_a += randint(e_ptr->max_to_a);
 	if (e_ptr->max_to_h > 0) o_ptr->to_h += randint(e_ptr->max_to_h);
 	if (e_ptr->max_to_d > 0) o_ptr->to_d += randint(e_ptr->max_to_d);
-
-	/* Handle special powers */
-	if (o_ptr->xtra1)
-	{
-
-		switch (o_ptr->xtra1)
-		{
-			case OBJECT_XTRA_TYPE_SUSTAIN:
-			{
-				o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_SUSTAIN);
-				break;
-			}
-
-			case OBJECT_XTRA_TYPE_POWER:
-			{
-				o_ptr->xtra2 = (byte)rand_int(OBJECT_XTRA_SIZE_POWER);
-
-				break;
-			}
-		}
-	}
-
 
 	return (TRUE);
 }

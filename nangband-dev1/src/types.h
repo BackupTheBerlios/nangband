@@ -66,6 +66,8 @@ typedef s16b s16b_wid[DUNGEON_WID];
 typedef struct maxima maxima;
 typedef struct feature_type feature_type;
 typedef struct object_kind object_kind;
+typedef struct object_type object_type;
+typedef struct object_bonus object_bonus;
 typedef struct artifact_type artifact_type;
 typedef struct randart_type randart_type;
 typedef struct ego_item_type ego_item_type;
@@ -73,7 +75,6 @@ typedef struct monster_blow monster_blow;
 typedef struct monster_race monster_race;
 typedef struct monster_lore monster_lore;
 typedef struct vault_type vault_type;
-typedef struct object_type object_type;
 typedef struct monster_type monster_type;
 typedef struct alloc_entry alloc_entry;
 typedef struct quest quest;
@@ -265,6 +266,23 @@ struct artifact_type
 };
 
 /*
+ * Information for an object's bonuses; this is very similar
+ * to the randart structure below.
+ */
+struct object_bonus
+{
+	char prefix_name[20];         /* Name which comes before item type */
+	char suffix_name[20];         /* Name which comes after item type */
+
+	s32b cost;                    /* Cost in stores */
+
+	u32b flags1, flags2, flags3;  /* Flags */
+
+	sbyte resists[RES_MAX],       /* Extra resistances */
+	      stats[A_MAX];           /* Stat bonuses */
+};
+
+/*
  * Information about "random artifacts".
  *
  * This holds much less data than artifact_type, because much
@@ -296,37 +314,31 @@ struct randart_type
  */
 struct ego_item_type
 {
-	u32b name;			/* Name (offset) */
+	u32b name;                      /* Name (offset) */
+	u32b text;                      /* Text (offset) */
 
-	u32b text;			/* Text (offset) */
+	byte rating;                    /* Rating boost */
+	byte level;                     /* Minimum level */
+	byte rarity;                    /* Object rarity */
+	byte xtra;                      /* Extra Sustain/Resist/Power */
 
-	byte rating;		/* Rating boost */
-	byte level;			/* Minimum level */
-	byte rarity;		/* Object rarity */
-	byte xtra;			/* Extra Sustain/Resist/Power */
+	s32b cost;                      /* Cost */
 
-	s32b cost;			/* Cost */
+	byte tval[EGO_MAX_TVALS];       /* Allowed tvals for this ego-item */
+	byte min_sval[EGO_MAX_TVALS];   /* Minimum allowed svals */
+	byte max_sval[EGO_MAX_TVALS];   /* Maximum allowed svals */
 
-	byte tval[EGO_MAX_TVALS];		/* Legal tval */
+	byte max_to_h;                  /* Maximum to-hit bonus */
+	byte max_to_d;                  /* Maximum to-dam bonus */
+	byte max_to_a;                  /* Maximum to-ac bonus */
+	byte max_pval;                  /* Maximum pval */
 
-	byte min_sval[EGO_MAX_TVALS];	/* Minimum legal sval */
+	u32b flags1, flags2, flags3;    /* Item flags */
 
-	byte max_sval[EGO_MAX_TVALS];	/* Maximum legal tval */
+	sbyte resist_min[RES_MAX];      /* Resists minima */
+	sbyte resist_max[RES_MAX];      /* Resists maxima */
 
-	byte max_to_h;		/* Maximum to-hit bonus */
-	byte max_to_d;		/* Maximum to-dam bonus */
-	byte max_to_a;		/* Maximum to-ac bonus */
-	byte max_pval;		/* Maximum pval */
-
-	s16b stat_mods[A_MAX];
-
-	u32b flags1;		/* Ego-Item Flags, set 1 */
-
-	u32b flags2;		/* Ego-Item Flags, set 2 */
-
-	u32b flags3;		/* Ego-Item Flags, set 3 */
-
-	sbyte resists[RES_MAX];	/* Item resists */
+	sbyte stat_mods[A_MAX];         /* Stat modifications (fixed for now) */
 };
 
 
@@ -518,16 +530,13 @@ struct object_type
 	byte name2;			/* Ego-Item type, if any */
 	u16b name3;			/* Randart type, if any */
 
-	byte xtra1;			/* Extra info type */
-	byte xtra2;			/* Extra info index */
-
 	s16b to_h;			/* Plusses to hit */
 	s16b to_d;			/* Plusses to damage */
 	s16b to_a;			/* Plusses to AC */
 
 	s16b ac;			/* Normal AC */
 
-	s16b stat_mods[A_MAX];
+	object_bonus *bonuses;   /* Other bonuses */
 
 	byte dd, ds;		/* Damage dice/sides */
 

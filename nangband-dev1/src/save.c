@@ -92,6 +92,7 @@
 #define BLOCK_TYPE_DUNGEON      12
 
 /* Block versions */
+#define BLOCK_VERSION_ERROR      0
 #define BLOCK_VERSION_HEADER     1
 #define BLOCK_VERSION_OPTIONS    1
 #define BLOCK_VERSION_PLAYER     1
@@ -106,7 +107,7 @@
 #define BLOCK_VERSION_DUNGEON    1
 
 /* The smallest block we can have */
-#define BLOCK_INCREMENT         128
+#define BLOCK_INCREMENT         32
 
 /* The size of the header (in bytes) */
 #define BLOCK_HEAD_SIZE         11
@@ -114,10 +115,10 @@
 /*
  * Variables needed by the code
  */
-static byte *savefile_head;       /* Current block's header */
+static byte *savefile_head;      /* Current block's header */
 static byte savefile_head_type;  /* The type of block */
 static byte savefile_head_ver;   /* The version of this block */
-static byte *savefile_block;      /* Current block */
+static byte *savefile_block;     /* Current block */
 static u32b savefile_blocksize;  /* Current block's size */
 static u32b savefile_blockused;  /* The amount of the block that has been used */
 
@@ -138,7 +139,7 @@ static void savefile_add_byte(byte v)
 		byte *savefile_new;
 
 		/* Make space for the new block. */
-		C_MAKE(savefile_new, savefile_blocksize + BLOCK_INCREMENT, byte);
+		savefile_new = C_RNEW(savefile_blocksize + BLOCK_INCREMENT, byte);
 
 		/* Copy the memory across */
 		COPY(savefile_new, savefile_block, vptr);
@@ -273,7 +274,7 @@ static void savefile_write_block(vptr block, int fd)
 
 	/* Reset the header type */
 	savefile_head_type = BLOCK_TYPE_ERROR;
-	savefile_head_ver = 0;
+	savefile_head_ver = BLOCK_VERSION_ERROR;
 
 	/* Write the block */
 	if (savefile_block) fd_write(fd, (cptr) savefile_block, savefile_blockused);
@@ -903,7 +904,7 @@ static void savefile_do_block_dungeon(void)
  * --------------------------------------------------------------------- */
  static void savefile_do_block_monlore(void)
  {
-	int i;
+	int i, n;
 
 	/* Write the count */
 	savefile_add_u32b((u32b) z_info->r_max);
@@ -937,8 +938,8 @@ static void savefile_do_block_dungeon(void)
 		savefile_add_byte(l_ptr->cast_spell);
 
 		/* Count blows of each type */
-		for (i = 0; i < MONSTER_BLOW_MAX; i++)
-			savefile_add_byte(l_ptr->blows[i]);
+		for (n = 0; n < MONSTER_BLOW_MAX; n++)
+			savefile_add_byte(l_ptr->blows[n]);
 
 		/* Memorize flags */
 		savefile_add_u32b(l_ptr->flags1);
@@ -968,7 +969,7 @@ static void savefile_do_block_objlore(void)
 	savefile_add_u32b((u32b) z_info->k_max);
 
 	/* Write the individual entries */
-	for (i = 0; i < z_info->r_max; i++)
+	for (i = 0; i < z_info->k_max; i++)
 	{
 		byte temp = 0;
 		object_kind *k_ptr = &k_info[i];

@@ -11,3 +11,8 @@ Makefile.in
 ChangeLog
 autoconf.h
 l-*.c
+.deps/
+anindent
+anmerge
+stamp-h
+trivial

@@ -77,54 +77,40 @@ ANGOBJS = \
 HAVE_MKSTEMP = -DHAVE_MKSTEMP
 
 # Uncomment this line to allow the borg
-ALLOW_BORG = -DALLOW_BORG
+#ALLOW_BORG = -DALLOW_BORG
 
 # This is your compiler
 CC = gcc
 WARNINGS = -Wall
 
-# gcc-3.0 with warnings
-gcc-3.0-warnings: WARNINGS = -Wwrite-strings -Wpointer-arith -Wbad-function-cast -Wconversion \
-	-Wsign-compare -Waggregate-return \
-	-Wredundant-decls -Wunreachable-code -Wdisabled-optimization -Wall
-gcc-3.0-warnings: CC = gcc-3.0
+# Default target
+default: x11-gcu
 
-# gcc-3.0
-gcc-3.0: WARNINGS = -Wall
-gcc-3.0: CC = gcc-3.0
-
-#
-# Standard version (see main-x11.c and main-gcu.c)
-#
 # This version supports both X11 and curses in a single executable.
-#
-# You may have to add various X11 include/library directories to the
-# "CFLAGS", if your machine places files in a weird location.
 #
 # You may have to replace "-lcurses" with "-lncurses" to use the
 # "new curses" library instead of the "old curses" library, and
 # you may have to add "-I/usr/include/ncurses" to the "CFLAGS".
 #
-# See "main-gcu.c" and "config.h" for some optional "curses" defines,
-# including "USE_GETCH" and "USE_CURS_SET".  Note that "config.h" will
-# attempt to "guess" at many of these flags based on your system.
+x11-gcu: CFLAGS = -O1 -pipe -g -DUSE_X11 -DUSE_GCU -I/usr/X11R6/lib
+x11-gcu: LIBS = -lcurses -ltermcap -L/usr/X11R6/lib -lX11
+x11-gcu: nangband
+
+# This version supports (only) X11.
 #
-CFLAGS = -O1 -pipe -g -DUSE_X11 -DUSE_GCU
-LIBS = -lX11 -lcurses -ltermcap -L/usr/X11R6/lib
+only-x11: CFLAGS = -O1 -pipe -g -D"USE_X11"
+only-x11: LIBS = -L/usr/X11R6/lib -lX11
+only-x11: nangband
 
-
-##
-## Variation -- Only support "main-x11.c" (not "main-gcu.c")
-##
-#CFLAGS = -O1 -pipe -g -D"USE_X11"
-#LIBS = -lX11
-
-
-##
-## Variation -- Only support "main-gcu.c" (not "main-x11.c")
-##
-#CFLAGS = -Wall -O1 -pipe -g -D"USE_GCU"
-#LIBS = -lcurses -ltermcap
+# This version supports (only) curses.
+#
+# You may have to replace "-lcurses" with "-lncurses" to use the
+# "new curses" library instead of the "old curses" library, and
+# you may have to add "-I/usr/include/ncurses" to the "CFLAGS".
+#
+only-gcu: CFLAGS = -Wall -O1 -pipe -g -D"USE_GCU"
+only-gcu: LIBS = -lcurses -ltermcap
+only-gcu: nangband
 
 
 ##
@@ -250,12 +236,11 @@ LIBS = -lX11 -lcurses -ltermcap -L/usr/X11R6/lib
 ##
 ## Variation -- Support S-Lang library
 ##
-#CFLAGS = -Wall -O2 -fno-strength-reduce -D"USE_SLA" -I/usr/include/slang
-#LIBS = -lslang
+slang: CFLAGS = -Wall -O2 -fno-strength-reduce -D"USE_SLA" -I/usr/include/slang
+slang: LIBS = -lslang
 
 # Add stuff
 CFLAGS += $(HAVE_MKSTEMP) $(WARNINGS) $(ALLOW_BORG)
-
 
 # Build the binary
 nangband: $(ANGOBJS) $(BORGOBJS)
@@ -270,14 +255,21 @@ cygwin: CC := gcc
 cygwin: WRES := windres
 cygwin: LUALIBS := -s -mno-cygwin
 cygwin: LIBS := -s -mno-cygwin -mwindows -e _mainCRTStartup -lwinmm
-cygwin: CFLAGS := -Wall -pedantic -mno-cygwin -O2 -fno-strength-reduce \
-	-DWINDOWS
+cygwin: CFLAGS := -Wall -pedantic -mno-cygwin -O2 -fno-strength-reduce -DWINDOWS
 cygwin: ANGOBJS += angband.res readdib.o
 cygwin: nangband
 
-# Set up other stuff
-gcc-3.0: nangband
+# Use GCC 3.0 with extranaeous warning options
+gcc-3.0-warnings: WARNINGS = -Wwrite-strings -Wpointer-arith -Wbad-function-cast -Wconversion \
+	-Wsign-compare -Waggregate-return \
+	-Wredundant-decls -Wunreachable-code -Wdisabled-optimization -Wall
+gcc-3.0-warnings: CC = gcc-3.0
 gcc-3.0-warnings: nangband
+
+# Use GCC 3.0
+gcc-3.0: WARNINGS = -Wall
+gcc-3.0: CC = gcc-3.0
+gcc-3.0: nangband
 
 # Move the binary one level up.
 install: nangband

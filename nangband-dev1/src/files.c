@@ -4476,7 +4476,7 @@ static void handle_signal_abort(int sig)
 	signals_ignore_tstp();
 
 	/* Attempt to save */
-	if (save_player())
+	if (save_game())
 	{
 		Term_putstr(45, 23, -1, TERM_RED, "Panic save succeeded!");
 	}

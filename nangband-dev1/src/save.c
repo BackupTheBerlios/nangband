@@ -264,16 +264,18 @@ static void savefile_write_block(vptr block, int fd)
 	fd_write(fd, (cptr) savefile_head, savefile_blockused);
 
 	/* Free up the header's memory */
+	header_pos = NULL;
 	KILL(savefile_head);
 
 	/* Reset the header type */
 	savefile_head_type = BLOCK_TYPE_ERROR;
-	savefile_head_type = 0;
+	savefile_head_ver = 0;
 
 	/* Write the block */
 	if (savefile_block) fd_write(fd, (cptr) savefile_block, BLOCK_HEAD_SIZE);
 
 	/* Free the block's memory */
+	savefile_blockpos = NULL;
 	if (savefile_block) KILL(savefile_block);
 
 	/* We are done */

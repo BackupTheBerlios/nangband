@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ahml>
+<title>Compiling Nangband</title>
+<body>
+
+<h1>Compiling Angband</h1>
+<p>You probably won't need to compile Angband if you use Windows or DOS, as
+these ports are normally available precompiled.  However, if you want to
+compile your own personalized version (or if the port for your particular
+platform doesn't exist), then read on.</p>
+
+<h2>Compiling for UNIX/Linux/etc. (quick and dirty way)</h2>
+<p>To compile on a UNIX system, you'll need sources.  These can be found at
+ftp://clockwork.dementia.org/angband/Variant/Nangband - look for the most
+recent version.  Extract the stuff from the archive (if it's a targz,
+"tar -xvzf filename", or a zip "unzip filename").  Go into the directory
+you just extracted (nangband-x.x.x, probably) and try "./configure"
+("./configure --help" if you want to change any options).  Then "make",
+and "make install", and you will have the executable "nangband" either in
+/usr/local/bin, or wherever you specified it be put.</p>
+
+<p>Of course, there's another makefile - "Makefile.std" in "src/".  If
+you "cd src; make -f Makefile.std portname", where "portname" is one
+of "only-gcu" (only console support), "only-x11" (only X11 support),
+"x11-gcu" (both X11 and console support in the same executable),
+and "gtk" (GTK/X11/console support). "make -f Makefile.std install"
+will copy to exectuable one level up, so:
+<pre>
+cd src/; make -f Makefile.std gtk install; cd ../; ./nangband
+</pre>
+would compile and run nangband using the "standard" makefile.
+</p>
+</body>
+</ahml>

@@ -1,4 +1,4 @@
-/* File: object1.c */
+	/* File: object1.c */
 
 /*
  * Copyright (c) 1997 Ben Harrison, James E. Wilson, Robert A. Koeneke
@@ -2240,11 +2240,9 @@ static void item_info_brief(const object_type *o_ptr, int mode)
 	if (f3 & (TR3_FEATHER)) text_out("\nIt induces feather falling.  ");
 	if (f3 & (TR3_REGEN)) text_out("\nIt speeds your regenerative powers.  ");
 	if (f3 & (TR3_TELEPATHY)) text_out("\nIt gives telepathic powers.  ");
-	if (f3 & (TR3_SEE_INVIS)) text_out("\nIt allows you to see invisible monsters. 
- ");
+	if (f3 & (TR3_SEE_INVIS)) text_out("\nIt allows you to see invisible monsters.  ");
 	if (f3 & (TR3_FREE_ACT)) text_out("\nIt provides immunity to paralysis.  ");
-	if (f3 & (TR3_HOLD_LIFE)) text_out("\nIt provides resistance to life draining. 
- ");
+	if (f3 & (TR3_HOLD_LIFE)) text_out("\nIt provides resistance to life draining.  ");
 	if (f3 & (TR3_IMPACT)) text_out("\nIt induces earthquakes.  ");
 	if (f3 & (TR3_TELEPORT)) text_out("\nIt induces random teleportation.  ");
 	if (f3 & (TR3_AGGRAVATE)) text_out("\nIt aggravates nearby creatures.  ");
@@ -2589,15 +2587,13 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 
 	if (f1 & (TR1_BLOWS))
 	{
-		text_out(format("It deals %i extra blow%s per round. ", o_ptr->pval,
- o_ptr->pval > 1 ? "s" : ""));
+		text_out(format("It deals %i extra blow%s per round. ", o_ptr->pval, o_ptr->pval > 1 ? "s" : ""));
 		abilities = TRUE;
 	}
 
 	if (f1 & (TR1_SHOTS))
 	{
-		text_out(format("It fires %i extra shot%s per round. ", o_ptr->pval,
- o_ptr->pval > 1 ? "s" : ""));
+		text_out(format("It fires %i extra shot%s per round. ", o_ptr->pval, o_ptr->pval > 1 ? "s" : ""));
 		abilities = TRUE;
 	}
 
@@ -2707,7 +2703,7 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	/* Describe the resists/immunities */
 	temp[0] = '\0';
 	obj_info_resists(resists, FALSE, temp);
-    text_out(temp);
+	text_out(temp);
 
 	/* Describe other (weird) things */
 	if (f2 & (TR2_NO_BLIND)) text_out("It grants you immunity to blindness.  ");
@@ -2717,11 +2713,9 @@ static void item_info_desc(const object_type *o_ptr, int mode)
 	if (f3 & (TR3_FEATHER)) text_out("It induces feather falling.  ");
 	if (f3 & (TR3_REGEN)) text_out("It speeds your regenerative powers.  ");
 	if (f3 & (TR3_TELEPATHY)) text_out("It gives telepathic powers.  ");
-	if (f3 & (TR3_SEE_INVIS)) text_out("It allows you to see invisible monsters. 
- ");
+	if (f3 & (TR3_SEE_INVIS)) text_out("It allows you to see invisible monsters.  ");
 	if (f3 & (TR3_FREE_ACT)) text_out("It provides immunity to paralysis.  ");
-	if (f3 & (TR3_HOLD_LIFE)) text_out("It provides resistance to life draining. 
- ");
+	if (f3 & (TR3_HOLD_LIFE)) text_out("It provides resistance to life draining.  ");
 	if (f3 & (TR3_IMPACT)) text_out("It induces earthquakes.  ");
 	if (f3 & (TR3_TELEPORT)) text_out("It induces random teleportation.  ");
 	if (f3 & (TR3_AGGRAVATE)) text_out("It aggravates nearby creatures.  ");

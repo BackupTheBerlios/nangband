@@ -836,7 +836,18 @@ static void savefile_do_block_options(bool type, int ver)
 
 	/* Add the "normal" options */
 	for (n = 0; n < OPT_MAX; n++)
-		savefile_do_byte((bool *) &op_ptr->opt[n], type);
+	{
+		byte cur;
+
+		/* Set the value */
+		if (type == PUT) cur = op_ptr->opt[n];
+
+		/* Do the value */
+		savefile_do_byte(&cur, type);
+
+		/* Get the value */
+		if (type == GET) op_ptr->opt[n] = cur;
+	}
 
 	/* Add the "window" options */
 	for (n = 0; n < ANGBAND_TERM_MAX; n++)
@@ -852,6 +863,7 @@ static void savefile_do_block_options(bool type, int ver)
 static errr savefile_do_block_player(bool type, int ver)
 {
 	int i = 0, n = 0;
+	byte temp;
 
 	/* Add number of past lives */
 	if (ver < 3)
@@ -862,19 +874,19 @@ static errr savefile_do_block_player(bool type, int ver)
 	}
 
 	/* Set the level */
-	if (type == PUT) n = i = PY_MAX_LEVEL;
+	if (type == PUT) n = temp = PY_MAX_LEVEL;
 
 	/* Do the numebr of HP entries */
-	savefile_do_byte((byte *) &i, type);
+	savefile_do_byte(&temp, type);
 
 	/* Set the level */
-	if (type == GET) n = i;
+	if (type == GET) n = temp;
 
 	/* Incompatible save files */
 	if (n > PY_MAX_LEVEL)
 	{
 		/* Warn */
-		note(format("Too many hitpoint entries! (%i player levels.)", n), type);
+		note(format("Too many hitpoint entries! (%i player levels)", n), type);
 
 		/* Return an error */
 		return (-1);
@@ -1641,13 +1653,17 @@ static errr savefile_do_block_dungeon(bool type, int ver)
  * --------------------------------------------------------------------- */
 static errr savefile_do_block_monlore(bool type, int ver)
 {
-	int i = 0, n = 0;
+	int i, j, n;
+	u32b max;
 
 	/* Grab the count */
-	if (type == PUT) n = z_info->r_max;
+	if (type == PUT) max = z_info->r_max;
 
 	/* Put/Get the count */
-	savefile_do_u32b((u32b *) &n, type);
+	savefile_do_u32b(&max, type);
+
+	/* Retrieve the count */
+	n = max;
 
 	/* Check incompatibilities */
 	if (type == GET && n != z_info->r_max)
@@ -1688,7 +1704,7 @@ static errr savefile_do_block_monlore(bool type, int ver)
 		savefile_do_byte(&l_ptr->cast_spell, type);
 
 		/* Count blows of each type */
-		for (n = 0; n < MONSTER_BLOW_MAX; n++)
+		for (j = 0; j < MONSTER_BLOW_MAX; j++)
 			savefile_do_byte(&l_ptr->blows[n], type);
 
 		/* Memorize flags */
@@ -1726,12 +1742,16 @@ static errr savefile_do_block_monlore(bool type, int ver)
 static errr savefile_do_block_objlore(bool type, int ver)
 {
 	int i = 0, n = 0;
+	u32b max;
 
 	/* Grab the count */
-	if (type == PUT) n = z_info->k_max;
+	if (type == PUT) max = z_info->k_max;
 
 	/* Put/Get the count */
-	savefile_do_u32b((u32b *) &n, type);
+	savefile_do_u32b(&max, type);
+
+	/* Retrieve the count */
+	n = max;
 
 	/* Check incompatibilities */
 	if (type == GET && n != z_info->k_max)
@@ -2129,9 +2149,9 @@ static errr read_savefile(int fd)
 			case BLOCK_TYPE_INVENTORY:
 				savefile_do_block_inventory(GET, version);
 				break;
-            case BLOCK_TYPE_END:
-                finished = TRUE;
-                break;
+			case BLOCK_TYPE_END:
+				finished = TRUE;
+				break;
 		}
 
 		/* Free the memory */
@@ -2407,19 +2427,19 @@ bool load_player(void)
 			/* Clear the screen */
 			Term_clear();
 
-            /* Check savefile versions */
-            if (header[pos++] != 83) { what = "Invalid savefile"; err = 1; }
-            else if (header[pos++] != 97) { what = "Invalid savefile"; err = 1; }
-            else if (header[pos++] != 118) { what = "Invalid savefile"; err = 1; }
-            else if (header[pos++] != 101) { what = "Invalid savefile"; err = 1; }
-            else
-            {
-                /* Read the savefile */
+			/* Check savefile versions */
+			if (header[pos++] != 83) { what = "Invalid savefile"; err = 1; }
+			else if (header[pos++] != 97) { what = "Invalid savefile"; err = 1; }
+			else if (header[pos++] != 118) { what = "Invalid savefile"; err = 1; }
+			else if (header[pos++] != 101) { what = "Invalid savefile"; err = 1; }
+			else
+			{
+				/* Read the savefile */
 				err = (errr) read_savefile(fd);
 
-                /* Error! */
-                if (err) what = "Cannot parse savefile";
-            }
+				/* Error! */
+				if (err) what = "Cannot parse savefile";
+			}
 
 			fd_close(fd);
 		}
@@ -2441,8 +2461,13 @@ bool load_player(void)
 		if (err) what = "Broken savefile";
 	}
 
-    inkey();
+	/* Tell the user what to do now */
+	prompt_note("[Press any key to continue]");
 
+	/* Wait for the user */
+	inkey();
+
+	/* Check status */
 	if (!err)
 	{
 		/* Player is dead */

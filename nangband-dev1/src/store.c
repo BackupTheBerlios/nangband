@@ -3198,6 +3198,9 @@ void do_cmd_store(void)
 		old_x = size_x;
 		old_y = size_y;
 
+		/* Hack -- Clear line 1 -- this *is* necessary */
+		prt("", 1, 0);
+
 		/* Grab the terminal sizes */
 		Term_get_size(&size_x, &size_y);
 

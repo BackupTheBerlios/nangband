@@ -10,15 +10,26 @@
 function page_header($title, $type)
 {
 	echo '<html>';
-	echo '<head><title>Nangband - ' . $title . '</title></head>';
-	echo '<body bgcolor="#ffffff" text="#000000">';
+	echo '<head>';
+	echo '<title>Nangband - ' . $title . '</title>';
+	echo '<link rel="stylesheet" rev="content" type="text/css" href="style.css">
+	echo '<meta name="description" content="A site about Nangband, an Angband variant.">
+	echo '</head>';
+	echo '<body bgcolor="#000000" text="#ffffff" link="#d090ff" alink="#00ffff" vlink="#77ff44">';
+<!--
 	echo '<h1 align="center">' . $title . '</h1>';
+-->
+	echo '<img src="images/nangband.gif">'
 	echo '<div align="center">';
-	echo '[ <a href="http://developer.berlios.de/projects/nangband">Berlios Project Page</a> ] ';
-	echo '[ <a href="index.php">Main</a> ] ';
-	echo '[ <a href="changes.php">Changes</a> ]';
+
+	echo '[ <a href="index.php">Main Page</a> | ';
+	echo '<a href="changes.php">Changes</a> | ';
+	echo '<a href="bugs.php">Bugs</a> | ';
+	echo '<a href="download.php">Download</a> | ';
+	echo '<a href="http://developer.berlios.de/projects/nangband">Project Page</a> ] ';
+
 	echo '</div>';
-	echo '<hr width="50%" size="1" align="center">';
+	echo '<hr width="450" size="1" align="center">';
 
 	return;
 }

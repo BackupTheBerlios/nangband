@@ -7,7 +7,8 @@
 ///////////////////////////////////////
 
 // Site name
-$sitename = 'nangband';
+$site_name = 'nangband';
+$site_description = 'Nangband is a variant of Angband, an ASCII, single-player roguelike.';
 
 // Filename-accessed array of "full names"
 $titles['main'] = 'main page';
